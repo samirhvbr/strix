@@ -20,6 +20,7 @@ from agents.model_settings import ModelSettings
 from agents.models.fake_id import FAKE_RESPONSES_ID
 from agents.models.interface import Model
 from agents.models.multi_provider import MultiProvider
+from agents.models.openai_chatcompletions import OpenAIChatCompletionsModel
 from agents.models.openai_responses import OpenAIResponsesModel
 from agents.retry import (
     ModelRetryBackoffSettings,
@@ -36,7 +37,7 @@ from openai.types.responses import (
 from openai.types.responses.response_usage import ResponseUsage
 from openai.types.shared import Reasoning
 
-from strix.config import codex
+from strix.config import codex, opencode
 from strix.config.loader import load_settings
 from strix.config.tool_call_ids import TurnCallIdRewriter, dedupe_input
 from strix.config.tool_call_limits import TurnToolCallLimiter
@@ -79,7 +80,12 @@ def _retry_statusless_provider_errors(context: RetryPolicyContext) -> bool:
 
 
 class _CodexResponsesModel(OpenAIResponsesModel):
-    """Responses model for the ChatGPT subscription backend (always streamed, stateless)."""
+    """Responses model for stateless subscription gateways (always streamed).
+
+    Used for the ChatGPT subscription backend and for Responses-served models on
+    the OpenCode gateway: neither stores responses server-side, so reasoning is
+    carried inline via ``reasoning.encrypted_content``.
+    """
 
     def __init__(
         self,
@@ -471,6 +477,7 @@ class StrixProvider(MultiProvider):
     def get_model(self, model_name: str | None) -> Model:
         llm = load_settings().llm
         slug = codex.subscription_model(model_name)
+        oc = opencode.subscription_model(model_name)
         idle_timeout = float(llm.stream_idle_timeout)
         if slug:
             # The ChatGPT subscription backend is always streamed; it has no
@@ -481,6 +488,19 @@ class StrixProvider(MultiProvider):
                 codex.get_subscription_client(),
                 reasoning_effort=llm.reasoning_effort,
             )
+        elif oc and oc.uses_responses:
+            model = _CodexResponsesModel(
+                oc.slug,
+                opencode.get_subscription_client(oc.base_url),
+                reasoning_effort=llm.reasoning_effort,
+            )
+        elif oc:
+            model = OpenAIChatCompletionsModel(
+                oc.slug, opencode.get_subscription_client(oc.base_url)
+            )
+            if llm.disable_streaming:
+                model = _NonStreamingModel(model)
+                idle_timeout = 0.0
         else:
             model = super().get_model(model_name)
             if llm.disable_streaming:
@@ -540,15 +560,24 @@ RECOMMENDED_MODEL_NAMES = (
 _RECOMMENDED_MODEL_NAME_SET = frozenset(name.lower() for name in RECOMMENDED_MODEL_NAMES)
 
 FRONTIER_MODEL_FAMILIES = (
-    (("azure", "azure_ai", "bedrock_mantle", "chatgpt", "openai"), ("gpt-5",)),
+    (("azure", "azure_ai", "bedrock_mantle", "chatgpt", "openai", "opencode"), ("gpt-5",)),
     (
-        ("anthropic", "azure_ai", "bedrock", "claude", "databricks", "snowflake", "vertex_ai"),
+        (
+            "anthropic",
+            "azure_ai",
+            "bedrock",
+            "claude",
+            "databricks",
+            "opencode",
+            "snowflake",
+            "vertex_ai",
+        ),
         ("claude-fable-5", "claude-opus-5", "claude-opus-4", "claude-sonnet-5", "claude-sonnet-4"),
     ),
-    (("google", "gemini", "vertex_ai"), ("gemini-3",)),
-    (("deepseek",), ("deepseek-v4", "deepseek-r1", "deepseek-reasoner")),
-    (("alibaba", "dashscope", "qwen"), ("qwen3.8", "qwen3.7", "qwen3-max")),
-    (("moonshot", "moonshotai", "kimi"), ("kimi-k3", "kimi-k2.7", "kimi-k2.6")),
+    (("google", "gemini", "opencode", "vertex_ai"), ("gemini-3",)),
+    (("deepseek", "opencode"), ("deepseek-v4", "deepseek-r1", "deepseek-reasoner")),
+    (("alibaba", "dashscope", "opencode", "qwen"), ("qwen3.8", "qwen3.7", "qwen3-max")),
+    (("kimi", "moonshot", "moonshotai", "opencode"), ("kimi-k3", "kimi-k2.7", "kimi-k2.6")),
 )
 
 
@@ -556,7 +585,7 @@ def configure_sdk_model_defaults(settings: Settings) -> None:
     """Apply Strix config to SDK-native defaults."""
     llm = settings.llm
     set_tracing_disabled(True)
-    if codex.subscription_model(llm.model):
+    if codex.subscription_model(llm.model) or opencode.subscription_model(llm.model):
         return
     _configure_litellm_compatibility()
     _configure_openrouter_attribution(llm.model)
@@ -741,6 +770,9 @@ def uses_chat_completions_tool_schema(model_name: str, settings: Settings) -> bo
     """Return whether the resolved SDK route can only receive JSON function tools."""
     if codex.subscription_model(model_name):
         return False
+    oc = opencode.subscription_model(model_name)
+    if oc:
+        return not oc.uses_responses
     model = model_name.strip().lower()
     if "/" in model and not model.startswith("openai/"):
         return True
