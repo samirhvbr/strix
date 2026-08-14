@@ -248,6 +248,7 @@ def _persist_run_record(args: argparse.Namespace) -> None:
         "start_time": datetime.now(UTC).isoformat(),
         "end_time": None,
         "auth_mode": opencode.auth_mode(load_settings().llm.model),
+        "subscription_provider": opencode.subscription_provider(load_settings().llm.model),
         "targets_info": args.targets_info,
         "scan_mode": args.scan_mode,
         "instruction": args.instruction,

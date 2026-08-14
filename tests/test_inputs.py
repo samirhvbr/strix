@@ -112,6 +112,13 @@ def test_make_model_settings_no_prompt_cache_for_non_claude(model_name: str) -> 
     assert make_model_settings(None, model_name=model_name).extra_args is None
 
 
+@pytest.mark.parametrize("model_name", ["opencode/claude-sonnet-5", "opencode-go/claude-sonnet-5"])
+def test_no_prompt_cache_for_opencode_claude(model_name: str) -> None:
+    # The OpenCode route uses the raw OpenAI SDK, whose create() rejects the
+    # LiteLLM-only cache_control_injection_points argument.
+    assert _cache_points(model_name) is None
+
+
 def test_no_prompt_cache_for_unmapped_bedrock_claude_model(monkeypatch: Any) -> None:
     # A Bedrock Claude model LiteLLM hasn't mapped must run uncached, not crash.
     unmapped = "bedrock/global.anthropic.claude-brand-new-9"

@@ -101,9 +101,11 @@ export function RunDetails({
   const totalTokens = num(usage.total_tokens);
   const cost = num(usage.cost);
   const subscription = str(raw.auth_mode) === "subscription";
-  const subscriptionLabel = models.some((m) => m.toLowerCase().startsWith("opencode"))
-    ? "OpenCode subscription"
-    : "ChatGPT subscription";
+  const subscriptionProvider =
+    str(raw.subscription_provider) ??
+    (models.some((m) => m.toLowerCase().startsWith("opencode")) ? "opencode" : "chatgpt");
+  const subscriptionLabel =
+    subscriptionProvider === "opencode" ? "OpenCode subscription" : "ChatGPT subscription";
 
   const sub = (n: number, word: string) => (
     <span className="text-[#666]"> ({formatNumber(n)} {word})</span>

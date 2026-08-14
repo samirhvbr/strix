@@ -94,6 +94,14 @@ def test_auth_mode_covers_both_subscriptions() -> None:
     assert opencode.auth_mode(None) == "api_key"
 
 
+def test_subscription_provider() -> None:
+    assert opencode.subscription_provider("opencode/claude-sonnet-5") == "opencode"
+    assert opencode.subscription_provider("opencode-go/kimi-k3") == "opencode"
+    assert opencode.subscription_provider("chatgpt/gpt-5.4") == "chatgpt"
+    assert opencode.subscription_provider("openai/gpt-5.4") is None
+    assert opencode.subscription_provider(None) is None
+
+
 def _response(status_code: int, text: str = "") -> mock.MagicMock:
     response = mock.MagicMock()
     response.status_code = status_code

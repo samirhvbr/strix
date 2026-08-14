@@ -147,3 +147,12 @@ def auth_mode(model_name: str | None) -> str:
     if subscription_model(model_name) or codex.subscription_model(model_name):
         return "subscription"
     return "api_key"
+
+
+def subscription_provider(model_name: str | None) -> str | None:
+    """The subscription behind STRIX_LLM: "opencode", "chatgpt", or None."""
+    if subscription_model(model_name):
+        return PROVIDER
+    if codex.subscription_model(model_name):
+        return "chatgpt"
+    return None

@@ -142,6 +142,7 @@ class ReportState:
             "end_time": None,
             "status": "running",
             "auth_mode": auth_mode,
+            "subscription_provider": opencode.subscription_provider(load_settings().llm.model),
             "targets_info": [],
             "llm_usage": self._build_llm_usage_record(),
         }
