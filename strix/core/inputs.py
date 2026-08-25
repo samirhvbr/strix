@@ -321,9 +321,12 @@ def _prompt_cache_extra_args(model_name: str) -> dict[str, Any] | None:
     """
     if not is_claude_model(model_name):
         return None
-    # OpenCode routes use the raw OpenAI SDK, which rejects this LiteLLM-only
-    # argument; the gateway applies Anthropic prompt caching itself.
-    if opencode.subscription_model(model_name):
+    # OpenCode's Chat Completions and Responses routes use the raw OpenAI SDK,
+    # which rejects this LiteLLM-only argument. Its Anthropic route does go
+    # through LiteLLM, so the injection points apply there as they would for a
+    # direct Anthropic key.
+    oc = opencode.subscription_model(model_name)
+    if oc is not None and oc.protocol != opencode.PROTOCOL_MESSAGES:
         return None
     if is_bedrock_route(model_name) and not bedrock_route_supports_prompt_caching(model_name):
         return None

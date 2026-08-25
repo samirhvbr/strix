@@ -488,12 +488,28 @@ class StrixProvider(MultiProvider):
                 codex.get_subscription_client(),
                 reasoning_effort=llm.reasoning_effort,
             )
-        elif oc and oc.uses_responses:
+        elif oc and oc.protocol == opencode.PROTOCOL_RESPONSES:
             model = _CodexResponsesModel(
                 oc.slug,
                 opencode.get_subscription_client(oc.base_url),
                 reasoning_effort=llm.reasoning_effort,
             )
+        elif oc and oc.protocol == opencode.PROTOCOL_MESSAGES:
+            # Claude models are served on Anthropic's ``/messages``, which the
+            # OpenAI SDK cannot speak: it has no Messages method and sends the
+            # key as a bearer token rather than ``x-api-key``. LiteLLM's
+            # Anthropic route handles both, so the gateway becomes an Anthropic
+            # base URL with the subscription key.
+            from agents.extensions.models.litellm_model import LitellmModel
+
+            model = LitellmModel(
+                model=f"anthropic/{oc.slug}",
+                base_url=oc.messages_url,
+                api_key=opencode.get_api_key(),
+            )
+            if llm.disable_streaming:
+                model = _NonStreamingModel(model)
+                idle_timeout = 0.0
         elif oc:
             model = OpenAIChatCompletionsModel(
                 oc.slug, opencode.get_subscription_client(oc.base_url)
@@ -585,7 +601,14 @@ def configure_sdk_model_defaults(settings: Settings) -> None:
     """Apply Strix config to SDK-native defaults."""
     llm = settings.llm
     set_tracing_disabled(True)
-    if codex.subscription_model(llm.model) or opencode.subscription_model(llm.model):
+    oc = opencode.subscription_model(llm.model)
+    if codex.subscription_model(llm.model) or oc:
+        # A subscription run carries its own client and credentials, so none of
+        # the api_key/api_base defaults below apply. The Anthropic route is the
+        # exception: it goes through LiteLLM, which still needs the
+        # compatibility flags and the cost callback.
+        if oc is not None and oc.protocol == opencode.PROTOCOL_MESSAGES:
+            _configure_litellm_compatibility()
         return
     _configure_litellm_compatibility()
     _configure_openrouter_attribution(llm.model)
@@ -772,7 +795,9 @@ def uses_chat_completions_tool_schema(model_name: str, settings: Settings) -> bo
         return False
     oc = opencode.subscription_model(model_name)
     if oc:
-        return not oc.uses_responses
+        # Chat Completions takes JSON function tools; so does the LiteLLM
+        # Anthropic route, which translates them to Anthropic tool blocks.
+        return oc.protocol != opencode.PROTOCOL_RESPONSES
     model = model_name.strip().lower()
     if "/" in model and not model.startswith("openai/"):
         return True

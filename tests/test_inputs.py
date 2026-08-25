@@ -113,10 +113,20 @@ def test_make_model_settings_no_prompt_cache_for_non_claude(model_name: str) -> 
 
 
 @pytest.mark.parametrize("model_name", ["opencode/claude-sonnet-5", "opencode-go/claude-sonnet-5"])
-def test_no_prompt_cache_for_opencode_claude(model_name: str) -> None:
-    # The OpenCode route uses the raw OpenAI SDK, whose create() rejects the
-    # LiteLLM-only cache_control_injection_points argument.
-    assert _cache_points(model_name) is None
+def test_prompt_cache_for_opencode_claude(model_name: str) -> None:
+    # Claude on OpenCode runs through LiteLLM's Anthropic route, which consumes
+    # cache_control_injection_points. The gateway's other two routes use the raw
+    # OpenAI SDK, whose create() rejects this LiteLLM-only argument.
+    assert _cache_points(model_name) == [
+        {"location": "message", "role": "system"},
+        {"location": "message", "index": -1},
+    ]
+
+
+def test_no_prompt_cache_for_opencode_openai_routes() -> None:
+    # A "claude" substring cannot smuggle the LiteLLM-only argument onto a route
+    # that is served by the raw OpenAI SDK.
+    assert _cache_points("opencode/gpt-5.4-claude-tuned") is None
 
 
 def test_no_prompt_cache_for_unmapped_bedrock_claude_model(monkeypatch: Any) -> None:

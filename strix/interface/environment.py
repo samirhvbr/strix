@@ -37,14 +37,15 @@ def validate_environment() -> None:
         logger.info("Environment OK (ChatGPT subscription)")
         return
 
-    if opencode.subscription_model(settings.llm.model):
+    oc = opencode.subscription_model(settings.llm.model)
+    if oc:
         if not opencode.is_authenticated():
             console.print(
-                f"[red]STRIX_LLM={settings.llm.model} uses your OpenCode subscription, "
+                f"[red]STRIX_LLM={settings.llm.model} runs on {oc.label}, "
                 "but you're not signed in.[/] Run [cyan]strix auth login opencode[/] first."
             )
             sys.exit(1)
-        logger.info("Environment OK (OpenCode subscription)")
+        logger.info("Environment OK (%s)", oc.label)
         return
 
     if not settings.llm.model:

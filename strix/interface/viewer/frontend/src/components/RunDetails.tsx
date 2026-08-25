@@ -104,8 +104,20 @@ export function RunDetails({
   const subscriptionProvider =
     str(raw.subscription_provider) ??
     (models.some((m) => m.toLowerCase().startsWith("opencode")) ? "opencode" : "chatgpt");
+  // Runs recorded before subscription_plan existed still carry the model string,
+  // whose prefix names the plan.
+  const subscriptionPlan =
+    str(raw.subscription_plan) ??
+    (models.some((m) => m.toLowerCase().startsWith("opencode-go/")) ? "go" : "zen");
   const subscriptionLabel =
-    subscriptionProvider === "opencode" ? "OpenCode subscription" : "ChatGPT subscription";
+    subscriptionProvider === "opencode"
+      ? subscriptionPlan === "go"
+        ? "OpenCode Go"
+        : "OpenCode Zen"
+      : "ChatGPT subscription";
+  // Zen bills prepaid credits per request, so its runs are not free and there is
+  // no price table to estimate them from. Go is a flat monthly plan.
+  const metered = subscriptionProvider === "opencode" && subscriptionPlan === "zen";
 
   const sub = (n: number, word: string) => (
     <span className="text-[#666]"> ({formatNumber(n)} {word})</span>
@@ -205,7 +217,21 @@ export function RunDetails({
                 </Field>
               )}
               {totalTokens != null && <Field label="Total tokens">{formatNumber(totalTokens)}</Field>}
-              {subscription ? (
+              {subscription && metered ? (
+                <Field label="Cost">
+                  {cost != null && cost > 0 ? (
+                    <>
+                      <span className="text-[#22c55e]">${cost.toFixed(2)}</span>
+                      <span className="text-[#666]"> (Zen credits)</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="text-[#22c55e]">credits</span>
+                      <span className="text-[#666]"> (not priced locally)</span>
+                    </>
+                  )}
+                </Field>
+              ) : subscription ? (
                 <Field label="Cost">
                   <span className="text-[#22c55e]">$0.00</span>
                   <span className="text-[#666]"> (subscription)</span>
