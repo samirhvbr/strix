@@ -7,13 +7,14 @@
 # modelo, a chave e o teto de budget certos — sem exportar nada na mão.
 #
 # Uso:
-#   strix-run <alvo> [args-do-strix...]     # novo scan, agente PRIMÁRIO
+#   strix-run <alvo> [args-do-strix...]     # novo scan, agente PRIMÁRIO (TUI nativa se houver Go)
 #   strix-run --resume [<run>]              # retoma último run (ou <run>) no PRIMÁRIO
 #   strix-run --resume -2 [<run>]           # retoma no SECUNDÁRIO (-3 = TERCIÁRIO)
 #   strix-run <alvo> --auto                 # roda a FILA (primário→secundário→terciário):
 #                                           # ao esgotar janela/budget de um, passa ao próximo;
 #                                           # para quando um CONCLUI o scan.
 #   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
+#   -n | --headless  força modo headless nos runs manuais (--auto é SEMPRE headless)
 #
 # Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
 # repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
@@ -36,6 +37,7 @@ SECONDARY="${STRIX_SECONDARY_LLM:-deepseek/deepseek-v4-pro}"
 TERTIARY="${STRIX_TERTIARY_LLM:-}"
 WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
 STRIX_BIN="${STRIX_BIN:-strix}"
+HEADLESS=0            # -n/--headless força; senão modos manuais abrem a TUI nativa (se houver Go)
 
 c_info=$'\033[36m'; c_warn=$'\033[33m'; c_err=$'\033[31m'; c_off=$'\033[0m'
 log()  { printf '%s[strix-run]%s %s\n' "$c_info" "$c_off" "$*" >&2; }
@@ -78,6 +80,12 @@ apply_model() {
   log "agente=$model  budget=${BUDGET:-—}  workdir=$WORKDIR"
 }
 
+# NFLAG[] = (-n) quando headless; vazio = TUI nativa. TUI exige Go (go run).
+compute_nflag() {
+  NFLAG=(); tela="TUI nativa"
+  if (( HEADLESS )) || ! command -v go >/dev/null 2>&1; then NFLAG=(-n); tela="headless"; fi
+}
+
 latest_run() {
   # newest run dir that actually looks like a run (has run.json) — ignora dirs vazios/lixo
   local d
@@ -94,6 +102,7 @@ while (($#)); do
     --resume)         MODE="resume"; shift
                       if [[ -n "${1:-}" && "${1:0:1}" != "-" ]]; then RUN="$1"; shift; fi ;;
     --auto)           MODE="auto"; shift ;;
+    -n|--headless)    HEADLESS=1; shift ;;
     -2|--secondary)   AGENT="secondary"; shift ;;
     -1|--primary)     AGENT="primary"; shift ;;
     -3|--tertiary)    AGENT="tertiary"; shift ;;
@@ -123,8 +132,9 @@ case "$MODE" in
   new)
     [[ -n "$TARGET" ]] || die "faltou o alvo. Ex.: strix-run https://exemplo.com"
     apply_model "$MODEL"
-    log "novo scan  alvo=$TARGET"
-    ( cd "$WORKDIR" && exec "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
+    compute_nflag
+    log "novo scan  alvo=$TARGET  ($tela)"
+    ( cd "$WORKDIR" && exec "$STRIX_BIN" "${NFLAG[@]}" --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
     ;;
 
   resume)
@@ -133,8 +143,9 @@ case "$MODE" in
       RUN="$(basename "$d")"; log "último run: $RUN"
     fi
     apply_model "$MODEL"
-    log "retomando run=$RUN"
-    ( cd "$WORKDIR" && exec "$STRIX_BIN" -n --resume "$RUN" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
+    compute_nflag
+    log "retomando run=$RUN  ($tela)"
+    ( cd "$WORKDIR" && exec "$STRIX_BIN" "${NFLAG[@]}" --resume "$RUN" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
     ;;
 
   auto)

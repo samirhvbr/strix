@@ -28,7 +28,7 @@ uv run ruff format . && uv run ruff check .    # formatação + lint (limite 100
 uv run pytest -q               # suíte (~1139 testes, ~2min)
 ```
 
-- **Interativo (TUI)** exige Go 1.24+ (compila a TUI de fonte). Sem Go, use sempre `-n` (headless).
+- **Interativo (TUI)** exige Go 1.24+ — **instalado** (`go1.24.4`), roda via `go run` na instalação editável. Runs manuais do `strix-run` abrem a TUI por padrão; `--auto` é sempre headless.
   `uv tool install .` também exige Go (build-hook `scripts/tui_sidecar_hook.py`).
 - Rodar precisa de **Docker** (puxa imagem sandbox no 1º run).
 
@@ -38,7 +38,7 @@ Não use `.bashrc` para chaves. Use o `.env` (no `.gitignore`) + o launcher:
 
 ```bash
 cp .env.example .env           # preencha chaves, primário/secundário, budgets
-./bin/strix-run <alvo>         # novo scan, agente PRIMÁRIO
+./bin/strix-run <alvo>         # novo scan, agente PRIMÁRIO (TUI nativa; -n força headless)
 ./bin/strix-run --resume -2    # religa o último run no SECUNDÁRIO (-3 = TERCIÁRIO)
 ./bin/strix-run <alvo> --auto  # FILA primário→secundário→terciário (-3): esgotou janela/budget → próximo
 ```
