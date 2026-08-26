@@ -15,6 +15,9 @@ A versão do fork usa o formato PEP 440 de *local version*:
 A versão corrente fica em [`.fork-version`](.fork-version). Não alteramos o campo
 `version` do `pyproject.toml` (para não conflitar em todo merge com o upstream).
 
+A **regra de funcionamento e incremento** (quando o `shvia.<n>` sobe, e o mapa para o
+`X.Y.Z` da casa) está em [`version.md`](version.md).
+
 ## Modelo de branches
 
 | Branch        | Papel                                                                 |
@@ -36,6 +39,7 @@ git checkout master && git merge main        # traz a evolução deles para a no
 
 | Versão do fork | Baseado no upstream | Data       | Mudanças |
 |----------------|---------------------|------------|----------|
+| `1.5.3+shvia.12` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run --auto` com **TUI ao vivo + failover**: o launcher roda o Strix interativo em background no mesmo process group (`< /dev/tty`); um watcher lê `strix.log`/`run.json` do run e, ao esgotar **janela/budget/pausa**, mata a árvore e **reabre a TUI no próximo agente** (resume). **Auto-continue** no resume via `--instruction` (o `runner` injeta como msg high-priority no root agent). **Budget por-provedor** no resume — cada provedor ganha o próprio teto sobre o já gasto (`STRIX_BUDGET_MODE=global` mantém o teto cumulativo antigo). Corrige o parsing `--resume -2 <run>` (antes o run caía em `TARGET`). Sem terminal → headless (modo antigo). Patches em `bin/strix-run` (commit `cb56b7a`). |
 | `1.5.3+shvia.11` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Viewer local **sem gate de e-mail**: `/api/runs` (lista "Past runs") e `/api/run|vulnerabilities|report|transcript` de runs históricos deixam de exigir `auth.is_verified()`. Mantém só o token de sessão do processo (a segurança real, HTTP 403 sem ele — mesmo com `--host`). Testado: com sessão `locked:false` (7 runs), sem sessão `locked:true`. Patch em `viewer/server.py` (fork-only; upstream gateia p/ growth). |
 | `1.5.3+shvia.10` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run list`: lista os runs locais no terminal (nome/status/vulns/custo/tokens) lendo `run.json`/`vulnerabilities.json` — sem o gate de e-mail da página web "Past runs" (que é recurso de conta na nuvem; o view por-run já é local/tokenizado). |
 | `1.5.3+shvia.9` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Atalho `strix-run view [run]`: roda `strix view` já dentro do `STRIX_WORKDIR` (senão `strix view` procura em `./strix_runs` do cwd e diz "No runs found"). |
