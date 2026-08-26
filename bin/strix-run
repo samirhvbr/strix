@@ -20,7 +20,8 @@
 set -euo pipefail
 
 # ── localizar repo e carregar .env ───────────────────────────────────────────
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SELF="$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || printf '%s' "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd "$(dirname "$SELF")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 ENV_FILE="${STRIX_ENV_FILE:-$REPO_DIR/.env}"
 if [[ -f "$ENV_FILE" ]]; then
@@ -71,7 +72,14 @@ apply_model() {
   log "agente=$model  budget=${BUDGET:-—}  workdir=$WORKDIR"
 }
 
-latest_run() { ls -1dt "$WORKDIR"/strix_runs/*/ 2>/dev/null | head -1; }
+latest_run() {
+  # newest run dir that actually looks like a run (has run.json) — ignora dirs vazios/lixo
+  local d
+  while IFS= read -r d; do
+    [[ -f "${d}run.json" ]] && { printf '%s' "$d"; return 0; }
+  done < <(ls -1dt "$WORKDIR"/strix_runs/*/ 2>/dev/null || true)
+  return 0
+}
 
 # ── parse de argumentos ──────────────────────────────────────────────────────
 MODE="new"; AGENT="primary"; RUN=""; TARGET=""; EXTRA=()
@@ -83,6 +91,7 @@ while (($#)); do
     -2|--secondary)   AGENT="secondary"; shift ;;
     -1|--primary)     AGENT="primary"; shift ;;
     --agent)          AGENT="${2:?--agent exige um modelo}"; shift 2 ;;
+    -t|--target)      TARGET="${2:?-t/--target exige uma URL/alvo}"; shift 2 ;;
     -h|--help)        usage; exit 0 ;;
     --)               shift; EXTRA+=("$@"); break ;;
     -*)               EXTRA+=("$1"); shift ;;          # pass-through p/ o strix
@@ -125,18 +134,26 @@ case "$MODE" in
     cd "$WORKDIR"
     apply_model "$PRIMARY"
     log "AUTO: iniciando no primário; failover p/ secundário ($SECONDARY) se a janela esgotar"
+    before="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
     "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" &
     PID=$!
 
-    # descobre o dir do run recém-criado
+    # localiza o run NOVO criado por este launch (nunca um run antigo)
     RUNDIR=""
     for _ in $(seq 1 30); do
-      RUNDIR="$(latest_run)"; [[ -n "$RUNDIR" ]] && break
+      cur="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
+      RUNDIR="$(comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$cur") | sed '/^$/d' | tail -1 || true)"
+      [[ -n "$RUNDIR" ]] && break
       kill -0 "$PID" 2>/dev/null || break
       sleep 1
     done
+
+    if [[ -z "$RUNDIR" ]]; then
+      wait "$PID" 2>/dev/null; rc=$?
+      die "o primário não criou um run novo (saiu rc=$rc). Cheque o comando/args; NÃO faço failover às cegas."
+    fi
     LOG="${RUNDIR%/}/strix.log"
-    [[ -n "$RUNDIR" ]] && log "run=$(basename "$RUNDIR")  (vigiando $LOG)" || warn "não localizei o dir do run; sigo só pelo processo"
+    log "run=$(basename "$RUNDIR")  (vigiando $LOG)"
 
     # supervisão: mata o primário assim que a janela esgota (usage_limit_reached repetido)
     EXHAUSTED=0
