@@ -2,17 +2,18 @@
 #
 # strix-run — launcher config-driven do fork SHVIA do Strix.
 #
-# Lê o .env do repo (STRIX_PRIMARY_LLM / STRIX_SECONDARY_LLM, chaves por
-# provedor, STRIX_BUDGET_*, STRIX_WORKDIR) e roda o Strix já com o modelo,
-# a chave e o teto de budget certos — sem precisar exportar nada na mão.
+# Lê o .env do repo (STRIX_PRIMARY_LLM / STRIX_SECONDARY_LLM / STRIX_TERTIARY_LLM,
+# chaves por provedor, STRIX_BUDGET_*, STRIX_WORKDIR) e roda o Strix já com o
+# modelo, a chave e o teto de budget certos — sem exportar nada na mão.
 #
 # Uso:
 #   strix-run <alvo> [args-do-strix...]     # novo scan, agente PRIMÁRIO
 #   strix-run --resume [<run>]              # retoma último run (ou <run>) no PRIMÁRIO
-#   strix-run --resume -2 [<run>]           # retoma no SECUNDÁRIO (modelo+chave+budget dele)
-#   strix-run <alvo> --auto                 # roda o primário e, se a janela esgotar, cai
-#                                           # sozinho pro secundário (mesmo run, via --resume)
-#   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe primário/secundário)
+#   strix-run --resume -2 [<run>]           # retoma no SECUNDÁRIO (-3 = TERCIÁRIO)
+#   strix-run <alvo> --auto                 # roda a FILA (primário→secundário→terciário):
+#                                           # ao esgotar janela/budget de um, passa ao próximo;
+#                                           # para quando um CONCLUI o scan.
+#   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
 #
 # Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
 # repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
@@ -32,6 +33,7 @@ fi
 # ── defaults (podem vir do .env) ─────────────────────────────────────────────
 PRIMARY="${STRIX_PRIMARY_LLM:-chatgpt/gpt-5.4}"
 SECONDARY="${STRIX_SECONDARY_LLM:-deepseek/deepseek-v4-pro}"
+TERTIARY="${STRIX_TERTIARY_LLM:-}"
 WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
 STRIX_BIN="${STRIX_BIN:-strix}"
 
@@ -54,6 +56,7 @@ resolve_creds() {
     anthropic|claude)  KEY="${ANTHROPIC_API_KEY:-}";   BUDGET="${STRIX_BUDGET_ANTHROPIC:-}" ;;
     deepseek)          KEY="${DEEPSEEK_API_KEY:-}";    BUDGET="${STRIX_BUDGET_DEEPSEEK:-}" ;;
     gemini|google)     KEY="${GEMINI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_GEMINI:-}" ;;
+    moonshot|moonshotai|kimi) KEY="${MOONSHOT_API_KEY:-}"; BUDGET="${STRIX_BUDGET_MOONSHOT:-}" ;;
     *)                 KEY="${LLM_API_KEY:-}";         BUDGET="${STRIX_BUDGET_DEFAULT:-}" ;;
   esac
 }
@@ -89,6 +92,7 @@ while (($#)); do
     --auto)           MODE="auto"; shift ;;
     -2|--secondary)   AGENT="secondary"; shift ;;
     -1|--primary)     AGENT="primary"; shift ;;
+    -3|--tertiary)    AGENT="tertiary"; shift ;;
     --agent)          AGENT="${2:?--agent exige um modelo}"; shift 2 ;;
     -t|--target)      TARGET="${2:?-t/--target exige uma URL/alvo}"; shift 2 ;;
     -h|--help)        usage; exit 0 ;;
@@ -102,6 +106,7 @@ done
 case "$AGENT" in
   primary)   MODEL="$PRIMARY" ;;
   secondary) MODEL="$SECONDARY" ;;
+  tertiary)  MODEL="${TERTIARY:?STRIX_TERTIARY_LLM não definido no .env}" ;;
   */*)       MODEL="$AGENT" ;;
   *)         die "agente inválido: $AGENT (use --primary, --secondary ou --agent prov/modelo)" ;;
 esac
@@ -131,54 +136,84 @@ case "$MODE" in
   auto)
     [[ -n "$TARGET" ]] || die "faltou o alvo. Ex.: strix-run https://exemplo.com --auto"
     cd "$WORKDIR"
-    apply_model "$PRIMARY"
-    log "AUTO: primário=$PRIMARY; failover → secundário=$SECONDARY se a janela esgotar"
+
+    # fila de agentes (ordem: primário, secundário, terciário); ignora vazios
+    QUEUE=()
+    [[ -n "$PRIMARY"   ]] && QUEUE+=("$PRIMARY")
+    [[ -n "$SECONDARY" ]] && QUEUE+=("$SECONDARY")
+    [[ -n "$TERTIARY"  ]] && QUEUE+=("$TERTIARY")
+    (( ${#QUEUE[@]} )) || die "fila vazia (defina STRIX_PRIMARY_LLM no .env)"
+    N=${#QUEUE[@]}
+    log "AUTO: fila (${N}) = ${QUEUE[*]}"
+
     before="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
-
-    # roda o primário mostrando a saída E capturando-a (p/ detectar esgotamento
-    # mesmo quando falha no preflight, antes de criar run)
-    POUT="$(mktemp "${TMPDIR:-/tmp}/strix-run.XXXXXX")"
-    "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
-    PID=$!
-
-    find_new_run() {   # ecoa o dir do run novo (criado por este launch), se houver
-      local cur
-      cur="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
+    find_new_run() {
+      local cur; cur="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
       comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$cur") | sed '/^$/d' | tail -1 || true
     }
-    exhausted() {   # 1 se 'usage_limit_reached' apareceu no log do run OU na saída
-      { [[ -n "$RUNDIR" && -f "${RUNDIR%/}/strix.log" ]] && grep -q "usage_limit_reached" "${RUNDIR%/}/strix.log" 2>/dev/null; } && return 0
-      grep -q "usage_limit_reached" "$POUT" 2>/dev/null && return 0
+    # esgotou (janela OU budget)? marcador na saída OU no trecho novo do log (>= offset)
+    _RUNOUT='usage_limit_reached|Token budget of'
+    has_runout() {   # $1=pout  $2=log  $3=offset
+      grep -qE "$_RUNOUT" "$1" 2>/dev/null && return 0
+      if [[ -n "$2" && -f "$2" ]]; then
+        tail -c "+$(( ${3:-0} + 1 ))" "$2" 2>/dev/null | grep -qE "$_RUNOUT" && return 0
+      fi
       return 1
     }
+    run_completed() {   # 0 se o run.json marca 'completed'
+      [[ -n "$RUNDIR" && -f "${RUNDIR%/}/run.json" ]] || return 1
+      local st; st="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('status',''))" "${RUNDIR%/}/run.json" 2>/dev/null || true)"
+      [[ "$st" == "completed" ]]
+    }
 
-    RUNDIR=""; EXHAUSTED=0
-    while kill -0 "$PID" 2>/dev/null; do
-      [[ -z "$RUNDIR" ]] && RUNDIR="$(find_new_run)"
-      if exhausted; then
-        warn "primário esgotou a janela (usage_limit_reached) → failover"
-        EXHAUSTED=1; kill "$PID" 2>/dev/null || true; break
-      fi
-      sleep 3
-    done
-    wait "$PID" 2>/dev/null || true
-    [[ -z "$RUNDIR" ]] && RUNDIR="$(find_new_run)"      # run criado tarde
-    (( EXHAUSTED == 0 )) && exhausted && EXHAUSTED=1     # confirmação pós-saída
-    rm -f "$POUT"
+    RUNDIR=""
+    for idx in "${!QUEUE[@]}"; do
+      model="${QUEUE[$idx]}"
+      apply_model "$model"
+      LOG=""; off=0
+      [[ -n "$RUNDIR" ]] && { LOG="${RUNDIR%/}/strix.log"; off="$(stat -c%s "$LOG" 2>/dev/null || echo 0)"; }
+      POUT="$(mktemp "${TMPDIR:-/tmp}/strix-run.XXXXXX")"
 
-    if (( EXHAUSTED == 1 )); then
-      apply_model "$SECONDARY"
       if [[ -n "$RUNDIR" ]]; then
-        run_name="$(basename "$RUNDIR")"
-        log "failover → RESUME '$run_name' no secundário: $SECONDARY"
-        exec "$STRIX_BIN" -n --resume "$run_name" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+        log "agente $((idx+1))/$N ($model) → RESUME $(basename "$RUNDIR")"
+        "$STRIX_BIN" -n --resume "$(basename "$RUNDIR")" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
       else
-        log "failover → primário nem criou run (preflight esgotado); SCAN NOVO no secundário: $SECONDARY"
-        exec "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+        log "agente $((idx+1))/$N ($model) → SCAN NOVO $TARGET"
+        "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
       fi
-    else
-      log "primário terminou sem esgotar a janela — nada a fazer."
-    fi
+      PID=$!
+
+      RUNOUT=0
+      while kill -0 "$PID" 2>/dev/null; do
+        if [[ -z "$RUNDIR" ]]; then
+          RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"
+        fi
+        if has_runout "$POUT" "$LOG" "$off"; then
+          warn "agente $model esgotou (janela/budget)"
+          RUNOUT=1; kill "$PID" 2>/dev/null || true; break
+        fi
+        sleep 3
+      done
+      wait "$PID" 2>/dev/null || true
+      if [[ -z "$RUNDIR" ]]; then RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"; fi
+      (( RUNOUT == 0 )) && has_runout "$POUT" "$LOG" "$off" && RUNOUT=1
+      rm -f "$POUT"
+
+      if run_completed; then
+        log "✔ agente $model CONCLUIU o scan (run $(basename "$RUNDIR")). Fim."
+        exit 0
+      fi
+      if (( RUNOUT == 1 )); then
+        if (( idx + 1 >= N )); then
+          die "todos os $N agentes esgotaram janela/budget. Tente mais tarde ou ajuste o .env."
+        fi
+        log "→ próximo agente na fila"
+        continue
+      fi
+      # nem concluiu nem esgotou cota: erro real — não queima os outros agentes às cegas
+      warn "agente $model parou sem concluir e sem sinal de cota (erro?). Parando a cadeia; veja a saída acima."
+      exit 1
+    done
     ;;
 
   *) die "modo desconhecido: $MODE" ;;

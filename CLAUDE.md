@@ -39,8 +39,8 @@ Não use `.bashrc` para chaves. Use o `.env` (no `.gitignore`) + o launcher:
 ```bash
 cp .env.example .env           # preencha chaves, primário/secundário, budgets
 ./bin/strix-run <alvo>         # novo scan, agente PRIMÁRIO
-./bin/strix-run --resume -2    # religa o último run no SECUNDÁRIO
-./bin/strix-run <alvo> --auto  # primário e, se a janela esgotar, cai sozinho pro secundário
+./bin/strix-run --resume -2    # religa o último run no SECUNDÁRIO (-3 = TERCIÁRIO)
+./bin/strix-run <alvo> --auto  # FILA primário→secundário→terciário (-3): esgotou janela/budget → próximo
 ```
 
 O `bin/strix-run` resolve modelo + chave do provedor + `--max-budget` a partir do `.env`.
