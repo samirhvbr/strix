@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+#
+# strix-run — launcher config-driven do fork SHVIA do Strix.
+#
+# Lê o .env do repo (STRIX_PRIMARY_LLM / STRIX_SECONDARY_LLM, chaves por
+# provedor, STRIX_BUDGET_*, STRIX_WORKDIR) e roda o Strix já com o modelo,
+# a chave e o teto de budget certos — sem precisar exportar nada na mão.
+#
+# Uso:
+#   strix-run <alvo> [args-do-strix...]     # novo scan, agente PRIMÁRIO
+#   strix-run --resume [<run>]              # retoma último run (ou <run>) no PRIMÁRIO
+#   strix-run --resume -2 [<run>]           # retoma no SECUNDÁRIO (modelo+chave+budget dele)
+#   strix-run <alvo> --auto                 # roda o primário e, se a janela esgotar, cai
+#                                           # sozinho pro secundário (mesmo run, via --resume)
+#   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe primário/secundário)
+#
+# Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
+# repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
+#
+set -euo pipefail
+
+# ── localizar repo e carregar .env ───────────────────────────────────────────
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="${STRIX_ENV_FILE:-$REPO_DIR/.env}"
+if [[ -f "$ENV_FILE" ]]; then
+  set -a; # shellcheck disable=SC1090
+  source "$ENV_FILE"; set +a
+fi
+
+# ── defaults (podem vir do .env) ─────────────────────────────────────────────
+PRIMARY="${STRIX_PRIMARY_LLM:-chatgpt/gpt-5.4}"
+SECONDARY="${STRIX_SECONDARY_LLM:-deepseek/deepseek-v4-pro}"
+WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
+AUTO_THRESHOLD="${STRIX_AUTO_THRESHOLD:-3}"         # nº de usage_limit_reached p/ failover
+STRIX_BIN="${STRIX_BIN:-strix}"
+
+c_info=$'\033[36m'; c_warn=$'\033[33m'; c_err=$'\033[31m'; c_off=$'\033[0m'
+log()  { printf '%s[strix-run]%s %s\n' "$c_info" "$c_off" "$*" >&2; }
+warn() { printf '%s[strix-run] %s%s\n' "$c_warn" "$*" "$c_off" >&2; }
+die()  { printf '%s[strix-run] %s%s\n' "$c_err" "$*" "$c_off" >&2; exit 1; }
+
+usage() { sed -n '3,26p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+
+provider_of() { printf '%s' "${1%%/*}"; }
+
+# ── resolve chave + budget de um modelo (globais KEY / BUDGET) ────────────────
+KEY=""; BUDGET=""
+resolve_creds() {
+  local prov; prov="$(provider_of "$1")"
+  case "$prov" in
+    chatgpt|codex)     KEY="";                        BUDGET="" ;;   # assinatura (OAuth)
+    openai)            KEY="${OPENAI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_OPENAI:-}" ;;
+    anthropic|claude)  KEY="${ANTHROPIC_API_KEY:-}";   BUDGET="${STRIX_BUDGET_ANTHROPIC:-}" ;;
+    deepseek)          KEY="${DEEPSEEK_API_KEY:-}";    BUDGET="${STRIX_BUDGET_DEEPSEEK:-}" ;;
+    gemini|google)     KEY="${GEMINI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_GEMINI:-}" ;;
+    *)                 KEY="${LLM_API_KEY:-}";         BUDGET="${STRIX_BUDGET_DEFAULT:-}" ;;
+  esac
+}
+
+# aplica STRIX_LLM/LLM_API_KEY do modelo e devolve os args de budget em BUDGET_ARGS[]
+BUDGET_ARGS=()
+apply_model() {
+  local model="$1"; resolve_creds "$model"
+  export STRIX_LLM="$model"
+  if [[ -n "$KEY" ]]; then export LLM_API_KEY="$KEY"; else unset LLM_API_KEY 2>/dev/null || true; fi
+  BUDGET_ARGS=(); [[ -n "$BUDGET" ]] && BUDGET_ARGS=(--max-budget "$BUDGET")
+  if [[ "$(provider_of "$model")" != "chatgpt" && "$(provider_of "$model")" != "codex" && -z "$KEY" ]]; then
+    warn "sem chave para o provedor '$(provider_of "$model")' no .env — o strix pode falhar na conexão"
+  fi
+  log "agente=$model  budget=${BUDGET:-—}  workdir=$WORKDIR"
+}
+
+latest_run() { ls -1dt "$WORKDIR"/strix_runs/*/ 2>/dev/null | head -1; }
+
+# ── parse de argumentos ──────────────────────────────────────────────────────
+MODE="new"; AGENT="primary"; RUN=""; TARGET=""; EXTRA=()
+while (($#)); do
+  case "$1" in
+    --resume)         MODE="resume"; shift
+                      if [[ -n "${1:-}" && "${1:0:1}" != "-" ]]; then RUN="$1"; shift; fi ;;
+    --auto)           MODE="auto"; shift ;;
+    -2|--secondary)   AGENT="secondary"; shift ;;
+    -1|--primary)     AGENT="primary"; shift ;;
+    --agent)          AGENT="${2:?--agent exige um modelo}"; shift 2 ;;
+    -h|--help)        usage; exit 0 ;;
+    --)               shift; EXTRA+=("$@"); break ;;
+    -*)               EXTRA+=("$1"); shift ;;          # pass-through p/ o strix
+    *)                if [[ -z "$TARGET" ]]; then TARGET="$1"; else EXTRA+=("$1"); fi; shift ;;
+  esac
+done
+
+# modelo do agente escolhido
+case "$AGENT" in
+  primary)   MODEL="$PRIMARY" ;;
+  secondary) MODEL="$SECONDARY" ;;
+  */*)       MODEL="$AGENT" ;;
+  *)         die "agente inválido: $AGENT (use --primary, --secondary ou --agent prov/modelo)" ;;
+esac
+
+command -v "$STRIX_BIN" >/dev/null 2>&1 || die "'$STRIX_BIN' não encontrado no PATH"
+mkdir -p "$WORKDIR/strix_runs"
+
+# ── execução ─────────────────────────────────────────────────────────────────
+case "$MODE" in
+  new)
+    [[ -n "$TARGET" ]] || die "faltou o alvo. Ex.: strix-run https://exemplo.com"
+    apply_model "$MODEL"
+    log "novo scan  alvo=$TARGET"
+    ( cd "$WORKDIR" && exec "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
+    ;;
+
+  resume)
+    if [[ -z "$RUN" ]]; then
+      d="$(latest_run)"; [[ -n "$d" ]] || die "nenhum run em $WORKDIR/strix_runs/ para retomar"
+      RUN="$(basename "$d")"; log "último run: $RUN"
+    fi
+    apply_model "$MODEL"
+    log "retomando run=$RUN"
+    ( cd "$WORKDIR" && exec "$STRIX_BIN" -n --resume "$RUN" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" )
+    ;;
+
+  auto)
+    [[ -n "$TARGET" ]] || die "faltou o alvo. Ex.: strix-run https://exemplo.com --auto"
+    cd "$WORKDIR"
+    apply_model "$PRIMARY"
+    log "AUTO: iniciando no primário; failover p/ secundário ($SECONDARY) se a janela esgotar"
+    "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" &
+    PID=$!
+
+    # descobre o dir do run recém-criado
+    RUNDIR=""
+    for _ in $(seq 1 30); do
+      RUNDIR="$(latest_run)"; [[ -n "$RUNDIR" ]] && break
+      kill -0 "$PID" 2>/dev/null || break
+      sleep 1
+    done
+    LOG="${RUNDIR%/}/strix.log"
+    [[ -n "$RUNDIR" ]] && log "run=$(basename "$RUNDIR")  (vigiando $LOG)" || warn "não localizei o dir do run; sigo só pelo processo"
+
+    # supervisão: mata o primário assim que a janela esgota (usage_limit_reached repetido)
+    EXHAUSTED=0
+    while kill -0 "$PID" 2>/dev/null; do
+      if [[ -f "$LOG" ]]; then
+        n=$(grep -c "usage_limit_reached" "$LOG" 2>/dev/null || true); n="${n:-0}"
+        if (( n >= AUTO_THRESHOLD )); then
+          warn "janela do primário esgotada (usage_limit_reached x$n) → failover"
+          EXHAUSTED=1
+          kill "$PID" 2>/dev/null || true
+          wait "$PID" 2>/dev/null || true
+          break
+        fi
+      fi
+      sleep 5
+    done
+    wait "$PID" 2>/dev/null || true
+
+    # se não pegamos pelo watcher, confere se o próprio strix parou por esgotamento
+    if (( EXHAUSTED == 0 )) && [[ -f "$LOG" ]] && grep -q "usage_limit_reached" "$LOG" 2>/dev/null; then
+      EXHAUSTED=1
+    fi
+
+    if (( EXHAUSTED == 1 )); then
+      [[ -n "$RUNDIR" ]] || die "janela esgotou mas não achei o run para retomar"
+      run_name="$(basename "$RUNDIR")"
+      log "failover → retomando '$run_name' no secundário: $SECONDARY"
+      apply_model "$SECONDARY"
+      exec "$STRIX_BIN" -n --resume "$run_name" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+    else
+      log "primário terminou sem esgotar a janela — nada a fazer."
+    fi
+    ;;
+
+  *) die "modo desconhecido: $MODE" ;;
+esac
