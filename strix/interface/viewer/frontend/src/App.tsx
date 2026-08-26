@@ -216,10 +216,16 @@ export default function App() {
     userSetView("email");
   }, [userSetView]);
 
-  // Sidebar entry keeps the disclosure (first place those users see it);
-  const openEmail = useCallback(() => goEmail(false, "sidebar"), [goEmail]);
-  // the Overview CTA already states the tradeoff, so it starts the flow directly.
-  const openEmailFromOverview = useCallback(() => goEmail(true, "overview"), [goEmail]);
+  // Fork SHVIA: os botões de "Export report" baixam o PDF LOCAL direto do viewer
+  // (endpoint /api/report/pdf, protegido pela sessão) — sem e-mail, relay ou nuvem.
+  // A resposta vem como attachment, então o navegador baixa sem sair da página.
+  void goEmail;
+  const downloadReportPdf = useCallback(() => {
+    if (!activeRun) return;
+    window.location.assign(`/api/report/pdf?run=${encodeURIComponent(activeRun)}`);
+  }, [activeRun]);
+  const openEmail = downloadReportPdf;
+  const openEmailFromOverview = downloadReportPdf;
 
   const openHistory = useCallback(() => {
     void refreshRuns();
@@ -621,9 +627,9 @@ function EmailReportCta({ onOpenEmail }: { onOpenEmail: () => void }) {
           <Mail className="h-4 w-4 text-emerald-400" aria-hidden="true" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-white">Email an encrypted PDF report of this run</p>
+          <p className="text-sm font-semibold text-white">Download the PDF report of this run</p>
           <p className="mt-0.5 text-xs text-[#888]">
-            Encrypted with a key only you can see, email verified with a one-time code before sending.
+            Generated locally on your machine — no email, no cloud.
           </p>
         </div>
         <span className="flex-shrink-0 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-black transition-opacity group-hover:opacity-90">

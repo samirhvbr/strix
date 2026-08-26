@@ -285,6 +285,20 @@ def _make_handler(state: _ViewerState) -> type[BaseHTTPRequestHandler]:
                 self._send_json(HTTPStatus.OK, {"markdown": read_report_markdown(run_dir)})
             elif path == "/api/transcript":
                 self._send_json(HTTPStatus.OK, build_run_state(run_dir))
+            elif path == "/api/report/pdf":
+                # Fork SHVIA: download LOCAL do PDF (sem e-mail/relay). Gera o PDF
+                # plano com reportlab e devolve como attachment. Session-gated
+                # como os demais endpoints de dados (HTTP 403 sem o token).
+                from strix.interface.viewer.report_pdf import generate_report_pdf
+
+                summary = read_run_summary(run_dir)
+                run_name = str(summary.get("run_name") or run_dir.name)
+                self._send_bytes(
+                    HTTPStatus.OK,
+                    generate_report_pdf(run_dir),
+                    "application/pdf",
+                    filename=f"strix-report-{run_name}.pdf",
+                )
             else:
                 self._send_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
 
@@ -546,6 +560,22 @@ def _make_handler(state: _ViewerState) -> type[BaseHTTPRequestHandler]:
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             self.wfile.write(body)
+
+        def _send_bytes(
+            self,
+            status: HTTPStatus,
+            content: bytes,
+            content_type: str,
+            *,
+            filename: str | None = None,
+        ) -> None:
+            self.send_response(status)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(content)))
+            if filename is not None:
+                self.send_header("Content-Disposition", f'attachment; filename="{filename}"')
+            self.end_headers()
+            self.wfile.write(content)
 
     return ViewerHandler
 
