@@ -36,6 +36,7 @@ git checkout master && git merge main        # traz a evolução deles para a no
 
 | Versão do fork | Baseado no upstream | Data       | Mudanças |
 |----------------|---------------------|------------|----------|
+| `1.5.3+shvia.9` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Atalho `strix-run view [run]`: roda `strix view` já dentro do `STRIX_WORKDIR` (senão `strix view` procura em `./strix_runs` do cwd e diz "No runs found"). |
 | `1.5.3+shvia.8` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Go 1.24 instalado → **TUI nativa** disponível. `strix-run` abre a TUI por padrão nos runs **manuais** (novo scan / resume); `-n`/`--headless` força headless; `--auto` continua SEMPRE headless (supervisão exige `-n` + `strix view`). |
 | `1.5.3+shvia.7` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run` avisa quando um provedor pago fica **sem budget** no `.env` (rodaria sem teto de custo). `.env.example` já traz `STRIX_BUDGET_MOONSHOT`. |
 | `1.5.3+shvia.6` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `--auto` vira **fila de N agentes** (primário→secundário→**terciário**): ao esgotar **janela** (`usage_limit_reached`) OU **budget** (`Token budget of`) de um, passa ao próximo (RESUME se há run, SCAN NOVO se não); para quando um **conclui** (`run.json status=completed`). Terceiro agente = Kimi (`moonshot/kimi-k3`, `MOONSHOT_API_KEY`, `-3/--tertiary`). |

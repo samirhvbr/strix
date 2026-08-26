@@ -15,6 +15,7 @@
 #                                           # para quando um CONCLUI o scan.
 #   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
 #   -n | --headless  força modo headless nos runs manuais (--auto é SEMPRE headless)
+#   strix-run view [run]                    # dashboard web (acha os runs no WORKDIR)
 #
 # Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
 # repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
@@ -38,6 +39,13 @@ TERTIARY="${STRIX_TERTIARY_LLM:-}"
 WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
 STRIX_BIN="${STRIX_BIN:-strix}"
 HEADLESS=0            # -n/--headless força; senão modos manuais abrem a TUI nativa (se houver Go)
+
+# Atalho: `strix-run view [run] [flags]` = `strix view` rodando no WORKDIR,
+# onde ficam os runs (senão o `strix view` procura em ./strix_runs do cwd atual).
+if [[ "${1:-}" == "view" ]]; then
+  shift
+  cd "$WORKDIR" && exec "${STRIX_BIN}" view "$@"
+fi
 
 c_info=$'\033[36m'; c_warn=$'\033[33m'; c_err=$'\033[31m'; c_off=$'\033[0m'
 log()  { printf '%s[strix-run]%s %s\n' "$c_info" "$c_off" "$*" >&2; }
