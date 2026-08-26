@@ -40,6 +40,7 @@ Não use `.bashrc` para chaves. Use o `.env` (no `.gitignore`) + o launcher:
 cp .env.example .env           # preencha chaves, primário/secundário, budgets
 ./bin/strix-run <alvo>         # novo scan, agente PRIMÁRIO (TUI nativa; -n força headless)
 ./bin/strix-run --resume -2    # religa o último run no SECUNDÁRIO (-3 = TERCIÁRIO)
+./bin/strix-run pdf <run>      # PDF do relatório LOCAL (sem e-mail/relay)
 ./bin/strix-run <alvo> --auto  # FILA primário→secundário→terciário (-3): esgotou janela/budget → próximo
 ```
 

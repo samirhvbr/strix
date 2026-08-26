@@ -18,6 +18,7 @@
 #   -n | --headless  força modo headless (sem TUI); em --auto força o modo antigo (scrape)
 #   strix-run view [run]                    # dashboard web (acha os runs no WORKDIR)
 #   strix-run list                          # lista os runs locais no TERMINAL (sem web/e-mail)
+#   strix-run pdf <run> [saida.pdf]         # gera o PDF do relatório LOCAL (sem e-mail/relay)
 #
 # Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
 # repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
@@ -44,6 +45,22 @@ HEADLESS=0            # -n/--headless força; senão modos manuais abrem a TUI n
 
 # Atalho: `strix-run view [run] [flags]` = `strix view` rodando no WORKDIR,
 # onde ficam os runs (senão o `strix view` procura em ./strix_runs do cwd atual).
+if [[ "${1:-}" == "pdf" ]]; then
+  shift
+  run="${1:-}"; [[ -n "$run" ]] || die "uso: strix-run pdf <run> [saida.pdf]  (veja: strix-run list)"
+  rundir="$WORKDIR/strix_runs/$run"
+  [[ -f "$rundir/run.json" ]] || die "run não encontrado: $rundir"
+  out="${2:-$rundir/strix-report-$run.pdf}"
+  exec uv run --project "$REPO_DIR" python - "$rundir" "$out" <<'PYEOF'
+import sys
+from pathlib import Path
+from strix.interface.viewer.report_pdf import generate_report_pdf
+rundir, out = Path(sys.argv[1]), Path(sys.argv[2])
+out.write_bytes(generate_report_pdf(rundir))
+print(f"[strix-run] PDF local gerado (sem e-mail/relay): {out} ({out.stat().st_size // 1024} KB)")
+PYEOF
+fi
+
 if [[ "${1:-}" == "list" || "${1:-}" == "runs" ]]; then
   exec python3 - "$WORKDIR/strix_runs" <<'PYEOF'
 import json, os, sys, glob
