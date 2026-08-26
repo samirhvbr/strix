@@ -33,7 +33,6 @@ fi
 PRIMARY="${STRIX_PRIMARY_LLM:-chatgpt/gpt-5.4}"
 SECONDARY="${STRIX_SECONDARY_LLM:-deepseek/deepseek-v4-pro}"
 WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
-AUTO_THRESHOLD="${STRIX_AUTO_THRESHOLD:-2}"         # nº de usage_limit_reached p/ failover
 STRIX_BIN="${STRIX_BIN:-strix}"
 
 c_info=$'\033[36m'; c_warn=$'\033[33m'; c_err=$'\033[31m'; c_off=$'\033[0m'
@@ -133,56 +132,50 @@ case "$MODE" in
     [[ -n "$TARGET" ]] || die "faltou o alvo. Ex.: strix-run https://exemplo.com --auto"
     cd "$WORKDIR"
     apply_model "$PRIMARY"
-    log "AUTO: iniciando no primário; failover p/ secundário ($SECONDARY) se a janela esgotar"
+    log "AUTO: primário=$PRIMARY; failover → secundário=$SECONDARY se a janela esgotar"
     before="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
-    "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" &
+
+    # roda o primário mostrando a saída E capturando-a (p/ detectar esgotamento
+    # mesmo quando falha no preflight, antes de criar run)
+    POUT="$(mktemp "${TMPDIR:-/tmp}/strix-run.XXXXXX")"
+    "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
     PID=$!
 
-    # localiza o run NOVO criado por este launch (nunca um run antigo)
-    RUNDIR=""
-    for _ in $(seq 1 30); do
+    find_new_run() {   # ecoa o dir do run novo (criado por este launch), se houver
+      local cur
       cur="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
-      RUNDIR="$(comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$cur") | sed '/^$/d' | tail -1 || true)"
-      [[ -n "$RUNDIR" ]] && break
-      kill -0 "$PID" 2>/dev/null || break
-      sleep 1
-    done
+      comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$cur") | sed '/^$/d' | tail -1 || true
+    }
+    exhausted() {   # 1 se 'usage_limit_reached' apareceu no log do run OU na saída
+      { [[ -n "$RUNDIR" && -f "${RUNDIR%/}/strix.log" ]] && grep -q "usage_limit_reached" "${RUNDIR%/}/strix.log" 2>/dev/null; } && return 0
+      grep -q "usage_limit_reached" "$POUT" 2>/dev/null && return 0
+      return 1
+    }
 
-    if [[ -z "$RUNDIR" ]]; then
-      wait "$PID" 2>/dev/null; rc=$?
-      die "o primário não criou um run novo (saiu rc=$rc). Cheque o comando/args; NÃO faço failover às cegas."
-    fi
-    LOG="${RUNDIR%/}/strix.log"
-    log "run=$(basename "$RUNDIR")  (vigiando $LOG)"
-
-    # supervisão: mata o primário assim que a janela esgota (usage_limit_reached repetido)
-    EXHAUSTED=0
+    RUNDIR=""; EXHAUSTED=0
     while kill -0 "$PID" 2>/dev/null; do
-      if [[ -f "$LOG" ]]; then
-        n=$(grep -c "usage_limit_reached" "$LOG" 2>/dev/null || true); n="${n:-0}"
-        if (( n >= AUTO_THRESHOLD )); then
-          warn "janela do primário esgotada (usage_limit_reached x$n) → failover"
-          EXHAUSTED=1
-          kill "$PID" 2>/dev/null || true
-          wait "$PID" 2>/dev/null || true
-          break
-        fi
+      [[ -z "$RUNDIR" ]] && RUNDIR="$(find_new_run)"
+      if exhausted; then
+        warn "primário esgotou a janela (usage_limit_reached) → failover"
+        EXHAUSTED=1; kill "$PID" 2>/dev/null || true; break
       fi
-      sleep 5
+      sleep 3
     done
     wait "$PID" 2>/dev/null || true
-
-    # se não pegamos pelo watcher, confere se o próprio strix parou por esgotamento
-    if (( EXHAUSTED == 0 )) && [[ -f "$LOG" ]] && grep -q "usage_limit_reached" "$LOG" 2>/dev/null; then
-      EXHAUSTED=1
-    fi
+    [[ -z "$RUNDIR" ]] && RUNDIR="$(find_new_run)"      # run criado tarde
+    (( EXHAUSTED == 0 )) && exhausted && EXHAUSTED=1     # confirmação pós-saída
+    rm -f "$POUT"
 
     if (( EXHAUSTED == 1 )); then
-      [[ -n "$RUNDIR" ]] || die "janela esgotou mas não achei o run para retomar"
-      run_name="$(basename "$RUNDIR")"
-      log "failover → retomando '$run_name' no secundário: $SECONDARY"
       apply_model "$SECONDARY"
-      exec "$STRIX_BIN" -n --resume "$run_name" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+      if [[ -n "$RUNDIR" ]]; then
+        run_name="$(basename "$RUNDIR")"
+        log "failover → RESUME '$run_name' no secundário: $SECONDARY"
+        exec "$STRIX_BIN" -n --resume "$run_name" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+      else
+        log "failover → primário nem criou run (preflight esgotado); SCAN NOVO no secundário: $SECONDARY"
+        exec "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}"
+      fi
     else
       log "primário terminou sem esgotar a janela — nada a fazer."
     fi
