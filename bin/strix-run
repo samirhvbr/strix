@@ -32,7 +32,7 @@ fi
 PRIMARY="${STRIX_PRIMARY_LLM:-chatgpt/gpt-5.4}"
 SECONDARY="${STRIX_SECONDARY_LLM:-deepseek/deepseek-v4-pro}"
 WORKDIR="${STRIX_WORKDIR:-$HOME/x}"                 # runs -> $WORKDIR/strix_runs/
-AUTO_THRESHOLD="${STRIX_AUTO_THRESHOLD:-3}"         # nº de usage_limit_reached p/ failover
+AUTO_THRESHOLD="${STRIX_AUTO_THRESHOLD:-2}"         # nº de usage_limit_reached p/ failover
 STRIX_BIN="${STRIX_BIN:-strix}"
 
 c_info=$'\033[36m'; c_warn=$'\033[33m'; c_err=$'\033[31m'; c_off=$'\033[0m'

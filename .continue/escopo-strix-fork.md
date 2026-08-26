@@ -28,7 +28,7 @@ como orquestrador externo, sem divergir do motor do upstream.
   - Cobrir o caso do processo travar no thrash de retries vs. sair resumível.
   - Log/telemetria do failover no próprio run.
 
-- **F3 — (opcional) fast-fail no motor** (pendente)
+- **F3 — fast-fail no motor** ✅ (2026-08-26, PR #1174)
   - Predicado `is_usage_limit_error()` em `strix/core/execution.py` para o primário falhar
     rápido em `usage_limit_reached` (em vez de martelar 5×+5× retries por minutos).
   - Self-contained → candidato a 2º PR pro upstream.
