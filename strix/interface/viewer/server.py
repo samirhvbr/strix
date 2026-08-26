@@ -241,7 +241,11 @@ def _make_handler(state: _ViewerState) -> type[BaseHTTPRequestHandler]:
             # leaks the run list (the payload still advertises the count as a
             # teaser).
             if path == "/api/runs":
-                unlocked = self._has_session() and auth.is_verified()
+                # Fork SHVIA: o viewer é local. Mantemos a proteção real (o token
+                # de sessão do processo, exigido mesmo com --host), mas removemos
+                # o gate de e-mail/conta na nuvem — na sua máquina você vê seus
+                # runs sem verificação por e-mail. (Upstream gateia p/ growth.)
+                unlocked = self._has_session()
                 payload = build_runs_payload(state.base_dir, verified=unlocked)
                 self._send_json(HTTPStatus.OK, payload)
                 return
@@ -268,12 +272,10 @@ def _make_handler(state: _ViewerState) -> type[BaseHTTPRequestHandler]:
                 self._send_json(HTTPStatus.NOT_FOUND, {"error": "unknown run"})
                 return
 
-            # Any run other than the one used to launch the viewer is part of the
-            # email-gated history. The session check above applies to both paths;
-            # verification adds a second gate for historical run data.
-            if run_dir.resolve() != state.run_dir.resolve() and not auth.is_verified():
-                self._send_json(HTTPStatus.UNAUTHORIZED, {"error": "unverified"})
-                return
+            # Fork SHVIA: qualquer run (não só o que abriu o viewer) é acessível
+            # com a sessão local; removido o 2º gate de e-mail/conta na nuvem. O
+            # token de sessão (checado logo acima, HTTP 403) continua sendo a
+            # proteção real — reachability da porta não dá acesso aos dados.
 
             if path == "/api/run":
                 self._send_json(HTTPStatus.OK, read_run_summary(run_dir))

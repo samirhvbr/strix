@@ -36,6 +36,7 @@ git checkout master && git merge main        # traz a evolução deles para a no
 
 | Versão do fork | Baseado no upstream | Data       | Mudanças |
 |----------------|---------------------|------------|----------|
+| `1.5.3+shvia.11` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Viewer local **sem gate de e-mail**: `/api/runs` (lista "Past runs") e `/api/run|vulnerabilities|report|transcript` de runs históricos deixam de exigir `auth.is_verified()`. Mantém só o token de sessão do processo (a segurança real, HTTP 403 sem ele — mesmo com `--host`). Testado: com sessão `locked:false` (7 runs), sem sessão `locked:true`. Patch em `viewer/server.py` (fork-only; upstream gateia p/ growth). |
 | `1.5.3+shvia.10` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run list`: lista os runs locais no terminal (nome/status/vulns/custo/tokens) lendo `run.json`/`vulnerabilities.json` — sem o gate de e-mail da página web "Past runs" (que é recurso de conta na nuvem; o view por-run já é local/tokenizado). |
 | `1.5.3+shvia.9` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Atalho `strix-run view [run]`: roda `strix view` já dentro do `STRIX_WORKDIR` (senão `strix view` procura em `./strix_runs` do cwd e diz "No runs found"). |
 | `1.5.3+shvia.8` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Go 1.24 instalado → **TUI nativa** disponível. `strix-run` abre a TUI por padrão nos runs **manuais** (novo scan / resume); `-n`/`--headless` força headless; `--auto` continua SEMPRE headless (supervisão exige `-n` + `strix view`). |
