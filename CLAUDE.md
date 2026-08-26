@@ -25,7 +25,7 @@ O upstream é frequente; mantemos as **nossas** mudanças isoladas para reduzir 
 ```bash
 uv sync                        # instala deps (editável). Roda com `uv run strix` ou o wrapper global `strix`.
 uv run ruff format . && uv run ruff check .    # formatação + lint (limite 100 colunas)
-uv run pytest -q               # suíte (~1136 testes, ~2min)
+uv run pytest -q               # suíte (~1139 testes, ~2min)
 ```
 
 - **Interativo (TUI)** exige Go 1.24+ (compila a TUI de fonte). Sem Go, use sempre `-n` (headless).
@@ -54,15 +54,24 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
   agentes são criados com `model=None` (`strix/agents/factory.py`). Um swap in-engine seria possível
   flipando `run_config.model` (`strix/core/runner.py:~327`), **mas escolhemos o orquestrador externo**
   (o launcher) para não divergir do upstream.
-- `usage_limit_reached` (429 da assinatura ChatGPT) é o marcador de "janela esgotada" no `strix.log`
-  — o `--auto` conta ocorrências e faz failover. Não há predicado nativo que distinga isso de um 429
-  transitório (todo 429 é retry por `_is_transient_model_error` em `strix/core/execution.py`).
+- `usage_limit_reached` = "janela esgotada" (429 da assinatura ChatGPT). Nós adicionamos o predicado
+  `codex.is_usage_limit_error()` (F3) que o torna **terminal** nas 2 camadas de retry
+  (`_is_transient_model_error` em `execution.py` + a policy do SDK em `models.py`, via
+  `retry_policies.all(any(...), _not_usage_limit_error)`) e o roteia p/ a **parada resumível** em
+  `run_strix_scan` mesmo para provedores não-OpenAI (LiteLLM). O `--auto` detecta o 1º marcador (na
+  saída capturada OU no log do run) e faz failover: **RESUME** se já há run, **SCAN NOVO** no secundário
+  se o esgotamento foi no preflight (antes de criar run). ⚠️ o preflight chama o modelo fora do run-loop,
+  então retenta pelo cliente Codex (`max_retries=2`), não pela policy do F3.
 
 ## Patches nossos sobre o upstream (reaplicar se um merge sobrescrever)
 
 - **Fix do import-race** (`strix/llm/warmup.py`, `strix/interface/main.py`): pré-import síncrono
   do SDK `agents` antes da thread de warmup, evitando o `ImportError: ... AgentOutputSchemaBase ...
   (circular import)`. Teste: `tests/test_warmup.py`. Enviado ao upstream como PR #1173.
+- **Usage-limit terminal (F3)** (`strix/config/codex.py`, `strix/core/execution.py`,
+  `strix/config/models.py`, `strix/core/runner.py`): `is_usage_limit_error()` → `usage_limit_reached`
+  é terminal (fail-fast) e resumível em qualquer provedor. Testes: `test_execution_transient_retry.py`,
+  `test_model_retry.py`, `test_runner_rate_limit.py`. Enviado ao upstream como PR #1174.
 
 ## Regras
 
