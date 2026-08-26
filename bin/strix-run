@@ -10,11 +10,12 @@
 #   strix-run <alvo> [args-do-strix...]     # novo scan, agente PRIMÁRIO (TUI nativa se houver Go)
 #   strix-run --resume [<run>]              # retoma último run (ou <run>) no PRIMÁRIO
 #   strix-run --resume -2 [<run>]           # retoma no SECUNDÁRIO (-3 = TERCIÁRIO)
-#   strix-run <alvo> --auto                 # roda a FILA (primário→secundário→terciário):
-#                                           # ao esgotar janela/budget de um, passa ao próximo;
-#                                           # para quando um CONCLUI o scan.
+#   strix-run <alvo> --auto                 # roda a FILA (primário→secundário→terciário)
+#                                           # com a TUI AO VIVO: ao esgotar janela/budget/pausa
+#                                           # de um, mata e REABRE a TUI no próximo; para quando
+#                                           # um CONCLUI. Sem terminal (cron/pipe) cai p/ headless.
 #   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
-#   -n | --headless  força modo headless nos runs manuais (--auto é SEMPRE headless)
+#   -n | --headless  força modo headless (sem TUI); em --auto força o modo antigo (scrape)
 #   strix-run view [run]                    # dashboard web (acha os runs no WORKDIR)
 #   strix-run list                          # lista os runs locais no TERMINAL (sem web/e-mail)
 #
@@ -150,6 +151,14 @@ while (($#)); do
   esac
 done
 
+# Em --resume, um argumento posicional é o RUN, não um alvo. Sem isto,
+# `strix-run --resume -2 <run>` jogava o <run> em TARGET (porque vem depois de
+# uma flag) e o script retomava o ÚLTIMO run. Agora as duas ordens funcionam:
+#   strix-run -2 --resume <run>   e   strix-run --resume -2 <run>
+if [[ "$MODE" == "resume" && -z "$RUN" && -n "$TARGET" ]]; then
+  RUN="$TARGET"; TARGET=""
+fi
+
 # modelo do agente escolhido
 case "$AGENT" in
   primary)   MODEL="$PRIMARY" ;;
@@ -201,69 +210,225 @@ case "$MODE" in
       local cur; cur="$(ls -1d strix_runs/*/ 2>/dev/null | sort || true)"
       comm -13 <(printf '%s\n' "$before") <(printf '%s\n' "$cur") | sed '/^$/d' | tail -1 || true
     }
-    # esgotou (janela OU budget)? marcador na saída OU no trecho novo do log (>= offset)
-    _RUNOUT='usage_limit_reached|Token budget of'
-    has_runout() {   # $1=pout  $2=log  $3=offset
-      grep -qE "$_RUNOUT" "$1" 2>/dev/null && return 0
-      if [[ -n "$2" && -f "$2" ]]; then
-        tail -c "+$(( ${3:-0} + 1 ))" "$2" 2>/dev/null | grep -qE "$_RUNOUT" && return 0
+
+    # Marcadores de esgotamento (janela do provedor OU budget em dólar). No modo
+    # TUI (interativo) o budget PAUSA em vez de encerrar (BudgetPausedError →
+    # status budget_paused), então incluímos as mensagens de pausa; no headless
+    # encerra com "Token budget ... exceeded".
+    _RUNOUT='usage_limit_reached|usage limit has been reached|Token budget of|Scan budget of|pausing until the user continues|budget_paused'
+    grep_runout() {   # $1=arquivo  $2=offset(bytes) — 0 se achou marcador no trecho novo
+      local f="$1" o="${2:-0}"
+      [[ -n "$f" && -f "$f" ]] || return 1
+      tail -c "+$(( o + 1 ))" "$f" 2>/dev/null | grep -qE "$_RUNOUT"
+    }
+    run_status() {    # imprime run.json.status (vazio se não há); sempre sai 0
+      [[ -n "${RUNDIR:-}" && -f "${RUNDIR%/}/run.json" ]] || return 0
+      python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("status",""))' "${RUNDIR%/}/run.json" 2>/dev/null || true
+    }
+    kill_tree() {     # $1=pid  $2=sinal(TERM) — mata pid e descendentes (filhos primeiro)
+      local pid="$1" sig="${2:-TERM}" c
+      for c in $(pgrep -P "$pid" 2>/dev/null || true); do kill_tree "$c" "$sig"; done
+      kill "-$sig" "$pid" 2>/dev/null || true
+    }
+    reset_term() {    # devolve o terminal ao normal depois de matar uma TUI full-screen
+      [[ -t 1 ]] || return 0
+      stty sane 2>/dev/null || true
+      printf '\033[?1049l\033[?25h\033[0m' > /dev/tty 2>/dev/null || true
+    }
+
+    # #1 auto-continue: instrução injetada no root agent na retomada. O Strix só
+    # injeta a --instruction quando is_resume (runner.py send→root, priority high),
+    # então a fila segue sozinha sem você digitar "continue" na TUI. Vale p/ TUI e
+    # headless. O usuário pode sobrepor passando o próprio --instruction (fica por
+    # último e o argparse usa esse).
+    RESUME_MSG="Continue the penetration test from where it stopped. The previous agent's LLM quota or budget was exhausted and control passed to you. Review the current run state (notes, coverage, findings, todos) and keep going autonomously — do not wait for further user input."
+
+    run_cost() {   # $1=run dir → imprime llm_usage.cost (0 se n/a); sempre sai 0
+      [[ -n "$1" && -f "${1%/}/run.json" ]] || { echo 0; return 0; }
+      python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("llm_usage",{}).get("cost") or 0)' "${1%/}/run.json" 2>/dev/null || echo 0
+    }
+
+    # #3 budget por-provedor: na retomada da fila cada provedor ganha o SEU teto
+    # inteiro por cima do já gasto. O hook do Strix compara o custo CUMULATIVO do
+    # run com --max-budget, então sem isso o 2º+ provedor em dólar já entra
+    # estourado e pausa na cara. STRIX_BUDGET_MODE=global mantém o teto cumulativo
+    # antigo (um teto global do scan).
+    apply_resume_budget() {   # $1=run dir — recomputa BUDGET_ARGS para o resume
+      [[ -n "$BUDGET" ]] || { BUDGET_ARGS=(); return 0; }        # provedor sem teto (ex.: chatgpt)
+      if [[ "${STRIX_BUDGET_MODE:-per-provider}" == "global" ]]; then
+        BUDGET_ARGS=(--max-budget "$BUDGET"); return 0
       fi
+      local spent eff
+      spent="$(run_cost "$1")"
+      eff="$(python3 -c 'import sys;print(round(float(sys.argv[1])+float(sys.argv[2]),4))' "${spent:-0}" "$BUDGET" 2>/dev/null || echo "$BUDGET")"
+      BUDGET_ARGS=(--max-budget "$eff")
+      log "  budget: \$$BUDGET próprio do $model (teto efetivo \$$eff sobre \$${spent:-0} já gastos)"
+    }
+
+    STRIX_PID=""; WATCH_PID=""
+    _cleanup_auto() {
+      [[ -n "$WATCH_PID" ]] && kill "$WATCH_PID" 2>/dev/null || true
+      [[ -n "$STRIX_PID" ]] && kill_tree "$STRIX_PID" TERM 2>/dev/null || true
+      reset_term
+    }
+
+    # ── caminho A: TUI ao vivo + failover (quando há terminal) ─────────────────
+    # Roda o Strix interativo em background: sem job control (set +m) ele fica no
+    # MESMO process group do terminal, e com stdin em /dev/tty a TUI lê o teclado
+    # e desenha normal. O watcher vigia strix.log/run.json do run; ao esgotar
+    # (janela/budget/pausa), sinaliza, mata a árvore do Strix e a fila avança
+    # REABRINDO a TUI no próximo agente (resume no mesmo run).
+    auto_tui() {
+      set +m
+      local idx model off flag PERR st exhausted
+      local RUNDIR="" LOG=""
+      for idx in "${!QUEUE[@]}"; do
+        model="${QUEUE[$idx]}"
+        apply_model "$model"
+        PERR="$(mktemp "${TMPDIR:-/tmp}/strix-run.err.XXXXXX")"
+        flag="$(mktemp -u "${TMPDIR:-/tmp}/strix-run.flag.XXXXXX")"
+
+        if [[ -n "$RUNDIR" ]]; then
+          apply_resume_budget "$RUNDIR"
+          off="$(stat -c%s "${RUNDIR%/}/strix.log" 2>/dev/null || echo 0)"
+          log "agente $((idx+1))/$N ($model) → REABRE a TUI (resume $(basename "$RUNDIR"))"
+          "$STRIX_BIN" --resume "$(basename "$RUNDIR")" --instruction "$RESUME_MSG" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" < /dev/tty 2>"$PERR" &
+        else
+          off=0
+          log "agente $((idx+1))/$N ($model) → SCAN NOVO $TARGET (TUI)"
+          "$STRIX_BIN" --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" < /dev/tty 2>"$PERR" &
+        fi
+        STRIX_PID=$!
+
+        # watcher: acha o run dir sozinho e vigia até esgotar ou o processo sair.
+        ( set +e
+          wrd="$RUNDIR"; wlog="$LOG"
+          while kill -0 "$STRIX_PID" 2>/dev/null; do
+            if [[ -z "$wrd" ]]; then
+              wrd="$(find_new_run)"
+              [[ -n "$wrd" ]] && wlog="${wrd%/}/strix.log"
+            fi
+            wst=""
+            [[ -n "$wrd" && -f "${wrd%/}/run.json" ]] && \
+              wst="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("status",""))' "${wrd%/}/run.json" 2>/dev/null || true)"
+            [[ "$wst" == "completed" ]] && break
+            if grep_runout "$wlog" "$off" || grep_runout "$PERR" 0; then
+              : > "$flag"
+              kill_tree "$STRIX_PID" TERM; sleep 2; kill_tree "$STRIX_PID" KILL
+              break
+            fi
+            sleep 3
+          done
+        ) &
+        WATCH_PID=$!
+
+        wait "$STRIX_PID" 2>/dev/null || true
+        kill "$WATCH_PID" 2>/dev/null || true
+        wait "$WATCH_PID" 2>/dev/null || true
+        STRIX_PID=""; WATCH_PID=""
+        [[ -f "$flag" ]] && reset_term
+
+        [[ -z "$RUNDIR" ]] && RUNDIR="$(find_new_run)"
+        [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"
+        st="$(run_status)"
+
+        if [[ "$st" == "completed" ]]; then
+          rm -f "$PERR"
+          log "✔ agente $model CONCLUIU o scan (run $(basename "$RUNDIR")). Fim."
+          return 0
+        fi
+
+        exhausted=0
+        if [[ -f "$flag" ]] || grep_runout "$LOG" "$off" || grep_runout "$PERR" 0; then
+          exhausted=1
+        elif [[ -z "$RUNDIR" ]]; then
+          # nem criou run: falha de preflight/conexão (ex.: 429 usage limit)
+          exhausted=1
+          [[ -s "$PERR" ]] && { warn "preflight de $model falhou (nem criou run):"; tail -n 15 "$PERR" >&2; }
+        fi
+
+        if (( exhausted )); then
+          rm -f "$PERR"
+          if (( idx + 1 >= N )); then
+            die "todos os $N agentes esgotaram/falharam janela/budget. Tente mais tarde ou ajuste o .env."
+          fi
+          warn "agente $model esgotou (janela/budget) — trocando de agente"
+          log "→ próximo agente na fila"
+          continue
+        fi
+
+        # nem concluiu nem esgotou: você saiu da TUI (q/Ctrl-C) ou erro real
+        warn "agente $model encerrou sem concluir e sem sinal de cota (saiu da TUI? erro?). Parando a cadeia."
+        [[ -s "$PERR" ]] && tail -n 15 "$PERR" >&2
+        rm -f "$PERR"
+        return 1
+      done
       return 1
     }
-    run_completed() {   # 0 se o run.json marca 'completed'
-      [[ -n "$RUNDIR" && -f "${RUNDIR%/}/run.json" ]] || return 1
-      local st; st="$(python3 -c "import json,sys;print(json.load(open(sys.argv[1])).get('status',''))" "${RUNDIR%/}/run.json" 2>/dev/null || true)"
-      [[ "$st" == "completed" ]]
+
+    # ── caminho B: headless + scrape de stdout (sem terminal: cron/pipe/ssh -T) ─
+    auto_headless() {
+      local idx model POUT off PID RUNOUT st
+      local RUNDIR="" LOG=""
+      for idx in "${!QUEUE[@]}"; do
+        model="${QUEUE[$idx]}"
+        apply_model "$model"
+        LOG=""; off=0
+        [[ -n "$RUNDIR" ]] && { LOG="${RUNDIR%/}/strix.log"; off="$(stat -c%s "$LOG" 2>/dev/null || echo 0)"; }
+        POUT="$(mktemp "${TMPDIR:-/tmp}/strix-run.XXXXXX")"
+        if [[ -n "$RUNDIR" ]]; then
+          apply_resume_budget "$RUNDIR"
+          log "agente $((idx+1))/$N ($model) → RESUME $(basename "$RUNDIR")"
+          "$STRIX_BIN" -n --resume "$(basename "$RUNDIR")" --instruction "$RESUME_MSG" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
+        else
+          log "agente $((idx+1))/$N ($model) → SCAN NOVO $TARGET"
+          "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
+        fi
+        PID=$!
+        RUNOUT=0
+        while kill -0 "$PID" 2>/dev/null; do
+          if [[ -z "$RUNDIR" ]]; then
+            RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"
+          fi
+          if grep_runout "$POUT" 0 || grep_runout "$LOG" "$off"; then
+            warn "agente $model esgotou (janela/budget)"
+            RUNOUT=1; kill_tree "$PID" TERM; break
+          fi
+          sleep 3
+        done
+        wait "$PID" 2>/dev/null || true
+        [[ -z "$RUNDIR" ]] && { RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"; }
+        if (( RUNOUT == 0 )); then
+          if grep_runout "$POUT" 0 || grep_runout "$LOG" "$off"; then RUNOUT=1; fi
+        fi
+        rm -f "$POUT"
+        st="$(run_status)"
+        if [[ "$st" == "completed" ]]; then
+          log "✔ agente $model CONCLUIU o scan (run $(basename "$RUNDIR")). Fim."
+          return 0
+        fi
+        if (( RUNOUT == 1 )); then
+          if (( idx + 1 >= N )); then
+            die "todos os $N agentes esgotaram janela/budget. Tente mais tarde ou ajuste o .env."
+          fi
+          log "→ próximo agente na fila"
+          continue
+        fi
+        warn "agente $model parou sem concluir e sem sinal de cota (erro?). Parando a cadeia; veja a saída acima."
+        return 1
+      done
+      return 1
     }
 
-    RUNDIR=""
-    for idx in "${!QUEUE[@]}"; do
-      model="${QUEUE[$idx]}"
-      apply_model "$model"
-      LOG=""; off=0
-      [[ -n "$RUNDIR" ]] && { LOG="${RUNDIR%/}/strix.log"; off="$(stat -c%s "$LOG" 2>/dev/null || echo 0)"; }
-      POUT="$(mktemp "${TMPDIR:-/tmp}/strix-run.XXXXXX")"
-
-      if [[ -n "$RUNDIR" ]]; then
-        log "agente $((idx+1))/$N ($model) → RESUME $(basename "$RUNDIR")"
-        "$STRIX_BIN" -n --resume "$(basename "$RUNDIR")" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
-      else
-        log "agente $((idx+1))/$N ($model) → SCAN NOVO $TARGET"
-        "$STRIX_BIN" -n --target "$TARGET" "${EXTRA[@]}" "${BUDGET_ARGS[@]}" > >(tee "$POUT") 2>&1 &
-      fi
-      PID=$!
-
-      RUNOUT=0
-      while kill -0 "$PID" 2>/dev/null; do
-        if [[ -z "$RUNDIR" ]]; then
-          RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"
-        fi
-        if has_runout "$POUT" "$LOG" "$off"; then
-          warn "agente $model esgotou (janela/budget)"
-          RUNOUT=1; kill "$PID" 2>/dev/null || true; break
-        fi
-        sleep 3
-      done
-      wait "$PID" 2>/dev/null || true
-      if [[ -z "$RUNDIR" ]]; then RUNDIR="$(find_new_run)"; [[ -n "$RUNDIR" ]] && LOG="${RUNDIR%/}/strix.log"; fi
-      (( RUNOUT == 0 )) && has_runout "$POUT" "$LOG" "$off" && RUNOUT=1
-      rm -f "$POUT"
-
-      if run_completed; then
-        log "✔ agente $model CONCLUIU o scan (run $(basename "$RUNDIR")). Fim."
-        exit 0
-      fi
-      if (( RUNOUT == 1 )); then
-        if (( idx + 1 >= N )); then
-          die "todos os $N agentes esgotaram janela/budget. Tente mais tarde ou ajuste o .env."
-        fi
-        log "→ próximo agente na fila"
-        continue
-      fi
-      # nem concluiu nem esgotou cota: erro real — não queima os outros agentes às cegas
-      warn "agente $model parou sem concluir e sem sinal de cota (erro?). Parando a cadeia; veja a saída acima."
-      exit 1
-    done
+    trap _cleanup_auto EXIT INT TERM
+    if [[ -t 0 && -t 1 ]] && (( ! HEADLESS )); then
+      if auto_tui; then ec=0; else ec=1; fi
+    else
+      if (( HEADLESS )); then warn "modo headless forçado (-n): sem painel TUI"
+      else warn "sem terminal interativo: usando modo headless (sem painel TUI)"; fi
+      if auto_headless; then ec=0; else ec=1; fi
+    fi
+    exit "$ec"
     ;;
 
   *) die "modo desconhecido: $MODE" ;;
