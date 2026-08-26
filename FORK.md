@@ -36,6 +36,7 @@ git checkout master && git merge main        # traz a evolução deles para a no
 
 | Versão do fork | Baseado no upstream | Data       | Mudanças |
 |----------------|---------------------|------------|----------|
+| `1.5.3+shvia.10` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run list`: lista os runs locais no terminal (nome/status/vulns/custo/tokens) lendo `run.json`/`vulnerabilities.json` — sem o gate de e-mail da página web "Past runs" (que é recurso de conta na nuvem; o view por-run já é local/tokenizado). |
 | `1.5.3+shvia.9` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Atalho `strix-run view [run]`: roda `strix view` já dentro do `STRIX_WORKDIR` (senão `strix view` procura em `./strix_runs` do cwd e diz "No runs found"). |
 | `1.5.3+shvia.8` | `1.5.3` (`bfaaa90`) | 2026-08-26 | Go 1.24 instalado → **TUI nativa** disponível. `strix-run` abre a TUI por padrão nos runs **manuais** (novo scan / resume); `-n`/`--headless` força headless; `--auto` continua SEMPRE headless (supervisão exige `-n` + `strix view`). |
 | `1.5.3+shvia.7` | `1.5.3` (`bfaaa90`) | 2026-08-26 | `strix-run` avisa quando um provedor pago fica **sem budget** no `.env` (rodaria sem teto de custo). `.env.example` já traz `STRIX_BUDGET_MOONSHOT`. |

@@ -16,6 +16,7 @@
 #   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
 #   -n | --headless  força modo headless nos runs manuais (--auto é SEMPRE headless)
 #   strix-run view [run]                    # dashboard web (acha os runs no WORKDIR)
+#   strix-run list                          # lista os runs locais no TERMINAL (sem web/e-mail)
 #
 # Flags extras (ex.: -m quick, --instruction "...", --max-turns N) são
 # repassadas ao strix. Runs saem em  $STRIX_WORKDIR/strix_runs/<run>/ .
@@ -42,6 +43,32 @@ HEADLESS=0            # -n/--headless força; senão modos manuais abrem a TUI n
 
 # Atalho: `strix-run view [run] [flags]` = `strix view` rodando no WORKDIR,
 # onde ficam os runs (senão o `strix view` procura em ./strix_runs do cwd atual).
+if [[ "${1:-}" == "list" || "${1:-}" == "runs" ]]; then
+  exec python3 - "$WORKDIR/strix_runs" <<'PYEOF'
+import json, os, sys, glob
+from collections import Counter
+base = sys.argv[1]
+dirs = sorted(glob.glob(base + "/*/"), key=os.path.getmtime, reverse=True)
+if not dirs:
+    print("(nenhum run em %s)" % base); sys.exit(0)
+print("%-34s %-10s %-6s %-13s %8s %9s" % ("RUN", "STATUS", "VULNS", "SEV", "CUSTO", "TOKENS"))
+for d in dirs:
+    name = os.path.basename(d.rstrip("/"))
+    try: rj = json.load(open(d + "run.json"))
+    except Exception: rj = {}
+    st = rj.get("status", "?"); u = rj.get("llm_usage", {}) or {}
+    cost = u.get("cost") or 0; intok = u.get("input_tokens") or 0
+    try:
+        vj = json.load(open(d + "vulnerabilities.json"))
+        vs = vj.get("vulnerabilities", vj) if isinstance(vj, dict) else vj
+    except Exception: vs = []
+    sev = Counter((v.get("severity") or "?").upper() for v in vs)
+    sevs = " ".join("%s%d" % (k[0], sev[k]) for k in ("CRITICAL","HIGH","MEDIUM","LOW","INFO") if sev.get(k)) or "-"
+    print("%-34s %-10s %-6d %-13s %7.2f %8dk" % (name[:34], st, len(vs), sevs, cost, intok // 1000))
+print("\nabrir um: strix-run view <RUN>")
+PYEOF
+fi
+
 if [[ "${1:-}" == "view" ]]; then
   shift
   cd "$WORKDIR" && exec "${STRIX_BIN}" view "$@"
