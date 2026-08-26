@@ -68,8 +68,12 @@ apply_model() {
   export STRIX_LLM="$model"
   if [[ -n "$KEY" ]]; then export LLM_API_KEY="$KEY"; else unset LLM_API_KEY 2>/dev/null || true; fi
   BUDGET_ARGS=(); [[ -n "$BUDGET" ]] && BUDGET_ARGS=(--max-budget "$BUDGET")
-  if [[ "$(provider_of "$model")" != "chatgpt" && "$(provider_of "$model")" != "codex" && -z "$KEY" ]]; then
-    warn "sem chave para o provedor '$(provider_of "$model")' no .env — o strix pode falhar na conexão"
+  local prov; prov="$(provider_of "$model")"
+  if [[ "$prov" != "chatgpt" && "$prov" != "codex" && -z "$KEY" ]]; then
+    warn "sem chave para o provedor '$prov' no .env — o strix pode falhar na conexão"
+  fi
+  if [[ "$prov" != "chatgpt" && "$prov" != "codex" && -z "$BUDGET" ]]; then
+    warn "sem budget (defina STRIX_BUDGET_${prov^^} no .env) para '$prov' — rodará SEM teto de custo"
   fi
   log "agente=$model  budget=${BUDGET:-—}  workdir=$WORKDIR"
 }
