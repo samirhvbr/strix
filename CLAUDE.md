@@ -66,9 +66,11 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
 
 ## Patches nossos sobre o upstream (reaplicar se um merge sobrescrever)
 
-- **Fix do import-race** (`strix/llm/warmup.py`, `strix/interface/main.py`): pré-import síncrono
-  do SDK `agents` antes da thread de warmup, evitando o `ImportError: ... AgentOutputSchemaBase ...
-  (circular import)`. Teste: `tests/test_warmup.py`. Enviado ao upstream como PR #1173.
+- **Import-race warm-up: superseded upstream (v1.6.x).** Upstream now solves the same
+  agents-SDK import race with `wait_for_import_warmup()` (the main thread joins the warm-up
+  before its first import from that graph) and dropped `docker` from `WARMUP_MODULES`. Our
+  synchronous pre-import (`_preimport_thread_unsafe_sdk`) and `tests/test_warmup.py` were
+  dropped in the v1.6.2 sync; PR #1173 is superseded — nothing to reapply here.
 - **Botão de PDF baixa local** (`viewer/server.py` + `frontend/src/App.tsx` + `static/` recompilado): `GET /api/report/pdf?run=` devolve o PDF plano (attachment, session-gated); os botões "Export report" baixam dele em vez de mandar por e-mail/relay. Rebuild do front: `cd frontend && npm ci && npm run build` (saída em `../static/`, commitar). Fork-only.
 - **Viewer sem gate de e-mail** (`strix/interface/viewer/server.py`): removido `and auth.is_verified()` de `/api/runs` (lista) e do acesso a runs históricos (`/api/run|vulnerabilities|report|transcript`), pra ver os runs local sem verificação por e-mail. Mantém `self._has_session()` (token de sessão = segurança real). Fork-only. O report POR e-mail (`_handle_*report`, ~l.364) fica gateado (legítimo).
 - **Usage-limit terminal (F3)** (`strix/config/codex.py`, `strix/core/execution.py`,
