@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlsplit
 
 from strix.core.paths import latest_run_dir, runs_base_dir
-from strix.interface.viewer.cli import run_view
+from strix.interface.viewer.cli import _state_label, run_view
 from strix.interface.viewer.server import serve
 from strix.interface.viewer.transcript import (
     build_run_state,
@@ -94,6 +94,33 @@ def test_read_run_summary_finished_flag(tmp_path: Path) -> None:
     # A terminal status without an end_time is not "finished".
     partial = _make_run(tmp_path, "partial", status="failed", end_time=None)
     assert read_run_summary(partial)["finished"] is False
+
+
+def test_read_run_summary_surfaces_mcp_connection_status(tmp_path: Path) -> None:
+    """The engine persists the non-secret MCP roster under mcp_connection_status;
+    read_run_summary spreads the whole record, so /api/run carries it to the
+    viewer verbatim."""
+    run_dir = _make_run(tmp_path, "mcp", status="running", end_time=None)
+    roster = [
+        {"name": "local_fs", "provider": None, "tool_count": 3, "dead": False},
+        {"name": "db", "provider": "supabase", "tool_count": 7, "dead": True},
+    ]
+    record = {
+        "run_name": "mcp",
+        "status": "running",
+        "end_time": None,
+        "mcp_connection_status": roster,
+    }
+    (run_dir / "run.json").write_text(json.dumps(record), encoding="utf-8")
+    assert read_run_summary(run_dir)["mcp_connection_status"] == roster
+
+
+def test_viewer_cli_labels_terminal_statuses() -> None:
+    assert _state_label({"status": "completed", "finished": True}) == "[#22c55e]finished[/]"
+    assert _state_label({"status": "stopped", "finished": True}) == "[#eab308]stopped[/]"
+    assert _state_label({"status": "interrupted", "finished": True}) == "[#eab308]interrupted[/]"
+    assert _state_label({"status": "failed", "finished": True}) == "[#ef4444]failed[/]"
+    assert _state_label({"status": "running", "finished": False}) == "[#eab308]live[/]"
 
 
 def test_read_missing_artifacts_return_defaults(tmp_path: Path) -> None:
@@ -592,9 +619,13 @@ def test_report_send_rejects_live_run(tmp_path: Path, monkeypatch: pytest.Monkey
         httpd.server_close()
 
 
-def test_historical_run_data_requires_verification(
+def test_historical_run_data_requires_session_not_email(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # Fork SHVIA: historical run data is gated by the session capability ALONE;
+    # the upstream email/account verification gate was removed (see CLAUDE.md).
+    # The session token stays the real protection, so an exposed --host port
+    # cannot grant data access.
     launched = _make_run(tmp_path, "launched", status="completed", end_time="2026-01-01T00:00:00Z")
     _make_run(tmp_path, "other", status="completed", end_time="2026-01-01T00:00:00Z")
     _bundle(tmp_path, monkeypatch)
@@ -604,21 +635,20 @@ def test_historical_run_data_requires_verification(
 
     httpd, url, token = serve(launched, open_browser=False)
     try:
-        # The launched run needs the session capability, but not email verification.
+        # The launched run needs the session capability, but not verification.
         assert _get_status(f"{url}/api/run") == 403
         cookie = _session_cookie(url, token)
         assert _get_status(f"{url}/api/run", cookie=cookie) == 200
 
-        # A different run needs the session capability first: a cookie-less
-        # caller is forbidden even once the machine is verified.
+        # A different historical run also needs the session capability first: a
+        # cookie-less caller is forbidden even once the machine is verified.
         verified["value"] = True
         assert _get_status(f"{url}/api/run?run=other") == 403
 
-        # With the cookie but not verified, the history gate returns 401.
+        # With the session cookie the historical run resolves whether or not the
+        # machine is email-verified (the fork dropped that second gate).
         verified["value"] = False
-        assert _get_status(f"{url}/api/run?run=other", cookie=cookie) == 401
-
-        # With both the cookie and verification, the historical run resolves.
+        assert _get_status(f"{url}/api/run?run=other", cookie=cookie) == 200
         verified["value"] = True
         assert _get_status(f"{url}/api/run?run=other", cookie=cookie) == 200
     finally:

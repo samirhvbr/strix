@@ -227,7 +227,9 @@ func TestGenericToolOmitsRawResult(t *testing.T) {
 }
 
 func TestMcpToolLeadsWithActionAndNamesTheServer(t *testing.T) {
-	data := tool("local_fs_read_file", map[string]any{"path": "/etc/hosts"}, "file body", "completed")
+	// call_mcp is the dispatch tool; the connection and the server's own tool
+	// name are tagged onto the event from its arguments.
+	data := tool("call_mcp", map[string]any{"path": "/etc/hosts"}, "file body", "completed")
 	data["mcp_connection"] = "local_fs"
 	data["mcp_tool"] = "read_file"
 
@@ -244,11 +246,44 @@ func TestMcpToolLeadsWithActionAndNamesTheServer(t *testing.T) {
 	}
 }
 
-func TestMcpToolWithoutTaggedNameFallsBackToFullName(t *testing.T) {
-	data := tool("local_fs_read_file", nil, nil, "running")
+func TestMcpToolWithoutTaggedToolFallsBackToDispatchName(t *testing.T) {
+	// A call_mcp whose underlying tool could not be read still renders as an MCP
+	// row, falling back to the dispatch tool name.
+	data := tool("call_mcp", nil, nil, "running")
 	data["mcp_connection"] = "local_fs"
 
-	requireContains(t, ansi.Strip(Tool(data)), "local_fs_read_file", "In progress")
+	requireContains(t, ansi.Strip(Tool(data)), mcpIcon+"call_mcp", "local_fs", "In progress")
+}
+
+func TestMcpDescribeInspectsConnection(t *testing.T) {
+	// describe_mcp inspects a connection; the connection is the subject and the
+	// dispatch tool name is not shown as if it were a server tool.
+	data := tool("describe_mcp", nil, nil, "completed")
+	data["mcp_connection"] = "local_fs"
+
+	out := ansi.Strip(Tool(data))
+	requireContains(t, out, mcpIcon, "Inspecting MCP server", "local_fs", "Done")
+	if strings.Contains(out, "describe_mcp") {
+		t.Fatalf("describe_mcp must read as inspecting the connection, not name the dispatch tool:\n%s", out)
+	}
+}
+
+func TestMcpListMarksDeadConnectionsOffline(t *testing.T) {
+	// list_mcps carries a per-connection dead flag; a dead connection reads as
+	// offline in the inventory while a live one shows normally.
+	result := map[string]any{
+		"connections": []any{
+			map[string]any{"name": "supabase", "tool_count": float64(3), "dead": false},
+			map[string]any{"name": "vercel", "tool_count": float64(1), "dead": true},
+		},
+	}
+	data := tool("list_mcps", nil, result, "completed")
+
+	out := ansi.Strip(Tool(data))
+	requireContains(t, out, "Listing MCP servers", "supabase", "vercel", "offline")
+	if strings.Count(out, "offline") != 1 {
+		t.Fatalf("only the dead connection should read offline:\n%s", out)
+	}
 }
 
 func TestCollapseToolShellPreviewAndExpand(t *testing.T) {

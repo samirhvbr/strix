@@ -1,13 +1,16 @@
 """Background pre-import of the heavy scan dependencies.
 
 The scan engine's import graph (the agents SDK, OpenAI client, LiteLLM, the
-Caido SDK, the Docker SDK) costs seconds to import cold, but none of it is
-needed until a scan actually starts. Importing it on a daemon thread at CLI
-entry overlaps that cost with the I/O-bound startup work that always precedes
-a scan (argument parsing, Docker checks, image pull, TUI setup), so by the
-time the scan begins the modules are already in ``sys.modules``. Any thread
-that needs one of them before the warm-up finishes just blocks on the normal
-import lock, so behaviour is unchanged either way.
+Caido SDK) costs seconds to import cold, but none of it is needed until a scan
+actually starts. Importing it on a daemon thread at CLI entry overlaps that
+cost with the I/O-bound startup work that always precedes a scan (argument
+parsing, Docker checks, image pull, TUI setup). The Docker SDK is not on the
+list: the Docker checks import it on the main thread during that same window.
+
+The main thread must call :func:`wait_for_import_warmup` before its first
+import from that graph. Two threads that enter the same package graph from
+different modules hold each other's import locks, and CPython breaks the cycle
+by failing one of the imports.
 """
 
 from __future__ import annotations
@@ -23,10 +26,8 @@ WARMUP_MODULES = (
     "strix.core.runner",
     "litellm",
     "caido_sdk_client",
-    "docker",
 )
 
-_lock = threading.Lock()
 _thread: threading.Thread | None = None
 
 
@@ -38,24 +39,6 @@ def _warm(modules: tuple[str, ...]) -> None:
             logger.debug("Import warm-up for %r failed", name, exc_info=True)
 
 
-def _preimport_thread_unsafe_sdk() -> None:
-    """Import the ``agents`` SDK once, on the caller's thread, before the daemon
-    warm-up starts.
-
-    ``openai-agents`` has an internal import cycle (``agents.agent_output`` <->
-    ``agents.agent``) that is not thread-safe: when two threads import the
-    ``agents`` package concurrently, CPython's deadlock-avoidance can hand one
-    of them a partially initialized module, raising ``ImportError: cannot
-    import name 'AgentOutputSchemaBase' ... (circular import)``. Fully importing
-    the package single-threaded here closes that race window before the daemon
-    warm-up thread (and the main thread's later report import) touch it.
-    """
-    try:
-        importlib.import_module("agents")
-    except Exception:  # noqa: BLE001 - a failed warm-up must never fail the run.
-        logger.debug("Pre-import of agents SDK failed", exc_info=True)
-
-
 def start_import_warmup(modules: tuple[str, ...] = WARMUP_MODULES) -> threading.Thread:
     """Start importing the heavy scan dependencies in the background, once.
 
@@ -63,12 +46,15 @@ def start_import_warmup(modules: tuple[str, ...] = WARMUP_MODULES) -> threading.
     runtime that has no local Docker) warm a narrower set.
     """
     global _thread  # noqa: PLW0603
-    with _lock:
-        if _thread is not None:
-            return _thread
-        _preimport_thread_unsafe_sdk()
+    if _thread is None:
         _thread = threading.Thread(
             target=_warm, args=(modules,), name="strix-import-warmup", daemon=True
         )
         _thread.start()
-        return _thread
+    return _thread
+
+
+def wait_for_import_warmup() -> None:
+    """Block until the warm-up thread has finished, if one was started."""
+    if _thread is not None:
+        _thread.join()

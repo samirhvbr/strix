@@ -45,6 +45,7 @@ from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.sessions import open_agent_session
 from strix.report.state import get_global_report_state
 from strix.runtime import session_manager
+from strix.telemetry import set_scan_phase
 from strix.telemetry.logging import set_scan_id, setup_scan_logging
 from strix.tools.output_store import (
     WORKSPACE_SPILL_DIR,
@@ -53,17 +54,42 @@ from strix.tools.output_store import (
 
 
 if TYPE_CHECKING:
-    from agents.mcp import MCPServer
     from agents.memory import SQLiteSession
     from agents.result import RunResultBase
 
     from strix.runtime.status import StatusSink
-    from strix.tools.mcp import ConnectedMcpServer
+    from strix.tools.mcp import (
+        ConnectedMcpServer,
+        McpConnectionRequest,
+        McpRegistry,
+        SupervisedMcpSession,
+    )
 
 
 logger = logging.getLogger(__name__)
 
 StreamEventSink = Callable[[str, Any], None]
+
+# Receives the run's MCP connection roster as a list of non-secret status dicts
+# ({"name", "provider", "tool_count", "dead"}), once when the connections are
+# established and again each time a connection transitions to dead. An interface
+# can persist it, render it, or forward it on as connection status. Kept as a
+# snapshot of the whole roster (not a per-
+# connection delta) so every call carries a consistent, current picture.
+McpStatusSink = Callable[[list[dict[str, Any]]], None]
+
+
+def _mcp_roster_payload(registry: McpRegistry) -> list[dict[str, Any]]:
+    """The run's MCP roster as non-secret status dicts (name/provider/tool_count/dead)."""
+    return [
+        {
+            "name": status.name,
+            "provider": status.provider,
+            "tool_count": status.tool_count,
+            "dead": status.dead,
+        }
+        for status in registry.statuses()
+    ]
 
 
 def _mcp_startup_summary(connections: list[ConnectedMcpServer]) -> str:
@@ -91,21 +117,26 @@ def _record_mcp_connections(connections: list[ConnectedMcpServer]) -> None:
     report_state.record_mcp_connections([connection.name for connection in connections])
 
 
-def _mcp_connection_notes(connections: list[ConnectedMcpServer]) -> str | None:
-    """A block describing the connections the user left notes on, for the agent.
+def _note_exit_reason(reason: str) -> None:
+    """Record why the scan stopped so the end-of-scan beacon reports it."""
+    report_state = get_global_report_state()
+    if report_state is not None and report_state.scan_ended_exit_reason is None:
+        report_state.scan_ended_exit_reason = reason
 
-    Only connections with notes are listed, so the note describes the connection
-    once rather than being repeated onto every tool. Returns ``None`` when no
-    connection has notes.
+
+def _persist_mcp_status(roster: list[dict[str, Any]]) -> None:
+    """Write the run's non-secret MCP connection status roster to run.json.
+
+    The viewer rebuilds its display by re-reading the run's files from disk, so
+    it cannot see the in-memory ``mcp_status_sink`` the TUI consumes. Persisting
+    the same non-secret roster (name / provider / tool_count / dead) gives the
+    viewer a source it can poll. Runs regardless of whether an interface sink is
+    attached, so the standalone / non-TUI CLI path records health too.
     """
-    noted = [(c.name, c.notes) for c in connections if c.notes]
-    if not noted:
-        return None
-    lines = "\n".join(f"- `{name}.*` tools: {notes}" for name, notes in noted)
-    return (
-        "The user connected these MCP servers for this run and left notes on how "
-        f"to use each:\n{lines}"
-    )
+    report_state = get_global_report_state()
+    if report_state is None:
+        return
+    report_state.record_mcp_connection_status(roster)
 
 
 def _merge_root_prompt_context(
@@ -173,6 +204,8 @@ async def run_strix_scan(
     root_instructions_override: str | None = None,
     extra_system_prompt_context: dict[str, Any] | None = None,
     status_sink: StatusSink | None = None,
+    mcp_connection_requests: list[McpConnectionRequest] | None = None,
+    mcp_status_sink: McpStatusSink | None = None,
 ) -> RunResultBase | None:
     """Run or resume one Strix scan against a sandbox.
 
@@ -184,6 +217,11 @@ async def run_strix_scan(
     ``extra_system_prompt_context`` is merged into the root agent's scan
     context before prompt rendering. Child agents keep the standard scan prompt
     and context.
+    ``mcp_connection_requests`` supplies the run's MCP connections from any
+    source: when given, the engine connects those requests; when ``None`` (the
+    command-line default) it reads ``~/.strix/mcp-servers.json`` itself. Either
+    way the engine does the connecting, so the caller passes inert configs plus
+    metadata and never live sessions.
     """
 
     def report(phase: str) -> None:
@@ -233,11 +271,13 @@ async def run_strix_scan(
 
     from strix.tools.coverage.tools import hydrate_coverage_from_disk
     from strix.tools.notes.tools import hydrate_notes_from_disk
+    from strix.tools.threat_model.tools import hydrate_threat_models_from_disk
     from strix.tools.todo.tools import hydrate_todos_from_disk
 
     hydrate_todos_from_disk(state_dir)
     hydrate_notes_from_disk(state_dir)
     hydrate_coverage_from_disk(state_dir)
+    hydrate_threat_models_from_disk(state_dir)
 
     root_id: str | None = None
     if is_resume:
@@ -281,6 +321,7 @@ async def run_strix_scan(
         root_id = uuid.uuid4().hex[:8]
 
     logger.info("Bringing up sandbox session for scan %s", scan_id)
+    set_scan_phase("sandbox_init")
     bundle = await session_manager.create_or_reuse(
         scan_id,
         image=image,
@@ -290,6 +331,7 @@ async def run_strix_scan(
     )
     report("Waiting for the first model response")
     logger.info("Sandbox ready for scan %s", scan_id)
+    set_scan_phase("agent_setup")
 
     sandbox_session = bundle["session"]
 
@@ -306,7 +348,7 @@ async def run_strix_scan(
     configure_spill_writer(_spill_to_workspace)
 
     sessions_to_close: list[SQLiteSession] = []
-    mcp_servers: list[MCPServer] = []
+    mcp_sessions: list[SupervisedMcpSession] = []
 
     try:
         targets = scan_config.get("targets") or []
@@ -344,6 +386,87 @@ async def run_strix_scan(
             coordinator.set_budget_extender(hooks.extend_budget)
 
         scope_context = build_scope_context(scan_config)
+
+        # Attach the run's MCP connections and hold their live sessions in a
+        # per-run registry. The connections are source-agnostic: a caller
+        # (the SaaS/pro product) can supply them as mcp_connection_requests, and
+        # when it does not the command-line path reads them from
+        # ~/.strix/mcp-servers.json here. Either way one shared engine routine
+        # does the connecting and populating. Nothing is registered as an agent
+        # tool: every agent reaches these connections on demand through the
+        # list_mcps / describe_mcp / call_mcp tools, guided by brief static prompt
+        # guidance when any connection exists. Fail-open: a missing config, or a
+        # server that will not connect, must never break a run.
+        from strix.tools.mcp import (
+            McpConnectionRequest,
+            McpRegistry,
+            attach_mcp_requests,
+            load_user_mcp_configs,
+        )
+
+        mcp_registry = McpRegistry()
+        try:
+            if mcp_connection_requests is None:
+                # Command-line default: read the user's file and wrap each config
+                # in a bare request (no provider or transform), so this path is
+                # exactly the old behavior.
+                mcp_requests = [
+                    McpConnectionRequest(config=config) for config in load_user_mcp_configs()
+                ]
+            else:
+                mcp_requests = mcp_connection_requests
+            if mcp_requests:
+                connections = await attach_mcp_requests(mcp_requests, mcp_registry)
+                mcp_sessions = [c.session for c in connections]
+                # Recorded even when nothing connected, so a resumed run does not
+                # keep attributing tool calls to servers it no longer has.
+                _record_mcp_connections(connections)
+                if connections:
+                    report(_mcp_startup_summary(connections))
+                    # Name the connected servers in the prompt so every agent
+                    # (root and children, both deriving from scope_context) sees
+                    # what is available at the start; they can still re-list or
+                    # inspect them at run time via list_mcps / describe_mcp. Set
+                    # only when a connection exists, so a run with no MCP leaves
+                    # the prompt context unchanged.
+                    scope_context["mcp_available"] = bool(mcp_registry)
+                    scope_context["mcp_connections"] = [
+                        {
+                            "name": summary.name,
+                            "purpose": summary.purpose,
+                            "tool_count": summary.tool_count,
+                        }
+                        for summary in mcp_registry.summaries()
+                    ]
+
+                    # Feed a non-secret connection roster (name / provider /
+                    # tool_count / dead) to two consumers: once now (all
+                    # currently healthy) and again whenever a connection later
+                    # dies. It is always persisted to run.json so the viewer,
+                    # which re-reads the run's files from disk, can render the
+                    # MCP connections panel and health without an in-memory
+                    # sink. When an interface sink is attached (the TUI backend,
+                    # or pro forwarding into the app's event stream) it also
+                    # receives the same snapshot. In-use is derived separately by
+                    # each interface from the connection-tagged tool-call events,
+                    # so it is not carried here.
+                    def _emit_mcp_status() -> None:
+                        roster = _mcp_roster_payload(mcp_registry)
+                        _persist_mcp_status(roster)
+                        if mcp_status_sink is not None:
+                            try:
+                                mcp_status_sink(roster)
+                            except Exception:
+                                logger.exception("MCP status sink failed")
+
+                    for connection_name in mcp_registry.names():
+                        entry = mcp_registry.get(connection_name)
+                        if entry is not None:
+                            entry.session.set_on_dead(_emit_mcp_status)
+                    _emit_mcp_status()
+        except Exception:
+            logger.exception("Failed to connect user MCP servers; continuing without them")
+
         root_context = _merge_root_prompt_context(scope_context, extra_system_prompt_context)
         root_instructions = _compose_root_instructions_override(
             root_instructions_override,
@@ -354,27 +477,6 @@ async def run_strix_scan(
             interactive=interactive,
             system_prompt_context=root_context,
         )
-
-        # Connect any MCP servers the user listed in ~/.strix/mcp-servers.json and
-        # register their tools before the agent is built. Fail-open: a missing
-        # config, or a server that will not connect, must never break a run.
-        from strix.tools.mcp import connect_mcp_servers, load_user_mcp_configs
-
-        try:
-            user_mcp_configs = load_user_mcp_configs()
-            if user_mcp_configs:
-                connections = await connect_mcp_servers(user_mcp_configs)
-                mcp_servers = [c.server for c in connections]
-                # Recorded even when nothing connected, so a resumed run does not
-                # keep attributing tool calls to servers it no longer has.
-                _record_mcp_connections(connections)
-                if connections:
-                    report(_mcp_startup_summary(connections))
-                    notes_block = _mcp_connection_notes(connections)
-                    if notes_block:
-                        root_task = f"{root_task}\n\n{notes_block}"
-        except Exception:
-            logger.exception("Failed to connect user MCP servers; continuing without them")
 
         root_agent = build_strix_agent(
             name="Root Agent",
@@ -427,6 +529,7 @@ async def run_strix_scan(
             "coordinator": coordinator,
             "sandbox_session": bundle["session"],
             "caido_client": bundle["caido_client"],
+            "mcp_registry": mcp_registry,
             "agent_id": root_id,
             "parent_id": None,
             "interactive": interactive,
@@ -480,6 +583,7 @@ async def run_strix_scan(
         async with coordinator._lock:
             root_status = coordinator.statuses.get(root_id)
 
+        set_scan_phase("agent_loop")
         result = await run_agent_loop(
             agent=root_agent,
             initial_input=initial_input,
@@ -517,6 +621,20 @@ async def run_strix_scan(
         return result  # noqa: TRY300
     except BudgetExceededError as exc:
         logger.info("Scan %s stopped: %s", scan_id, exc)
+        _note_exit_reason("budget_exceeded")
+        if root_id is not None:
+            with contextlib.suppress(Exception):
+                await coordinator.set_status(root_id, "stopped")
+        return None
+    except RateLimitError as exc:
+        logger.warning(
+            "Scan %s stopped: persistent rate limit from the LLM provider (%s). "
+            "Resume with 'strix --resume %s' once the limit clears.",
+            scan_id,
+            exc,
+            scan_id,
+        )
+        _note_exit_reason("rate_limited")
         if root_id is not None:
             with contextlib.suppress(Exception):
                 await coordinator.set_status(root_id, "stopped")
@@ -528,20 +646,20 @@ async def run_strix_scan(
                 await coordinator.set_status(root_id, "running")
         raise
     except Exception as exc:
-        # A usage-limit rejection is resumable regardless of the provider's
-        # exception class: OpenAI raises RateLimitError, but a LiteLLM-routed
-        # provider may surface the same exhausted-window error as a different
-        # type. Both retry layers already stop retrying it (see
+        # A LiteLLM-routed provider can surface an exhausted usage window as a
+        # non-RateLimitError type (OpenAI's RateLimitError is handled above).
+        # Both retry layers already stop retrying it (see
         # codex.is_usage_limit_error), so route it to the same resumable stop
         # instead of the generic failure path.
-        if isinstance(exc, RateLimitError) or codex.is_usage_limit_error(exc):
+        if codex.is_usage_limit_error(exc):
             logger.warning(
-                "Scan %s stopped: persistent rate limit from the LLM provider (%s). "
+                "Scan %s stopped: persistent usage limit from the LLM provider (%s). "
                 "Resume with 'strix --resume %s' once the limit clears.",
                 scan_id,
                 exc,
                 scan_id,
             )
+            _note_exit_reason("rate_limited")
             if root_id is not None:
                 with contextlib.suppress(Exception):
                     await coordinator.set_status(root_id, "stopped")
@@ -567,9 +685,9 @@ async def run_strix_scan(
         for s in sessions_to_close:
             with contextlib.suppress(Exception):
                 s.close()
-        for mcp_server in mcp_servers:
+        for mcp_session in mcp_sessions:
             with contextlib.suppress(Exception):
-                await mcp_server.cleanup()  # type: ignore[no-untyped-call]
+                await mcp_session.aclose()
         with contextlib.suppress(Exception):
             await coordinator._maybe_snapshot()
         if cleanup_on_exit:

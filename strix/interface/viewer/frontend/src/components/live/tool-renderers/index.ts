@@ -93,7 +93,9 @@ const CATEGORY_META: Record<ToolCategory, CategoryMeta> = {
   threatModel: { renderer: ThreatModelRenderer, icon: Crosshair, color: "text-blue-400", match: /threat_model/ },
   telemetry: { renderer: FallbackRenderer, icon: Wrench, color: "text-[#555]" },
   // Tools from the user's own MCP servers. Resolved from the connection on the
-  // event rather than from a tool name, so this family has no names below.
+  // event rather than from a tool name — except list_mcps, the engine's
+  // inventory of every connection, which touches none and so carries no
+  // connection to resolve from; it is the family's one name below.
   mcp: { renderer: McpRenderer, icon: Plug, color: "text-teal-400" },
 };
 
@@ -114,7 +116,7 @@ const CATEGORY_TOOLS: Record<ToolCategory, readonly string[]> = {
   filesystem: ["apply_patch", "view_image", "str_replace_editor", "list_files", "search_files"],
   // Caido proxy tools (legacy: send_request)
   proxy: ["list_requests", "view_request", "repeat_request", "list_sitemap", "view_sitemap_entry", "scope_rules", "send_request"],
-  reporting: ["create_vulnerability_report", "list_reports", "get_report"],
+  reporting: ["create_vulnerability_report", "update_vulnerability_report", "list_reports", "get_report"],
   thinking: ["think"],
   agents: ["create_agent", "agent_finish", "send_message_to_agent", "wait_for_agents", "view_agent_graph", "stop_agent"],
   search: ["web_search"],
@@ -128,7 +130,7 @@ const CATEGORY_TOOLS: Record<ToolCategory, readonly string[]> = {
   // Per-target threat model, shared across the agent tree
   threatModel: ["get_threat_model", "save_threat_model", "amend_threat_model"],
   telemetry: ["sandbox_error_details", "llm_error_details"],
-  mcp: [],
+  mcp: ["list_mcps"],
 };
 
 /** Reverse index (tool name → family), built once from CATEGORY_TOOLS. */
@@ -181,8 +183,9 @@ function resolveCategory(toolName: string): ToolCategory | null {
 
 /**
  * A call to a tool from one of the user's MCP servers is placed by the
- * connection it was tagged with, ahead of every name-keyed lookup below: its
- * name belongs to that server and matches nothing in this table.
+ * connection it was tagged with, ahead of every name-keyed lookup below. Every
+ * MCP call goes through the `call_mcp` / `describe_mcp` dispatch tools, so the
+ * connection tag, not the tool name, is what routes it to the MCP renderer.
  */
 export function getToolRenderer(
   toolName: string,

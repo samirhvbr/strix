@@ -96,14 +96,12 @@ func TestCoverageDuplicateRejectionSurfacesTheError(t *testing.T) {
 	requireContains(t, out, "/login", "already has coverage entry a1b2c3")
 }
 
-func TestGetThreatModelRendersStalenessAndAmendments(t *testing.T) {
+func TestGetThreatModelRendersAmendments(t *testing.T) {
 	out := ansi.Strip(Tool(tool("get_threat_model",
 		map[string]any{"target": "https://app.example.com"},
 		map[string]any{
-			"success":         true,
-			"found":           true,
-			"stale":           true,
-			"cached_revision": "0123456789abcdef",
+			"success": true,
+			"found":   true,
 			"content": "# Overview\nMulti-tenant billing app.\n\n" +
 				"## Trust Boundaries and Assumptions\n\n## Attack Surface\n",
 			"amendments": []any{
@@ -116,7 +114,6 @@ func TestGetThreatModelRendersStalenessAndAmendments(t *testing.T) {
 		"completed")))
 	requireContains(t, out,
 		"Threat Model", "https://app.example.com",
-		"stale", "01234567",
 		"1 amendment(s)", "ReconAgent", "staging host shares the production database",
 		"Multi-tenant billing app.", "Overview", "Trust Boundaries and Assumptions",
 	)
@@ -126,7 +123,7 @@ func TestGetThreatModelMissingModelIsExplicit(t *testing.T) {
 	out := ansi.Strip(Tool(tool("get_threat_model",
 		map[string]any{"target": "10.0.0.5"},
 		map[string]any{"success": true, "found": false}, "completed")))
-	requireContains(t, out, "No model cached for this target yet")
+	requireContains(t, out, "No model derived for this target yet")
 }
 
 func TestSaveThreatModelWarnsWhenAmendmentsAreCleared(t *testing.T) {
@@ -134,15 +131,10 @@ func TestSaveThreatModelWarnsWhenAmendmentsAreCleared(t *testing.T) {
 		map[string]any{"target": "app.example.com", "content": "# Overview\nA thing.\n"},
 		map[string]any{
 			"success":            true,
-			"revision":           "unversioned",
 			"amendments_cleared": 2,
 		},
 		"completed")))
 	requireContains(t, out, "Threat Model Saved", "saved", "cleared 2 amendment(s)")
-	// An unversioned target has no revision worth printing.
-	if strings.Contains(out, "unversioned") {
-		t.Fatalf("unversioned revision should not be rendered:\n%s", out)
-	}
 }
 
 func TestAmendThreatModelRendersAddendum(t *testing.T) {
@@ -200,5 +192,30 @@ func TestVulnerabilityReportRendersCalibrationFields(t *testing.T) {
 		"Counterevidence", "gateway may strip the id parameter",
 		"Severity Would Change If", "other tenants' bank details",
 		"Fix Verification", "bypass review reasoned only",
+	)
+}
+
+func TestVulnerabilityReportUpdateRendersReportAndReason(t *testing.T) {
+	out := ansi.Strip(Tool(tool("update_vulnerability_report",
+		map[string]any{
+			"report_id":       "vuln-0009",
+			"update_reason":   "built a working unauthenticated file write against the endpoint",
+			"poc_script_code": "curl -X PATCH https://target/files/uuid",
+		},
+		map[string]any{
+			"success":        true,
+			"action":         "updated",
+			"report_id":      "vuln-0009",
+			"severity":       "critical",
+			"cvss_score":     9.3,
+			"updated_fields": []any{"poc_script_code"},
+		},
+		"completed")))
+	requireContains(t, out,
+		"Vulnerability Report Updated",
+		"vuln-0009",
+		"built a working unauthenticated file write",
+		"CRITICAL",
+		"9.3",
 	)
 }

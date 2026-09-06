@@ -16,13 +16,6 @@ const ACTION_LABELS: Record<string, { label: string; Icon: typeof Crosshair }> =
   amend_threat_model: { label: "Threat model amended", Icon: Plus },
 };
 
-/** A git sha is noise past its first bytes, and "unversioned" is not a revision. */
-function shortRevision(revision: unknown): string {
-  const value = typeof revision === "string" ? revision.trim() : "";
-  if (!value || value === "unversioned") return "";
-  return value.slice(0, 8);
-}
-
 export default function ThreatModelRenderer({ toolName, args, result }: ToolRendererProps) {
   const action = ACTION_LABELS[toolName] ?? { label: "Threat model", Icon: Crosshair };
   const ActionIcon = action.Icon;
@@ -59,22 +52,15 @@ export default function ThreatModelRenderer({ toolName, args, result }: ToolRend
       return (
         <div>
           {header}
-          <div className="mt-1.5 text-[#555] text-xs">No model cached for this target yet</div>
+          <div className="mt-1.5 text-[#555] text-xs">No model derived for this target yet</div>
         </div>
       );
     }
     const rawAmendments = structured?.amendments;
     const amendments: Amendment[] = Array.isArray(rawAmendments) ? (rawAmendments as Amendment[]) : [];
-    const cachedRevision = shortRevision(structured?.cached_revision);
     return (
       <div>
         {header}
-        {structured?.stale === true && (
-          <div className="mt-1.5 flex items-center gap-1.5 text-yellow-400/80 text-xs">
-            <AlertTriangle className="w-3 h-3 shrink-0" />
-            <span>stale{cachedRevision ? ` — written at ${cachedRevision}` : ""}</span>
-          </div>
-        )}
         {amendments.length > 0 && (
           <div className="mt-2">
             <span className="text-amber-400/70 text-xs font-semibold">
@@ -119,12 +105,10 @@ export default function ThreatModelRenderer({ toolName, args, result }: ToolRend
   }
 
   const cleared = (structured?.amendments_cleared as number | undefined) ?? 0;
-  const revision = shortRevision(structured?.revision);
   const content = (args.content as string) ?? "";
   return (
     <div>
       {header}
-      {revision && <div className="mt-1.5 text-[#666] font-mono text-xs">at {revision}</div>}
       {/* Saving folds amendments away — the one destructive thing this tool does. */}
       {cleared > 0 && (
         <div className="mt-1.5 flex items-center gap-1.5 text-yellow-400/80 text-xs">

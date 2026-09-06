@@ -1,9 +1,10 @@
 """Read the open-source user's MCP servers from ``~/.strix/mcp-servers.json``.
 
 An open-source user lists the MCP servers they want the agent to reach in a
-small JSON file. Strix reads it at the start of a run, connects to each server,
-and registers its tools. The file is optional; without it the run simply gets
-no MCP tools.
+small JSON file. Strix reads it at the start of a run and connects to each
+server, holding the live sessions in the run's registry for the agent to reach
+on demand. The file is optional; without it the run simply gets no MCP
+connections.
 
 Parsing is fail-open. A single malformed entry is logged and skipped rather than
 raising, so one bad row never blocks the servers that are valid, and a missing
@@ -46,9 +47,9 @@ def _resolve_path(path: Path | None) -> Path:
 def _dedupe_by_name(configs: list[McpConnectionConfig]) -> list[McpConnectionConfig]:
     """Keep the first connection of each name, dropping later duplicates.
 
-    Names namespace a server's tools (``<name>.<tool>``), so two connections
-    sharing a name would collide and the second's tools would be silently
-    rejected at registration. Drop the duplicate here, with a warning, instead.
+    A connection's name is its key in the run's registry, so two connections
+    sharing a name would collide and the second would overwrite the first. Drop
+    the duplicate here, with a warning, instead.
     """
     seen: set[str] = set()
     unique: list[McpConnectionConfig] = []

@@ -27,7 +27,7 @@ Before spawning agents, analyze the target from the scan config/scope and any pr
 
 ## Establish the Threat Model
 
-Every scan needs one shared answer to "who is the attacker here, and what are they attacking" — black-box or white-box. Without it, five agents derive five different answers and their findings cannot be reconciled. Call `get_threat_model` on the target (a host, a URL, or a repository path) before you spawn hunters; if nothing is cached, derive one and persist it with `save_threat_model`. It is cached per target, so a later scan of the same host or tree reads it back instead of paying for it twice, and a model written from source is read back by an agent testing the deployment.
+Every scan needs one shared answer to "who is the attacker here, and what are they attacking" — black-box or white-box. Without it, five agents derive five different answers and their findings cannot be reconciled. Call `get_threat_model` on the target (a host, a URL, or a repository path) before you spawn hunters; if no model exists yet, derive one and share it with `save_threat_model`. It lives for this scan only — nothing carries over from an earlier run, so every scan derives its own — but within the run every agent reads the same document, and a model written from source is read back by an agent testing the deployment.
 
 **When the target includes a repository**, derive it up front: the code tells you the boundaries, entrypoints, and controls before you send a single request.
 

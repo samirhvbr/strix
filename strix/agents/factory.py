@@ -29,6 +29,7 @@ from strix.tools.agents_graph.tools import (
 from strix.tools.coverage.tools import list_coverage, record_coverage, update_coverage
 from strix.tools.finish.tool import finish_scan
 from strix.tools.load_skill.tool import load_skill
+from strix.tools.mcp import call_mcp, describe_mcp, list_mcps
 from strix.tools.notes.tools import (
     create_note,
     delete_note,
@@ -51,6 +52,7 @@ from strix.tools.reporting.tool import (
     create_vulnerability_report,
     get_report,
     list_reports,
+    update_vulnerability_report,
 )
 from strix.tools.respond.tool import respond_to_user
 from strix.tools.thinking.tool import think
@@ -67,7 +69,7 @@ from strix.tools.todo.tools import (
     mark_todo_pending,
     update_todo,
 )
-from strix.tools.web_search.tool import web_search
+from strix.tools.web_search.tool import web_get_contents, web_search
 
 
 if TYPE_CHECKING:
@@ -577,8 +579,10 @@ _BASE_TOOLS: tuple[Tool, ...] = (
     save_threat_model,
     amend_threat_model,
     web_search,
+    web_get_contents,
     create_vulnerability_report,
     create_dependency_report,
+    update_vulnerability_report,
     list_reports,
     get_report,
     list_requests,
@@ -587,6 +591,9 @@ _BASE_TOOLS: tuple[Tool, ...] = (
     list_sitemap,
     view_sitemap_entry,
     scope_rules,
+    list_mcps,
+    describe_mcp,
+    call_mcp,
     view_agent_graph,
     send_message_to_agent,
     wait_for_agents,

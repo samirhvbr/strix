@@ -56,9 +56,6 @@ func renderThreatModel(name string, args map[string]any, result any) string {
 		threatModelBody(&b, StringValue(args["addendum"]))
 	default:
 		b.WriteString("\n  " + Col(Green).Render("✓ saved"))
-		if revision := shortRevision(StringValue(m["revision"])); revision != "" {
-			b.WriteString(Dim().Render(" at " + revision))
-		}
 		// Saving folds amendments away, so the count that vanished is worth
 		// stating: it is the one destructive thing this tool does.
 		if cleared, ok := NumericValue(m["amendments_cleared"]); ok && cleared > 0 {
@@ -72,14 +69,8 @@ func renderThreatModel(name string, args map[string]any, result any) string {
 
 func threatModelReadBody(b *strings.Builder, result map[string]any) {
 	if !truthy(result["found"]) {
-		b.WriteString("\n  " + Dim().Render("No model cached for this target yet"))
+		b.WriteString("\n  " + Dim().Render("No model derived for this target yet"))
 		return
-	}
-	if truthy(result["stale"]) {
-		b.WriteString("\n  " + Col(AmberY).Render("⚠ stale"))
-		if cached := shortRevision(StringValue(result["cached_revision"])); cached != "" {
-			b.WriteString(Dim().Render(" (written at " + cached + ")"))
-		}
 	}
 	if amendments, ok := result["amendments"].([]any); ok && len(amendments) > 0 {
 		b.WriteString("\n  " + Col(Gold).Render("+ "+strconv.Itoa(len(amendments))+
@@ -125,14 +116,4 @@ func threatModelBody(b *strings.Builder, content string) {
 		}
 		b.WriteString("\n  " + Dim().Render(strings.Join(headings, " · ")))
 	}
-}
-
-// shortRevision abbreviates a git sha; "unversioned" targets have no revision
-// worth showing.
-func shortRevision(revision string) string {
-	revision = strings.TrimSpace(revision)
-	if revision == "" || revision == "unversioned" {
-		return ""
-	}
-	return firstN(revision, 8)
 }

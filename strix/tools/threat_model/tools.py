@@ -1,28 +1,29 @@
-"""Target-scoped threat models — cached under ``~/.strix/threat-models``.
+"""Run-scoped threat models — mirrored to ``{state_dir}/threat_models.json``.
 
-A threat model describes the target, not the scan: a host, an application, an
-API, a repository, or whatever else the engagement is pointed at. It stays
-valid across unrelated runs against the same target, so it is keyed by target
-identity rather than by run id — one agent derives it, every later agent in
-this run and in future runs against the same target reads it back instead of
+A threat model is the scan's shared answer to who the attacker is, where the
+trust boundaries sit, and what counts as critical for the target. One agent
+derives it and every other agent on the same run reads it back instead of
 re-deriving trust boundaries from scratch.
 
-Where the target is a checkout, the model is additionally pinned to the git
-revision, so a moved ``HEAD`` marks it stale. Black-box targets have no
-revision to pin to; those age out instead.
+It does not outlive the scan. The mirror lives in the run's own state directory
+and exists only so a resumed scan keeps the baseline its earlier agents agreed
+on; a new scan against the same host or checkout starts with no model and
+derives its own. Agents do spell one target several ways within a run — the URL
+they were handed, the page they happen to be testing, a checkout path — so a
+model is keyed by a normalized target identity to keep them converging on one
+document instead of each starting a fresh one.
 """
 
 from __future__ import annotations
 
 import asyncio
-import hashlib
 import json
 import logging
 import re
 import subprocess
 import tempfile
 import threading
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -35,16 +36,19 @@ from strix.core.agents import AgentCoordinator
 logger = logging.getLogger(__name__)
 
 
-_CACHE_DIR = Path.home() / ".strix" / "threat-models"
 _MAX_MODEL_BYTES = 512 * 1024
 _MIN_MODEL_CHARS = 400
 _MIN_AMENDMENT_CHARS = 80
 _MAX_AMENDMENTS = 40
 _GIT_TIMEOUT_SECONDS = 10
-_UNVERSIONED = "unversioned"
-_MAX_AGE_DAYS = 14
 _DEFAULT_PORTS = {"http": "80", "https": "443"}
-_cache_lock = threading.RLock()
+
+_store_lock = threading.RLock()
+
+# The whole store: target identity -> model. It holds exactly the models this
+# scan derived, and is mirrored to the run's state directory for resume.
+_MODELS: dict[str, dict[str, Any]] = {}
+_store_path: Path | None = None
 
 _REQUIRED_SECTIONS = (
     "overview",
@@ -95,7 +99,7 @@ def _remote_authority(target: str) -> str:
 
 
 def _normalize_remote_target(target: str) -> str:
-    """Collapse the spellings of one remote target onto a single cache key."""
+    """Collapse the spellings of one remote target onto a single key."""
     authority = _remote_authority(target)
     if not authority:
         return re.sub(r"\s+", " ", target.lower()).strip()
@@ -132,30 +136,23 @@ def _normalize_git_remote(remote: str) -> str:
     return normalized.removesuffix(".git")
 
 
-def _target_identity(target: str) -> tuple[str, str]:
-    """Return the (stable identity, revision) pair a cached model is keyed on.
+def _target_identity(target: str) -> str:
+    """Return the stable identity a model is stored under.
 
-    A checkout is keyed on its remote (so the same repository cloned to two
-    paths shares one model, and a subdirectory resolves to the whole tree) and
-    pinned to ``HEAD``. Everything else — a host, a URL, an API base, a named
-    scope — is keyed on its normalized form and carries no revision. Both
-    routes run through the same normalization, so a checkout and the URL it
-    was cloned from land on one key.
+    A checkout is keyed on its remote, so the same repository checked out at
+    two paths shares one model and a subdirectory resolves to the whole tree.
+    Everything else — a host, a URL, an API base, a named scope — is keyed on
+    its normalized form. Both routes run through the same normalization, so a
+    checkout and the URL it was cloned from land on one key.
     """
     directory = _local_directory(target)
     if directory is None:
-        return _normalize_remote_target(target).removesuffix(".git"), _UNVERSIONED
+        return _normalize_remote_target(target).removesuffix(".git")
     remote = _git(directory, ["config", "--get", "remote.origin.url"])
-    revision = _git(directory, ["rev-parse", "HEAD"]) or _UNVERSIONED
     if remote:
-        return _normalize_git_remote(remote), revision
+        return _normalize_git_remote(remote)
     toplevel = _git(directory, ["rev-parse", "--show-toplevel"])
-    return toplevel or str(directory), revision
-
-
-def _cache_path(identity: str) -> Path:
-    digest = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
-    return _CACHE_DIR / f"{digest}.json"
+    return toplevel or str(directory)
 
 
 def _snap_to_scan_target(raw: str, scan_targets: list[str]) -> str:
@@ -163,13 +160,13 @@ def _snap_to_scan_target(raw: str, scan_targets: list[str]) -> str:
 
     Agents name the same target differently — one passes the URL it was given,
     the next the page it happens to be testing, a third the checkout path. Left
-    alone those become separate cache keys, every lookup misses, and each agent
+    alone those become separate keys, every lookup misses, and each agent
     quietly derives its own model, which is the exact failure the shared model
     exists to prevent. So a target that is recognisably one of the scan's own
     targets is resolved to that target instead.
     """
-    identity, _ = _target_identity(raw)
-    scoped = [(target, _target_identity(target)[0]) for target in scan_targets]
+    identity = _target_identity(raw)
+    scoped = [(target, _target_identity(target)) for target in scan_targets]
     if any(known == identity for _, known in scoped):
         return raw
 
@@ -208,38 +205,51 @@ def _resolve_target(
     return (_snap_to_scan_target(raw, known) if known else raw), None
 
 
-def _is_expired(created_at: str | None) -> bool:
-    if not created_at:
-        return True
+def hydrate_threat_models_from_disk(state_dir: Path) -> None:
+    """Point the store at this run's mirror and load whatever it already holds.
+
+    A resumed scan is the same scan, so its agents have to keep the baseline
+    the earlier ones agreed on. The mirror lives under the run directory, so a
+    different scan never reads it.
+    """
+    global _store_path  # noqa: PLW0603
+    _store_path = state_dir / "threat_models.json"
+    with _store_lock:
+        _MODELS.clear()
+        if not _store_path.is_file():
+            return
+        try:
+            data = json.loads(_store_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            logger.exception(
+                "threat_models.json at %s is unreadable; starting with no models",
+                _store_path,
+            )
+            return
+        if not isinstance(data, dict):
+            return
+        _MODELS.update(
+            {
+                identity: model
+                for identity, model in data.items()
+                if isinstance(identity, str) and isinstance(model, dict)
+            }
+        )
+        logger.info("threat models hydrated from %s (%d)", _store_path, len(_MODELS))
+
+
+def _persist_locked() -> None:
+    """Mirror the store to disk. Callers must already hold ``_store_lock``.
+
+    Serializing and renaming in one critical section keeps a writer holding an
+    older serialization from winning the rename and dropping a concurrent
+    agent's model or amendment.
+    """
+    path = _store_path
+    if path is None:
+        return
     try:
-        created = datetime.fromisoformat(created_at)
-    except ValueError:
-        return True
-    if created.tzinfo is None:
-        created = created.replace(tzinfo=UTC)
-    return datetime.now(UTC) - created > timedelta(days=_MAX_AGE_DAYS)
-
-
-def _missing_sections(content: str) -> list[str]:
-    lowered = content.lower()
-    return [section for section in _REQUIRED_SECTIONS if section not in lowered]
-
-
-def _read_cache(path: Path) -> dict[str, Any] | None:
-    """Load a cached model. Callers must already hold ``_cache_lock``."""
-    if not path.is_file():
-        return None
-    try:
-        cached = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        logger.exception("threat model cache at %s is unreadable", path)
-        return None
-    return cached if isinstance(cached, dict) else None
-
-
-def _write_cache(path: Path, payload: dict[str, Any]) -> str | None:
-    """Atomically persist a model. Callers must already hold ``_cache_lock``."""
-    try:
+        payload = json.dumps(_MODELS, ensure_ascii=False, default=str)
         path.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.NamedTemporaryFile(
             mode="w",
@@ -249,56 +259,38 @@ def _write_cache(path: Path, payload: dict[str, Any]) -> str | None:
             suffix=".tmp",
             delete=False,
         ) as tmp:
-            tmp.write(json.dumps(payload, ensure_ascii=False))
+            tmp.write(payload)
             tmp_path = Path(tmp.name)
         tmp_path.replace(path)
-    except OSError as exc:
-        logger.exception("threat model persist to %s failed", path)
-        return f"Failed to persist threat model: {exc}"
-    return None
+    except OSError:
+        logger.exception("threat model mirror to %s failed", path)
 
 
-def _amendments_of(cached: dict[str, Any]) -> list[dict[str, Any]]:
-    raw = cached.get("amendments")
+def _missing_sections(content: str) -> list[str]:
+    lowered = content.lower()
+    return [section for section in _REQUIRED_SECTIONS if section not in lowered]
+
+
+def _amendments_of(model: dict[str, Any]) -> list[dict[str, Any]]:
+    raw = model.get("amendments")
     if not isinstance(raw, list):
         return []
     return [item for item in raw if isinstance(item, dict)]
 
 
-def _not_found(identity: str, revision: str) -> dict[str, Any]:
+def _not_found(identity: str) -> dict[str, Any]:
     return {
         "success": True,
         "found": False,
         "target": identity,
-        "revision": revision,
         "message": (
-            "No threat model cached for this target. Derive one — from the code if "
-            "you have it, from recon output if you do not — and persist it with "
-            "save_threat_model, so every agent on this scan shares one view of the "
-            "trust boundaries instead of each inventing their own."
+            "No threat model for this target on this scan. Nothing carries over "
+            "from other scans, so derive one — from the code if you have it, from "
+            "recon output if you do not — and share it with save_threat_model, so "
+            "every agent on this scan works from one view of the trust boundaries "
+            "instead of each inventing their own."
         ),
     }
-
-
-def _staleness(cached: dict[str, Any], revision: str) -> tuple[bool, str | None]:
-    """Decide whether a cached model can still be trusted, and why not."""
-    if revision != _UNVERSIONED:
-        if cached.get("revision") == revision:
-            return False, None
-        return True, (
-            "This model was derived against a different revision. Use it as a "
-            "starting point, re-check the boundaries it names against the current "
-            "tree, and save the corrected version."
-        )
-    created_at = cached.get("created_at")
-    if not _is_expired(created_at if isinstance(created_at, str) else None):
-        return False, None
-    return True, (
-        f"This model is more than {_MAX_AGE_DAYS} days old and there is no revision "
-        "to pin it to, so the target may have moved under it. Treat its surface "
-        "inventory as a lead list to re-confirm during recon, not as fact, and save "
-        "the corrected version."
-    )
 
 
 def _get_impl(target: str, scan_targets: list[str] | None = None) -> dict[str, Any]:
@@ -306,28 +298,22 @@ def _get_impl(target: str, scan_targets: list[str] | None = None) -> dict[str, A
     if resolved is None:
         return {"success": False, "error": error}
 
-    identity, revision = _target_identity(resolved)
-    path = _cache_path(identity)
-    with _cache_lock:
-        cached = _read_cache(path)
-    if cached is None:
-        return _not_found(identity, revision)
-    content = cached.get("content")
+    identity = _target_identity(resolved)
+    with _store_lock:
+        model = _MODELS.get(identity)
+        if model is None:
+            return _not_found(identity)
+        content = model.get("content")
+        amendments = list(_amendments_of(model))
     if not isinstance(content, str) or not content.strip():
-        return _not_found(identity, revision)
+        return _not_found(identity)
 
-    stale, stale_message = _staleness(cached, revision)
     result: dict[str, Any] = {
         "success": True,
         "found": True,
         "target": identity,
-        "revision": revision,
-        "cached_revision": cached.get("revision"),
-        "created_at": cached.get("created_at"),
-        "stale": stale,
         "content": content,
     }
-    amendments = _amendments_of(cached)
     if amendments:
         result["amendments"] = amendments
         result["amendments_note"] = (
@@ -335,8 +321,6 @@ def _get_impl(target: str, scan_targets: list[str] | None = None) -> dict[str, A
             "correct or extend it and have not been folded in yet - read them as "
             "part of the model, and prefer the later one where they conflict."
         )
-    if stale_message:
-        result["message"] = stale_message
     return result
 
 
@@ -376,25 +360,21 @@ def _save_impl(
             ),
         }
 
-    identity, revision = _target_identity(resolved)
-    path = _cache_path(identity)
-    payload: dict[str, Any] = {
-        "target": identity,
-        "revision": revision,
-        "created_at": datetime.now(UTC).isoformat(),
-        "created_by": agent_name,
-        "content": body,
-    }
-    with _cache_lock:
-        existing = _read_cache(path)
+    identity = _target_identity(resolved)
+    with _store_lock:
+        existing = _MODELS.get(identity)
         folded = len(_amendments_of(existing)) if existing else 0
-        error = _write_cache(path, payload)
-    if error:
-        return {"success": False, "error": error}
+        _MODELS[identity] = {
+            "target": identity,
+            "written_at": datetime.now(UTC).isoformat(),
+            "written_by": agent_name,
+            "content": body,
+        }
+        _persist_locked()
 
     message = (
-        "Threat model saved. Subagents should call get_threat_model before they "
-        "start, and treat its trust boundaries as the shared baseline."
+        "Threat model shared with this scan. Subagents should call get_threat_model "
+        "before they start, and treat its trust boundaries as the shared baseline."
     )
     if folded:
         message += (
@@ -404,34 +384,35 @@ def _save_impl(
     return {
         "success": True,
         "target": identity,
-        "revision": revision,
         "amendments_cleared": folded,
         "message": message,
     }
 
 
 def _append_amendment(
-    path: Path, amendment: dict[str, Any]
+    identity: str, amendment: dict[str, Any]
 ) -> tuple[list[dict[str, Any]] | None, str | None]:
-    """Add an amendment to the cached model. Returns (amendments, error)."""
-    with _cache_lock:
-        cached = _read_cache(path)
-        if cached is None or not str(cached.get("content", "")).strip():
+    """Add an amendment to the stored model. Returns (amendments, error)."""
+    with _store_lock:
+        model = _MODELS.get(identity)
+        if model is None or not str(model.get("content", "")).strip():
             return None, (
                 "No threat model exists for this target yet, so there is nothing to "
                 "amend. Derive the base model and call save_threat_model instead."
             )
-        amendments = _amendments_of(cached)
+        amendments = _amendments_of(model)
         if len(amendments) >= _MAX_AMENDMENTS:
             return None, (
                 f"This model already carries {len(amendments)} amendments. Fold them "
                 "into the base model with save_threat_model before adding more."
             )
-        amendments.append(amendment)
-        cached["amendments"] = amendments
-        if len(json.dumps(cached, ensure_ascii=False).encode("utf-8")) > _MAX_MODEL_BYTES:
+        candidate = [*amendments, amendment]
+        sized = {**model, "amendments": candidate}
+        if len(json.dumps(sized, ensure_ascii=False).encode("utf-8")) > _MAX_MODEL_BYTES:
             return None, "Threat model with this amendment exceeds 512KB; tighten it."
-        return amendments, _write_cache(path, cached)
+        model["amendments"] = candidate
+        _persist_locked()
+        return candidate, None
 
 
 def _amend_impl(
@@ -455,13 +436,12 @@ def _amend_impl(
             ),
         }
 
-    identity, revision = _target_identity(resolved)
+    identity = _target_identity(resolved)
     amendments, amend_error = _append_amendment(
-        _cache_path(identity),
+        identity,
         {
             "at": datetime.now(UTC).isoformat(),
             "by": agent_name,
-            "revision": revision,
             "content": body,
         },
     )
@@ -471,7 +451,6 @@ def _amend_impl(
     return {
         "success": True,
         "target": identity,
-        "revision": revision,
         "amendment_count": len(amendments),
         "message": (
             "Amendment recorded. Agents calling get_threat_model will now see it "
@@ -500,25 +479,25 @@ def _scan_targets(ctx: RunContextWrapper) -> list[str]:
 
 @function_tool(timeout=30)
 async def get_threat_model(ctx: RunContextWrapper, target: str) -> str:
-    """Read the cached threat model for a target, if one exists.
+    """Read this scan's threat model for a target, if an agent has derived one.
 
-    A threat model belongs to the target, not to this scan — the same
-    trust boundaries hold across unrelated runs against the same host
-    or application. Call this before you start hunting so you inherit
-    the shared view instead of re-deriving it, and so every agent on
-    this run agrees on what "attacker-controlled" means here.
+    The threat model is this run's shared answer to who the attacker
+    is, where the trust boundaries sit, and what counts as critical
+    here. Call it before you start hunting so you inherit the shared
+    view instead of re-deriving it, and so every agent on this run
+    agrees on what "attacker-controlled" means.
+
+    It is scoped to this scan and nothing is carried over from an
+    earlier run, so an empty result means no agent has derived one yet.
 
     Works black-box or white-box. The target can be a host, a URL, an
     API base, or a repository path; equivalent spellings of the same
     host resolve to the same model, and a checkout resolves to its
-    remote, so a model derived white-box is read back by a black-box
-    agent testing the deployment.
+    remote, so a model derived white-box by one agent is read back by
+    another testing the deployment.
 
-    Returns ``found: false`` when nothing is cached — derive one and
-    persist it with ``save_threat_model``. ``stale: true`` means the
-    checkout moved to a different revision, or that a model with no
-    revision to pin to has aged out: use it as a starting point,
-    re-confirm what it claims, and save the corrected version.
+    Returns ``found: false`` when nothing has been derived yet — derive
+    one and share it with ``save_threat_model``.
 
     Any ``amendments`` in the response are corrections other agents
     recorded after the base model was written. They are part of the
@@ -540,10 +519,10 @@ async def get_threat_model(ctx: RunContextWrapper, target: str) -> str:
 
 @function_tool(timeout=30)
 async def save_threat_model(ctx: RunContextWrapper, target: str, content: str) -> str:
-    """Persist a target-scoped threat model for reuse by other agents.
+    """Share a target-scoped threat model with the other agents on this scan.
 
-    Keyed by target identity, so a later scan of the same host or tree
-    reads it back instead of paying to derive it again.
+    The model lives for this run only — it is not written to disk and a
+    later scan of the same host or tree starts without it.
 
     **This replaces the whole document, and clears any amendments** —
     it is for the agent establishing the baseline (normally root,
@@ -561,9 +540,9 @@ async def save_threat_model(ctx: RunContextWrapper, target: str, content: str) -
     necessarily provisional — say which parts are inferred rather than
     observed, and let later agents amend it as the picture fills in.
 
-    **Scope it to the target, not to this scan.** Do not centre it on
-    the diff you were handed, the subsystem you were assigned, or the
-    one host that happened to answer first. With source, distinguish
+    **Scope it to the target, not to your slice of it.** Do not centre
+    it on the diff you were handed, the subsystem you were assigned, or
+    the one host that happened to answer first. With source, distinguish
     real product and runtime surfaces from test, docs, example, and
     developer-tooling paths — in a monorepo, do not let ``tests/`` or
     one-off scripts become the centre of gravity unless the code shows

@@ -1,14 +1,15 @@
-"""Connect to MCP servers and expose their tools to the agent.
+"""Connect to MCP servers so a run can reach their tools on demand.
 
 Given one :class:`McpConnectionConfig` per server, :func:`connect_mcp_servers`
-lists each server's tools, keeps the ones on the connection's allowlist (or all
-of them when none is set), prefixes each with the connection name so servers do
-not collide, and registers them through the agent factory. The factory applies
-output bounding, per-call timeouts, and structured errors to every registered
-tool, so this layer does not reimplement them.
+connects each server, counts the tools it offers (honoring the connection's
+allowlist), and returns the live sessions. It does NOT register anything as an
+agent tool: under the generic-dispatch model the run holds these sessions in a
+per-run :class:`~strix.tools.mcp.registry.McpRegistry`, and the agent reaches
+them through the two dispatch tools (``describe_mcp`` / ``call_mcp``), which call
+:func:`dispatch_mcp_call` here to run one tool and serialize its result.
 
-A server that cannot connect, or a tool set that cannot be registered, is logged
-and skipped, so one bad connection never fails the run.
+A server that cannot connect is logged and skipped, so one bad connection never
+fails the run.
 """
 
 from __future__ import annotations
@@ -16,36 +17,40 @@ from __future__ import annotations
 import contextlib
 import json
 import logging
+import os
+from pathlib import Path
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
-from agents.exceptions import ModelBehaviorError
 from agents.mcp import (
     MCPServer,
     MCPServerStdio,
     MCPServerStdioParams,
     MCPServerStreamableHttp,
     MCPServerStreamableHttpParams,
-    MCPUtil,
     create_static_tool_filter,
 )
+from mcp.client.stdio import stdio_client
+from mcp.shared._httpx_utils import create_mcp_http_client
 
-from strix.agents.factory import register_agent_tools
-from strix.tools.mcp.naming import namespaced_tool_name
+from strix.tools.mcp.failures import HttpStatusRecorder
+from strix.tools.mcp.session import McpConnectionUnavailableError, SupervisedMcpSession
 
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from agents.tool import FunctionTool, Tool
-    from mcp.types import Tool as MCPTool
+    import httpx
 
     from strix.tools.mcp.config import McpConnectionConfig
+    from strix.tools.mcp.registry import McpConnectionRequest, McpRegistry
 
-    # Runs on each tool's structured result before it reaches the agent. Called
-    # ``result_transform(namespaced_tool_name, structured_result)`` and its return
-    # value becomes the tool's output. ``structured_result`` is the parsed
-    # ``CallToolResult`` as a dict (not a serialized string), so the transform can
-    # project or drop individual fields.
+    # Runs on one tool call's structured result before it reaches the agent.
+    # Called ``result_transform(label, structured_result)`` and its return value
+    # becomes the tool's output. ``label`` is the model-facing
+    # ``<connection>_<tool>`` name so a transform keyed on names still resolves
+    # the same way it did under per-tool registration; ``structured_result`` is
+    # the parsed ``CallToolResult`` as a dict (not a serialized string), so the
+    # transform can project or drop individual fields.
     ResultTransform = Callable[[str, Any], Any]
 
 
@@ -53,18 +58,28 @@ logger = logging.getLogger(__name__)
 
 
 class ConnectedMcpServer(NamedTuple):
-    """One successfully connected MCP server and how many tools it registered.
+    """One successfully connected MCP connection and how many tools it offers.
 
-    ``server`` is kept so the caller can clean it up when the run ends;
-    ``name`` and ``tool_count`` let the caller show the user a startup summary;
+    ``session`` is the :class:`~strix.tools.mcp.session.SupervisedMcpSession` that
+    owns the live connection on its own task, so the caller cleans it up when the
+    run ends (``await session.aclose()``) and hands it to the run's
+    :class:`~strix.tools.mcp.registry.McpRegistry`; ``name`` and ``tool_count``
+    let the caller show the user a startup summary and fill the prompt inventory;
     ``notes`` carries the connection's optional free-text description so the
-    caller can surface it to the agent as context about the connection.
+    caller can surface it as the connection's purpose in the inventory.
     """
 
-    server: MCPServer
+    session: SupervisedMcpSession
     name: str
     tool_count: int
     notes: str | None = None
+
+
+class BuiltMcpServer(NamedTuple):
+    """A constructed SDK server and its optional HTTP failure recorder."""
+
+    server: MCPServer
+    recorder: HttpStatusRecorder | None
 
 
 def _auth_headers(config: McpConnectionConfig) -> dict[str, str]:
@@ -75,13 +90,45 @@ def _auth_headers(config: McpConnectionConfig) -> dict[str, str]:
     return {"Authorization": f"Bearer {auth.token}"}
 
 
-def _build_server(config: McpConnectionConfig) -> MCPServer:
+@contextlib.asynccontextmanager
+async def _quiet_stdio_streams(params: Any) -> Any:
+    """Run a stdio MCP server with its stderr sent to the void.
+
+    A stdio MCP server chats on stderr as it boots (the filesystem server, for
+    one, prints ``Allowed directories: [ ... ]``). The mcp library forwards that
+    stderr to the parent's ``sys.stderr`` by default, which is the terminal the
+    TUI is drawing on, so the banner corrupts the display. Pointing ``errlog`` at
+    ``os.devnull`` drops that chatter. Connection failures are unaffected: they
+    still raise from ``connect`` and are logged by :func:`connect_mcp_servers`.
+    """
+    with Path(os.devnull).open("w", encoding="utf-8") as errlog:
+        async with stdio_client(params, errlog=errlog) as streams:
+            yield streams
+
+
+class _QuietMCPServerStdio(MCPServerStdio):
+    """``MCPServerStdio`` whose subprocess stderr is kept off the terminal.
+
+    The SDK's ``create_streams`` calls ``stdio_client(self.params)`` with no
+    ``errlog``, so the subprocess stderr defaults to ``sys.stderr`` and paints
+    server banners over the running TUI. Overriding it lets us redirect that
+    stream; everything else about the stdio transport is unchanged.
+    """
+
+    def create_streams(self) -> Any:
+        return _quiet_stdio_streams(self.params)
+
+
+def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
     """Construct (but do not connect) the SDK server for one connection.
 
+    The returned tuple carries the server and, for HTTP connections, a recorder
+    that retains sanitized response metadata for the owning session.
+
     When ``allowed_tools`` is a list the static filter means the server will not
-    even list tools outside it; :func:`_register_server_tools` re-applies the
-    same allowlist as the authoritative gate on what gets registered. When it is
-    ``None`` no filter is applied and every listed tool is registered.
+    even list tools outside it, so it is the authoritative gate on what
+    ``describe_mcp`` and ``call_mcp`` can see. When it is ``None`` no filter is
+    applied and every listed tool is reachable.
     """
     tool_filter = (
         create_static_tool_filter(allowed_tool_names=config.allowed_tools)
@@ -95,114 +142,44 @@ def _build_server(config: McpConnectionConfig) -> MCPServer:
             "args": config.args,
             "env": config.env,
         }
-        return MCPServerStdio(
-            params=stdio_params,
-            name=config.name,
-            tool_filter=tool_filter,
-            cache_tools_list=True,
+        return BuiltMcpServer(
+            _QuietMCPServerStdio(
+                params=stdio_params,
+                name=config.name,
+                tool_filter=tool_filter,
+                cache_tools_list=True,
+            ),
+            None,
         )
+
+    recorder = HttpStatusRecorder()
+
+    def httpx_client_factory(
+        headers: dict[str, str] | None = None,
+        timeout: httpx.Timeout | None = None,
+        auth: httpx.Auth | None = None,
+    ) -> httpx.AsyncClient:
+        client = create_mcp_http_client(headers=headers, timeout=timeout, auth=auth)
+        client.event_hooks.setdefault("response", []).append(recorder)
+        return client
 
     http_params: MCPServerStreamableHttpParams = {
         "url": cast("str", config.url),
         "headers": _auth_headers(config),
+        "timeout": config.http_timeout_seconds,
+        "sse_read_timeout": config.sse_read_timeout_seconds,
+        "httpx_client_factory": httpx_client_factory,
     }
-    return MCPServerStreamableHttp(
-        params=http_params,
-        name=config.name,
-        tool_filter=tool_filter,
-        cache_tools_list=True,
+    return BuiltMcpServer(
+        MCPServerStreamableHttp(
+            params=http_params,
+            name=config.name,
+            tool_filter=tool_filter,
+            cache_tools_list=True,
+            client_session_timeout_seconds=config.session_timeout_seconds,
+        ),
+        recorder,
     )
-
-
-def _build_tool(
-    config: McpConnectionConfig,
-    server: MCPServer,
-    mcp_tool: MCPTool,
-    result_transform: ResultTransform | None,
-) -> FunctionTool:
-    """Build one namespaced FunctionTool from a listed MCP tool.
-
-    The SDK builds the tool (so name override, input schema, approval policy,
-    error-as-result handling, and tool-origin metadata are unchanged). With a
-    ``result_transform`` we route the underlying MCP call through
-    :func:`_install_result_transform` so the transform sees the structured result
-    and decides the tool's output. Without one (the stock path), we still route
-    the call, through :func:`_install_error_status_capture`, so an errored result
-    reads as failed in the TUI while the agent's content is unchanged.
-    """
-    namespaced_name = namespaced_tool_name(config.name, mcp_tool.name)
-    tool = MCPUtil.to_function_tool(
-        mcp_tool,
-        server,
-        convert_schemas_to_strict=False,
-        tool_name_override=namespaced_name,
-    )
-    if result_transform is not None:
-        _install_result_transform(tool, server, mcp_tool.name, namespaced_name, result_transform)
-    else:
-        _install_error_status_capture(tool, server, mcp_tool.name, namespaced_name)
-    return tool
-
-
-def _install_result_transform(
-    tool: FunctionTool,
-    server: MCPServer,
-    base_tool_name: str,
-    namespaced_name: str,
-    result_transform: ResultTransform,
-) -> None:
-    """Route a tool's MCP call through ``result_transform``, innermost.
-
-    ``MCPUtil.to_function_tool`` serializes the result inside its own invoke, so
-    the structured result cannot be intercepted through it. Instead we call
-    ``server.call_tool`` ourselves, hand the parsed :class:`CallToolResult` to the
-    transform, and return the transform's output as the tool result.
-
-    This runs INSIDE the tool's invoke. The agent factory wraps a registered
-    tool's ``on_invoke_tool`` with output bounding, disk spill, and tracing at
-    agent-build time, which is OUTSIDE this invoke, so the transform is genuinely
-    the innermost step: nothing sees the raw result before the transform does.
-
-    ``to_function_tool`` wraps the real invoke in the SDK's failure-handling
-    invoker, which stores the inner coroutine on ``_invoke_tool_impl`` and calls
-    it inside its try/except. Swapping that inner impl keeps the SDK's
-    error-as-result handling and all tool metadata while inserting the transform.
-    If the SDK ever renames that attribute we fail loudly rather than silently
-    skip the transform.
-    """
-
-    async def _invoke(_ctx: Any, input_json: str) -> Any:
-        parsed: Any = json.loads(input_json) if input_json else {}
-        if not isinstance(parsed, dict):
-            raise ModelBehaviorError(
-                f"Invalid JSON input for tool {namespaced_name}: expected a JSON object"
-            )
-        args = cast("dict[str, Any]", parsed)
-        result = await server.call_tool(base_tool_name, args)
-        structured_result = result.model_dump(mode="json")
-        return result_transform(namespaced_name, structured_result)
-
-    _replace_tool_invoke(tool, _invoke)
-
-
-def _replace_tool_invoke(tool: FunctionTool, invoke: Callable[[Any, str], Any]) -> None:
-    """Swap a FunctionTool's inner invoke, failing loudly if the SDK shape changed.
-
-    ``to_function_tool`` wraps the real invoke in the SDK's failure-handling
-    invoker, which stores the inner coroutine on ``_invoke_tool_impl`` and calls
-    it inside its own try/except. Swapping that inner impl keeps the SDK's
-    error-as-result handling and every piece of tool metadata intact. It is a
-    plain object with the coroutine as an attribute, not a function, so we treat
-    it as untyped to swap it. If the SDK ever renames that attribute we raise
-    rather than silently leave the swap un-applied.
-    """
-    invoker = cast("Any", tool.on_invoke_tool)
-    if not hasattr(invoker, "_invoke_tool_impl"):
-        raise RuntimeError(
-            "agents SDK FunctionTool invoker shape changed: cannot swap the tool "
-            "invoke without risking it being silently skipped."
-        )
-    invoker._invoke_tool_impl = invoke
 
 
 def _mcp_result_to_tool_output(server: MCPServer, result: Any) -> Any:
@@ -210,9 +187,9 @@ def _mcp_result_to_tool_output(server: MCPServer, result: Any) -> Any:
 
     This reproduces the serialization in ``agents.mcp.util.MCPUtil.invoke_mcp_tool``
     (structured-content JSON when the server asks for it, otherwise text/image
-    content blocks, unwrapping a single block). Because the stock path now routes
+    content blocks, unwrapping a single block). Because the dispatch tool routes
     its own call, this is what makes the agent see byte-identical content to what
-    the SDK would have produced on its own.
+    the SDK would have produced building the tool itself.
     """
     if getattr(server, "use_structured_content", False) and result.structuredContent:
         return json.dumps(result.structuredContent)
@@ -232,118 +209,166 @@ def _mcp_result_to_tool_output(server: MCPServer, result: Any) -> Any:
     return outputs
 
 
-def _install_error_status_capture(
-    tool: FunctionTool,
+async def dispatch_mcp_call(
     server: MCPServer,
-    base_tool_name: str,
-    namespaced_name: str,
-) -> None:
-    """Make an errored MCP result read as failed in the TUI, agent content unchanged.
-
-    The stock SDK invoke returns only the text/image tool output and drops the
-    ``CallToolResult.isError`` flag, so the TUI cannot tell an errored MCP call
-    (which it renders as a green "done") from a successful one. We route the call
-    the same way :func:`_install_result_transform` does, read ``isError`` off the
-    full result, and on an error tag the returned output dict with
-    ``success: False``.
-
-    That tag reaches the human-facing status but not the agent. The SDK stores the
-    raw return value on the run item's ``output`` (which the TUI reads to derive a
-    tool's status), but hands the agent the value re-projected through its
-    ToolOutput schema, which keeps only the known ``type``/``text`` fields and
-    drops the extra ``success`` key. So the status flips to failed while the agent
-    still receives exactly the same error content it does today. Non-error calls
-    return the stock output unchanged and keep rendering as done.
-    """
-
-    async def _invoke(_ctx: Any, input_json: str) -> Any:
-        parsed: Any = json.loads(input_json) if input_json else {}
-        if not isinstance(parsed, dict):
-            raise ModelBehaviorError(
-                f"Invalid JSON input for tool {namespaced_name}: expected a JSON object"
-            )
-        args = cast("dict[str, Any]", parsed)
-        result = await server.call_tool(base_tool_name, args)
-        tool_output = _mcp_result_to_tool_output(server, result)
-        if getattr(result, "isError", False) and isinstance(tool_output, dict):
-            return {**tool_output, "success": False}
-        return tool_output
-
-    _replace_tool_invoke(tool, _invoke)
-
-
-async def _register_server_tools(
-    config: McpConnectionConfig,
-    server: MCPServer,
+    tool_name: str,
+    arguments: dict[str, Any],
+    *,
+    label: str,
     result_transform: ResultTransform | None = None,
-) -> list[Tool]:
-    """List a connected server's tools, prefix + filter them, and register them.
+) -> Any:
+    """Run one MCP tool call and convert its result to a tool output.
 
-    ``allowed_tools`` of ``None`` registers every listed tool; a list restricts
-    to exactly those names.
+    Shared single dispatch point for the generic ``call_mcp`` tool. Calls
+    ``server.call_tool`` with the tool's unprefixed name, then:
+
+    - with a ``result_transform`` (strix-pro's sanitizer), hands the parsed
+      :class:`CallToolResult` to it as ``result_transform(label, structured)`` and
+      returns whatever the transform returns; or
+    - without one, serializes the result the way the agents SDK does (see
+      :func:`_mcp_result_to_tool_output`) and, when the result is an MCP error,
+      normalizes it through :func:`_errored_tool_output` so the failure reaches
+      the interfaces (see that function for the representation and why it does not
+      corrupt the content the agent receives).
+    """
+    result = await server.call_tool(tool_name, arguments)
+    if result_transform is not None:
+        return result_transform(label, result.model_dump(mode="json"))
+    tool_output = _mcp_result_to_tool_output(server, result)
+    if getattr(result, "isError", False):
+        return _errored_tool_output(tool_output)
+    return tool_output
+
+
+def _errored_tool_output(tool_output: Any) -> dict[str, Any]:
+    """Tag a serialized MCP error so the interfaces render it as failed.
+
+    Both the TUI and the run viewer decide a tool call failed by reading a
+    ``success`` key off a top-level dict in the result (``success is False`` means
+    failed). :func:`_mcp_result_to_tool_output` returns a dict only for a single
+    content block; a structured-content result comes back as a string and a
+    multi-block result as a list, and on those the failure flag had nowhere to
+    ride, so the interfaces showed a failed call as done. This normalizes every
+    errored result to a top-level dict carrying ``success: False``:
+
+    - a single content block (already a dict) keeps its ``type``/``text`` and gains
+      ``success: False`` alongside. The SDK's ToolOutput projection keeps the known
+      ``type``/``text`` fields and drops ``success`` before the agent sees it, so
+      the agent still receives exactly the error content;
+    - a list (multiple blocks) or a string (structured content) is placed under a
+      stable ``content`` key so the flag has a top-level dict to ride on. The agent
+      still receives the full error content, under ``content``, rather than losing
+      it.
+    """
+    if isinstance(tool_output, dict):
+        return {**tool_output, "success": False}
+    return {"success": False, "content": tool_output}
+
+
+async def _count_session_tools(config: McpConnectionConfig, session: SupervisedMcpSession) -> int:
+    """Count a connected session's reachable tools for the startup summary.
+
+    ``allowed_tools`` of ``None`` counts every listed tool; a list counts only
+    those names. The count matches what ``describe_mcp`` will show, because the
+    static tool filter built in :func:`_build_server` restricts the server's own
+    ``list_tools`` to the same allowlist. The listing goes through the session's
+    owning task like every other call.
     """
     allowed = config.allowed_tools
-    mcp_tools = await server.list_tools()
-
-    tools: list[Tool] = [
-        _build_tool(config, server, mcp_tool, result_transform)
-        for mcp_tool in mcp_tools
-        if allowed is None or mcp_tool.name in allowed
-    ]
-
-    register_agent_tools(*tools)
-    return tools
+    mcp_tools = await session.list_tools()
+    return sum(1 for mcp_tool in mcp_tools if allowed is None or mcp_tool.name in allowed)
 
 
 async def connect_mcp_servers(
     configs: list[McpConnectionConfig],
-    result_transform: ResultTransform | None = None,
 ) -> list[ConnectedMcpServer]:
-    """Connect to each MCP server and register its tools.
+    """Connect each MCP config on its own supervising task and return the sessions.
 
-    When ``result_transform`` is given, every registered tool routes its result
-    through it before the result reaches the agent (see
-    :func:`_install_result_transform`). When it is ``None`` the tools behave
-    exactly as the SDK builds them.
+    Each connection becomes a :class:`~strix.tools.mcp.session.SupervisedMcpSession`
+    that owns ``connect()``, the held-open session, and ``cleanup()`` on one
+    dedicated task, so a later background failure in one session is contained to
+    that task and never cancels the run. Returns one :class:`ConnectedMcpServer`
+    per session that connected, carrying the session (the caller closes it with
+    ``await session.aclose()`` when the run ends and hands it to the run's
+    registry) plus the connection name, tool count, and notes. A connection whose
+    initial connect fails is skipped rather than raised (fail-open).
 
-    Returns one :class:`ConnectedMcpServer` per server that connected, carrying
-    the SDK server (so the caller can clean it up when the run ends) plus the
-    server name and how many tools it registered (so the caller can show the
-    user a startup summary). Connections that fail are skipped rather than
-    raised.
+    If this coroutine is itself cancelled mid-attach (the run going down), every
+    session started so far is closed on its own task before the cancellation is
+    re-raised, so nothing is orphaned.
+
+    Nothing is registered as an agent tool: the caller builds a per-run
+    :class:`~strix.tools.mcp.registry.McpRegistry` from these sessions, and the
+    agent reaches each tool on demand through ``describe_mcp`` / ``call_mcp``.
     """
     connected: list[ConnectedMcpServer] = []
-    for config in configs:
-        server: MCPServer | None = None
-        try:
-            server = _build_server(config)
-            await server.connect()  # type: ignore[no-untyped-call]
-            tools = await _register_server_tools(config, server, result_transform)
-        except Exception:
-            logger.exception("Skipping MCP connection %r", config.name)
-            if server is not None:
-                with contextlib.suppress(Exception):
-                    await server.cleanup()  # type: ignore[no-untyped-call]
-            continue
-        except BaseException:
-            # A cancellation (or other non-Exception failure) mid-connect must not
-            # orphan MCP subprocesses or HTTP sessions. Clean up the server being
-            # connected and every server already connected, then re-raise so the
-            # caller still stops. The runner only receives the list on a clean
-            # return, so on an abnormal exit this function owns the cleanup.
-            if server is not None:
-                with contextlib.suppress(Exception):
-                    await server.cleanup()  # type: ignore[no-untyped-call]
-            for established in connected:
-                with contextlib.suppress(Exception):
-                    await established.server.cleanup()  # type: ignore[no-untyped-call]
-            raise
-
-        logger.info("Connected MCP server %r (%d tools)", config.name, len(tools))
-        connected.append(
-            ConnectedMcpServer(
-                server=server, name=config.name, tool_count=len(tools), notes=config.notes
+    sessions: list[SupervisedMcpSession] = []
+    try:
+        for config in configs:
+            session = SupervisedMcpSession(config)
+            sessions.append(session)
+            if not await session.start():
+                # Initial connect failed; already logged inside the session. Drop it.
+                await session.aclose()
+                sessions.remove(session)
+                continue
+            try:
+                tool_count = await _count_session_tools(config, session)
+            except McpConnectionUnavailableError:
+                # The session died between connecting and its first listing; skip it.
+                logger.warning("MCP connection %r died before its first listing", config.name)
+                await session.aclose()
+                sessions.remove(session)
+                continue
+            logger.info("Connected MCP server %r (%d tools)", config.name, tool_count)
+            connected.append(
+                ConnectedMcpServer(
+                    session=session, name=config.name, tool_count=tool_count, notes=config.notes
+                )
             )
-        )
+    except BaseException:
+        # Cancelled or errored mid-attach: close every session started so far,
+        # each on its own task, then re-raise. The runner only receives the list
+        # on a clean return, so on an abnormal exit this function owns the cleanup.
+        for session in sessions:
+            with contextlib.suppress(BaseException):
+                await session.aclose()
+        raise
 
     return connected
+
+
+async def attach_mcp_requests(
+    requests: list[McpConnectionRequest],
+    registry: McpRegistry,
+) -> list[ConnectedMcpServer]:
+    """Connect a caller's MCP requests and populate the run's registry.
+
+    The one shared attach-and-populate path both the command-line and the
+    SaaS/pro product go through, so all connecting and cleanup lives in one owner.
+    The caller supplies inert :class:`McpConnectionRequest` objects (a config plus
+    a provider label, an optional per-connection ``result_transform``, and an
+    optional ``purpose``) and never a live session: the engine connects each
+    config here, reusing :func:`connect_mcp_servers` so the fail-open behavior (a
+    connection that will not connect is logged and skipped) and the cancellation
+    cleanup are preserved unchanged.
+
+    For each connection that came up, this registers it under its config name with
+    its tool count, its ``provider`` label, its ``result_transform``, and a purpose
+    of ``request.purpose`` when set else the connection's notes. Returns the
+    connected servers (the runner records them and cleans them up when the run
+    ends).
+    """
+    request_by_name = {request.config.name: request for request in requests}
+    connections = await connect_mcp_servers([request.config for request in requests])
+    for connection in connections:
+        request = request_by_name[connection.name]
+        registry.add(
+            name=connection.name,
+            session=connection.session,
+            tool_count=connection.tool_count,
+            purpose=request.purpose or connection.notes,
+            provider=request.provider,
+            result_transform=request.result_transform,
+        )
+    return connections

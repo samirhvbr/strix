@@ -98,6 +98,14 @@ Examples:
   # Extra files placed in the sandbox workspace
   strix --target ./my-project --workspace-file ./wordlist.txt
   strix --target https://app.com --workspace-file ./openapi.yaml:specs/openapi.yaml
+
+Strix Cloud:
+  strix cloud login
+  strix cloud scans start --source . --yes --wait
+  strix cloud                      # list every cloud resource
+
+  Run a pentest in Strix Cloud     https://app.strix.ai
+  Try Strix Enterprise             https://strix.ai/demo
         """,
     )
 

@@ -57,6 +57,11 @@ func Tool(data map[string]any) string {
 	// nothing here. The tag is only ever set from the connections the run made,
 	// so it is the one thing that can tell such a call apart from a built-in.
 	if connection := StringValue(data["mcp_connection"]); connection != "" {
+		// describe_mcp inspects a connection's catalog rather than calling a tool
+		// on it, so there is no underlying tool and the connection is the subject.
+		if name == "describe_mcp" {
+			return renderMcpInspect(connection, status)
+		}
 		toolName := StringValue(data["mcp_tool"])
 		if toolName == "" {
 			toolName = name
@@ -65,6 +70,10 @@ func Tool(data map[string]any) string {
 	}
 
 	switch name {
+	// list_mcps inventories every connection rather than touching one, so it is
+	// the one MCP tool with no connection tag and routes by name like a built-in.
+	case "list_mcps":
+		return renderMcpList(result, status)
 	case "exec_command":
 		return renderExecCommand(args, result, status)
 	case "write_stdin":
@@ -75,6 +84,8 @@ func Tool(data map[string]any) string {
 		return renderViewImage(args, result)
 	case "create_vulnerability_report":
 		return renderVulnerabilityReport(args, result)
+	case "update_vulnerability_report":
+		return renderVulnerabilityReportUpdate(args, result)
 	case "create_dependency_report":
 		return renderDependencyReport(args, result)
 	case "list_reports":

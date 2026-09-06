@@ -1,10 +1,8 @@
-"""Tests for the target-scoped threat model cache."""
+"""Tests for the run-scoped threat model store."""
 
 from __future__ import annotations
 
-import json
 import subprocess
-from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING
 
 import pytest
@@ -17,6 +15,7 @@ from strix.tools.threat_model.tools import (
     _save_impl,
     amend_threat_model,
     get_threat_model,
+    hydrate_threat_models_from_disk,
     save_threat_model,
 )
 
@@ -64,8 +63,10 @@ def _make_repo(tmp_path: Path, name: str = "repo") -> Path:
 
 
 @pytest.fixture(autouse=True)
-def _isolated_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(threat_model_tools, "_CACHE_DIR", tmp_path / "cache")
+def _empty_store() -> None:
+    """Each test is its own run, so it starts with an empty, unmirrored store."""
+    threat_model_tools._MODELS.clear()
+    threat_model_tools._store_path = None
 
 
 def test_missing_model_reports_not_found(tmp_path: Path) -> None:
@@ -85,11 +86,53 @@ def test_saved_model_round_trips(tmp_path: Path) -> None:
     result = _get_impl(str(repo))
 
     assert result["found"] is True
-    assert result["stale"] is False
     assert "multi-tenant billing API" in result["content"]
 
 
-def test_model_is_stale_after_new_revision(tmp_path: Path) -> None:
+def test_nothing_is_written_outside_the_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The model must not outlive the scan, so nothing may land in the home dir."""
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    repo = _make_repo(tmp_path)
+
+    _save_impl(str(repo), _MODEL, "root")
+    _amend_impl(str(repo), _ADDENDUM, "agent-a")
+
+    assert list(home.rglob("*")) == []
+
+
+def test_a_new_run_starts_without_the_model(tmp_path: Path) -> None:
+    """A later scan of the same target inherits nothing from this one."""
+    repo = _make_repo(tmp_path)
+    hydrate_threat_models_from_disk(tmp_path / "first-run")
+    _save_impl(str(repo), _MODEL, "root")
+
+    hydrate_threat_models_from_disk(tmp_path / "second-run")  # a different scan
+
+    assert _get_impl(str(repo))["found"] is False
+
+
+def test_resuming_the_same_run_keeps_the_model(tmp_path: Path) -> None:
+    """A resumed scan is the same scan, so its agents keep the shared baseline."""
+    state_dir = tmp_path / "state"
+    repo = _make_repo(tmp_path)
+    hydrate_threat_models_from_disk(state_dir)
+    _save_impl(str(repo), _MODEL, "root")
+    _amend_impl(str(repo), _ADDENDUM, "agent-a")
+
+    threat_model_tools._MODELS.clear()  # what the resuming process starts from
+    hydrate_threat_models_from_disk(state_dir)
+
+    result = _get_impl(str(repo))
+    assert result["found"] is True
+    assert [a["content"] for a in result["amendments"]] == [_ADDENDUM]
+
+
+def test_model_survives_a_new_revision_within_the_run(tmp_path: Path) -> None:
+    """The model is not pinned to a revision; a commit mid-run does not drop it."""
     repo = _make_repo(tmp_path)
     _save_impl(str(repo), _MODEL, None)
 
@@ -100,11 +143,10 @@ def test_model_is_stale_after_new_revision(tmp_path: Path) -> None:
     result = _get_impl(str(repo))
 
     assert result["found"] is True
-    assert result["stale"] is True
-    assert result["content"]
+    assert "multi-tenant billing API" in result["content"]
 
 
-def test_cache_is_keyed_per_repository(tmp_path: Path) -> None:
+def test_store_is_keyed_per_repository(tmp_path: Path) -> None:
     first = _make_repo(tmp_path, "first")
     second = _make_repo(tmp_path, "second")
     _save_impl(str(first), _MODEL, None)
@@ -218,8 +260,6 @@ def test_blackbox_target_round_trips() -> None:
     result = _get_impl(target)
 
     assert result["found"] is True
-    assert result["stale"] is False, "a fresh model with no revision is not stale"
-    assert result["revision"] == "unversioned"
     assert "Inferred from recon" in result["content"]
 
 
@@ -230,22 +270,6 @@ def test_blackbox_target_spellings_share_one_model() -> None:
         assert _get_impl(spelling)["found"] is True, spelling
 
     assert _get_impl("https://other.example.com")["found"] is False
-
-
-def test_blackbox_model_goes_stale_with_age() -> None:
-    target = "https://app.example.com"
-    _save_impl(target, _BLACKBOX_MODEL, "recon")
-
-    aged = (datetime.now(UTC) - timedelta(days=threat_model_tools._MAX_AGE_DAYS + 1)).isoformat()
-    path = threat_model_tools._cache_path("app.example.com:443")
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    payload["created_at"] = aged
-    path.write_text(json.dumps(payload), encoding="utf-8")
-
-    result = _get_impl(target)
-
-    assert result["stale"] is True
-    assert "re-confirm" in result["message"]
 
 
 def test_blackbox_target_can_be_amended() -> None:
