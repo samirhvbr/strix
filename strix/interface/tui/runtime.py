@@ -49,6 +49,11 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
+def _revision_count(report: dict[str, Any]) -> int:
+    history = report.get("update_history")
+    return len(history) if isinstance(history, list) else 0
+
+
 class GoTuiPreActivationError(RuntimeError):
     """A sidecar failure raised before the Go TUI activates."""
 
@@ -107,6 +112,9 @@ class GoTuiRuntime:
             self.controller.notify_changed()
         )
         self.report_state.vulnerability_updated_callback = lambda _report: (
+            self.controller.notify_changed()
+        )
+        self.report_state.vulnerability_deleted_callback = lambda _report: (
             self.controller.notify_changed()
         )
         self.controller.notify_changed()
@@ -339,7 +347,9 @@ class GoTuiRuntime:
         if self.report_state is not None:
             usage = dict(self.report_state.get_total_llm_usage())
             vulnerabilities = [
-                report.get("id", index) if isinstance(report, dict) else index
+                (report.get("id", index), _revision_count(report))
+                if isinstance(report, dict)
+                else index
                 for index, report in enumerate(self.report_state.vulnerability_reports)
             ]
         return json.dumps(

@@ -370,6 +370,17 @@ func TestStartedSnapshotTransitionsToLiveView(t *testing.T) {
 	}
 }
 
+func TestSplashModelWarningRendersTheBackendSentenceOnce(t *testing.T) {
+	warning := "openai/glm-5.3 is not a recommended frontier model. Pentest quality could be degraded."
+	got := ansi.Strip(splashModelWarning("openai/glm-5.3", warning))
+	if got != "⚠ "+warning {
+		t.Fatalf("splash warning = %q, want %q", got, "⚠ "+warning)
+	}
+	if got := ansi.Strip(splashModelWarning("other/model", warning)); got != "⚠ "+warning {
+		t.Fatalf("splash warning with unrelated model = %q", got)
+	}
+}
+
 func TestSetupStartScreenFitsNarrowTerminal(t *testing.T) {
 	model := New(nil)
 	model.width, model.height = 40, 18
@@ -1426,5 +1437,33 @@ func TestNarrowTerminalKeepsTheFrameIntact(t *testing.T) {
 				t.Fatalf("at width %d row %d is %d columns", width, i, got)
 			}
 		}
+	}
+}
+
+func TestCtrlZSuspendsFromEveryScreen(t *testing.T) {
+	for name, prepare := range map[string]func(*Model){
+		"splash": func(m *Model) { m.showSplash = true },
+		"modal":  func(m *Model) { m.showSplash = false; m.openModal(modalHelp) },
+		"main":   func(m *Model) { m.showSplash = false },
+	} {
+		model := New(nil)
+		prepare(&model)
+		_, cmd := model.Update(tea.KeyMsg{Type: tea.KeyCtrlZ})
+		if cmd == nil {
+			t.Fatalf("%s: ctrl+z returned no command", name)
+		}
+		if _, ok := cmd().(tea.SuspendMsg); !ok {
+			t.Fatalf("%s: ctrl+z did not suspend", name)
+		}
+	}
+}
+
+func TestResumeReenablesMouse(t *testing.T) {
+	_, cmd := New(nil).Update(tea.ResumeMsg{})
+	if cmd == nil {
+		t.Fatal("resume returned no command")
+	}
+	if msg := cmd(); msg != tea.EnableMouseCellMotion() {
+		t.Fatalf("resume did not re-enable mouse tracking: %#v", msg)
 	}
 }

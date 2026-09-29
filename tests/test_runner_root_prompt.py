@@ -194,21 +194,12 @@ async def test_mcp_available_flag_set_when_a_connection_attaches(
     scope_context: dict[str, Any] = {"scope": "built-in"}
     captured = _patch_engine_scaffold(monkeypatch, tmp_path, scope_context)
 
-    async def _aclose() -> None:
-        return None
-
-    async def _attach(_requests: Any, registry: Any) -> list[Any]:
-        registry.add(name="fs", server=object(), purpose="local files", tool_count=2)
-        session = types.SimpleNamespace(aclose=_aclose)
-        return [types.SimpleNamespace(name="fs", tool_count=2, session=session)]
-
-    monkeypatch.setattr(mcp_pkg, "attach_mcp_requests", _attach)
-
     request = McpConnectionRequest(
         config=McpConnectionConfig(
             name="fs",
             url="https://mcp.example.com",
             auth=BearerAuth(token="run-token"),
+            notes="local files",
         )
     )
 
@@ -224,7 +215,7 @@ async def test_mcp_available_flag_set_when_a_connection_attaches(
     assert kwargs["system_prompt_context"]["mcp_available"] is True
     # The named inventory names each connected server for the prompt.
     assert kwargs["system_prompt_context"]["mcp_connections"] == [
-        {"name": "fs", "purpose": "local files", "tool_count": 2}
+        {"name": "fs", "purpose": "local files", "tool_count": 0}
     ]
 
 

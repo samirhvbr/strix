@@ -40,6 +40,7 @@ from strix.config import codex
 from strix.config.loader import load_settings
 from strix.config.tool_call_ids import TurnCallIdRewriter, dedupe_input
 from strix.config.tool_call_limits import TurnToolCallLimiter
+from strix.llm import request_log
 
 
 if TYPE_CHECKING:
@@ -390,7 +391,7 @@ def _guard_event(
     event: TResponseStreamEvent, rewriter: TurnCallIdRewriter, limiter: TurnToolCallLimiter
 ) -> TResponseStreamEvent | None:
     if isinstance(event, ResponseOutputItemAddedEvent | ResponseOutputItemDoneEvent):
-        rewritten = rewriter.rewrite_item(event.item)
+        rewritten = rewriter.rewrite_item(event.item, event.output_index)
         if not limiter.allow(rewritten):
             return None
         if rewritten is not event.item:
@@ -525,13 +526,37 @@ class StrixProvider(MultiProvider):
             # The ChatGPT subscription backend is always streamed; it has no
             # non-streaming mode to fall back to, so LLM_DISABLE_STREAMING
             # does not apply here.
-            model: Model = _CodexResponsesModel(
-                slug,
-                codex.get_subscription_client(),
-                reasoning_effort=llm.reasoning_effort,
+            model: Model = request_log.RequestLoggingModel(
+                _CodexResponsesModel(
+                    slug,
+                    codex.get_subscription_client(),
+                    reasoning_effort=llm.reasoning_effort,
+                ),
+                model_name=slug,
+                provider="openai-codex",
+                base_url=None,
             )
         else:
             model = super().get_model(model_name)
+            resolved_name = model_name or llm.model or "unknown"
+            if _routes_via_litellm(model):
+                # LiteLLM's callbacks log every reply; only a cancelled attempt
+                # (stream idle timeout, abandoned turn) escapes them.
+                model = request_log.RequestLoggingModel(
+                    model,
+                    model_name=resolved_name,
+                    provider=_litellm_provider(resolved_name),
+                    base_url=self._override_base_url or llm.api_base,
+                    route="litellm",
+                    abandoned_only=True,
+                )
+            else:
+                model = request_log.RequestLoggingModel(
+                    model,
+                    model_name=resolved_name,
+                    provider="openai",
+                    base_url=self._override_base_url or llm.api_base,
+                )
             if llm.disable_streaming:
                 model = _NonStreamingModel(model)
                 # The wrapper emits its single event only once the whole request
@@ -552,6 +577,23 @@ def _not_usage_limit_error(context: RetryPolicyContext) -> bool:
     # Composed with ``all`` below so the run fails fast and stops resumably
     # instead of thrashing the backoff on a limit that will not clear for hours.
     return not codex.is_usage_limit_error(context.error)
+
+
+def _routes_via_litellm(model: Model) -> bool:
+    """LiteLLM-backed models are captured by the LiteLLM callback, not the wrapper."""
+    from agents.extensions.models.litellm_model import LitellmModel
+
+    return isinstance(model, LitellmModel)
+
+
+def _litellm_provider(model_name: str) -> str | None:
+    """The provider LiteLLM will route ``model_name`` to, if it can tell."""
+    try:
+        import litellm
+
+        return str(litellm.get_llm_provider(model_name)[1])
+    except Exception:  # noqa: BLE001 - unknown model ids are the provider's problem, not the log's
+        return None
 
 
 DEFAULT_MODEL_RETRY = ModelRetrySettings(
@@ -605,17 +647,27 @@ RECOMMENDED_MODEL_NAMES = (
 
 _RECOMMENDED_MODEL_NAME_SET = frozenset(name.lower() for name in RECOMMENDED_MODEL_NAMES)
 
-FRONTIER_MODEL_FAMILIES = (
-    (("azure", "azure_ai", "bedrock_mantle", "chatgpt", "openai"), ("gpt-5",)),
-    (
-        ("anthropic", "azure_ai", "bedrock", "claude", "databricks", "snowflake", "vertex_ai"),
-        ("claude-fable-5", "claude-opus-5", "claude-opus-4", "claude-sonnet-5", "claude-sonnet-4"),
-    ),
-    (("google", "gemini", "vertex_ai"), ("gemini-3",)),
-    (("deepseek",), ("deepseek-v4", "deepseek-r1", "deepseek-reasoner")),
-    (("alibaba", "dashscope", "qwen"), ("qwen3.8", "qwen3.7", "qwen3-max")),
-    (("moonshot", "moonshotai", "kimi"), ("kimi-k3", "kimi-k2.7", "kimi-k2.6")),
-    (("zai", "z-ai", "zai-org", "zhipuai"), ("glm-5.3", "glm-5.2")),
+# Matched against the bare model name only: the route (``openai/``, ``openrouter/``,
+# a local gateway, ...) says nothing about the model's quality.
+FRONTIER_MODEL_PREFIXES = (
+    "gpt-5",
+    "claude-fable-5",
+    "claude-opus-5",
+    "claude-opus-4",
+    "claude-sonnet-5",
+    "claude-sonnet-4",
+    "gemini-3",
+    "deepseek-v4",
+    "deepseek-r1",
+    "deepseek-reasoner",
+    "qwen3.8",
+    "qwen3.7",
+    "qwen3-max",
+    "kimi-k3",
+    "kimi-k2.7",
+    "kimi-k2.6",
+    "glm-5.3",
+    "glm-5.2",
 )
 
 
@@ -623,6 +675,7 @@ def configure_sdk_model_defaults(settings: Settings) -> None:
     """Apply Strix config to SDK-native defaults."""
     llm = settings.llm
     set_tracing_disabled(True)
+    request_log.install()
     if codex.subscription_model(llm.model):
         return
     _configure_litellm_compatibility()
@@ -634,9 +687,11 @@ def configure_sdk_model_defaults(settings: Settings) -> None:
     if llm.api_base:
         os.environ["OPENAI_BASE_URL"] = llm.api_base
         _configure_litellm_default("api_base", llm.api_base)
-        set_default_openai_api("chat_completions")
-    else:
-        set_default_openai_api("responses")
+    api_type = llm.api_type
+    if api_type is None:
+        api_type = "chat_completions" if llm.api_base else "responses"
+
+    set_default_openai_api(api_type)
     _configure_extra_headers(llm)
 
 
@@ -773,12 +828,16 @@ def _merge_litellm_headers(headers: dict[str, str]) -> None:
 
 def _register_openai_client_with_headers(llm: LlmSettings, headers: dict[str, str]) -> None:
     from agents import set_default_openai_client
+    from agents.models.openai_provider import shared_http_client
     from openai import AsyncOpenAI
 
     client = AsyncOpenAI(
         api_key=llm.api_key or "not-needed",
         base_url=llm.api_base,
         default_headers=dict(headers),
+        # The SDK's shared client is the one the request log observes for
+        # reply status, headers and provider request ids.
+        http_client=shared_http_client(),
     )
     set_default_openai_client(client, use_for_tracing=False)
 
@@ -811,6 +870,8 @@ def uses_chat_completions_tool_schema(model_name: str, settings: Settings) -> bo
     model = model_name.strip().lower()
     if "/" in model and not model.startswith("openai/"):
         return True
+    if settings.llm.api_type is not None:
+        return settings.llm.api_type == "chat_completions"
     if settings.llm.api_base:
         return True
     return not model_supports_reasoning(model_name)
@@ -849,11 +910,8 @@ def is_recommended_or_frontier_model(model_name: str) -> bool:
         return False
     if name in _RECOMMENDED_MODEL_NAME_SET:
         return True
-    provider_name, bare_model_name = _split_model_provider(name)
-    return any(
-        _matches_frontier_family(provider_name, bare_model_name, provider_markers, prefixes)
-        for provider_markers, prefixes in FRONTIER_MODEL_FAMILIES
-    )
+    bare_model_name = name.rsplit("/", 1)[-1]
+    return _matches_model_prefix(bare_model_name, FRONTIER_MODEL_PREFIXES)
 
 
 def _normalized_model_name(model_name: str) -> str:
@@ -863,28 +921,6 @@ def _normalized_model_name(model_name: str) -> str:
             name = name[len(prefix) :]
             break
     return name
-
-
-def _split_model_provider(model_name: str) -> tuple[str | None, str]:
-    if "/" not in model_name:
-        return None, model_name
-    provider_name, bare_model_name = model_name.rsplit("/", 1)
-    return provider_name, bare_model_name
-
-
-def _matches_frontier_family(
-    provider_name: str | None,
-    model_name: str,
-    provider_markers: tuple[str, ...],
-    model_prefixes: tuple[str, ...],
-) -> bool:
-    if not _matches_model_prefix(model_name, model_prefixes):
-        return False
-    if provider_name is None:
-        return True
-    return _contains_provider_marker(
-        provider_name, provider_markers, split_compound_names=True
-    ) or _contains_provider_marker(model_name, provider_markers)
 
 
 def _matches_model_prefix(model_name: str, model_prefixes: tuple[str, ...]) -> bool:
@@ -902,16 +938,6 @@ def _model_name_candidates(model_name: str) -> tuple[str, ...]:
         model_name.split(".", index)[-1] for index in range(1, model_name.count(".") + 1)
     )
     return (model_name, *suffixes)
-
-
-def _contains_provider_marker(
-    value: str, provider_markers: tuple[str, ...], *, split_compound_names: bool = False
-) -> bool:
-    parts = set(value.replace(".", "/").split("/"))
-    if split_compound_names:
-        for separator in ("_", "-"):
-            parts.update(piece for part in tuple(parts) for piece in part.split(separator))
-    return any(marker in parts for marker in provider_markers)
 
 
 def is_known_openai_bare_model(model_name: str) -> bool:
