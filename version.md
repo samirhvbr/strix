@@ -1,12 +1,12 @@
 # Versão — fork SHVIA do Strix
 
-**Versão atual:** `1.6.2+shvia.15`
+**Current version:** `1.6.2+shvia.16`
 
 > **Fonte da verdade (máquina):** [`.fork-version`](.fork-version) — uma linha.
 > **Changelog por entrega:** [`FORK.md`](FORK.md).
 > Este é o doc de versão no padrão da casa (todo repo tem um `version.md`): guarda a
 > **regra de incremento** e espelha a versão corrente. Ao bumpar, mexa nos **três
-> juntos**: `.fork-version`, a linha "Versão atual" aqui, e uma linha nova no topo da
+> juntos**: `.fork-version`, a linha "Current version" aqui, e uma linha nova no topo da
 > tabela do `FORK.md`.
 
 ---
@@ -46,9 +46,27 @@ comportamento nem contrato.
 
 1. Entrega validada em `master` (rodou / testou).
 2. `.fork-version`: `shvia.<n>` → `shvia.<n+1>`.
-3. `version.md`: atualiza a linha **"Versão atual"** (no topo).
+3. `version.md`: atualiza a linha **"Current version"** (no topo).
 4. `FORK.md`: linha nova no **topo** da tabela — versão do fork, base do upstream, data, o que mudou.
 5. Commit no estilo do fork (conventional-commits, ex.: `feat(strix-run): …` ou `docs(fork): shvia.<n> — …`) + `git push origin master`.
+6. Tag and Release. Every fork version gets an annotated tag `v<version>` (e.g.
+   `v1.6.2+shvia.16`) and a GitHub Release, otherwise the repo's Releases box shows
+   nothing but the upstream tags:
+
+   ```bash
+   V="v$(cat .fork-version)"
+   git tag -a "$V" -m "$(cat .fork-version)" && git push origin "$V"
+   gh release create "$V" --verify-tag --latest --title "$V" --notes-file <notes.md>
+   ```
+
+   The notes come from the new `FORK.md` row, in English. Never create a Release for an
+   older version without `--latest=false`, or it steals the "Latest" badge.
+
+> **`build-release.yml` is inert on the fork, and should stay that way.** It is inherited
+> from upstream and fires on every `v*` tag (5-OS PyInstaller build + an auto-created
+> Release). Forks do not run upstream workflows until the owner enables them in the
+> Actions tab, so tagging here builds nothing. If that is ever enabled, tag pushes will
+> start burning CI minutes and creating their own Releases.
 
 > O **COMMITTER** da casa **não opera** neste repo (sem `.committer.yml`): o
 > versionamento aqui é **manual**, feito pelo agente que entrega. Os commits também

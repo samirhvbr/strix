@@ -71,7 +71,7 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
   before its first import from that graph) and dropped `docker` from `WARMUP_MODULES`. Our
   synchronous pre-import (`_preimport_thread_unsafe_sdk`) and `tests/test_warmup.py` were
   dropped in the v1.6.2 sync; PR #1173 is superseded — nothing to reapply here.
-- **Botão de PDF baixa local** (`viewer/server.py` + `frontend/src/App.tsx` + `static/` recompilado): `GET /api/report/pdf?run=` devolve o PDF plano (attachment, session-gated); os botões "Export report" baixam dele em vez de mandar por e-mail/relay. Rebuild do front: `cd frontend && npm ci && npm run build` (saída em `../static/`, commitar). Fork-only.
+- **Botão de PDF baixa local** (`viewer/server.py` + `frontend/src/App.tsx` + `static/` recompilado): `GET /api/report/pdf?run=` devolve o PDF plano (attachment, session-gated); os botões "Export report" baixam dele em vez de mandar por e-mail/relay. Rebuild do front: `cd frontend && npm ci && npm run build` (saída em `../static/`, commitar). Fork-only. On a sync conflict in `static/` (upstream and we rename the hashed bundle differently, git then text-merges minified JS), never resolve it by hand: finish the source merge, rebuild, and `git add -A strix/interface/viewer/static`.
 - **Viewer sem gate de e-mail** (`strix/interface/viewer/server.py`): removido `and auth.is_verified()` de `/api/runs` (lista) e do acesso a runs históricos (`/api/run|vulnerabilities|report|transcript`), pra ver os runs local sem verificação por e-mail. Mantém `self._has_session()` (token de sessão = segurança real). Fork-only. O report POR e-mail (`_handle_*report`, ~l.364) fica gateado (legítimo).
 - **Usage-limit terminal (F3)** (`strix/config/codex.py`, `strix/core/execution.py`,
   `strix/config/models.py`, `strix/core/runner.py`): `is_usage_limit_error()` → `usage_limit_reached`
@@ -81,5 +81,5 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
 ## Regras
 
 - **Nada de chaves/segredos no git.** `.env` é ignorado; use-o.
-- Mudança validada em `master` → bump em `.fork-version` + linha em `FORK.md`.
+- Mudança validada em `master` → bump em `.fork-version` + linha em `FORK.md`. Then tag `v<version>` and publish a GitHub Release (step 6 of the checklist in `version.md`); a sync also means pushing the `main` mirror.
 - Não reescrever histórico do working copy (o ambiente ~/x faz auto-commit/pull --rebase).
