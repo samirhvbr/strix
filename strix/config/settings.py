@@ -58,6 +58,14 @@ class LlmSettings(BaseSettings):
         default=True,
         alias="STRIX_PROMPT_CACHE",
     )
+    # Providers cache prompts in fixed-size token blocks, so a fully cached prompt
+    # can read back up to a block short. 128 covers the largest common size
+    # (OpenAI; DeepSeek and GLM use 64, vLLM defaults to 16).
+    cache_block_tokens: int = Field(default=128, ge=1, alias="STRIX_CACHE_BLOCK_TOKENS")
+    openrouter_sticky_sessions: bool = Field(
+        default=False,
+        alias="STRIX_OPENROUTER_STICKY_SESSIONS",
+    )
     disable_streaming: bool = Field(
         default=False,
         alias="LLM_DISABLE_STREAMING",

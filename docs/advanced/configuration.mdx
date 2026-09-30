@@ -49,6 +49,14 @@ Configure Strix using environment variables or a config file.
   Timeout in seconds for memory compression operations (context summarization).
 </ParamField>
 
+<ParamField path="STRIX_OPENROUTER_STICKY_SESSIONS" default="false" type="boolean">
+  Send a per-agent `session_id` on OpenRouter requests, so each agent's calls stay on one upstream provider and its prompt cache carries over between turns. When unset, OpenRouter routes every request freely.
+</ParamField>
+
+<ParamField path="STRIX_CACHE_BLOCK_TOKENS" default="128" type="integer">
+  Token block size that providers cache prompts in. A turn counts as a cache miss in the run report only when the cached tokens fall at least this many tokens short of the previous prompt and the prompt did not shrink. Lower it for providers with smaller blocks (DeepSeek and GLM use 64; vLLM defaults to 16).
+</ParamField>
+
 ### Dedicated deduplication model
 
 Finding deduplication is a cheap, structured classification task. By default it

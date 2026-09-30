@@ -70,7 +70,6 @@ def _cache_points(model_name: str) -> Any:
 def test_make_model_settings_enables_prompt_cache_for_bedrock_claude() -> None:
     assert _cache_points("bedrock/global.anthropic.claude-opus-4-8") == [
         {"location": "message", "role": "system"},
-        {"location": "tool_config"},
         {"location": "message", "index": -1},
     ]
 

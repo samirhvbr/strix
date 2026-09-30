@@ -312,11 +312,12 @@ def _reasoning_settings(effort: ReasoningEffort) -> ModelSettings:
 def _prompt_cache_extra_args(model_name: str) -> dict[str, Any] | None:
     """LiteLLM ``cache_control_injection_points`` for Claude prompt caching.
 
-    System prompt + rolling last-message breakpoint everywhere; ``tool_config``
-    only on Bedrock Converse (the only route whose LiteLLM transform consumes
-    it — elsewhere it leaks onto the wire and native Anthropic 400s). Unmapped
-    Bedrock models get no points at all: Bedrock rejects the passed-through
-    field outright.
+    A breakpoint on each system message, plus a rolling last-message one. The
+    system prompt is split into up to three messages, which with the last
+    message uses all four breakpoints Claude allows. There is none on
+    ``tool_config``: the tools come before the system prompt, so its first
+    breakpoint caches them too. Unmapped Bedrock models get no points at all:
+    Bedrock rejects the passed-through field outright.
 
     The field is LiteLLM's own, consumed by its transform, so it only goes to
     routes LiteLLM serves. A bare ``claude-...`` name is served by the SDK's
@@ -328,11 +329,12 @@ def _prompt_cache_extra_args(model_name: str) -> dict[str, Any] | None:
     if is_bedrock_route(model_name) and not bedrock_route_supports_prompt_caching(model_name):
         return None
 
-    points: list[dict[str, Any]] = [{"location": "message", "role": "system"}]
-    if is_bedrock_route(model_name):
-        points.append({"location": "tool_config"})
-    points.append({"location": "message", "index": -1})
-    return {"cache_control_injection_points": points}
+    return {
+        "cache_control_injection_points": [
+            {"location": "message", "role": "system"},
+            {"location": "message", "index": -1},
+        ]
+    }
 
 
 def child_initial_input(

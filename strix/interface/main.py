@@ -135,14 +135,12 @@ def _subscription_error_hint(exc: BaseException) -> str | None:
     return None
 
 
-async def warm_up_llm(show_model_warning: bool = True) -> None:
+async def warm_up_llm() -> None:
     from agents.models.interface import ModelTracing
 
     from strix.config.models import (
-        RECOMMENDED_MODEL_NAMES,
         configure_sdk_model_defaults,
         is_known_openai_bare_model,
-        is_recommended_or_frontier_model,
     )
     from strix.core.inputs import make_model_settings
 
@@ -185,32 +183,6 @@ async def warm_up_llm(show_model_warning: bool = True) -> None:
                 ),
             )
             sys.exit(1)
-
-        if show_model_warning and raw_model and not is_recommended_or_frontier_model(raw_model):
-            warn_text = Text()
-            warn_text.append("MODEL QUALITY WARNING", style="bold yellow")
-            warn_text.append("\n\n", style="white")
-            warn_text.append(f"'{raw_model}'", style="bold cyan")
-            warn_text.append(
-                " is not a recommended frontier model for Strix.\nSecurity scans work best with:\n",
-                style="white",
-            )
-            for recommended_model in RECOMMENDED_MODEL_NAMES:
-                warn_text.append(f"• {recommended_model}\n", style="bold cyan")
-            warn_text.append(
-                "\nYou can continue, but weaker models may miss vulnerabilities "
-                "or produce lower-quality findings.",
-                style="white",
-            )
-            console.print(
-                Panel(
-                    warn_text,
-                    title="[bold white]STRIX",
-                    title_align="left",
-                    border_style="yellow",
-                    padding=(1, 2),
-                ),
-            )
 
         await preflight_model_connection(raw_model, settings=settings)
         logger.info("LLM warm-up succeeded for model %s", (llm.model or "").strip())
@@ -403,7 +375,7 @@ def _bootstrap_scan(args: argparse.Namespace) -> None:
     """
     set_scan_phase("preflight")
     try:
-        asyncio.run(warm_up_llm(show_model_warning=True))
+        asyncio.run(warm_up_llm())
     except ModelConnectionError as exc:
         report_error("model_connection_failed", exc)
         _print_model_connection_error(exc, exc.model_name)
