@@ -267,9 +267,7 @@ def make_model_settings(
         and reasoning_effort != "none"
         and model_supports_reasoning(model_name)
     ):
-        model_settings = model_settings.resolve(
-            _reasoning_settings(reasoning_effort),
-        )
+        model_settings = model_settings.resolve(_reasoning_settings(reasoning_effort))
     if force_required_tool_choice and _accepts_required_tool_choice(model_name):
         model_settings = model_settings.resolve(ModelSettings(tool_choice="required"))
 

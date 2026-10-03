@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import AliasChoices, Field
+from pydantic import AliasChoices, Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -12,6 +12,12 @@ ReasoningEffort = Literal["none", "minimal", "low", "medium", "high", "xhigh", "
 ApiType = Literal["responses", "chat_completions"]
 
 DEFAULT_MAX_TURNS = 500
+
+
+def _lowercase(value: object) -> object:
+    """Enum-like env values are matched case-insensitively (``None`` is ``none``)."""
+    return value.strip().lower() if isinstance(value, str) else value
+
 
 _BASE_CONFIG = SettingsConfigDict(
     case_sensitive=False,
@@ -78,6 +84,11 @@ class LlmSettings(BaseSettings):
         alias="LLM_MAX_TOOL_CALLS_PER_TURN",
     )
 
+    @field_validator("api_type", "reasoning_effort", mode="before")
+    @classmethod
+    def _normalize_case(cls, value: object) -> object:
+        return _lowercase(value)
+
 
 class DedupeSettings(BaseSettings):
     model_config = _BASE_CONFIG
@@ -94,6 +105,11 @@ class DedupeSettings(BaseSettings):
         alias="DEDUPE_LLM_EXTRA_HEADERS",
         repr=False,
     )
+
+    @field_validator("reasoning_effort", mode="before")
+    @classmethod
+    def _normalize_case(cls, value: object) -> object:
+        return _lowercase(value)
 
 
 class ContextSettings(BaseSettings):

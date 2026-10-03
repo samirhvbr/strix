@@ -430,3 +430,10 @@ def test_user_headers_override_openrouter_attribution() -> None:
     assert headers["X-Title"] == "Custom"
     assert headers["X-Tenant"] == "acme"
     assert headers["HTTP-Referer"] == "https://strix.ai"
+
+
+def test_reasoning_effort_sent_as_configured_and_none_omitted() -> None:
+    assert make_model_settings("none", model_name="gpt-5.6-sol").reasoning is None
+    settings = make_model_settings("high", model_name="gpt-daybreak-blue-latest")
+    assert settings.reasoning is not None
+    assert settings.reasoning.effort == "high"
