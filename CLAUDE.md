@@ -45,6 +45,7 @@ cp .env.example .env           # preencha chaves, primário/secundário, budgets
 ```
 
 O `bin/strix-run` resolve modelo + chave do provedor + `--max-budget` a partir do `.env`.
+A provider missing from `resolve_creds` falls through to the generic `LLM_API_KEY` and `STRIX_BUDGET_DEFAULT` without any error, so a new provider needs a `case` line there, its key and budget in `.env.example`, and a case in `tests/test_strix_run_providers.py` (known: openai, anthropic, deepseek, gemini, moonshot, minimax).
 Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para todos os flags.
 
 ### Como o failover funciona (fatos do motor, mapeados)

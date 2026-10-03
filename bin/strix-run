@@ -112,7 +112,8 @@ resolve_creds() {
     deepseek)          KEY="${DEEPSEEK_API_KEY:-}";    BUDGET="${STRIX_BUDGET_DEEPSEEK:-}" ;;
     gemini|google)     KEY="${GEMINI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_GEMINI:-}" ;;
     moonshot|moonshotai|kimi) KEY="${MOONSHOT_API_KEY:-}"; BUDGET="${STRIX_BUDGET_MOONSHOT:-}" ;;
-    *)                 KEY="${LLM_API_KEY:-}";         BUDGET="${STRIX_BUDGET_DEFAULT:-}" ;;
+    minimax)           KEY="${MINIMAX_API_KEY:-}";     BUDGET="${STRIX_BUDGET_MINIMAX:-}" ;;
+    *)                KEY="${LLM_API_KEY:-}";         BUDGET="${STRIX_BUDGET_DEFAULT:-}" ;;
   esac
 }
 
