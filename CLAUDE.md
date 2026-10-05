@@ -83,4 +83,5 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
 
 - **Nada de chaves/segredos no git.** `.env` é ignorado; use-o.
 - Mudança validada em `master` → bump em `.fork-version` + linha em `FORK.md`. Then tag `v<version>` and publish a GitHub Release (step 6 of the checklist in `version.md`); a sync also means pushing the `main` mirror.
+- Never answer `y` to strix's "A new version of strix is available" prompt. Here the install method is detected as `pip`, so `y` runs a package upgrade from PyPI over our editable clone and drops every fork patch. `n` asks again next run and `s` silences only that one version (newer releases still notify), so both are safe; sync through `master` instead (see FORK.md), and once `pyproject.toml` carries the new upstream version the prompt stops by itself. `STRIX_NO_UPDATE_CHECK=1` turns the check off entirely.
 - Não reescrever histórico do working copy (o ambiente ~/x faz auto-commit/pull --rebase).

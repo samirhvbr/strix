@@ -1,6 +1,6 @@
 # Versão — fork SHVIA do Strix
 
-**Current version:** `1.6.2+shvia.19`
+**Current version:** `1.7.0+shvia.20`
 
 > **Fonte da verdade (máquina):** [`.fork-version`](.fork-version) — uma linha.
 > **Changelog por entrega:** [`FORK.md`](FORK.md).
