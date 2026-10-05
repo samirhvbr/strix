@@ -10,7 +10,7 @@ from collections.abc import Callable
 from functools import cache
 from typing import TYPE_CHECKING, Any, cast
 
-from agents import RunConfig, Runner
+from agents import ItemHelpers, MessageOutputItem, RunConfig, Runner
 from agents.exceptions import AgentsException, MaxTurnsExceeded, UserError
 from agents.sandbox.errors import ExecTransportError
 from openai import (
@@ -507,13 +507,18 @@ async def _run_until_lifecycle(
     """Drive an agent until an explicit lifecycle tool settles its status.
 
     A turn that ends without ``finish_scan``, ``agent_finish``,
-    ``respond_to_user``, or ``wait_for_agents`` leaves the agent ``running``:
+    ``wait_for_user``, or ``wait_for_agents`` leaves the agent ``running``:
     plain text never terminates a run and never yields to the user. Such a turn
-    is nudged back into a tool call, bounded by a recovery limit.
+    is nudged back into a tool call, bounded by a recovery limit. The same
+    budget covers a ``wait_for_user`` call made before anything was said to the
+    user since their last message: plain text is the only channel to them, so
+    that park would hand them a silent turn, and the agent is sent back to
+    write its reply instead.
     """
     result: RunResultBase | None = None
     input_data: Any = initial_input
     recovery_limit = _INTERACTIVE_TOOL_RECOVERY_LIMIT if interactive else max(1, max_turns)
+    said_to_user = False
 
     while True:
         if coordinator.budget_stopped:
@@ -570,22 +575,26 @@ async def _run_until_lifecycle(
                 input_data = []
             continue
 
+        said_to_user = said_to_user or _said_to_user(result)
+        # Atomic: only an agent still parked on the user is put back to work, so
+        # a stop that lands in between is never overwritten.
+        silent_yield = (
+            interactive and not said_to_user and await coordinator.resume_silent_user_wait(agent_id)
+        )
         status = await _agent_status(coordinator, agent_id)
-        if status != "running":
+        if status != "running" and not silent_yield:
             await coordinator.reset_recovery(agent_id)
             return result
 
         recoveries = await coordinator.record_recovery(agent_id)
-        logger.warning(
-            "agent %s ended a turn without a lifecycle tool call (interactive=%s); "
-            "forcing tool continuation (%d/%d): %s",
+        _log_recovery(
             agent_id,
-            interactive,
+            result,
             recoveries,
             recovery_limit,
-            _final_output_preview(result),
+            interactive=interactive,
+            silent_yield=silent_yield,
         )
-
         if recoveries >= recovery_limit:
             return await _exhausted_recovery(coordinator, agent_id, result, interactive=interactive)
 
@@ -595,6 +604,7 @@ async def _run_until_lifecycle(
             attempt=recoveries,
             limit=recovery_limit,
             interactive=interactive,
+            silent_yield=silent_yield,
         )
 
 
@@ -886,6 +896,43 @@ async def _agent_status(coordinator: AgentCoordinator, agent_id: str) -> Status 
         return coordinator.statuses.get(agent_id)
 
 
+def _log_recovery(
+    agent_id: str,
+    result: RunResultBase | None,
+    attempt: int,
+    limit: int,
+    *,
+    interactive: bool,
+    silent_yield: bool,
+) -> None:
+    if silent_yield:
+        logger.warning(
+            "agent %s called wait_for_user without saying anything to the user; "
+            "sending it back to reply (%d/%d)",
+            agent_id,
+            attempt,
+            limit,
+        )
+        return
+    logger.warning(
+        "agent %s ended a turn without a lifecycle tool call (interactive=%s); "
+        "forcing tool continuation (%d/%d): %s",
+        agent_id,
+        interactive,
+        attempt,
+        limit,
+        _final_output_preview(result),
+    )
+
+
+def _said_to_user(result: RunResultBase | None) -> bool:
+    """Whether the run produced any assistant text, the only channel to the user."""
+    for item in getattr(result, "new_items", ()) or ():
+        if isinstance(item, MessageOutputItem) and ItemHelpers.text_message_output(item).strip():
+            return True
+    return False
+
+
 def _final_output_preview(result: RunResultBase | None) -> str:
     final_output = getattr(result, "final_output", None)
     if final_output is None:
@@ -903,15 +950,23 @@ async def _append_tool_required_message(
     attempt: int,
     limit: int,
     interactive: bool,
+    silent_yield: bool = False,
 ) -> list[dict[str, str]]:
     finish_tool = "finish_scan" if context.get("parent_id") is None else "agent_finish"
-    if interactive:
+    if silent_yield:
+        message = (
+            "You called wait_for_user without having written anything to the user since "
+            "their last message, so they would be handed a silent turn. Plain text is the "
+            "only channel to the user: write your reply as plain text now, then call "
+            f"wait_for_user. This is recovery attempt {attempt}/{limit}."
+        )
+    elif interactive:
         message = (
             "Your previous message ended a turn without a tool call. Plain text never ends "
             "execution and never hands control to the user: it is shown to the user, and the "
             "run continues. Continue immediately and call exactly one tool. "
-            "If you have something to tell the user and nothing to do until they reply, "
-            "call respond_to_user — with no message if you have already said it. "
+            "If you have nothing to do until the user replies, call wait_for_user; your "
+            "text already reached them, so do not repeat it. "
             "If you are blocked waiting for another agent, call wait_for_agents. "
             f"If the whole engagement is complete, call {finish_tool}. "
             "Otherwise use the appropriate execution or planning tool. "

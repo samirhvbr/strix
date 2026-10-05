@@ -291,12 +291,28 @@ class AgentCoordinator:
     async def mark_running(self, agent_id: str) -> None:
         async with self._lock:
             if agent_id in self.statuses:
-                self.statuses[agent_id] = "running"
-                self.errors.pop(agent_id, None)
-                self.wait_kinds.pop(agent_id, None)
-                self.runtimes.setdefault(agent_id, AgentRuntime()).user_wake_required = False
-                self._parent_notified.discard(agent_id)
+                self._set_running_locked(agent_id)
         await self._maybe_snapshot()
+
+    async def resume_silent_user_wait(self, agent_id: str) -> bool:
+        """Undo a park on the user, unless the agent's state has moved on since.
+
+        Returns False without touching anything when the agent is no longer
+        waiting on the user (a stop or a delivered message got there first).
+        """
+        async with self._lock:
+            if self.statuses.get(agent_id) != "waiting" or self.wait_kinds.get(agent_id) != "user":
+                return False
+            self._set_running_locked(agent_id)
+        await self._maybe_snapshot()
+        return True
+
+    def _set_running_locked(self, agent_id: str) -> None:
+        self.statuses[agent_id] = "running"
+        self.errors.pop(agent_id, None)
+        self.wait_kinds.pop(agent_id, None)
+        self.runtimes.setdefault(agent_id, AgentRuntime()).user_wake_required = False
+        self._parent_notified.discard(agent_id)
 
     async def park_waiting(self, agent_id: str, *, wait_kind: WaitKind) -> None:
         """Park an agent, recording what it is waiting on so the driver can time it."""

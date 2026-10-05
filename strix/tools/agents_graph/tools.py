@@ -311,8 +311,8 @@ async def wait_for_agents(  # noqa: PLR0911
     **This tool is only for waiting on other agents.** Two things it is
     NOT for:
 
-    - **Talking to the user.** Use ``respond_to_user``, which delivers
-      your message and hands control back in one call.
+    - **Waiting for the user.** Write your reply as plain text, then call
+      ``wait_for_user`` to hand control back.
     - **Waiting for a long-running command.** This tool does not watch
       processes at all — it sleeps until a *message* arrives, so it
       burns the full timeout even if your command finished a second

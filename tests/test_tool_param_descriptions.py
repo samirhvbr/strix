@@ -16,12 +16,12 @@ from strix.agents import factory
 from strix.tools.agents_graph.tools import agent_finish
 from strix.tools.finish.tool import finish_scan
 from strix.tools.reporting.tool import create_vulnerability_report
-from strix.tools.respond.tool import respond_to_user
+from strix.tools.wait_for_user.tool import wait_for_user
 
 
 _SCAN_AGENT_TOOLS = [
     tool
-    for tool in (*factory._BASE_TOOLS, finish_scan, agent_finish, respond_to_user)
+    for tool in (*factory._BASE_TOOLS, finish_scan, agent_finish, wait_for_user)
     if isinstance(tool, FunctionTool)
 ]
 

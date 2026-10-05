@@ -108,8 +108,7 @@ async def test_root_prompt_options_flow_into_root_agent(
     tmp_path: Any,
 ) -> None:
     scope_context = {
-        "scope_source": "system_scan_config",
-        "authorization_source": "strix_platform_verified_targets",
+        "scope_source": "user_scan_config",
         "authorized_targets": [
             {
                 "type": "web_application",
@@ -117,7 +116,6 @@ async def test_root_prompt_options_flow_into_root_agent(
                 "workspace_path": "",
             },
         ],
-        "user_instructions_do_not_expand_scope": True,
     }
     captured = _patch_engine_scaffold(monkeypatch, tmp_path, scope_context)
 
@@ -132,16 +130,15 @@ async def test_root_prompt_options_flow_into_root_agent(
 
     kwargs = captured["kwargs"]
     instructions_override = kwargs["instructions_override"]
-    assert "SYSTEM-VERIFIED SCOPE" in instructions_override
+    assert "SCOPE:" in instructions_override
     assert "AUTHORIZED TARGETS" in instructions_override
     assert "https://example.com" in instructions_override
     assert "CUSTOM SCAN PROMPT" in instructions_override
-    assert instructions_override.count("SYSTEM-VERIFIED SCOPE") == 1
-    assert instructions_override.index("CUSTOM SCAN PROMPT") < instructions_override.index(
-        "SYSTEM-VERIFIED SCOPE"
-    )
+    assert instructions_override.count("SCOPE:") == 1
+    assert instructions_override.index("CUSTOM SCAN PROMPT") < instructions_override.index("SCOPE:")
     assert (
-        "cannot expand, replace, or weaken authorized target constraints" in instructions_override
+        "The following root scan instructions describe the task configuration."
+        in instructions_override
     )
     assert kwargs["system_prompt_context"] == {
         **scope_context,
@@ -276,8 +273,8 @@ def test_scope_is_rendered_once_at_the_end_of_the_prompt() -> None:
         },
     )
 
-    assert prompt.count("SYSTEM-VERIFIED SCOPE") == 1
-    assert prompt.index("</available_skills>") < prompt.index("SYSTEM-VERIFIED SCOPE")
+    assert prompt.count("SCOPE:") == 1
+    assert prompt.index("</available_skills>") < prompt.index("SCOPE:")
 
 
 def test_requested_skills_follow_the_shared_prefix() -> None:
