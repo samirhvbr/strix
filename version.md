@@ -62,11 +62,16 @@ comportamento nem contrato.
    The notes come from the new `FORK.md` row, in English. Never create a Release for an
    older version without `--latest=false`, or it steals the "Latest" badge.
 
-> **`build-release.yml` is inert on the fork, and should stay that way.** It is inherited
-> from upstream and fires on every `v*` tag (5-OS PyInstaller build + an auto-created
-> Release). Forks do not run upstream workflows until the owner enables them in the
-> Actions tab, so tagging here builds nothing. If that is ever enabled, tag pushes will
-> start burning CI minutes and creating their own Releases.
+> **`Build & Release` (`build-release.yml`) must stay disabled on the fork.** It is
+> inherited from upstream and fires on every `v*` tag (5-OS PyInstaller build + an
+> auto-created Release that would also touch ours). It used to be inert because a fork
+> only registers upstream workflows once the owner enables them, but the v1.7.0 sync
+> brought new CI workflows and pushing them registered all of them: the first tag push
+> afterwards started two builds (cancelled by hand). It is now switched off with
+> `gh workflow disable build-release.yml -R samirhvbr/strix` (state `disabled_manually`).
+> Check that state again after each sync (`gh workflow list -R samirhvbr/strix --all`).
+> The upstream `CI` workflow stays on: it runs on pull requests and on pushes to `main`
+> (the mirror), never on `master`.
 
 > O **COMMITTER** da casa **não opera** neste repo (sem `.committer.yml`): o
 > versionamento aqui é **manual**, feito pelo agente que entrega. Os commits também
