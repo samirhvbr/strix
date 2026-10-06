@@ -248,7 +248,6 @@ async def test_summarize_routes_through_provider_with_settings(
 async def test_summarize_falls_back_to_reasoning_when_no_output_text(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    # A reasoning model that spends its budget thinking returns only a reasoning item.
     _patch_budget(monkeypatch, keep_tokens=30, window=4_000)
     message = InternalChatCompletionMessage(
         role="assistant", content=None, reasoning_content="REASONED SUMMARY"
