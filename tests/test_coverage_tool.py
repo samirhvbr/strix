@@ -148,6 +148,7 @@ def test_update_moves_outcome_and_keeps_history() -> None:
             "recorded_at": entry["created_at"],
             "evidence": "No credentials to test.",
             "agent_name": "authz-tester",
+            "agent_id": "agent-1",
         }
     ]
     assert outcome_counts() == {"reported": 1}
