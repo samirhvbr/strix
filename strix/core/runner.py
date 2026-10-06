@@ -592,16 +592,10 @@ async def run_strix_scan(
         )
         if not interactive and result is not None:
             final = getattr(result, "final_output", None)
-            scan_completed = False
-            if isinstance(final, str):
-                try:
-                    parsed = json.loads(final)
-                    scan_completed = bool(isinstance(parsed, dict) and parsed.get("scan_completed"))
-                except (ValueError, TypeError):
-                    scan_completed = False
-            elif isinstance(final, dict):
-                scan_completed = bool(final.get("scan_completed"))
-            if not scan_completed:
+            # Lifecycle tools mark the root completed. 
+            async with coordinator._lock:
+                root_completed = coordinator.statuses.get(root_id) == "completed"
+            if not root_completed:
                 logger.error(
                     "Scan %s ended without calling finish_scan. The agent "
                     "emitted a text-only turn instead of a lifecycle tool call, "

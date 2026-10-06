@@ -128,3 +128,16 @@ def test_disabling_strict_leaves_shared_tools_untouched() -> None:
     agent = factory.build_strix_agent(is_root=True)
 
     assert any(t.strict_json_schema for t in agent.tools if isinstance(t, FunctionTool))
+
+
+@pytest.mark.parametrize(
+    ("tool_name", "output", "completed"),
+    [
+        ("finish_pr_review", '{"success": true, "review_completed": true}', True),
+        ("finish_pr_review", '{"success": false, "error": "agents_still_active"}', False),
+        ("finish_scan", '{"success": true, "scan_completed": true}', True),
+        ("think", '{"success": true, "review_completed": true}', False),
+    ],
+)
+def test_lifecycle_tool_completed(tool_name: str, output: str, completed: bool) -> None:
+    assert factory._lifecycle_tool_completed(tool_name, output) is completed

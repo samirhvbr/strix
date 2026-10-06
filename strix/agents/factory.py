@@ -517,6 +517,8 @@ def _lifecycle_tool_completed(tool_name: str, output: Any) -> bool:
         completion_key = "agent_completed"
     elif tool_name == "finish_scan":
         completion_key = "scan_completed"
+    elif tool_name == "finish_pr_review":  # registered by strix-pro
+        completion_key = "review_completed"
     else:
         return False
 
