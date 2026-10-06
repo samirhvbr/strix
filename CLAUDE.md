@@ -31,6 +31,7 @@ uv run pytest -q               # suíte (~1139 testes, ~2min)
 - **Interativo (TUI)** exige Go 1.24+ — **instalado** (`go1.24.4`), roda via `go run` na instalação editável. Runs manuais do `strix-run` abrem a TUI por padrão; `--auto` é sempre headless.
   `uv tool install .` também exige Go (build-hook `scripts/tui_sidecar_hook.py`).
 - Rodar precisa de **Docker** (puxa imagem sandbox no 1º run).
+- The test suite leaves synthetic `strix_runs/run-*` folders in the repo root (git-ignored; measured: `run_name` null, 3 requests, 300 input tokens, cost 0). They are not real runs: those live in `$STRIX_WORKDIR/strix_runs`. Run the suite in a worktree, or delete the folder afterwards.
 
 ## Configuração de execução (nosso launcher)
 
@@ -45,7 +46,7 @@ cp .env.example .env           # preencha chaves, primário/secundário, budgets
 ```
 
 O `bin/strix-run` resolve modelo + chave do provedor + `--max-budget` a partir do `.env`.
-A provider missing from `resolve_creds` falls through to the generic `LLM_API_KEY` and `STRIX_BUDGET_DEFAULT` without any error, so a new provider needs a `case` line there, its key and budget in `.env.example`, and a case in `tests/test_strix_run_providers.py` (known: openai, anthropic, deepseek, gemini, moonshot, minimax).
+`resolve_creds` maps the provider prefix to variables by convention (`<PROVIDER>_API_KEY` and `STRIX_BUDGET_<PROVIDER>`, the budget falling back to `STRIX_BUDGET_DEFAULT`), so a new provider needs no script edit, only its key in `.env`. The generic `LLM_API_KEY` is borrowed only by providers the launcher does not know by name (custom gateways); openai, anthropic, deepseek, gemini, moonshot and minimax never borrow it, so a key is not sent to the wrong vendor. Touch the script only for an alias or to add a vendor to that named list, and add the case to `tests/test_strix_run_providers.py`. One agent without touching the queue: `strix-run --agent <provider>/<model> <alvo>`.
 Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para todos os flags.
 
 ### Como o failover funciona (fatos do motor, mapeados)

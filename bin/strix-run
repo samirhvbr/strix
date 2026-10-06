@@ -14,7 +14,9 @@
 #                                           # com a TUI AO VIVO: ao esgotar janela/budget/pausa
 #                                           # de um, mata e REABRE a TUI no próximo; para quando
 #                                           # um CONCLUI. Sem terminal (cron/pipe) cai p/ headless.
-#   strix-run --agent openai/gpt-5.6 <alvo> # agente ad-hoc (sobrepõe a fila)
+#   strix-run --agent chatgpt/gpt-5.6-sol <alvo>  # ONE agent straight from the command line (overrides
+#                                           # the queue); its key and budget come from .env by provider:
+#                                           # <PROVIDER>_API_KEY and STRIX_BUDGET_<PROVIDER>
 #   -n | --headless  força modo headless (sem TUI); em --auto força o modo antigo (scrape)
 #   strix-run view [run]                    # dashboard web (acha os runs no WORKDIR)
 #   strix-run list                          # lista os runs locais no TERMINAL (sem web/e-mail)
@@ -97,24 +99,39 @@ log()  { printf '%s[strix-run]%s %s\n' "$c_info" "$c_off" "$*" >&2; }
 warn() { printf '%s[strix-run] %s%s\n' "$c_warn" "$*" "$c_off" >&2; }
 die()  { printf '%s[strix-run] %s%s\n' "$c_err" "$*" "$c_off" >&2; exit 1; }
 
-usage() { sed -n '3,26p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
+usage() { sed -n '3,27p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; }
 
 provider_of() { printf '%s' "${1%%/*}"; }
 
-# ── resolve chave + budget de um modelo (globais KEY / BUDGET) ────────────────
-KEY=""; BUDGET=""
+# ── resolve chave + budget de um modelo (globais KEY / BUDGET / KEY_VAR / BUDGET_VAR) ──
+# Convention: provider prefix P -> <P>_API_KEY and STRIX_BUDGET_<P> (upper case, anything
+# non-alphanumeric becomes _), so `--agent xai/grok-4.7` only needs XAI_API_KEY in .env and
+# nothing is edited here. A few prefixes are aliases of another provider's variables, and
+# chatgpt/codex are the subscription (OAuth: no key, no dollars). The budget falls back to
+# STRIX_BUDGET_DEFAULT so there is always a ceiling. The generic LLM_API_KEY is only a
+# fallback for providers not named below (custom gateways): a vendor the launcher knows by
+# name never borrows a key that belongs to another one.
+KEY=""; BUDGET=""; KEY_VAR=""; BUDGET_VAR=""; BUDGET_DEFAULTED=0
 resolve_creds() {
-  local prov; prov="$(provider_of "$1")"
+  local prov own_only=1 up
+  prov="$(provider_of "$1")"
+  KEY=""; BUDGET=""; KEY_VAR=""; BUDGET_VAR=""; BUDGET_DEFAULTED=0
   case "$prov" in
-    chatgpt|codex)     KEY="";                        BUDGET="" ;;   # assinatura (OAuth)
-    openai)            KEY="${OPENAI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_OPENAI:-}" ;;
-    anthropic|claude)  KEY="${ANTHROPIC_API_KEY:-}";   BUDGET="${STRIX_BUDGET_ANTHROPIC:-}" ;;
-    deepseek)          KEY="${DEEPSEEK_API_KEY:-}";    BUDGET="${STRIX_BUDGET_DEEPSEEK:-}" ;;
-    gemini|google)     KEY="${GEMINI_API_KEY:-}";      BUDGET="${STRIX_BUDGET_GEMINI:-}" ;;
-    moonshot|moonshotai|kimi) KEY="${MOONSHOT_API_KEY:-}"; BUDGET="${STRIX_BUDGET_MOONSHOT:-}" ;;
-    minimax)           KEY="${MINIMAX_API_KEY:-}";     BUDGET="${STRIX_BUDGET_MINIMAX:-}" ;;
-    *)                KEY="${LLM_API_KEY:-}";         BUDGET="${STRIX_BUDGET_DEFAULT:-}" ;;
+    chatgpt|codex)    return 0 ;;                                  # subscription (OAuth)
+    claude)           prov=anthropic ;;
+    google)           prov=gemini ;;
+    moonshotai|kimi)  prov=moonshot ;;
+    openai|anthropic|deepseek|gemini|moonshot|minimax) ;;          # vendors known by name
+    *)                own_only=0 ;;
   esac
+  up="${prov^^}"; up="${up//[^A-Z0-9]/_}"
+  KEY_VAR="${up}_API_KEY"; BUDGET_VAR="STRIX_BUDGET_${up}"
+  KEY="${!KEY_VAR:-}"
+  if [[ -z "$KEY" && "$own_only" == 0 ]]; then KEY="${LLM_API_KEY:-}"; fi
+  BUDGET="${!BUDGET_VAR:-}"
+  if [[ -z "$BUDGET" && -n "${STRIX_BUDGET_DEFAULT:-}" ]]; then
+    BUDGET="$STRIX_BUDGET_DEFAULT"; BUDGET_DEFAULTED=1
+  fi
 }
 
 # aplica STRIX_LLM/LLM_API_KEY do modelo e devolve os args de budget em BUDGET_ARGS[]
@@ -125,13 +142,19 @@ apply_model() {
   if [[ -n "$KEY" ]]; then export LLM_API_KEY="$KEY"; else unset LLM_API_KEY 2>/dev/null || true; fi
   BUDGET_ARGS=(); [[ -n "$BUDGET" ]] && BUDGET_ARGS=(--max-budget "$BUDGET")
   local prov; prov="$(provider_of "$model")"
-  if [[ "$prov" != "chatgpt" && "$prov" != "codex" && -z "$KEY" ]]; then
-    warn "sem chave para o provedor '$prov' no .env — o strix pode falhar na conexão"
+  if [[ -n "$KEY_VAR" && -z "${!KEY_VAR:-}" ]]; then
+    if [[ -n "$KEY" ]]; then
+      warn "sem $KEY_VAR no .env — usando a LLM_API_KEY genérica para '$prov'"
+    else
+      warn "sem chave para o provedor '$prov': defina $KEY_VAR no .env — o strix pode falhar na conexão"
+    fi
   fi
-  if [[ "$prov" != "chatgpt" && "$prov" != "codex" && -z "$BUDGET" ]]; then
-    warn "sem budget (defina STRIX_BUDGET_${prov^^} no .env) para '$prov' — rodará SEM teto de custo"
+  if [[ -n "$BUDGET_VAR" && -z "$BUDGET" ]]; then
+    warn "sem budget ($BUDGET_VAR nem STRIX_BUDGET_DEFAULT no .env) para '$prov' — rodará SEM teto de custo"
   fi
-  log "agente=$model  budget=${BUDGET:-—}  workdir=$WORKDIR"
+  local note=""
+  if [[ "$BUDGET_DEFAULTED" == 1 ]]; then note=" (STRIX_BUDGET_DEFAULT)"; fi
+  log "agente=$model  budget=${BUDGET:-—}$note  workdir=$WORKDIR"
 }
 
 # NFLAG[] = (-n) quando headless; vazio = TUI nativa. TUI exige Go (go run).
