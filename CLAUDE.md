@@ -80,6 +80,7 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
   `strix/config/models.py`, `strix/core/runner.py`): `is_usage_limit_error()` → `usage_limit_reached`
   é terminal (fail-fast) e resumível em qualquer provedor. Testes: `test_execution_transient_retry.py`,
   `test_model_retry.py`, `test_runner_rate_limit.py`. Enviado ao upstream como PR #1174.
+- **Third-party upstream PRs carried in `master`** (nine, listed in FORK.md with their upstream status; merged with `--no-ff`, never rebased). On a sync, if upstream already has one of them, keep upstream's and drop ours. PR #1311 changes the same failure path of `_run_cycle` in `strix/core/execution.py` as our F3: after any merge that touches that file, re-run `test_execution_transient_retry.py`, `test_model_retry.py` and `test_runner_rate_limit.py`, and check that a usage-limit stop leaves the agent's stored session as it was (on plain master it doubled: 201 items became 402). The todo tests from #663 live in `tests/test_todo_ids.py` because `tests/test_todo.py` already existed.
 
 ## Regras
 
