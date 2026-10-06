@@ -31,7 +31,8 @@ uv run pytest -q               # suíte (~1139 testes, ~2min)
 - **Interativo (TUI)** exige Go 1.24+ — **instalado** (`go1.24.4`), roda via `go run` na instalação editável. Runs manuais do `strix-run` abrem a TUI por padrão; `--auto` é sempre headless.
   `uv tool install .` também exige Go (build-hook `scripts/tui_sidecar_hook.py`).
 - Rodar precisa de **Docker** (puxa imagem sandbox no 1º run).
-- The test suite leaves synthetic `strix_runs/run-*` folders in the repo root (git-ignored; measured: `run_name` null, 3 requests, 300 input tokens, cost 0). They are not real runs: those live in `$STRIX_WORKDIR/strix_runs`. Run the suite in a worktree, or delete the folder afterwards.
+- The suite no longer writes your real `~/.strix` or leaves `strix_runs/run-*` in the repo root: `tests/conftest.py` redirects the config and identity paths and three tests were fixed (upstream PR #1471, carried here). Before that, every run replaced `~/.strix/cli-config.json` (the stored model, API key and API base), regenerated `cli-identity.json` and created `wallet-npm-cache/`. Real runs live in `$STRIX_WORKDIR/strix_runs`. If a new test starts leaking again, find it by running the suite with `HOME=$(mktemp -d)` and listing what appears under `$HOME/.strix` afterwards.
+- **`import litellm` loads the `.env` of the current directory into the process by default**, so any Python probe or test run from this repo's root gets the real provider keys and can make real calls. Set `LITELLM_MODE=PRODUCTION` for probes and throwaway test runs (measured: the key is visible after the import by default and not with that variable). Never print the environment or request headers in a probe.
 
 ## Configuração de execução (nosso launcher)
 
