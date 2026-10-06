@@ -1,79 +1,86 @@
-# Versão — fork SHVIA do Strix
+# Version — SHVIA fork of Strix
 
-**Current version:** `1.7.0+shvia.23`
+**Current version:** `1.2.4`
+**Upstream base:** Strix `1.7.0` + 3 commits (`f1386ca`)
 
-> **Fonte da verdade (máquina):** [`.fork-version`](.fork-version) — uma linha.
-> **Changelog por entrega:** [`FORK.md`](FORK.md).
-> Este é o doc de versão no padrão da casa (todo repo tem um `version.md`): guarda a
-> **regra de incremento** e espelha a versão corrente. Ao bumpar, mexa nos **três
-> juntos**: `.fork-version`, a linha "Current version" aqui, e uma linha nova no topo da
-> tabela do `FORK.md`.
+> **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
+> line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you
+> bump, change all three together.
 
 ---
 
-## Por que aqui não é `X.Y.Z` como nos outros repos
+## Our versioning
 
-Os projetos **próprios** da casa versionam em `X.Y.Z`, com o `version.md` como fonte
-da verdade (ver skill-COMMITTER, AUDITOR, SHVIA-WEB): **Z** = cada entrega; **Y** =
-mudança estrutural / fase concluída / quebra de contrato; **X** = release estável.
+The fork has its own `X.Y.Z`, the house standard, **independent of upstream's number**.
+Upstream's version is never part of ours; it is recorded apart as the *base* the fork sits on.
 
-Este repo é um **fork de um projeto externo**
-([`usestrix/strix`](https://github.com/usestrix/strix)). Então:
-
-- O `X.Y.Z` **é do upstream** — não editamos o `version` do `pyproject.toml` (senão
-  conflita em todo merge do upstream).
-- A **nossa** versão é um *local version* PEP 440 por cima da deles:
-
-  ```
-  <versão-upstream>+shvia.<n>        ex.: 1.5.3+shvia.12
-  ```
-
-## Regra de funcionamento e incremento
-
-| Parte | O que é | Quando muda |
+| Part | Meaning | When it changes |
 |---|---|---|
-| `<versão-upstream>` | A release do upstream em que estamos baseados (coluna "Baseado no upstream" do `FORK.md`) | **Só** ao sincronizar com o upstream (`git merge main`). Nunca à mão. |
-| `shvia.<n>` | Contador **monotônico** das nossas entregas sobre essa base | **+1 a cada entrega validada em `master`** que muda comportamento, ferramenta, regra, segurança ou testes. **Uma entrega = uma linha no `FORK.md`.** |
+| `Z` | One delivery | Every validated delivery on `master` that changes behavior, tooling, rules, security or tests. **One delivery = one row in `FORK.md`.** |
+| `Y` | A new phase | The fork moves onto a new upstream release (1.5 → 1.6 → 1.7), or we make a structural change of our own. `Z` goes back to 0. |
+| `X` | Stable release | Declared by Samir. It is `1` from the first delivery: the fork has been in daily use since then. |
 
-**Mapa para a regra da casa:** o `<versão-upstream>` cobre o `X.Y` (vem do upstream); o
-**`shvia.<n>` faz o papel do `Z`** (incremento por entrega). O fork não tem major/minor
-próprios — é uma série linear de patches nossos.
+**Does not bump:** wording fixes, formatting or lint, anything that changes neither behavior
+nor contract.
 
-**Não bumpa** `n`: correção de redação, formatação/lint, ou mudança que não altera
-comportamento nem contrato.
+We never edit `version` in `pyproject.toml`: it would conflict with every upstream merge. That
+field keeps carrying upstream's version, which is also what silences Strix's self-update prompt.
 
-### Como bumpar (checklist)
+**Upstream base** is recorded in the field above, in the "Upstream base" column of
+`FORK.md`, and in the title of each Release. Update it at every sync.
 
-1. Entrega validada em `master` (rodou / testou).
-2. `.fork-version`: `shvia.<n>` → `shvia.<n+1>`.
-3. `version.md`: atualiza a linha **"Current version"** (no topo).
-4. `FORK.md`: linha nova no **topo** da tabela — versão do fork, base do upstream, data, o que mudou.
-5. Commit no estilo do fork (conventional-commits, ex.: `feat(strix-run): …` ou `docs(fork): shvia.<n> — …`) + `git push origin master`.
-6. Tag and Release. Every fork version gets an annotated tag `v<version>` (e.g.
-   `v1.6.2+shvia.16`) and a GitHub Release, otherwise the repo's Releases box shows
-   nothing but the upstream tags:
+## Names before 2026-10-06
+
+The first 23 deliveries (up to `1.2.3`) were named `<upstream version>+shvia.<n>`. They became:
+
+| Now | Was | Upstream base |
+|---|---|---|
+| `1.0.0` to `1.0.13` | `1.5.3+shvia.1` to `1.5.3+shvia.14` | Strix 1.5.3 |
+| `1.1.0` to `1.1.4` | `1.6.2+shvia.15` to `1.6.2+shvia.19` | Strix 1.6.2 (`1.1.0` is the sync onto it) |
+| `1.2.0` to `1.2.3` | `1.7.0+shvia.20` to `1.7.0+shvia.23` | Strix 1.7.0 (`1.2.0` is the sync onto it) |
+
+The rule is `shvia.n` → `1.0.(n-1)` up to `n = 14`, `1.1.(n-15)` for `n = 15..19`, and
+`1.2.(n-20)` from `n = 20`. The `FORK.md` table shows both names on every row. Text inside a row
+keeps the wording of its time, so a `shvia.N` there is the old name.
+
+## Tags, Releases and commits
+
+- **Tag:** annotated `shvia-vX.Y.Z`. The prefix is there because upstream's own tags
+  (`v1.0.1` and so on) live in this same repository, so a bare `vX.Y.Z` would collide with them.
+- **Release:** titled `SHVIA X.Y.Z (Strix <upstream release>)`, notes in English taken from the
+  `FORK.md` row. Every version gets one, otherwise the Releases box shows only upstream tags.
+- **Commits:** the delivery commit, the one that bumps, is `X.Y.Z - description` in English, as in
+  the other house repositories. Commits that go upstream as a PR (`fix/*`, `feat/*` branches)
+  stay conventional commits without a version, so they read cleanly there. Merge commits keep
+  their own message.
+
+## How to bump
+
+1. The delivery is validated on `master` (it ran, it was tested).
+2. Update `.fork-version` and "Current version" here; update "Upstream base" too when it is a sync.
+3. Add a new row on top of the `FORK.md` table: version, upstream base, date, what changed.
+4. Commit as `X.Y.Z - description` and `git push origin master`. A sync also pushes the `main`
+   mirror.
+5. Tag and Release:
 
    ```bash
-   V="v$(cat .fork-version)"
-   git tag -a "$V" -m "$(cat .fork-version)" && git push origin "$V"
-   gh release create "$V" --verify-tag --latest --title "$V" --notes-file <notes.md>
+   V="$(cat .fork-version)"; BASE="1.7.0"        # BASE = the upstream release we sit on
+   git tag -a "shvia-v$V" -m "SHVIA $V (Strix $BASE)" && git push origin "shvia-v$V"
+   gh release create "shvia-v$V" --verify-tag --latest \
+     --title "SHVIA $V (Strix $BASE)" --notes-file <notes.md>
    ```
 
-   The notes come from the new `FORK.md` row, in English. Never create a Release for an
-   older version without `--latest=false`, or it steals the "Latest" badge.
+   Never create a Release for an older version without `--latest=false`, or it steals the
+   "Latest" badge.
 
-> **`Build & Release` (`build-release.yml`) must stay disabled on the fork.** It is
-> inherited from upstream and fires on every `v*` tag (5-OS PyInstaller build + an
-> auto-created Release that would also touch ours). It used to be inert because a fork
-> only registers upstream workflows once the owner enables them, but the v1.7.0 sync
-> brought new CI workflows and pushing them registered all of them: the first tag push
-> afterwards started two builds (cancelled by hand). It is now switched off with
-> `gh workflow disable build-release.yml -R samirhvbr/strix` (state `disabled_manually`).
-> Check that state again after each sync (`gh workflow list -R samirhvbr/strix --all`).
-> The upstream `CI` workflow stays on: it runs on pull requests and on pushes to `main`
-> (the mirror), never on `master`.
+> **`Build & Release` (`build-release.yml`) must stay disabled on the fork.** It is inherited
+> from upstream and fires on every `v*` tag (5-OS PyInstaller build plus an auto-created
+> Release). Our `shvia-v*` tags do not match that trigger, but the upstream tags we mirror
+> (`v1.7.0`) do: pushing one started two builds once, cancelled by hand. It is switched off with
+> `gh workflow disable build-release.yml -R samirhvbr/strix` (state `disabled_manually`). A fork
+> registers upstream workflows when new workflow files are pushed, so check the state again after
+> each sync with `gh workflow list -R samirhvbr/strix --all`. The upstream `CI` workflow stays on:
+> it runs on pull requests and on pushes to `main` (the mirror), never on `master`.
 
-> O **COMMITTER** da casa **não opera** neste repo (sem `.committer.yml`): o
-> versionamento aqui é **manual**, feito pelo agente que entrega. Os commits também
-> seguem conventional-commits (para os PRs ao upstream saírem limpos), diferente do
-> `X.Y.Z - descrição` dos repos próprios.
+> The house COMMITTER does not operate on this repository (no `.committer.yml`): versioning is
+> manual, done by the agent that delivers.

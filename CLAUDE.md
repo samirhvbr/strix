@@ -17,8 +17,13 @@ O upstream é frequente; mantemos as **nossas** mudanças isoladas para reduzir 
 
 ## Versão
 
-`<upstream>+shvia.<n>` em [`.fork-version`](.fork-version). **Não** editar o `version` do
-`pyproject.toml` (conflita com o upstream). Registrar mudanças em [FORK.md](FORK.md).
+Our own `X.Y.Z`, independent of upstream's number, in [`.fork-version`](.fork-version) (source of
+truth: [`version.md`](version.md)). `Z` is one delivery, `Y` a new upstream release or a structural
+change of ours, `X` a stable release. The upstream release the fork sits on is recorded apart (field in
+`version.md`, a column in `FORK.md`, the Release title). Tags are `shvia-vX.Y.Z`; delivery commits are
+`X.Y.Z - description`. The old `<upstream>+shvia.<n>` names map to the new ones in `version.md`.
+**Do not** edit `version` in `pyproject.toml` (it conflicts with upstream). Log changes in
+[FORK.md](FORK.md).
 
 ## Setup / build / testes
 
@@ -85,6 +90,6 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
 ## Regras
 
 - **Nada de chaves/segredos no git.** `.env` é ignorado; use-o.
-- Mudança validada em `master` → bump em `.fork-version` + linha em `FORK.md`. Then tag `v<version>` and publish a GitHub Release (step 6 of the checklist in `version.md`); a sync also means pushing the `main` mirror.
+- A change validated on `master` means a bump in `.fork-version` and `version.md` plus a row in `FORK.md`, committed as `X.Y.Z - description`. Then tag `shvia-vX.Y.Z` and publish a GitHub Release titled `SHVIA X.Y.Z (Strix <base>)` (step 5 of the checklist in `version.md`); a sync also means pushing the `main` mirror and recording the new upstream base.
 - Never answer `y` to strix's "A new version of strix is available" prompt. Here the install method is detected as `pip`, so `y` runs a package upgrade from PyPI over our editable clone and drops every fork patch. `n` asks again next run and `s` silences only that one version (newer releases still notify), so both are safe; sync through `master` instead (see FORK.md), and once `pyproject.toml` carries the new upstream version the prompt stops by itself. `STRIX_NO_UPDATE_CHECK=1` turns the check off entirely.
 - Não reescrever histórico do working copy (o ambiente ~/x faz auto-commit/pull --rebase).
