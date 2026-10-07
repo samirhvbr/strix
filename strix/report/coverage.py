@@ -652,3 +652,25 @@ def write_coverage(run_dir: Path, document: dict[str, Any]) -> Path:
         len(document.get("gaps", [])),
     )
     return path
+
+
+def read_coverage(run_dir: Path) -> dict[str, Any] | None:
+    """Load ``coverage.json`` from a finished or resumed run, or ``None``
+    when it is absent or unreadable.
+
+    Mirrors :func:`read_agent_graph`: reading the artifact from disk
+    (rather than holding a live reference) keeps this usable from a
+    process that only has the run directory, such as the headless exit
+    path in ``strix.interface.main`` composing ``EvaluationResult``
+    (``strix/report/result.py``, ENG-01) after the scan has already torn
+    its in-memory state down.
+    """
+    path = run_dir / COVERAGE_FILENAME
+    if not path.is_file():
+        return None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        logger.warning("coverage document at %s is unreadable", path, exc_info=True)
+        return None
+    return data if isinstance(data, dict) else None

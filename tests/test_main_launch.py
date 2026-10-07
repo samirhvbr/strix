@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import importlib
+import json
 import sys
 from types import SimpleNamespace
 from typing import Any
@@ -16,6 +17,9 @@ report_state_module: Any = importlib.import_module("strix.report.state")
 interactive: Any = importlib.import_module("strix.interface.interactive")
 tui_runtime: Any = importlib.import_module("strix.interface.tui.runtime")
 tui_sidecar: Any = importlib.import_module("strix.interface.tui.sidecar")
+
+from strix.core.paths import run_dir_for  # noqa: E402
+from strix.report.coverage import write_coverage  # noqa: E402
 
 
 def _launch(
@@ -183,6 +187,82 @@ def test_no_terminal_fallback_keeps_the_fail_on_gate(monkeypatch: pytest.MonkeyP
 
     assert exit_info.value.code == 2
     assert args.non_interactive is True
+
+
+def test_headless_exit_reflects_an_incomplete_scan_not_just_fail_on(
+    tmp_path: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """ENG-02 (.continue/pentest/PENTEST-11 §7.5): a scan that stopped early
+    (budget exceeded, crashed, interrupted) with no finding breaching
+    --fail-on used to fall through to exit 0 -- the bug the composed result
+    exists to fix. No coverage.json at all is the sharpest case of this:
+    the run never even got that far, and that must never read as success.
+    """
+    monkeypatch.chdir(tmp_path)
+    calls: list[str] = []
+    report_state = SimpleNamespace(
+        cleanup=lambda status: calls.append(f"cleanup:{status}"),
+        vulnerability_reports=[],
+    )
+    args = argparse.Namespace(
+        non_interactive=False,
+        needs_setup=False,
+        resume_picker=False,
+        run_name="run",
+        fail_on=None,
+    )
+    monkeypatch.setattr(cli_main.posthog, "end", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(cli_main.scarf, "end", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(report_state_module, "get_global_report_state", lambda: report_state)
+
+    with pytest.raises(SystemExit) as exit_info:
+        _launch(monkeypatch, needs_setup=False, terminal=False, args=args)
+
+    assert exit_info.value.code == 3  # EXIT_INCOMPLETE
+    result_path = run_dir_for("run") / "result.json"
+    assert result_path.is_file()
+
+
+def test_headless_success_writes_result_json(
+    tmp_path: Any, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    run_dir = run_dir_for("run")
+    write_coverage(
+        run_dir,
+        {
+            "schema_version": 1,
+            "completeness": {
+                "complete": True,
+                "scan_status": "completed",
+                "exit_reason": "finished_by_tool",
+                "caveats": [],
+            },
+            "summary": {"gaps": 0},
+        },
+    )
+    report_state = SimpleNamespace(
+        cleanup=lambda **_kwargs: None,
+        vulnerability_reports=[],
+    )
+    args = argparse.Namespace(
+        non_interactive=False,
+        needs_setup=False,
+        resume_picker=False,
+        run_name="run",
+        fail_on=None,
+    )
+    monkeypatch.setattr(cli_main.posthog, "end", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(cli_main.scarf, "end", lambda *_args, **_kwargs: None)
+    monkeypatch.setattr(report_state_module, "get_global_report_state", lambda: report_state)
+
+    with pytest.raises(SystemExit) as exit_info:
+        _launch(monkeypatch, needs_setup=False, terminal=False, args=args)
+
+    assert exit_info.value.code == 0
+    on_disk = json.loads((run_dir / "result.json").read_text(encoding="utf-8"))
+    assert on_disk["exit_code"] == 0
+    assert on_disk["scan_status"] == "completed"
 
 
 def test_no_terminal_without_a_target_stops_with_the_headless_hint(

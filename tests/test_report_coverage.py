@@ -11,6 +11,7 @@ from strix.report.coverage import (
     build_coverage_document,
     cwe_for_skill,
     read_agent_graph,
+    read_coverage,
     write_coverage,
 )
 from strix.skills import get_available_skills
@@ -363,6 +364,27 @@ def test_read_agent_graph_loads_a_snapshot(tmp_path: Path) -> None:
     (tmp_path / "agents.json").write_text(json.dumps(_graph()), encoding="utf-8")
 
     assert read_agent_graph(tmp_path)["names"] == {"agent-1": "authz-tester"}
+
+
+def test_read_coverage_tolerates_a_missing_or_corrupt_document(tmp_path: Path) -> None:
+    assert read_coverage(tmp_path) is None
+
+    (tmp_path / "coverage.json").write_text("{not json", encoding="utf-8")
+    assert read_coverage(tmp_path) is None
+
+
+def test_read_coverage_rejects_a_non_object_document(tmp_path: Path) -> None:
+    (tmp_path / "coverage.json").write_text(json.dumps(["not", "an", "object"]), encoding="utf-8")
+    assert read_coverage(tmp_path) is None
+
+
+def test_read_coverage_loads_a_written_document(tmp_path: Path) -> None:
+    write_coverage(tmp_path, _document())
+
+    loaded = read_coverage(tmp_path)
+
+    assert loaded is not None
+    assert loaded["schema_version"] == 1
 
 
 def test_multi_token_skill_matches_how_a_pentester_writes_it() -> None:

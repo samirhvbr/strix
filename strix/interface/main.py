@@ -549,9 +549,25 @@ def main() -> None:
     display_completion_message(args, results_path)
 
     if args.non_interactive:
+        from strix.report.coverage import read_coverage
+        from strix.report.result import compose_evaluation_result, write_result
+
         report_state = get_global_report_state()
-        if report_state and findings_fail_build(report_state.vulnerability_reports, args.fail_on):
-            sys.exit(2)
+        findings = report_state.vulnerability_reports if report_state else []
+        result = compose_evaluation_result(
+            coverage_document=read_coverage(results_path),
+            findings_count=len(findings),
+            findings_policy_failed=findings_fail_build(findings, args.fail_on),
+        )
+        try:
+            write_result(results_path, result)
+        except OSError:
+            logger.exception("failed to write result.json to %s", results_path)
+        # §7.5 (PENTEST-11, ENG-02): the composed result decides the exit code
+        # now, not findings_fail_build alone -- an incomplete run (budget
+        # exceeded, crashed, interrupted) no longer exits 0 just because no
+        # finding happened to breach --fail-on.
+        sys.exit(result.exit_code)
 
 
 if __name__ == "__main__":
