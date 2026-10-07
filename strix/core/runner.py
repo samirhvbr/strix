@@ -45,6 +45,7 @@ from strix.core.inputs import (
 from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.sessions import open_agent_session
 from strix.core.targets import is_whitebox_scan
+from strix.core.test_catalog import TestCatalog
 from strix.report.state import get_global_report_state
 from strix.runtime import session_manager
 from strix.telemetry import set_scan_phase
@@ -238,6 +239,7 @@ async def run_strix_scan(
 
     agents_path = state_dir / "agents.json"
     agents_db = state_dir / "agents.db"
+    test_catalog_path = state_dir / "test_catalog.json"
     is_resume = agents_path.exists()
 
     logger.info(
@@ -273,6 +275,16 @@ async def run_strix_scan(
         coordinator = AgentCoordinator()
     coordinator.set_snapshot_path(agents_path)
     coordinator.set_budget_policy(budget_policy)
+
+    # Spec 01 (.continue/pentest): every create_agent call is catalogued as a
+    # "test" (D6 -- emergent decomposition, catalogued identity). A sibling of
+    # the coordinator, never a part of it: wired only through load()/the
+    # status-change callback below, so a run with no interest in test
+    # cataloguing pays nothing beyond one small JSON file.
+    test_catalog = TestCatalog()
+    test_catalog.set_snapshot_path(test_catalog_path)
+    test_catalog.load()  # no-op when test_catalog.json does not exist yet (first run)
+    coordinator.set_status_change_callback(test_catalog.mark_status)
 
     from strix.tools.coverage.tools import hydrate_coverage_from_disk
     from strix.tools.notes.tools import hydrate_notes_from_disk
@@ -507,6 +519,7 @@ async def run_strix_scan(
         async def spawn_child_agent(**kwargs: Any) -> dict[str, Any]:
             return await start_child_agent(
                 coordinator=coordinator,
+                test_catalog=test_catalog,
                 factory=child_agent_builder,
                 agents_db_path=agents_db,
                 sessions_to_close=sessions_to_close,
@@ -520,6 +533,7 @@ async def run_strix_scan(
 
         context: dict[str, Any] = {
             "coordinator": coordinator,
+            "test_catalog": test_catalog,
             "sandbox_session": bundle["session"],
             "caido_client": bundle["caido_client"],
             "mcp_registry": mcp_registry,

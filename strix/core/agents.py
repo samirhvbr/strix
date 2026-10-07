@@ -78,9 +78,23 @@ class AgentCoordinator:
         self._budget_policy: BudgetPolicy = "stop"
         self._extend_budget: Callable[[], None] | None = None
         self._set_budget_limit: Callable[[float | None], None] | None = None
+        self._on_status_change: Callable[[str, Status], None] | None = None
 
     def set_snapshot_path(self, path: Path) -> None:
         self._snapshot_path = path
+
+    def set_status_change_callback(self, callback: Callable[[str, Status], None] | None) -> None:
+        """Register a listener notified of every status transition.
+
+        Called synchronously, inside ``_set_status_locked`` -- i.e. while
+        holding ``self._lock`` -- so the callback must not block on the
+        coordinator itself (no ``await``, nothing that touches ``self._lock``
+        again) and should stay cheap. Exists so a sibling like
+        ``TestCatalog`` (``strix/core/test_catalog.py``) can observe status
+        changes without the coordinator knowing anything about test
+        cataloguing -- it only knows "someone wants to be notified".
+        """
+        self._on_status_change = callback
 
     def mark_shutting_down(self) -> None:
         self.is_shutting_down = True
@@ -386,6 +400,11 @@ class AgentCoordinator:
         runtime = self.runtimes.setdefault(agent_id, AgentRuntime())
         runtime.user_wake_required = status in {"failed", "crashed"}
         runtime.wake.set()
+        if self._on_status_change is not None:
+            try:
+                self._on_status_change(agent_id, cast("Status", status))
+            except Exception:
+                logger.exception("on_status_change callback failed for %s=%s", agent_id, status)
 
     async def claim_parent_notice(self, agent_id: str) -> bool:
         """Reserve the one notice a child owes its parent when it stops running.

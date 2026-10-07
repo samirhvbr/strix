@@ -46,6 +46,7 @@ if TYPE_CHECKING:
     from agents.result import RunResultBase
 
     from strix.core.agents import AgentCoordinator, Status
+    from strix.core.test_catalog import TestCatalog
 
 
 logger = logging.getLogger(__name__)
@@ -357,6 +358,7 @@ async def spawn_child_agent(
     parent_history: list[Any],
     event_sink: StreamEventSink | None = None,
     hooks: RunHooks[dict[str, Any]] | None = None,
+    test_catalog: TestCatalog | None = None,
 ) -> dict[str, Any]:
     parent_id = parent_ctx.get("agent_id")
     if not isinstance(parent_id, str):
@@ -371,6 +373,19 @@ async def spawn_child_agent(
         task=task,
         skills=skills,
     )
+    # Spec 01 (.continue/pentest): every create_agent call is catalogued as a
+    # "test" in lock-step with its coordinator registration above -- same
+    # function, same order, so the two can never drift apart. test_catalog is
+    # None for a caller that never set one up (e.g. a bare unit test of this
+    # function), in which case cataloguing is simply skipped.
+    if test_catalog is not None:
+        test_catalog.register(
+            agent_id=child_id,
+            name=name,
+            skills=skills,
+            task=task,
+            parent_agent_id=parent_id,
+        )
 
     await _start_child_runner(
         parent_ctx=parent_ctx,
