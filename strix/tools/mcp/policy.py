@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 
 if TYPE_CHECKING:
+    from strix.core.authorization_audit import AuthorizationAudit
     from strix.tools.mcp.config import McpConnectionConfig, McpToolPolicy
 
 
@@ -77,12 +78,33 @@ class McpDispatchPolicy:
         )
 
 
-def denied_call(reason: str) -> dict[str, Any]:
+def denied_call(
+    reason: str,
+    *,
+    audit: AuthorizationAudit | None = None,
+    connection: str | None = None,
+    tool: str | None = None,
+) -> dict[str, Any]:
     """A stable failed-tool result without argument values or credentials."""
     logger.warning("MCP dispatch blocked by configured policy: %s", reason)
-    return {
+    result: dict[str, Any] = {
         "success": False,
         "error": "mcp_policy_denied",
         "reason": reason,
         "message": "The configured MCP dispatch policy denied this call before sending it.",
+    }
+    if audit is not None:
+        receipt = audit.record_denial("mcp_dispatch", reason, connection=connection, tool=tool)
+        result["authorization_receipt"] = receipt
+        result["authorization_audit_status"] = "recorded" if receipt else "unavailable"
+    return result
+
+
+def audit_unavailable_call() -> dict[str, Any]:
+    return {
+        "success": False,
+        "error": "authorization_audit_unavailable",
+        "message": (
+            "Authorization auditing is unavailable; MCP execution is blocked for this launch."
+        ),
     }

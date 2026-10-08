@@ -33,6 +33,7 @@ from strix.core.assessment import (
     bind_assessment_policy,
     validate_assessment_scope,
 )
+from strix.core.authorization_audit import AuthorizationAudit
 from strix.core.execution import (
     respawn_subagents,
     run_agent_loop,
@@ -248,10 +249,41 @@ async def run_strix_scan(
         scan_config.get("assessment_policy"),
         resuming=(state_dir / "agents.json").exists(),
     )
+    authorization_audit: AuthorizationAudit | None = None
     if assessment_policy is not None:
-        validate_assessment_scope(assessment_policy, scan_config)
-        if local_sources:
-            raise ValueError("Assessment policy version 1 does not support source mounts")
+        audit_report = get_global_report_state()
+
+        def publish_authorization_audit(summary: dict[str, Any]) -> None:
+            if audit_report is not None and audit_report.run_id == scan_id:
+                audit_report.run_record["authorization_audit"] = summary
+                audit_report.save_run_data()
+
+        authorization_audit = AuthorizationAudit(
+            state_dir / "authorization_audit.db",
+            scan_id=scan_id,
+            assessment_id=assessment_policy.assessment_id,
+            policy_sha256=assessment_policy.digest,
+            authorization_ref=assessment_policy.authorization_ref,
+            operator_ref=assessment_policy.operator_ref,
+            approved_tools={
+                name: frozenset(grant.tool_policies)
+                for name, grant in assessment_policy.mcp_connections.items()
+            },
+            on_change=publish_authorization_audit,
+            resuming=(state_dir / "agents.json").exists(),
+        )
+        try:
+            validate_assessment_scope(
+                assessment_policy,
+                {
+                    **scan_config,
+                    "local_sources": local_sources or scan_config.get("local_sources"),
+                },
+            )
+        except ValueError:
+            authorization_audit.record_denial("startup", "scope_rejected")
+            authorization_audit.close()
+            raise
         scan_config["network_policy"] = assessment_policy.network_policy.model_dump()
         scan_config["assessment_policy"] = assessment_policy.model_dump()
         from strix.tools.mcp import McpConnectionRequest, load_user_mcp_configs
@@ -261,12 +293,23 @@ async def run_strix_scan(
             requests = [McpConnectionRequest(config=item) for item in load_user_mcp_configs()]
         # Validate and snapshot before sandbox startup and outside the legacy
         # best-effort MCP registration block. No warm-up can precede this gate.
-        mcp_connection_requests = assessment_mcp_requests(assessment_policy, requests)
-    network_policy = bind_network_policy(
-        state_dir,
-        scan_config.get("network_policy"),
-        resuming=(state_dir / "agents.json").exists(),
-    )
+        try:
+            mcp_connection_requests = assessment_mcp_requests(assessment_policy, requests)
+        except ValueError:
+            authorization_audit.record_denial("startup", "mcp_configuration_rejected")
+            authorization_audit.close()
+            raise
+    try:
+        network_policy = bind_network_policy(
+            state_dir,
+            scan_config.get("network_policy"),
+            resuming=(state_dir / "agents.json").exists(),
+        )
+    except ValueError:
+        if authorization_audit is not None:
+            authorization_audit.record_denial("startup", "network_binding_rejected")
+            authorization_audit.close()
+        raise
     scan_config["network_policy"] = (
         network_policy.model_dump() if network_policy is not None else None
     )
@@ -500,7 +543,7 @@ async def run_strix_scan(
             load_user_mcp_configs,
         )
 
-        mcp_registry = McpRegistry()
+        mcp_registry = McpRegistry(authorization_audit=authorization_audit)
         try:
             if mcp_connection_requests is None:
                 # Command-line default: read the user's file and wrap each config
@@ -768,6 +811,8 @@ async def run_strix_scan(
         if mcp_registry is not None:
             with contextlib.suppress(Exception):
                 await mcp_registry.close()
+        if authorization_audit is not None:
+            authorization_audit.close()
         with contextlib.suppress(Exception):
             await coordinator._maybe_snapshot()
         if cleanup_on_exit:

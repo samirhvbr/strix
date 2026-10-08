@@ -37,6 +37,7 @@ if TYPE_CHECKING:
 
     from agents.mcp import MCPServer
 
+    from strix.core.authorization_audit import AuthorizationAudit
     from strix.tools.mcp.client import ResultTransform
     from strix.tools.mcp.config import McpConnectionConfig
 
@@ -110,6 +111,7 @@ class McpConnectionEntry:
     _retry_after: float = dataclasses.field(default=0.0, repr=False)
     _status_sink: Callable[[], None] | None = dataclasses.field(default=None, repr=False)
     dispatch_policy: McpDispatchPolicy = dataclasses.field(init=False, repr=False)
+    authorization_audit: AuthorizationAudit | None = dataclasses.field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         if self.connection_config is not None:
@@ -162,6 +164,10 @@ class McpConnectionEntry:
 
     async def ensure_connected(self) -> SupervisedMcpSession:
         """Return this entry's live session, connecting it once when needed."""
+        if self.authorization_audit is not None and not self.authorization_audit.available:
+            raise McpConnectionUnavailableError(
+                "Authorization audit unavailable; MCP execution is blocked"
+            )
         if self.session is not None:
             return self.session
         if self.connection_config is None:
@@ -191,7 +197,7 @@ class McpConnectionEntry:
                 f"MCP connection {self.name!r} has no connection configuration."
             )
         self._set_state("connecting")
-        session = SupervisedMcpSession(config)
+        session = SupervisedMcpSession(config, authorization_audit=self.authorization_audit)
         try:
             started = await session.start()
         except BaseException:
@@ -335,7 +341,8 @@ class McpRegistry:
     :meth:`get`, and :meth:`summaries`.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, authorization_audit: AuthorizationAudit | None = None) -> None:
+        self.authorization_audit = authorization_audit
         self._entries: dict[str, McpConnectionEntry] = {}
         self._status_sink: Callable[[], None] | None = None
         self._warmup_task: asyncio.Task[None] | None = None
@@ -348,6 +355,7 @@ class McpRegistry:
             purpose=request.purpose or request.config.notes,
             result_transform=request.result_transform,
             provider=request.provider,
+            authorization_audit=self.authorization_audit,
         )
         entry.set_status_sink(self._status_sink)
         self._entries[entry.name] = entry
@@ -378,7 +386,11 @@ class McpRegistry:
         if session is None:
             if server is None:
                 raise ValueError("McpRegistry.add requires either 'session' or 'server'")
-            session = SupervisedMcpSession.adopt(server, name=name, config=config)
+            session = SupervisedMcpSession.adopt(
+                server, name=name, config=config, authorization_audit=self.authorization_audit
+            )
+        if session.authorization_audit is not self.authorization_audit:
+            raise ValueError("An adopted MCP session must use the registry's authorization audit")
         entry = McpConnectionEntry(
             name=name,
             connection_config=config or session.config,
@@ -388,6 +400,7 @@ class McpRegistry:
             result_transform=result_transform,
             provider=provider,
             state="connected",
+            authorization_audit=session.authorization_audit,
         )
         entry.set_status_sink(self._status_sink)
         self._entries[name] = entry

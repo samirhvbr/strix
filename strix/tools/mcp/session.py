@@ -57,7 +57,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 
 from strix.tools.mcp.config import DEFAULT_MAX_CONCURRENT_CALLS
 from strix.tools.mcp.failures import FailureInfo, HttpStatusRecorder, classify
-from strix.tools.mcp.policy import McpDispatchPolicy, denied_call
+from strix.tools.mcp.policy import McpDispatchPolicy, audit_unavailable_call, denied_call
 
 
 if TYPE_CHECKING:
@@ -66,6 +66,7 @@ if TYPE_CHECKING:
     from agents.mcp import MCPServer
     from mcp.types import Tool as MCPTool
 
+    from strix.core.authorization_audit import AuthorizationAudit
     from strix.tools.mcp.client import ResultTransform
     from strix.tools.mcp.config import McpConnectionConfig
 
@@ -159,7 +160,10 @@ class SupervisedMcpSession:
     :attr:`name`, :attr:`server`, :attr:`config`, :attr:`is_dead`.
     """
 
-    def __init__(self, config: McpConnectionConfig) -> None:
+    def __init__(
+        self, config: McpConnectionConfig, *, authorization_audit: AuthorizationAudit | None = None
+    ) -> None:
+        self.authorization_audit = authorization_audit
         self._name = config.name
         self._config: McpConnectionConfig | None = config.model_copy(deep=True)
         self.dispatch_policy = McpDispatchPolicy(self._config)
@@ -186,6 +190,7 @@ class SupervisedMcpSession:
         *,
         name: str,
         config: McpConnectionConfig | None = None,
+        authorization_audit: AuthorizationAudit | None = None,
     ) -> SupervisedMcpSession:
         """Wrap an already-connected server without a supervising task.
 
@@ -194,6 +199,7 @@ class SupervisedMcpSession:
         given; otherwise a failed call can be quarantined but cannot be revived.
         """
         self = cls.__new__(cls)
+        self.authorization_audit = authorization_audit
         self._name = name
         self._config = config.model_copy(deep=True) if config is not None else None
         self.dispatch_policy = McpDispatchPolicy(self._config)
@@ -355,7 +361,17 @@ class SupervisedMcpSession:
         Raises :class:`McpConnectionUnavailableError` when the connection is dead
         and never returns a call failure.
         """
-        outcome = await self._run_job(lambda server: server.list_tools(), phase="connect")
+        if self.authorization_audit is not None and not self.authorization_audit.available:
+            raise McpConnectionUnavailableError(
+                "Authorization audit unavailable; MCP discovery is blocked"
+            )
+
+        async def list_available(server: MCPServer) -> list[MCPTool]:
+            if self.authorization_audit is not None:
+                self.authorization_audit.require_available()
+            return await server.list_tools()
+
+        outcome = await self._run_job(list_available, phase="connect")
         if outcome.dead:
             raise McpConnectionUnavailableError(self._unavailable_message())
         if outcome.call_failure is not None:
@@ -383,13 +399,20 @@ class SupervisedMcpSession:
         """
         from strix.tools.mcp.client import dispatch_mcp_call
 
+        if self.authorization_audit is not None and not self.authorization_audit.available:
+            return audit_unavailable_call()
         # Own the request before the first await. A caller or a failed provider
         # attempt must not change what a queued call or its retry will send.
         request_arguments = copy.deepcopy(arguments)
         if reason := self.dispatch_policy.rejection(tool_name, request_arguments):
-            return denied_call(reason)
+            return denied_call(
+                reason, audit=self.authorization_audit, connection=self._name, tool=tool_name
+            )
 
         async def job(server: MCPServer) -> Any:
+            # A different queued call can lose its audit receipt while this call waits.
+            if self.authorization_audit is not None and not self.authorization_audit.available:
+                return audit_unavailable_call()
             return await dispatch_mcp_call(
                 server,
                 tool_name,
@@ -713,7 +736,11 @@ class SupervisedMcpSession:
 
         if self._config is None:
             raise RuntimeError(f"MCP connection {self._name!r} has no config to connect")
-        built = _build_server(self._config)
+        if self.authorization_audit is not None:
+            self.authorization_audit.require_available()
+            built = _build_server(self._config, authorization_audit=self.authorization_audit)
+        else:
+            built = _build_server(self._config)
         server = built.server
         self._recorder = built.recorder
         try:

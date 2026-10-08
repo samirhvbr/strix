@@ -41,6 +41,7 @@ from strix.tools.mcp.session import McpConnectionUnavailableError, SupervisedMcp
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from strix.core.authorization_audit import AuthorizationAudit
     from strix.tools.mcp.config import McpConnectionConfig
     from strix.tools.mcp.registry import McpConnectionRequest, McpRegistry
 
@@ -119,7 +120,9 @@ class _QuietMCPServerStdio(MCPServerStdio):
         return _quiet_stdio_streams(self.params)
 
 
-def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
+def _build_server(
+    config: McpConnectionConfig, *, authorization_audit: AuthorizationAudit | None = None
+) -> BuiltMcpServer:
     """Construct (but do not connect) the SDK server for one connection.
 
     The returned tuple carries the server and, for HTTP connections, a recorder
@@ -164,11 +167,25 @@ def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
             endpoint = httpx.URL(pinned_endpoint)
 
             async def check_endpoint(request: httpx.Request) -> None:
+                if authorization_audit is not None:
+                    authorization_audit.require_available()
                 if request.url != endpoint:
+                    if authorization_audit is not None:
+                        authorization_audit.record_denial(
+                            "mcp_transport", "endpoint_not_allowed", connection=config.name
+                        )
                     raise ValueError("MCP request destination differs from the approved endpoint")
+
+            async def check_redirect(response: httpx.Response) -> None:
+                if authorization_audit is not None and response.has_redirect_location:
+                    authorization_audit.record_denial(
+                        "mcp_transport", "redirect_not_allowed", connection=config.name
+                    )
+                    raise ValueError("MCP redirect blocked by the approved endpoint policy")
 
             client.follow_redirects = False
             client.event_hooks.setdefault("request", []).append(check_endpoint)
+            client.event_hooks.setdefault("response", []).append(check_redirect)
         client.event_hooks.setdefault("response", []).append(recorder)
         return client
 
