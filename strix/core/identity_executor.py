@@ -11,6 +11,7 @@ import httpx
 
 from strix.core.assessment_context import IdentityUnavailableError
 from strix.core.authorization_case import run_private_read_case
+from strix.core.business_case import run_single_credit_case
 from strix.core.evidence_ledger import EvidenceError
 from strix.core.web_authorization import WebAuthorizationError
 
@@ -78,6 +79,10 @@ class IdentityExecutor:
             self.ledger.record_denial(agent_ref, "scope_rejected")
             raise EvidenceError("Unknown approved case")
         async with self._case_locks[case_ref]:
+            if self.context.cases[case_ref].business is not None:
+                if baseline_ref is not None:
+                    raise EvidenceError("Business retest requires a fresh approved assessment")
+                return await run_single_credit_case(self, agent_ref=agent_ref, case_ref=case_ref)
             return await run_private_read_case(
                 self, agent_ref=agent_ref, case_ref=case_ref, baseline_ref=baseline_ref
             )
@@ -97,13 +102,20 @@ class IdentityExecutor:
             )
 
     async def _request(  # noqa: PLR0912, PLR0915 -- One serialized request/receipt transaction.
-        self, *, agent_ref: str, case_ref: str, identity_ref: str, operation_ref: str
+        self,
+        *,
+        agent_ref: str,
+        case_ref: str,
+        identity_ref: str,
+        operation_ref: str,
+        allow_effects: bool = False,
     ) -> dict[str, Any]:
         case = self.context.cases.get(case_ref)
         if (
             case is None
             or identity_ref not in case.identities
             or operation_ref not in case.operations
+            or (self.context.operations[operation_ref].method == "POST" and not allow_effects)
         ):
             self.ledger.record_denial(agent_ref, "scope_rejected")
             raise EvidenceError("Operation or identity is outside the approved case")
@@ -163,9 +175,16 @@ class IdentityExecutor:
                 )
                 self._clients[identity_ref] = client
             operation = self.context.operations[operation_ref]
+            payload = None
+            if operation.method == "POST":
+                if operation.resource_ref is None:
+                    raise EvidenceError("Effect resource is missing")
+                self.ledger.register_effect(attempt, operation.resource_ref)
+                headers["Idempotency-Key"] = attempt
+                payload = {"resource_ref": operation.resource_ref}
             try:
                 async with client.stream(
-                    operation.method, operation.url, headers=headers
+                    operation.method, operation.url, headers=headers, json=payload
                 ) as response:
                     for cookie in client.cookies.jar:
                         if cookie.value:

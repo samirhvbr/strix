@@ -543,7 +543,12 @@ async def run_strix_scan(
             def publish_case_result(result: dict[str, Any]) -> None:
                 if identity_report is None or result["verdict"] != "vulnerable":
                     return
-                title = f"Cross-tenant private resource access ({result['case_ref']})"
+                business = result["adapter"] == "http.single-credit"
+                title = (
+                    f"Single-credit invariant violated ({result['case_ref']})"
+                    if business
+                    else f"Cross-tenant private resource access ({result['case_ref']})"
+                )
                 if any(
                     report.get("title") == title for report in identity_report.vulnerability_reports
                 ):
@@ -551,14 +556,20 @@ async def run_strix_scan(
                 identity_report.add_vulnerability_report(
                     title=title,
                     severity="high",
-                    cwe="CWE-639",
+                    cwe="CWE-841" if business else "CWE-639",
                     confidence="high",
                     description=(
-                        "A second authenticated tenant received the approved private resource "
+                        "Concurrent requests applied the approved single-use credit "
+                        "more than once. "
+                        "Persistent balance and settled effects confirm the invariant violation."
+                        if business
+                        else "A second authenticated tenant received the approved private resource "
                         "and data. Both identity controls and legitimate owner access passed."
                     ),
                     remediation_steps=(
-                        "Enforce the resource ownership boundary and retest with valid identities."
+                        "Enforce single-use redemption atomically and retest with a fresh fixture."
+                        if business
+                        else "Enforce resource ownership and retest with valid identities."
                     ),
                     assessment_evidence=result["evidence"],
                 )

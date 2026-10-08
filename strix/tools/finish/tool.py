@@ -92,7 +92,9 @@ def _do_finish(
                 and obligations.get("essential_total")
                 and obligations.get("essential_unfulfilled") == 0
                 and all(
-                    item.get("verdict") in {"compliant", "vulnerable"} for item in case_evaluations
+                    item.get("verdict") in {"compliant", "vulnerable"}
+                    and item.get("cleanup_complete") is not False
+                    for item in case_evaluations
                 )
             )
             if not result["essential_coverage_complete"]:
