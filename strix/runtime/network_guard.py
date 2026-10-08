@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import contextlib
 import logging
+import re
 from typing import TYPE_CHECKING, Any, Literal
 
 from agents.sandbox.types import ExposedPortEndpoint
@@ -125,6 +126,29 @@ class NetworkGuard:
         if not bindings or bindings[0].get("HostIp") != "127.0.0.1":
             raise RuntimeError("Network guard port must be published only on loopback")
         return ExposedPortEndpoint(host="127.0.0.1", port=int(bindings[0]["HostPort"]), tls=False)
+
+    def denied_packets(self) -> dict[str, dict[str, int]]:
+        """Read aggregate DROP counters from the protected namespace, without packet contents."""
+        self.verify()
+        assert self.container is not None
+        counts: dict[str, dict[str, int]] = {}
+        for family, command in (("ipv4", "iptables-save"), ("ipv6", "ip6tables-save")):
+            result = self.container.exec_run([command, "-c", "-t", "filter"])
+            if result.exit_code != 0:
+                raise RuntimeError("Cannot observe sandbox packet denials")
+            rules = result.output.decode("ascii", errors="strict")
+            default = re.search(r"^:OUTPUT DROP \[(\d+):(\d+)\]$", rules, re.MULTILINE)
+            if default is None:
+                raise RuntimeError("Sandbox OUTPUT policy is not default-deny")
+            packets, octets = map(int, default.groups())
+            # Docker's embedded DNS has an explicit DROP before the loopback exception.
+            for match in re.finditer(
+                r"^\[(\d+):(\d+)\] -A OUTPUT .* -j DROP$", rules, re.MULTILINE
+            ):
+                packets += int(match[1])
+                octets += int(match[2])
+            counts[family] = {"packets": packets, "bytes": octets}
+        return counts
 
     def close(self) -> None:
         if self.container is not None:

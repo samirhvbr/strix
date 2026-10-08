@@ -9,6 +9,7 @@ import json
 import logging
 import uuid
 from collections.abc import Callable
+from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -55,6 +56,7 @@ from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.sessions import open_agent_session
 from strix.core.targets import is_whitebox_scan
 from strix.core.test_catalog import TestCatalog
+from strix.core.web_authorization import WebAuthorization
 from strix.llm import request_log
 from strix.report.state import get_global_report_state
 from strix.runtime import session_manager
@@ -336,6 +338,26 @@ async def run_strix_scan(
     credential_path = scan_config.get("identity_credentials")
     if credential_path and Path(credential_path).resolve().is_relative_to(run_dir.resolve()):
         raise ValueError("Identity credential files must stay outside run artifacts")
+    authorization_check: Callable[[], None] | None = None
+    if assessment_policy is not None and assessment_policy.version == 2:
+        if identity_context is None or not scan_config.get("web_authorization"):
+            raise ValueError(
+                "Controlled assessment requires WEB authorization and identity context"
+            )
+        handoff = Path(scan_config["web_authorization"])
+        if handoff.resolve().is_relative_to(run_dir.resolve()):
+            raise ValueError("WEB authorization must stay outside run artifacts")
+        web_authorization = WebAuthorization(handoff)
+        if interactive or budget_policy != "stop":
+            raise ValueError("Controlled assessment requires headless execution and a fixed budget")
+        authorization_check = partial(
+            web_authorization.check,
+            scan_id,
+            assessment_policy,
+            identity_context,
+            max_budget_usd or 0,
+        )
+        authorization_check()
     teardown_logging = setup_scan_logging(run_dir)
     set_scan_id(scan_id)
 
@@ -510,7 +532,19 @@ async def run_strix_scan(
                     assessment_policy.assessment_id,
                 ),
                 ledger,
+                authorize=authorization_check,
             )
+            if authorization_check is not None:
+                try:
+                    counters = await asyncio.to_thread(
+                        bundle["client"].network_guard.denied_packets
+                    )
+                except Exception:  # noqa: BLE001 -- Persist a gap without exposing transport errors.
+                    ledger.record_network_snapshot(None)
+                    raise RuntimeError(
+                        "Controlled assessment cannot observe network denials"
+                    ) from None
+                ledger.record_network_snapshot(counters)
         if assessment_policy is not None:
             report_state = get_global_report_state()
             if report_state is not None:
@@ -582,6 +616,9 @@ async def run_strix_scan(
         scope_context = build_scope_context(scan_config)
         if identity_executor is not None:
             scope_context["assessment_context"] = identity_executor.catalog()
+            scope_context["controlled_assessment"] = (
+                assessment_policy is not None and assessment_policy.version == 2
+            )
 
         # Attach the run's MCP connections and hold their live sessions in a
         # per-run registry. The connections are source-agnostic: a caller
@@ -711,6 +748,7 @@ async def run_strix_scan(
             "caido_client": bundle["caido_client"],
             "mcp_registry": mcp_registry,
             "identity_executor": identity_executor,
+            "authorize_assessment": authorization_check,
             "agent_id": root_id,
             "parent_id": None,
             "interactive": interactive,
@@ -871,6 +909,15 @@ async def run_strix_scan(
         if authorization_audit is not None:
             authorization_audit.close()
         if identity_executor is not None:
+            if authorization_check is not None:
+                try:
+                    counters = await asyncio.to_thread(
+                        bundle["client"].network_guard.denied_packets
+                    )
+                except Exception:  # noqa: BLE001 -- Cleanup retains an explicit observation gap.
+                    counters = None
+                with contextlib.suppress(Exception):
+                    identity_executor.ledger.record_network_snapshot(counters)
             with contextlib.suppress(Exception):
                 await identity_executor.close()
         with contextlib.suppress(Exception):

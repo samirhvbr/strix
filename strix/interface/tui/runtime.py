@@ -107,6 +107,7 @@ class GoTuiRuntime:
             "assessment_policy": getattr(self.args, "assessment_policy", None),
             "assessment_context": getattr(self.args, "assessment_context", None),
             "identity_credentials": getattr(self.args, "identity_credentials", None),
+            "web_authorization": getattr(self.args, "web_authorization", None),
         }
         self.report_state = ReportState(self.scan_config["run_name"])
         self.report_state.hydrate_from_run_dir()

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import sys
 from pathlib import Path
@@ -18,6 +19,7 @@ from strix.core.assessment import (
 )
 from strix.core.assessment_context import bind_context, parse_context
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
+from strix.core.web_authorization import WebAuthorization
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
 from strix.interface.update_check import self_update
 from strix.interface.utils import (
@@ -337,14 +339,51 @@ Strix Cloud:
         metavar="FILE",
         help="Bind network targets and executor grants to a host-approved assessment (JSON file).",
     )
+    parser.add_argument(
+        "--web-authorization", help="Private WEB authorization handoff from Desktop"
+    )
+    parser.add_argument(
+        "--inspect-web-authorization",
+        metavar="FILE",
+        help="Print approved scope as JSON without starting a scan or model",
+    )
     args = parser.parse_args()
-    if args.assessment_context:
+    if args.inspect_web_authorization:
+        args.web_authorization = args.inspect_web_authorization
+    if args.web_authorization:
+        try:
+            approved_policy, approved_context, approved_budget = WebAuthorization(
+                Path(args.web_authorization)
+            ).fetch()
+            if args.assessment_policy or args.assessment_context:
+                parser.error("WEB authorization supplies its own immutable assessment context")
+            args.assessment_policy = approved_policy.model_dump()
+            args.assessment_context = approved_context.model_dump()
+            if not args.target and not args.resume:
+                args.target = [target.value for target in approved_policy.targets]
+            args.max_budget_usd = min(args.max_budget_usd or approved_budget, approved_budget)
+            args.non_interactive = True
+            if args.inspect_web_authorization:
+                sys.stdout.write(
+                    json.dumps(
+                        {
+                            "policy": args.assessment_policy,
+                            "context": args.assessment_context,
+                            "max_budget_usd": approved_budget,
+                        }
+                    )
+                    + "\n"
+                )
+                parser.exit()
+        except ValueError as exc:
+            parser.error(str(exc))
+    if args.assessment_context and not args.web_authorization:
         try:
             identity_context = parse_context(read_assessment_json(Path(args.assessment_context)))
             args.assessment_context = identity_context.model_dump() if identity_context else None
         except (OSError, ValueError, TypeError):
             parser.error("Invalid assessment identity context file")
-    if args.assessment_policy:
+    if args.assessment_policy and not args.web_authorization:
         try:
             args.assessment_policy = read_assessment_policy(
                 Path(args.assessment_policy).expanduser()

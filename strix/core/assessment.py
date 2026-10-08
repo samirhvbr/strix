@@ -9,7 +9,7 @@ import os
 from typing import TYPE_CHECKING, Annotated, Any, Literal, cast
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from strix.runtime.network_policy import NetworkPolicy, parse_network_policy
 from strix.tools.mcp.config import (
@@ -62,7 +62,7 @@ class AssessmentMcpGrant(BaseModel):
 class AssessmentPolicy(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True, revalidate_instances="always")
 
-    version: Literal[1]
+    version: Literal[1, 2]
     assessment_id: Reference
     authorization_ref: Reference
     operator_ref: Reference
@@ -73,9 +73,16 @@ class AssessmentPolicy(BaseModel):
     @field_validator("version", mode="before")
     @classmethod
     def validate_version(cls, value: Any) -> int:
-        if type(value) is not int or value != 1:
+        if type(value) is not int or value not in {1, 2}:
             raise ValueError("Unsupported assessment policy version")
         return value
+
+    @model_validator(mode="after")
+    def validate_controlled_adapters(self) -> AssessmentPolicy:
+        # No external MCP adapter has a lab-validated effect contract yet.
+        if self.version == 2 and self.mcp_connections:
+            raise ValueError("Controlled assessments do not admit unvalidated MCP adapters")
+        return self
 
     @property
     def digest(self) -> str:
@@ -101,7 +108,7 @@ def parse_assessment_policy(value: Any) -> AssessmentPolicy | None:
         policy = AssessmentPolicy.model_validate(raw).model_copy(deep=True)
     except (ValueError, TypeError):
         # Pydantic's full diagnostic can contain rejected credentials or grants.
-        raise ValueError("Invalid assessment policy (version 1, at most 256 KiB)") from None
+        raise ValueError("Invalid assessment policy (version 1 or 2, at most 256 KiB)") from None
     if len(policy.model_dump_json().encode()) > _MAX_BYTES:
         raise ValueError("Assessment policy exceeds 256 KiB")
     return policy
@@ -206,6 +213,8 @@ def assessment_mcp_requests(
     Provider behavior remains a trust boundary. Stdio subprocesses cannot be
     constrained by tool grants and are deliberately unsupported in this version.
     """
+    if policy.version == 2:
+        return []
     selected: dict[str, McpConnectionRequest] = {}
     for request in requests:
         config = request.config.model_copy(deep=True)

@@ -11,20 +11,28 @@ import httpx
 
 from strix.core.assessment_context import IdentityUnavailableError
 from strix.core.evidence_ledger import EvidenceError
+from strix.core.web_authorization import WebAuthorizationError
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from strix.core.assessment_context import AssessmentContext, FileCredentials
     from strix.core.evidence_ledger import EvidenceLedger
 
 
 class IdentityExecutor:
     def __init__(
-        self, context: AssessmentContext, credentials: FileCredentials, ledger: EvidenceLedger
+        self,
+        context: AssessmentContext,
+        credentials: FileCredentials,
+        ledger: EvidenceLedger,
+        authorize: Callable[[], None] | None = None,
     ) -> None:
         self.context = context.model_copy(deep=True)
         self.credentials = credentials
         self.ledger = ledger
+        self._authorize = authorize
         self._clients: dict[str, httpx.AsyncClient] = {}
         self._revisions: dict[str, int] = {}
         self._locks = {name: asyncio.Lock() for name in context.identities}
@@ -67,6 +75,7 @@ class IdentityExecutor:
             or identity_ref not in case.identities
             or operation_ref not in case.operations
         ):
+            self.ledger.record_denial(agent_ref, "scope_rejected")
             raise EvidenceError("Operation or identity is outside the approved case")
         async with self._locks[identity_ref]:
             attempt = self.ledger.begin(
@@ -80,6 +89,8 @@ class IdentityExecutor:
             headers: dict[str, str] = {}
             revision = 0
             try:
+                if self._authorize is not None:
+                    await asyncio.to_thread(self._authorize)
                 if identity.secret_ref is not None:
                     credential = self.credentials.resolve(identity.secret_ref, identity_ref)
                     headers = {
@@ -91,6 +102,12 @@ class IdentityExecutor:
                         json.dumps(headers, sort_keys=True).encode()
                     ).hexdigest()
                     self.ledger.bind_credential(attempt, revision, fingerprint)
+            except WebAuthorizationError:
+                self.ledger.record_denial(agent_ref, "authorization_rejected")
+                artifact = self.ledger.finish(
+                    attempt, status="blocked", content={"reason": "authorization_unavailable"}
+                )
+                return self.ledger.read(artifact)
             except IdentityUnavailableError as exc:
                 artifact = self.ledger.finish(
                     attempt, status="blocked", content={"reason": str(exc)}
