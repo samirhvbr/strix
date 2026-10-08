@@ -170,7 +170,7 @@ async def test_revocation_blocks_next_identity_request_without_fallback(
     state["status"] = 410
     receipt = await request(executor)
     assert receipt["status"] == "blocked"
-    assert receipt["content"] == {"reason": "authorization_unavailable"}
+    assert receipt["content"]["reason"] == "authorization_unavailable"
     assert len(calls) == 1
     assert executor.ledger.summary()["authorization_denials"] == 1
     await executor.close()

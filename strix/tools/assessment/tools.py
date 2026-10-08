@@ -35,6 +35,7 @@ async def execute_assessment_operation(
     Blocked, uncertain and truncated observations do not establish a completed
     test. Each invocation is a new attempt; no remote operation is automatically
     retried. Only references from list_assessment_cases are accepted.
+    Target response bodies remain private; returned content is sanitized metadata.
 
     Args:
         case_ref: Approved case identifier from list_assessment_cases.
