@@ -70,7 +70,7 @@ class LLMUsageLedger:
             metadata["model"] = model
 
         if not self.zero_cost:
-            estimated = _estimate_litellm_cost(usage, model)
+            estimated = estimate_usage_cost(usage, model)
             if estimated:
                 self._estimated_cost += estimated
 
@@ -212,7 +212,8 @@ def _usage_has_activity(usage: Usage) -> bool:
     )
 
 
-def _estimate_litellm_cost(usage: Usage, model: str | None) -> float | None:
+def estimate_usage_cost(usage: Usage, model: str | None) -> float | None:
+    """Best-effort token price estimate shared by run and per-attempt accounting."""
     litellm_model = _litellm_model_name(model)
     if not litellm_model:
         return None

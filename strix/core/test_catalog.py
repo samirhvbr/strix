@@ -24,9 +24,13 @@ import uuid
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, ClassVar, Literal
+from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from strix.report.coverage import VULN_CLASSES
+
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 logger = logging.getLogger(__name__)
@@ -129,6 +133,21 @@ class TestCatalog:
     def __init__(self) -> None:
         self._tests: dict[str, TestUnit] = {}  # agent_id -> TestUnit
         self._snapshot_path: Path | None = None
+        self._on_change: Callable[[TestUnit], None] | None = None
+
+    def get(self, agent_id: str) -> TestUnit | None:
+        return self._tests.get(agent_id)
+
+    def set_change_callback(self, callback: Callable[[TestUnit], None] | None) -> None:
+        """Observe registration/status changes and hydrate existing units on resume."""
+        self._on_change = callback
+        if callback is not None:
+            for unit in self._tests.values():
+                callback(unit)
+
+    def _notify(self, unit: TestUnit) -> None:
+        if self._on_change is not None:
+            self._on_change(unit)
 
     def set_snapshot_path(self, path: Path) -> None:
         self._snapshot_path = path
@@ -206,6 +225,7 @@ class TestCatalog:
             unit.vuln_class or "-",
         )
         self._write()
+        self._notify(unit)
         return unit
 
     def mark_status(self, agent_id: str, status: str) -> None:
@@ -223,11 +243,14 @@ class TestCatalog:
             return
         unit.status = status  # type: ignore[assignment]
         now = _now()
-        if status == "running" and unit.started_at is None:
-            unit.started_at = now
+        if status == "running":
+            if unit.started_at is None:
+                unit.started_at = now
+            unit.ended_at = None
         if status in _TERMINAL_STATUSES and unit.ended_at is None:
             unit.ended_at = now
         self._write()
+        self._notify(unit)
 
     def snapshot(self) -> dict[str, Any]:
         return {"tests": {agent_id: unit.to_dict() for agent_id, unit in self._tests.items()}}

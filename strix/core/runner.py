@@ -46,10 +46,12 @@ from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.sessions import open_agent_session
 from strix.core.targets import is_whitebox_scan
 from strix.core.test_catalog import TestCatalog
+from strix.llm import request_log
 from strix.report.state import get_global_report_state
 from strix.runtime import session_manager
 from strix.telemetry import set_scan_phase
 from strix.telemetry.logging import set_scan_id, setup_scan_logging
+from strix.telemetry.test_ledger import TestLedger
 from strix.tools.output_store import (
     WORKSPACE_SPILL_DIR,
     configure_spill_writer,
@@ -373,8 +375,25 @@ async def run_strix_scan(
 
     sessions_to_close: list[SQLiteSession] = []
     mcp_registry: McpRegistry | None = None
+    test_ledger: TestLedger | None = None
 
     try:
+        test_ledger = TestLedger(
+            state_dir / "test_telemetry.db",
+            scan_id=scan_id,
+            catalog=test_catalog,
+            owns_agent=lambda agent_id: agent_id in coordinator.statuses,
+            subscription=codex.auth_mode(resolved_model) == "subscription",
+            resuming=is_resume,
+        )
+        test_catalog.set_change_callback(test_ledger.sync_test)
+
+        def record_test_status(agent_id: str, status: str) -> None:
+            test_catalog.mark_status(agent_id, status)
+            test_ledger.record_status(agent_id, status)
+
+        coordinator.set_status_change_callback(record_test_status)
+        request_log.register_sink(test_ledger.record_llm_event)
         targets = scan_config.get("targets") or []
         scan_mode = str(scan_config.get("scan_mode") or "deep")
         is_whitebox = is_whitebox_scan(targets)
@@ -684,6 +703,11 @@ async def run_strix_scan(
         if root_id is not None:
             with contextlib.suppress(Exception):
                 await coordinator.cancel_descendants(root_id)
+        if test_ledger is not None:
+            request_log.unregister_sink(test_ledger.record_llm_event)
+            test_catalog.set_change_callback(None)
+            coordinator.set_status_change_callback(test_catalog.mark_status)
+            test_ledger.close()
         for s in sessions_to_close:
             with contextlib.suppress(Exception):
                 s.close()

@@ -327,6 +327,7 @@ class AgentCoordinator:
         self.wait_kinds.pop(agent_id, None)
         self.runtimes.setdefault(agent_id, AgentRuntime()).user_wake_required = False
         self._parent_notified.discard(agent_id)
+        self._notify_status_change(agent_id, "running")
 
     async def park_waiting(self, agent_id: str, *, wait_kind: WaitKind) -> None:
         """Park an agent, recording what it is waiting on so the driver can time it."""
@@ -400,6 +401,9 @@ class AgentCoordinator:
         runtime = self.runtimes.setdefault(agent_id, AgentRuntime())
         runtime.user_wake_required = status in {"failed", "crashed"}
         runtime.wake.set()
+        self._notify_status_change(agent_id, status)
+
+    def _notify_status_change(self, agent_id: str, status: Status | str) -> None:
         if self._on_status_change is not None:
             try:
                 self._on_status_change(agent_id, cast("Status", status))
