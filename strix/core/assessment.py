@@ -116,7 +116,7 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return result
 
 
-def _read_json(path: Path) -> Any:
+def read_assessment_json(path: Path) -> Any:
     with path.open("rb") as stream:
         raw = stream.read(_MAX_BYTES + 4097)
     if len(raw) > _MAX_BYTES + 4096:
@@ -128,7 +128,7 @@ def _read_json(path: Path) -> Any:
 
 
 def read_assessment_policy(path: Path) -> AssessmentPolicy:
-    policy = parse_assessment_policy(_read_json(path))
+    policy = parse_assessment_policy(read_assessment_json(path))
     if policy is None:
         raise ValueError("Assessment policy must be an object")
     return policy
@@ -166,7 +166,7 @@ def bind_assessment_policy(
     if path.is_symlink():
         raise ValueError("Assessment binding must not be a symlink")
     if path.exists():
-        raw_payload = _read_json(path)
+        raw_payload = read_assessment_json(path)
         if not isinstance(raw_payload, dict):
             raise ValueError("Invalid assessment binding")
         payload = cast("dict[str, Any]", raw_payload)

@@ -26,6 +26,11 @@ from strix.tools.agents_graph.tools import (
     view_agent_graph,
     wait_for_agents,
 )
+from strix.tools.assessment.tools import (
+    execute_assessment_operation,
+    list_assessment_cases,
+    read_assessment_evidence,
+)
 from strix.tools.coverage.tools import list_coverage, record_coverage, update_coverage
 from strix.tools.finish.tool import finish_scan
 from strix.tools.load_skill.tool import load_skill
@@ -697,6 +702,17 @@ def build_strix_agent(
         )
 
     agent_tools = [*_EXTRA_TOOLS, *(extra_tools or [])]
+    if system_prompt_context and system_prompt_context.get("assessment_context"):
+        agent_tools.extend(
+            [list_assessment_cases, execute_assessment_operation, read_assessment_evidence]
+        )
+        instructions += (
+            "\nThis assessment has host-approved cases and isolated identities. "
+            "Use list_assessment_cases, then execute_assessment_operation for authenticated "
+            "HTTP observations. Never request or copy credentials. Refer to returned evidence_ref "
+            "receipts when reporting; unavailable identities and incomplete observations "
+            "are limitations."
+        )
     if interactive:
         # Yielding to the user is only meaningful when one is attached.
         agent_tools.append(wait_for_user)
@@ -704,6 +720,9 @@ def build_strix_agent(
         tools: list[Tool] = [*_BASE_TOOLS, *agent_tools, finish_scan]
     else:
         tools = [*_BASE_TOOLS, *agent_tools, agent_finish]
+    if system_prompt_context and system_prompt_context.get("assessment_context"):
+        # This profile captures HTTP observations, not dependency/static evidence.
+        tools = [tool for tool in tools if tool is not create_dependency_report]
     _ensure_unique_tool_names(tools)
     tools = [
         _with_bounded_result(_with_strictness(_with_coerced_arguments(tool), strict_tool_schemas))
