@@ -49,6 +49,7 @@ from strix.core.test_catalog import TestCatalog
 from strix.llm import request_log
 from strix.report.state import get_global_report_state
 from strix.runtime import session_manager
+from strix.runtime.network_policy import bind_network_policy
 from strix.telemetry import set_scan_phase
 from strix.telemetry.logging import set_scan_id, setup_scan_logging
 from strix.telemetry.test_ledger import TestLedger
@@ -236,6 +237,14 @@ async def run_strix_scan(
     run_dir.mkdir(parents=True, exist_ok=True)
     state_dir = runtime_state_dir(run_dir)
     state_dir.mkdir(parents=True, exist_ok=True)
+    network_policy = bind_network_policy(
+        state_dir,
+        scan_config.get("network_policy"),
+        resuming=(state_dir / "agents.json").exists(),
+    )
+    scan_config["network_policy"] = (
+        network_policy.model_dump() if network_policy is not None else None
+    )
     teardown_logging = setup_scan_logging(run_dir)
     set_scan_id(scan_id)
 
@@ -354,6 +363,8 @@ async def run_strix_scan(
         extra_files=extra_files,
         status_sink=status_sink,
         authorized_targets=build_scope_context(scan_config).get("authorized_targets", []),
+        network_policy=network_policy,
+        run_dir=run_dir,
     )
     report("Waiting for the first model response")
     logger.info("Sandbox ready for scan %s", scan_id)
@@ -378,6 +389,17 @@ async def run_strix_scan(
     test_ledger: TestLedger | None = None
 
     try:
+        if network_policy is not None:
+            report_state = get_global_report_state()
+            if report_state is not None:
+                guard = bundle["client"].network_guard
+                report_state.run_record["network_policy"] = network_policy.model_dump()
+                report_state.run_record["network_enforcement"] = {
+                    "kind": "docker_namespace_firewall",
+                    "policy_sha256": network_policy.digest,
+                    "guard_image_id": guard.image_id,
+                }
+                report_state.save_run_data()
         test_ledger = TestLedger(
             state_dir / "test_telemetry.db",
             scan_id=scan_id,

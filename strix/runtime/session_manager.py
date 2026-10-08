@@ -19,6 +19,7 @@ from strix.config import load_settings
 from strix.runtime.backends import backend_supports_bind_mounts, get_backend
 from strix.runtime.caido_bootstrap import bootstrap_caido
 from strix.runtime.caido_handle import CaidoBootstrapHandle
+from strix.runtime.network_policy import NetworkPolicy, parse_network_policy
 
 
 if TYPE_CHECKING:
@@ -86,6 +87,18 @@ def build_manifest_entries(local_sources: list[dict[str, Any]]) -> dict[str | Pa
             continue
         entries[ws_subdir] = LocalDir(src=Path(host_path).expanduser().resolve())
     return entries
+
+
+def protect_run_mounts(mounts: list[dict[str, Any]], run_dir: Path) -> None:
+    """Prevent a mounted source tree from making its host policy record writable."""
+    protected = run_dir.resolve()
+    for mount in mounts:
+        source = Path(mount["source"]).resolve()
+        if source.is_relative_to(protected) or protected.is_relative_to(source):
+            # Protect the whole intersecting source: a read-only overlay of
+            # just the run would still let an agent rename a writable ancestor
+            # and substitute a new host policy at the original path.
+            mount["read_only"] = True
 
 
 def _extra_file_rel_path(workspace_path: str) -> str | None:
@@ -263,6 +276,8 @@ async def create_or_reuse(
     extra_files: list[dict[str, Any]] | None = None,
     status_sink: StatusSink | None = None,
     authorized_targets: list[dict[str, str]] | None = None,
+    network_policy: NetworkPolicy | None = None,
+    run_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Return the existing session bundle for ``scan_id`` or create a new one.
 
@@ -285,16 +300,25 @@ async def create_or_reuse(
         if status_sink is not None:
             status_sink(phase)
 
+    policy = parse_network_policy(network_policy)
     cached = _SESSION_CACHE.get(scan_id)
     if cached is not None:
+        if cached.get("network_policy") != policy:
+            raise ValueError("A cached sandbox cannot change its network policy")
+        if policy is not None:
+            cached["client"].network_guard.verify()
         logger.info("Reusing existing sandbox session for scan %s", scan_id)
         return cached
 
     backend_name = load_settings().runtime.backend
+    if policy is not None and backend_name != "docker":
+        raise ValueError("Network policy enforcement requires the Docker backend")
     backend = get_backend(backend_name)
 
     if backend_supports_bind_mounts(backend_name):
         bind_mounts = build_bind_mounts(local_sources)
+        if policy is not None and run_dir is not None:
+            protect_run_mounts(bind_mounts, run_dir)
         entries: dict[str | Path, BaseEntry] = {}
     else:
         bind_mounts = []
@@ -336,6 +360,7 @@ async def create_or_reuse(
         manifest=manifest,
         exposed_ports=(_CONTAINER_CAIDO_PORT,),
         bind_mounts=bind_mounts,
+        **({"network_policy": policy} if policy is not None else {}),
     )
 
     if extra_file_archive is not None:
@@ -347,7 +372,11 @@ async def create_or_reuse(
             raise
 
     report("Setting up the proxy")
-    caido_endpoint = await session.resolve_exposed_port(_CONTAINER_CAIDO_PORT)
+    try:
+        caido_endpoint = await session.resolve_exposed_port(_CONTAINER_CAIDO_PORT)
+    except BaseException:
+        await _discard_session(client, session)
+        raise
     scheme = "https" if caido_endpoint.tls else "http"
     host_caido_url = f"{scheme}://{caido_endpoint.host}:{caido_endpoint.port}"
     logger.debug("Caido host endpoint resolved: %s", host_caido_url)
@@ -373,6 +402,7 @@ async def create_or_reuse(
         "client": client,
         "session": session,
         "caido_client": caido_client,
+        "network_policy": policy,
     }
     _SESSION_CACHE[scan_id] = bundle
     logger.info("Sandbox session for scan %s ready and cached", scan_id)

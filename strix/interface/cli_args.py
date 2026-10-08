@@ -19,6 +19,7 @@ from strix.interface.utils import (
     validate_config_file,
 )
 from strix.report.runs import list_run_summaries
+from strix.runtime.network_policy import parse_network_policy, read_network_policy
 
 
 # Severities ``--fail-on`` accepts, most severe first.
@@ -313,7 +314,19 @@ Strix Cloud:
         ),
     )
 
+    parser.add_argument(
+        "--network-policy",
+        metavar="FILE",
+        help="Enforce an explicit IP/protocol/port policy in the Docker sandbox (JSON file).",
+    )
     args = parser.parse_args()
+    if args.network_policy:
+        try:
+            args.network_policy = read_network_policy(
+                Path(args.network_policy).expanduser()
+            ).model_dump()
+        except (OSError, ValueError):
+            parser.error("--network-policy: cannot read a valid network policy JSON file")
     # Startup-resolved state lives alongside the parsed flags. The full schema
     # is established here so downstream code reads attributes directly.
     args.needs_setup = False
@@ -463,6 +476,15 @@ def load_resume_state(args: argparse.Namespace) -> None:
         state = read_run_record(run_dir)
     except (RuntimeError, TypeError) as exc:
         raise ResumeError(f"--resume {args.resume}: run.json unreadable: {exc}") from exc
+
+    try:
+        saved_policy = parse_network_policy(state.get("network_policy"))
+        requested_policy = parse_network_policy(getattr(args, "network_policy", None))
+    except ValueError as exc:
+        raise ResumeError("Cannot resume with a changed or invalid network policy") from exc
+    if requested_policy is not None and requested_policy != saved_policy:
+        raise ResumeError("Network policy cannot change on resume; start a new run")
+    args.network_policy = saved_policy.model_dump() if saved_policy is not None else None
 
     args.targets_info = state.get("targets_info") or []
     # A target-less run has no targets_info at all. It is driven by its

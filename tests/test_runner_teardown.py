@@ -5,6 +5,7 @@ import sqlite3
 import types
 from datetime import UTC, datetime
 from typing import Any
+from unittest.mock import AsyncMock
 
 import pytest
 from agents import ModelSettings
@@ -15,6 +16,7 @@ from strix.core import runner
 from strix.core.agents import AgentCoordinator
 from strix.llm import request_log
 from strix.runtime import session_manager
+from strix.runtime.network_policy import NetworkPolicy, bind_network_policy
 from strix.telemetry.test_ledger import TestLedger
 
 
@@ -59,6 +61,55 @@ def _settings() -> Any:
         ),
         runtime=types.SimpleNamespace(max_context_images=3),
     )
+
+
+@pytest.mark.asyncio
+async def test_network_policy_change_fails_before_sandbox_or_agent_start(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Any
+) -> None:
+    _wire_runner(monkeypatch, tmp_path)
+    bind_network_policy(tmp_path, NetworkPolicy(), resuming=False)
+    sandbox = AsyncMock()
+    agent = AsyncMock()
+    monkeypatch.setattr(session_manager, "create_or_reuse", sandbox)
+    monkeypatch.setattr(runner, "run_agent_loop", agent)
+    with pytest.raises(ValueError, match="cannot change"):
+        await runner.run_strix_scan(
+            scan_config={
+                "targets": [],
+                "network_policy": {
+                    "destinations": [{"address": "192.0.2.10", "protocol": "tcp", "ports": [443]}],
+                },
+            },
+            scan_id="guarded",
+            image="unused",
+        )
+    sandbox.assert_not_called()
+    agent.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_runner_restores_omitted_policy_and_passes_protected_run_path(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Any
+) -> None:
+    _wire_runner(monkeypatch, tmp_path)
+    saved = NetworkPolicy()
+    bind_network_policy(tmp_path, saved, resuming=False)
+    sandbox = AsyncMock(
+        return_value={
+            "client": types.SimpleNamespace(
+                network_guard=types.SimpleNamespace(image_id="sha256:fixture")
+            ),
+            "session": object(),
+            "caido_client": None,
+        }
+    )
+    monkeypatch.setattr(session_manager, "create_or_reuse", sandbox)
+    monkeypatch.setattr(runner, "get_global_report_state", lambda: None)
+    monkeypatch.setattr(runner, "run_agent_loop", AsyncMock())
+    await runner.run_strix_scan(scan_config={"targets": []}, scan_id="guarded", image="unused")
+    assert sandbox.call_args.kwargs["network_policy"] == saved
+    assert sandbox.call_args.kwargs["run_dir"] == tmp_path
 
 
 @pytest.mark.parametrize("ending", ["success", "failure", "cancelled"])

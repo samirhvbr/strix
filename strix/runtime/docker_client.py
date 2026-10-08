@@ -11,10 +11,9 @@ deltas:
    ``docker-entrypoint.sh`` actually run — without it, ``caido-cli`` never
    starts inside the container and ``bootstrap_caido`` retries against a
    dead port.
-2. Append NET_ADMIN/NET_RAW to ``cap_add`` (required by ``nmap -sS`` and
-   other raw-socket tools).
-3. Add ``host.docker.internal`` → host-gateway to ``extra_hosts`` so the
-   agent can reach host-served apps.
+2. Legacy sessions receive NET_ADMIN/NET_RAW and a host-gateway alias.
+3. Guarded sessions share a separately owned network namespace, drop
+   NET_ADMIN/NET_RAW/SYS_ADMIN, and publish control ports through its owner.
 
 Pinned to ``openai-agents==0.14.6``. Bumping the SDK requires
 re-merging the parent body. Track upstream for an injection hook.
@@ -26,7 +25,7 @@ import contextlib
 import logging
 import os
 import uuid
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from agents.sandbox.errors import ExposedPortUnavailableError
 from agents.sandbox.manifest import Manifest
@@ -46,6 +45,12 @@ from docker.types import LogConfig  # type: ignore[import-untyped, unused-ignore
 from docker.types import Mount as DockerSDKMount  # type: ignore[import-untyped, unused-ignore]
 from docker.utils import parse_repository_tag  # type: ignore[import-untyped, unused-ignore]
 from requests.exceptions import RequestException
+
+from strix.runtime.network_guard import NetworkGuard
+
+
+if TYPE_CHECKING:
+    from strix.runtime.network_policy import NetworkPolicy
 
 
 logger = logging.getLogger(__name__)
@@ -161,10 +166,46 @@ class StrixDockerSandboxSession(DockerSandboxSession):
         return ExposedPortEndpoint(host=host, port=port, tls=False)
 
 
+class GuardedDockerSandboxSession(DockerSandboxSession):
+    network_guard: NetworkGuard
+
+    async def _resolve_exposed_port(self, port: int) -> ExposedPortEndpoint:
+        return self.network_guard.endpoint(port)
+
+
 class StrixDockerSandboxClient(DockerSandboxClient):
     # Host directories to bind-mount into the container, set by the docker
     # backend before ``create()``. Each item is ``{source, target, read_only}``.
     strix_bind_mounts: list[dict[str, Any]] | None = None
+    strix_network_policy: NetworkPolicy | None = None
+    network_guard: NetworkGuard | None = None
+    _guarded_container: Container | None = None
+
+    def _validate_guarded_manifest(self, manifest: Manifest | None) -> None:
+        if self.strix_network_policy is None:
+            return
+        if _sandbox_network():
+            raise ValueError("A network policy cannot use STRIX_DOCKER_SANDBOX_NETWORK")
+        if manifest is not None and (
+            _manifest_requires_fuse(manifest) or _manifest_requires_sys_admin(manifest)
+        ):
+            raise ValueError("A guarded sandbox cannot grant SYS_ADMIN or FUSE capabilities")
+
+    def _configure_network(self, kwargs: dict[str, Any], ports: tuple[int, ...]) -> None:
+        if self.strix_network_policy is not None:
+            self.network_guard = NetworkGuard(self.docker_client, self.strix_network_policy, ports)
+            self.network_guard.start()
+            kwargs.pop("ports", None)
+            kwargs["network_mode"] = self.network_guard.network_mode
+            kwargs["cap_drop"] = ["NET_ADMIN", "NET_RAW", "SYS_ADMIN"]
+            return
+        caps = list(kwargs.get("cap_add") or [])
+        for cap in ("NET_ADMIN", "NET_RAW"):
+            if cap not in caps:
+                caps.append(cap)
+        kwargs["cap_add"] = caps
+        kwargs.setdefault("extra_hosts", {})["host.docker.internal"] = "host-gateway"
+        _apply_sandbox_network(kwargs)
 
     async def _create_container(
         self,
@@ -174,6 +215,7 @@ class StrixDockerSandboxClient(DockerSandboxClient):
         exposed_ports: tuple[int, ...] = (),
         session_id: uuid.UUID | None = None,
     ) -> Container:
+        self._validate_guarded_manifest(manifest)
         # ----- BEGIN VERBATIM COPY of DockerSandboxClient._create_container -----
         # SDK ref: src/agents/sandbox/sandboxes/docker.py:1434-1477 (v0.14.6).
         if not self.image_exists(image):
@@ -220,19 +262,7 @@ class StrixDockerSandboxClient(DockerSandboxClient):
             }
         # ----- END VERBATIM COPY -----
 
-        # Strix injections — append, don't overwrite, so FUSE/SYS_ADMIN survives.
-        cap_add = create_kwargs.setdefault("cap_add", [])
-        if not isinstance(cap_add, list):
-            cap_add = list(cap_add)
-            create_kwargs["cap_add"] = cap_add
-        for cap in ("NET_ADMIN", "NET_RAW"):
-            if cap not in cap_add:
-                cap_add.append(cap)
-
-        extra_hosts = create_kwargs.setdefault("extra_hosts", {})
-        extra_hosts["host.docker.internal"] = "host-gateway"
-
-        _apply_sandbox_network(create_kwargs)
+        self._configure_network(create_kwargs, exposed_ports)
         _apply_resource_limits(create_kwargs)
         _apply_log_limits(create_kwargs)
         _apply_run_labels(create_kwargs)
@@ -255,10 +285,12 @@ class StrixDockerSandboxClient(DockerSandboxClient):
         logger.debug(
             "Creating sandbox container: image=%s caps=%s exposed_ports=%s",
             image,
-            cap_add,
+            create_kwargs.get("cap_add", []),
             list(exposed_ports),
         )
         container = self.docker_client.containers.create(**create_kwargs)
+        if self.network_guard is not None:
+            self._guarded_container = container
         logger.info(
             "Sandbox container created: id=%s image=%s",
             container.short_id if hasattr(container, "short_id") else "?",
@@ -267,13 +299,36 @@ class StrixDockerSandboxClient(DockerSandboxClient):
         return container
 
     async def create(self, **kwargs: Any) -> SandboxSession:
-        session = await super().create(**kwargs)
+        try:
+            session = await super().create(**kwargs)
+        except BaseException:
+            if self._guarded_container is not None:
+                try:
+                    self._guarded_container.remove(force=True)
+                except Exception:
+                    logger.exception("Failed to remove a half-started guarded sandbox")
+            if self.network_guard is not None:
+                try:
+                    self.network_guard.close()
+                except Exception:
+                    logger.exception("Failed to remove a half-started network guard")
+            raise
         network = _sandbox_network()
         inner = session._inner
-        if network and isinstance(inner, DockerSandboxSession):
+        if self.network_guard is not None and isinstance(inner, DockerSandboxSession):
+            inner.__class__ = GuardedDockerSandboxSession
+            cast("GuardedDockerSandboxSession", inner).network_guard = self.network_guard
+        elif network and isinstance(inner, DockerSandboxSession):
             inner.__class__ = StrixDockerSandboxSession
             cast("StrixDockerSandboxSession", inner).sandbox_network = network
         return session
+
+    async def resume(self, state: Any) -> SandboxSession:
+        if self.strix_network_policy is not None:
+            raise ValueError(
+                "Guarded SDK sessions cannot be resumed in place; create a new sandbox"
+            )
+        return await super().resume(state)
 
     async def delete(self, session: SandboxSession) -> SandboxSession:
         container_id = getattr(getattr(session._inner, "state", None), "container_id", None)
@@ -289,4 +344,8 @@ class StrixDockerSandboxClient(DockerSandboxClient):
                 docker_errors.NotFound, docker_errors.APIError, RequestException
             ):
                 self.docker_client.containers.get(container_id).kill()
-        return await super().delete(session)
+        try:
+            return await super().delete(session)
+        finally:
+            if self.network_guard is not None:
+                self.network_guard.close()

@@ -786,6 +786,11 @@ class ReportState:
         self.save_run_data()
 
     def set_scan_config(self, config: dict[str, Any]) -> None:
+        saved_policy = self.run_record.get("network_policy")
+        if saved_policy is not None:
+            if config.get("network_policy") not in (None, saved_policy):
+                raise ValueError("Network policy cannot change on resume; start a new run")
+            config["network_policy"] = saved_policy
         self.scan_config = config
         self.run_record["status"] = "running"
         self.run_record["end_time"] = None
@@ -803,6 +808,7 @@ class ReportState:
                 "local_sources": config.get("local_sources", []),
                 "scope_mode": config.get("scope_mode", "auto"),
                 "diff_base": config.get("diff_base"),
+                "network_policy": config.get("network_policy"),
             }
         )
 
