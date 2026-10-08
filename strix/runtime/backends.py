@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from agents.sandbox.manifest import Manifest
 
+    from strix.runtime.network_policy import NetworkPolicy
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,14 +25,14 @@ async def _docker_backend(
     manifest: Manifest,
     exposed_ports: tuple[int, ...],
     bind_mounts: list[dict[str, Any]] | None = None,
+    network_policy: NetworkPolicy | None = None,
 ) -> tuple[Any, Any]:
     """Bring up a session backed by the local Docker daemon.
 
-    Uses :class:`StrixDockerSandboxClient` to inject NET_ADMIN /
-    NET_RAW caps + ``host.docker.internal`` host-gateway, on the same
-    endpoint the startup check resolved (``DOCKER_HOST``, docker context,
-    default socket). Imports ``docker`` lazily so deployments that target
-    a non-Docker backend don't need the docker-py library installed.
+    Uses :class:`StrixDockerSandboxClient` for either legacy networking or
+    an explicitly guarded namespace, on the endpoint the startup check
+    resolved (``DOCKER_HOST``, docker context, default socket).
+    Backend-specific dependencies are imported lazily.
 
     ``session.start()`` is what materializes the manifest into the running
     container — the SDK's ``client.create()`` only builds the inner session
@@ -45,9 +47,14 @@ async def _docker_backend(
 
     client = StrixDockerSandboxClient(connect_docker())
     client.strix_bind_mounts = bind_mounts or []
+    client.strix_network_policy = network_policy
     options = DockerSandboxClientOptions(image=image, exposed_ports=exposed_ports)
     session = await client.create(options=options, manifest=manifest)
-    await session.start()
+    try:
+        await session.start()
+    except BaseException:
+        await client.delete(session)
+        raise
     return client, session
 
 
