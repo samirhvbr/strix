@@ -17,6 +17,8 @@ if TYPE_CHECKING:
     from collections.abc import Callable, Generator
     from pathlib import Path
 
+    from strix.core.assessment_context import AssessmentContext
+
 
 class EvidenceError(RuntimeError):
     """An evidence claim or its durable storage could not be verified."""
@@ -89,6 +91,19 @@ class EvidenceLedger:
                 "CREATE TABLE IF NOT EXISTS network_snapshots ("
                 "id TEXT PRIMARY KEY, occurred_at TEXT NOT NULL, counters TEXT)"
             )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS obligation_plan (version INTEGER, context_sha256 TEXT)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS obligations (case_ref TEXT, case_version INTEGER, "
+                "identity_ref TEXT, operation_ref TEXT, "
+                "PRIMARY KEY(case_ref,case_version,identity_ref,operation_ref))"
+            )
+            db.execute(
+                "CREATE INDEX IF NOT EXISTS attempts_obligation "
+                "ON attempts(case_ref,case_version,identity_ref,operation_ref)"
+            )
+            db.execute("CREATE INDEX IF NOT EXISTS events_attempt ON events(attempt_id)")
         path.chmod(0o600)
         self._publish()
 
@@ -136,6 +151,7 @@ class EvidenceLedger:
             attempts = db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0]
             artifacts = db.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0]
             denials = db.execute("SELECT COUNT(*) FROM execution_denials").fetchone()[0]
+            obligations = self._obligations(db)
             network_gaps = db.execute(
                 "SELECT COUNT(*) FROM network_snapshots WHERE counters IS NULL"
             ).fetchone()[0]
@@ -147,6 +163,86 @@ class EvidenceLedger:
             "unresolved_attempts": unresolved,
             "authorization_denials": denials,
             "network_observation_gaps": network_gaps,
+            "obligations": obligations,
+        }
+
+    def bind_obligations(self, context: AssessmentContext) -> None:
+        """All approved case/identity/operation combinations are essential in plan version 1."""
+        if context.digest != self._binding[2]:
+            raise EvidenceError("Obligation context does not match the assessment")
+        count = sum(len(c.identities) * len(c.operations) for c in context.cases.values())
+        if not count or count > 4096:
+            raise EvidenceError("Assessment needs between 1 and 4096 essential obligations")
+        expected = sorted(
+            {
+                (name, case.version, identity, operation)
+                for name, case in context.cases.items()
+                for identity in case.identities
+                for operation in case.operations
+            }
+        )
+        with self._db() as db:
+            plan = db.execute("SELECT * FROM obligation_plan").fetchall()
+            if not plan:
+                db.execute("INSERT INTO obligation_plan VALUES (1, ?)", (context.digest,))
+                db.executemany("INSERT INTO obligations VALUES (?,?,?,?)", expected)
+            actual = db.execute("SELECT * FROM obligations ORDER BY 1,2,3,4").fetchall()
+            if (
+                db.execute("SELECT * FROM obligation_plan").fetchall() != [(1, context.digest)]
+                or actual != expected
+            ):
+                raise EvidenceError("Persisted obligation plan changed; execution blocked")
+        self._publish()
+
+    def _obligations(self, db: sqlite3.Connection) -> dict[str, Any] | None:
+        plan = db.execute("SELECT * FROM obligation_plan").fetchall()
+        if not plan:
+            return None
+        if plan != [(1, self._binding[2])]:
+            raise EvidenceError("Invalid obligation plan")
+        obligations = db.execute("SELECT * FROM obligations ORDER BY 1,2,3,4").fetchall()
+        rows: list[dict[str, Any]] = []
+        for case, version, identity, operation in obligations:
+            attempt = db.execute(
+                "SELECT id,status FROM attempts WHERE case_ref=? AND case_version=? "
+                "AND identity_ref=? AND operation_ref=? ORDER BY rowid DESC LIMIT 1",
+                (case, version, identity, operation),
+            ).fetchone()
+            status = "missing" if attempt is None else attempt[1]
+            evidence_ref = None
+            if status == "observed" and attempt is not None:
+                artifact = db.execute(
+                    "SELECT a.id,a.content,a.sha256,a.truncated FROM artifacts a "
+                    "JOIN events e ON a.event_id=e.id WHERE e.attempt_id=? AND e.kind='observed'",
+                    (attempt[0],),
+                ).fetchall()
+                if (
+                    len(artifact) != 1
+                    or hashlib.sha256(artifact[0][1]).hexdigest() != artifact[0][2]
+                ):
+                    status = "invalid_evidence"
+                elif artifact[0][3]:
+                    status = "truncated"
+                else:
+                    evidence_ref = artifact[0][0]
+            rows.append(
+                {
+                    "case_ref": case,
+                    "case_version": version,
+                    "identity_ref": identity,
+                    "operation_ref": operation,
+                    "essential": True,
+                    "status": status,
+                    "attempt_ref": attempt[0] if attempt else None,
+                    "evidence_ref": evidence_ref,
+                }
+            )
+        return {
+            "version": 1,
+            "source": "approved_context_and_runtime_receipts",
+            "essential_total": len(rows),
+            "essential_unfulfilled": sum(row["status"] != "observed" for row in rows),
+            "items": rows,
         }
 
     def _publish(self) -> None:
@@ -166,6 +262,15 @@ class EvidenceLedger:
             raise EvidenceError("Attempt belongs to an unknown agent")
         attempt = uuid.uuid4().hex
         with self._db() as db:
+            if (
+                db.execute("SELECT COUNT(*) FROM obligation_plan").fetchone()[0]
+                and not db.execute(
+                    "SELECT 1 FROM obligations WHERE case_ref=? AND case_version=? "
+                    "AND identity_ref=? AND operation_ref=?",
+                    (case_ref, case_version, identity_ref, operation_ref),
+                ).fetchone()
+            ):
+                raise EvidenceError("Attempt is outside the approved obligation plan")
             db.execute(
                 "INSERT INTO attempts VALUES (?, ?, ?, ?, ?, ?, NULL, ?, NULL, 'started')",
                 (

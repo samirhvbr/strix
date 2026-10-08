@@ -32,6 +32,7 @@ class IdentityExecutor:
         self.context = context.model_copy(deep=True)
         self.credentials = credentials
         self.ledger = ledger
+        self.ledger.bind_obligations(self.context)
         self._authorize = authorize
         self._clients: dict[str, httpx.AsyncClient] = {}
         self._revisions: dict[str, int] = {}
@@ -40,6 +41,7 @@ class IdentityExecutor:
 
     def catalog(self) -> dict[str, Any]:
         return {
+            "obligations": self.ledger.summary()["obligations"],
             "project_ref": self.context.project_ref,
             "environment_ref": self.context.environment_ref,
             "identities": {

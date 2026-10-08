@@ -18,15 +18,9 @@ unreachable, an unhandled exception), before or without ever reaching a
 composed result. This module only distinguishes the three states a scan
 that DID start running can end in.
 
-Deliberately NOT done here (left for ENG-06, which the backlog in
-PENTEST-11 §14.2 makes depend on ENG-04/ENG-05, identity and evidence):
-a coverage gap does not yet fail a scan on its own. ``coverage.json``'s
-``gaps`` has no essential/optional split today, so "N gaps open" cannot
-yet be distinguished from "N gaps the operator already accepted" --
-``operationally_complete`` already captures the coarser, real signal
-("did the run stop before the root agent decided it was done"), and
-``coverage_gaps`` is carried through informationally for ENG-06 to build
-on, not to gate on yet.
+The controlled assessment profile also makes missing essential runtime
+obligations incomplete (ENG-06). General agent-reported or skill-derived gaps
+remain informational; they cannot satisfy or waive an essential obligation.
 """
 
 from __future__ import annotations
