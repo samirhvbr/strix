@@ -15,7 +15,7 @@ if not tui_binary.is_file():
     )
 binaries = [(str(tui_binary), 'strix/bin')]
 
-datas = []
+datas = [(str(project_root / '.fork-version'), 'strix')]
 
 for md_file in strix_root.rglob('skills/**/*.md'):
     rel_path = md_file.relative_to(project_root)

@@ -14,6 +14,7 @@ from uuid import uuid4
 from strix.config import codex
 from strix.config.loader import load_settings
 from strix.core.paths import run_dir_for, runtime_state_dir
+from strix.fork_version import fork_version
 from strix.report.coverage import write_coverage
 from strix.report.pricing import resolve_litellm_model
 from strix.report.sarif import write_sarif
@@ -226,6 +227,7 @@ class ReportState:
         self._telemetry_llm_usage_baseline: dict[str, Any] = {}
         auth_mode = codex.auth_mode(load_settings().llm.model)
         self._llm_usage.zero_cost = auth_mode == "subscription"
+        current_fork_version = fork_version()
         self.run_record: dict[str, Any] = {
             "run_id": self.run_id,
             "run_name": self.run_name,
@@ -233,6 +235,8 @@ class ReportState:
             "end_time": None,
             "status": "running",
             "auth_mode": auth_mode,
+            "strix_version": current_fork_version,
+            "strix_execution_versions": [current_fork_version] if current_fork_version else [],
             "targets_info": [],
             "llm_usage": self._build_llm_usage_record(),
         }
@@ -282,6 +286,19 @@ class ReportState:
         data = read_run_record(run_dir)
         if data:
             self.run_record.update(data)
+            # The current executable cannot identify the version that created an
+            # older run. Keep that provenance unknown instead of backfilling it.
+            self.run_record["strix_version"] = data.get("strix_version")
+            prior_versions = data.get("strix_execution_versions")
+            execution_versions = (
+                [v for v in cast("list[object]", prior_versions) if isinstance(v, str)]
+                if isinstance(prior_versions, list)
+                else []
+            )
+            current_fork_version = fork_version()
+            if current_fork_version and current_fork_version not in execution_versions:
+                execution_versions.append(current_fork_version)
+            self.run_record["strix_execution_versions"] = execution_versions
             if isinstance(data.get("start_time"), str):
                 self.start_time = data["start_time"]
             if isinstance(data.get("end_time"), str):
