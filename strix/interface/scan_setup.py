@@ -187,6 +187,12 @@ def build_targets_info(args: argparse.Namespace) -> None:
         except ValueError as e:
             raise ValueError(f"Invalid target '{target}': {e}") from None
 
+        if getattr(args, "assessment_policy", None) is not None and target_type not in {
+            "web_application",
+            "ip_address",
+        }:
+            raise ValueError("Assessment policy version 1 supports only URL and IP targets")
+
         if target_type == "local_code":
             display_target = target_dict.get("target_path", target)
         else:
@@ -240,6 +246,20 @@ def prepare_run(args: argparse.Namespace) -> None:
     user has supplied a target via ``/target``). Mutates *args* in place and
     raises :class:`ValueError` on any preparation failure.
     """
+    from strix.core.assessment import parse_assessment_policy, validate_assessment_scope
+
+    policy = parse_assessment_policy(getattr(args, "assessment_policy", None))
+    if policy is not None:
+        validate_assessment_scope(
+            policy,
+            {
+                "targets": args.targets_info,
+                "network_policy": getattr(args, "network_policy", None),
+                "local_sources": getattr(args, "local_sources", None),
+                "workspace_mount": getattr(args, "workspace_mount", None),
+            },
+        )
+        args.network_policy = policy.network_policy.model_dump()
     args.run_name = args.resume or generate_run_name(args.targets_info)
 
     if args.resume:

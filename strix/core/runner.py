@@ -28,6 +28,11 @@ from strix.config.models import (
 )
 from strix.config.settings import DEFAULT_MAX_TURNS
 from strix.core.agents import AgentCoordinator, BudgetPolicy
+from strix.core.assessment import (
+    assessment_mcp_requests,
+    bind_assessment_policy,
+    validate_assessment_scope,
+)
 from strix.core.execution import (
     respawn_subagents,
     run_agent_loop,
@@ -237,6 +242,26 @@ async def run_strix_scan(
     run_dir.mkdir(parents=True, exist_ok=True)
     state_dir = runtime_state_dir(run_dir)
     state_dir.mkdir(parents=True, exist_ok=True)
+    assessment_policy = bind_assessment_policy(
+        state_dir,
+        scan_id,
+        scan_config.get("assessment_policy"),
+        resuming=(state_dir / "agents.json").exists(),
+    )
+    if assessment_policy is not None:
+        validate_assessment_scope(assessment_policy, scan_config)
+        if local_sources:
+            raise ValueError("Assessment policy version 1 does not support source mounts")
+        scan_config["network_policy"] = assessment_policy.network_policy.model_dump()
+        scan_config["assessment_policy"] = assessment_policy.model_dump()
+        from strix.tools.mcp import McpConnectionRequest, load_user_mcp_configs
+
+        requests = mcp_connection_requests
+        if requests is None:
+            requests = [McpConnectionRequest(config=item) for item in load_user_mcp_configs()]
+        # Validate and snapshot before sandbox startup and outside the legacy
+        # best-effort MCP registration block. No warm-up can precede this gate.
+        mcp_connection_requests = assessment_mcp_requests(assessment_policy, requests)
     network_policy = bind_network_policy(
         state_dir,
         scan_config.get("network_policy"),
@@ -389,6 +414,11 @@ async def run_strix_scan(
     test_ledger: TestLedger | None = None
 
     try:
+        if assessment_policy is not None:
+            report_state = get_global_report_state()
+            if report_state is not None:
+                report_state.run_record["assessment"] = assessment_policy.summary()
+                report_state.save_run_data()
         if network_policy is not None:
             report_state = get_global_report_state()
             if report_state is not None:
@@ -512,6 +542,8 @@ async def run_strix_scan(
                 _emit_mcp_status()
                 mcp_registry.start_warmup(max_concurrency=6)
         except Exception:
+            if assessment_policy is not None:
+                raise
             logger.exception("Failed to configure user MCP servers; continuing without them")
 
         root_context = _merge_root_prompt_context(scope_context, extra_system_prompt_context)

@@ -786,6 +786,18 @@ class ReportState:
         self.save_run_data()
 
     def set_scan_config(self, config: dict[str, Any]) -> None:
+        from strix.core.assessment import parse_assessment_policy, validate_assessment_scope
+
+        assessment = parse_assessment_policy(config.get("assessment_policy"))
+        saved_assessment = self.run_record.get("assessment")
+        if saved_assessment is not None and (
+            assessment is None or saved_assessment != assessment.summary()
+        ):
+            raise ValueError("Assessment binding must be restored before resuming the report")
+        if assessment is not None:
+            validate_assessment_scope(assessment, config)
+            config["network_policy"] = assessment.network_policy.model_dump()
+            self.run_record["assessment"] = assessment.summary()
         saved_policy = self.run_record.get("network_policy")
         if saved_policy is not None:
             if config.get("network_policy") not in (None, saved_policy):
