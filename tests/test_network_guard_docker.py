@@ -136,6 +136,10 @@ async def test_real_packets_root_tampering_control_port_and_cleanup(  # noqa: PL
         assert not _connect(sandbox, allowed_ip, 18083, udp=True)
         assert not _connect(sandbox, allowed_ip, 53, udp=True)
         assert not _connect(sandbox, "::ffff:" + denied_ip, 18080)
+        counters = client.network_guard.denied_packets()
+        assert counters["ipv4"]["packets"] >= 5
+        assert counters["ipv4"]["bytes"] > 0
+        assert counters["ipv6"]["packets"] >= 0
 
         # Both filter families must be installed even on an IPv4-only bridge.
         for command in ("iptables-save", "ip6tables-save"):
