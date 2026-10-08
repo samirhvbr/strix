@@ -9,10 +9,45 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, model_validator
 
 
 DEFAULT_MAX_CONCURRENT_CALLS = 4
+
+ArgumentName = Annotated[str, Field(strict=True, min_length=1)]
+PolicyScalar = (
+    StrictStr
+    | StrictInt
+    | StrictBool
+    | Annotated[float, Field(strict=True, allow_inf_nan=False)]
+    | None
+)
+
+
+class McpToolPolicy(BaseModel):
+    """Explicit grants for one tool's top-level arguments.
+
+    Names and scalar values match exactly, including their types. Every value
+    constraint also requires the argument, so omitting a tenant or project
+    cannot delegate that choice to the provider's default.
+    """
+
+    model_config = ConfigDict(extra="forbid", strict=True)
+
+    allowed_arguments: list[ArgumentName]
+    required_arguments: list[ArgumentName] = Field(default_factory=list)
+    argument_values: dict[ArgumentName, Annotated[list[PolicyScalar], Field(min_length=1)]] = Field(
+        default_factory=dict, repr=False
+    )
+
+    @model_validator(mode="after")
+    def _check_arguments(self) -> McpToolPolicy:
+        allowed = set(self.allowed_arguments)
+        if not set(self.required_arguments) <= allowed:
+            raise ValueError("required_arguments must be included in allowed_arguments")
+        if not self.argument_values.keys() <= allowed:
+            raise ValueError("argument_values must be included in allowed_arguments")
+        return self
 
 
 class BearerAuth(BaseModel):
@@ -59,8 +94,14 @@ class McpConnectionConfig(BaseModel):
     """Extra environment variables for the stdio subprocess."""
 
     allowed_tools: list[str] | None = None
-    """Tool allowlist, applied after the server lists its tools. ``None`` (the
-    default) exposes every tool the server lists; a list restricts to it."""
+    """Tool allowlist, enforced during discovery and dispatch. ``None`` (the
+    default) allows every listed tool unless ``tool_policies`` restricts it."""
+
+    tool_policies: dict[ArgumentName, McpToolPolicy] | None = Field(default=None, repr=False)
+    """Optional explicit tool and argument grants, intersected with allowed_tools.
+    None preserves legacy behavior; an empty mapping denies all dispatches.
+    A tool absent from a configured mapping is denied, even if the server lists it.
+    """
 
     active_tools: list[str] = Field(default_factory=list)
     """Small scan-relevant subset ranked ahead of the broader allowed catalog."""

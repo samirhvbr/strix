@@ -126,10 +126,9 @@ def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
     The returned tuple carries the server and, for HTTP connections, a recorder
     that retains sanitized response metadata for the owning session.
 
-    When ``allowed_tools`` is a list the static filter means the server will not
-    even list tools outside it, so it is the authoritative gate on what
-    ``describe_mcp`` and ``call_mcp`` can see. When it is ``None`` no filter is
-    applied and every listed tool is reachable.
+    The static filter reduces the SDK catalog. The host-owned session policy
+    separately enforces tool and argument grants at discovery and dispatch,
+    including adopted servers and reconnects.
     """
     tool_filter = (
         create_static_tool_filter(allowed_tool_names=config.allowed_tools)

@@ -44,28 +44,6 @@ def _resolve_path(path: Path | None) -> Path:
     return _DEFAULT_PATH
 
 
-def _dedupe_by_name(configs: list[McpConnectionConfig]) -> list[McpConnectionConfig]:
-    """Keep the first connection of each name, dropping later duplicates.
-
-    A connection's name is its key in the run's registry, so two connections
-    sharing a name would collide and the second would overwrite the first. Drop
-    the duplicate here, with a warning, instead.
-    """
-    seen: set[str] = set()
-    unique: list[McpConnectionConfig] = []
-    for config in configs:
-        if config.name in seen:
-            logger.warning(
-                "Ignoring MCP server %r: another connection already uses that name "
-                "(names must be unique because they namespace the server's tools).",
-                config.name,
-            )
-            continue
-        seen.add(config.name)
-        unique.append(config)
-    return unique
-
-
 def _parse_names(env_var: str) -> set[str]:
     return {name.strip() for name in os.environ.get(env_var, "").split(",") if name.strip()}
 
@@ -105,8 +83,10 @@ def load_user_mcp_configs(path: Path | None = None) -> list[McpConnectionConfig]
     ``~/.strix/mcp-servers.json``. The file is a JSON list of server entries.
     A missing file returns ``[]``; an unreadable or non-list file is logged and
     returns ``[]``; individual entries that fail validation are logged and
-    skipped. Connections sharing a name are de-duplicated (first wins), and an
-    optional per-run include/exclude selection is applied last.
+    skipped. Connections sharing a name are de-duplicated before validation
+    (first wins, including an invalid first entry), so a malformed restriction
+    cannot fall back to a later permissive duplicate. An optional per-run
+    include/exclude selection is applied last.
     """
     source = _resolve_path(path)
     if not source.exists():
@@ -124,10 +104,24 @@ def load_user_mcp_configs(path: Path | None = None) -> list[McpConnectionConfig]
 
     entries = cast("list[object]", raw)
     configs: list[McpConnectionConfig] = []
+    seen_names: set[str] = set()
     for index, entry in enumerate(entries):
+        name = cast("dict[str, object]", entry).get("name") if isinstance(entry, dict) else None
+        if isinstance(name, str):
+            if name in seen_names:
+                logger.warning("Skipping duplicate MCP server entry #%d in %s", index, source)
+                continue
+            seen_names.add(name)
         try:
             configs.append(McpConnectionConfig.model_validate(entry))
         except ValidationError as exc:
-            logger.warning("Skipping invalid MCP server entry #%d in %s: %s", index, source, exc)
+            # ValidationError text includes rejected input, which can contain
+            # bearer tokens, subprocess environment values or policy constraints.
+            logger.warning(
+                "Skipping invalid MCP server entry #%d in %s (%d validation errors)",
+                index,
+                source,
+                exc.error_count(),
+            )
 
-    return _apply_run_selection(_dedupe_by_name(configs))
+    return _apply_run_selection(configs)

@@ -18,6 +18,7 @@ from strix.tools.mcp.config import (
     BearerAuth,
     McpAuth,
     McpConnectionConfig,
+    McpToolPolicy,
 )
 from strix.tools.mcp.failures import FailureInfo, HttpStatusRecorder, classify
 from strix.tools.mcp.loader import load_user_mcp_configs
@@ -60,6 +61,7 @@ __all__ = [
     "McpConnectionSummary",
     "McpConnectionUnavailableError",
     "McpRegistry",
+    "McpToolPolicy",
     "SupervisedMcpSession",
     "attach_mcp_requests",
     "call_mcp",
