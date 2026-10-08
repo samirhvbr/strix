@@ -24,7 +24,7 @@ class _ToolGrant:
     def from_config(cls, policy: McpToolPolicy) -> _ToolGrant:
         return cls(
             frozenset(policy.allowed_arguments),
-            frozenset(policy.required_arguments) | policy.argument_values.keys(),
+            frozenset(policy.required_arguments) | frozenset(policy.argument_values),
             tuple((name, tuple(values)) for name, values in policy.argument_values.items()),
         )
 
