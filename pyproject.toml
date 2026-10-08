@@ -93,6 +93,9 @@ exclude = [
   "strix/interface/tui/go.sum",
 ]
 
+[tool.hatch.build.targets.wheel.force-include]
+".fork-version" = "strix/.fork-version"
+
 [tool.hatch.build.targets.wheel.hooks.custom]
 path = "scripts/tui_sidecar_hook.py"
 

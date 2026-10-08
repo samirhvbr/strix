@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import asyncio
+import sqlite3
 import types
+from datetime import UTC, datetime
 from typing import Any
 
 import pytest
@@ -11,7 +13,9 @@ import strix.tools.notes.tools as notes_tools
 import strix.tools.todo.tools as todo_tools
 from strix.core import runner
 from strix.core.agents import AgentCoordinator
+from strix.llm import request_log
 from strix.runtime import session_manager
+from strix.telemetry.test_ledger import TestLedger
 
 
 def _wire_runner(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> None:
@@ -54,6 +58,86 @@ def _settings() -> Any:
             extra_headers=None,
         ),
         runtime=types.SimpleNamespace(max_context_images=3),
+    )
+
+
+@pytest.mark.parametrize("ending", ["success", "failure", "cancelled"])
+@pytest.mark.asyncio
+async def test_telemetry_records_root_and_cancelled_children_before_detaching(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Any,
+    ending: str,
+) -> None:
+    _wire_runner(monkeypatch, tmp_path)
+    coordinator = AgentCoordinator()
+    started = asyncio.Event()
+
+    def emit(agent_id: str) -> None:
+        now = datetime.now(UTC)
+        request_log.emit(
+            request_log.LlmRequestEvent(
+                call_id=agent_id,
+                agent_id=agent_id,
+                route="openai",
+                provider="openai",
+                model="test-model",
+                api_host=None,
+                streaming=False,
+                outcome="success",
+                status_code=200,
+                provider_request_id=None,
+                response_id=None,
+                error_type=None,
+                error_message=None,
+                started_at=now,
+                finished_at=now,
+                duration_ms=1,
+                cost_usd=0.02,
+                input_tokens=1,
+                output_tokens=2,
+                total_tokens=3,
+            )
+        )
+
+    async def run(**kwargs: Any) -> None:
+        root = kwargs["agent_id"]
+        emit(root)
+        await coordinator.register("child", "Child", parent_id=root)
+        kwargs["context"]["test_catalog"].register(agent_id="child", name="Child")
+
+        async def child() -> None:
+            started.set()
+            try:
+                await asyncio.sleep(3600)
+            finally:
+                emit("child")
+
+        task = asyncio.create_task(child())
+        await coordinator.attach_runtime("child", task=task)
+        await started.wait()
+        if ending == "failure":
+            raise RuntimeError("simulated agent failure")
+        if ending == "cancelled":
+            raise asyncio.CancelledError
+
+    monkeypatch.setattr(runner, "run_agent_loop", run)
+    invocation = runner.run_strix_scan(
+        scan_config={"targets": []},
+        scan_id="scan-test",
+        image="img",
+        coordinator=coordinator,
+    )
+    if ending == "success":
+        await invocation
+    else:
+        with pytest.raises(RuntimeError if ending == "failure" else asyncio.CancelledError):
+            await invocation
+    with sqlite3.connect(tmp_path / "test_telemetry.db") as db:
+        assert db.execute("SELECT COUNT(*) FROM test_events").fetchone()[0] == 2
+        assert db.execute("SELECT SUM(cost_usd) FROM test_events").fetchone()[0] == 0.04
+        assert db.execute("SELECT ingestion_status FROM ledger_metadata").fetchone()[0] == "closed"
+    assert not any(
+        isinstance(getattr(sink, "__self__", None), TestLedger) for sink in request_log._sinks
     )
 
 
