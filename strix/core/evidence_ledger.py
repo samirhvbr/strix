@@ -113,6 +113,15 @@ class EvidenceLedger:
             db.execute("CREATE INDEX IF NOT EXISTS events_attempt ON events(attempt_id)")
             db.execute("CREATE TABLE IF NOT EXISTS case_plans (case_ref TEXT PRIMARY KEY)")
             db.execute(
+                "CREATE TABLE IF NOT EXISTS effects (attempt_ref TEXT PRIMARY KEY "
+                "REFERENCES attempts(id), "
+                "resource_ref TEXT, outcome TEXT, reconciliation_ref TEXT)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS business_runs "
+                "(case_ref TEXT PRIMARY KEY, checkpoint TEXT)"
+            )
+            db.execute(
                 "CREATE TABLE IF NOT EXISTS case_results (id TEXT PRIMARY KEY, "
                 "case_ref TEXT, attempt_seq INTEGER, content BLOB, sha256 TEXT)"
             )
@@ -159,14 +168,20 @@ class EvidenceLedger:
         if self._failed:
             return {"version": 1, "status": "failed", "unresolved_attempts": None}
         with self._db() as db:
+            self._verify_reconciliations(db)
             unresolved = db.execute(
-                "SELECT COUNT(*) FROM attempts WHERE status IN ('started','uncertain')"
+                "SELECT COUNT(*) FROM attempts WHERE status IN ('started','uncertain') "
+                "AND id NOT IN (SELECT attempt_ref FROM effects "
+                "WHERE outcome IN ('applied','not_applied'))"
             ).fetchone()[0]
             attempts = db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0]
             artifacts = db.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0]
             denials = db.execute("SELECT COUNT(*) FROM execution_denials").fetchone()[0]
             obligations = self._obligations(db)
             case_evaluations = self._case_evaluations(db)
+            pending_effects = db.execute(
+                "SELECT COUNT(*) FROM effects WHERE outcome='pending'"
+            ).fetchone()[0]
             network_gaps = db.execute(
                 "SELECT COUNT(*) FROM network_snapshots WHERE counters IS NULL"
             ).fetchone()[0]
@@ -180,6 +195,7 @@ class EvidenceLedger:
             "network_observation_gaps": network_gaps,
             "obligations": obligations,
             "case_evaluations": case_evaluations,
+            "pending_effects": pending_effects,
         }
 
     def bind_obligations(self, context: AssessmentContext) -> None:
@@ -209,7 +225,7 @@ class EvidenceLedger:
             ):
                 raise EvidenceError("Persisted obligation plan changed; execution blocked")
             expected_cases = sorted(
-                key for key, case in context.cases.items() if case.authorization
+                key for key, case in context.cases.items() if case.authorization or case.business
             )
             db.executemany(
                 "INSERT OR IGNORE INTO case_plans VALUES (?)", [(key,) for key in expected_cases]
@@ -236,6 +252,113 @@ class EvidenceLedger:
             )
         self._publish()
         return data
+
+    def claim_business_run(self, case_ref: str, pre_ref: str) -> tuple[bool, dict[str, Any]]:
+        checkpoint = {"pre_ref": pre_ref, "phase": "dispatch_reserved"}
+        with self._db() as db:
+            changed = db.execute(
+                "INSERT OR IGNORE INTO business_runs VALUES (?,?)",
+                (case_ref, json.dumps(checkpoint)),
+            ).rowcount
+            saved = db.execute(
+                "SELECT checkpoint FROM business_runs WHERE case_ref=?", (case_ref,)
+            ).fetchone()[0]
+        return changed == 1, json.loads(saved)
+
+    def business_checkpoint(self, case_ref: str) -> dict[str, Any] | None:
+        with self._db() as db:
+            row = db.execute(
+                "SELECT checkpoint FROM business_runs WHERE case_ref=?", (case_ref,)
+            ).fetchone()
+        return json.loads(row[0]) if row else None
+
+    def register_effect(self, attempt: str, resource_ref: str) -> None:
+        with self._db() as db:
+            db.execute("INSERT INTO effects VALUES (?,?,'pending',NULL)", (attempt, resource_ref))
+        self._publish()
+
+    def reconcile_effects(self, case_ref: str, state_operation: str, evidence_ref: str) -> None:
+        receipt = self.read_private(evidence_ref, case_ref=case_ref, require_complete=True)
+        if (
+            receipt["operation_ref"] != state_operation
+            or receipt["content"].get("status_code") != 200
+        ):
+            raise EvidenceError("Reconciliation requires the approved state observation")
+        try:
+            body = json.loads(receipt["content"].get("body", ""))
+            outcomes = body["effects"]
+            if not isinstance(outcomes, dict):
+                return
+        except (KeyError, TypeError, ValueError):
+            return
+        with self._db() as db:
+            effects = db.execute(
+                "SELECT e.attempt_ref,e.resource_ref FROM effects e JOIN attempts a "
+                "ON a.id=e.attempt_ref WHERE a.case_ref=? AND e.outcome='pending'",
+                (case_ref,),
+            ).fetchall()
+            for ref, resource in effects:
+                outcome = outcomes.get(ref)
+                if (
+                    body.get("resource_ref") == resource
+                    and isinstance(outcome, dict)
+                    and outcome.get("settled") is True
+                    and isinstance(outcome.get("outcome"), str)
+                    and outcome.get("outcome") in {"applied", "not_applied"}
+                ):
+                    db.execute(
+                        "UPDATE effects SET outcome=?,reconciliation_ref=? "
+                        "WHERE attempt_ref=? AND outcome='pending'",
+                        (outcome["outcome"], evidence_ref, ref),
+                    )
+        self._publish()
+
+    def effect_history(self, case_ref: str) -> list[dict[str, Any]]:
+        with self._db() as db:
+            rows = db.execute(
+                "SELECT e.attempt_ref,e.resource_ref,e.outcome,"
+                "e.reconciliation_ref,a.operation_ref "
+                "FROM effects e JOIN attempts a ON a.id=e.attempt_ref "
+                "WHERE a.case_ref=? ORDER BY a.rowid",
+                (case_ref,),
+            ).fetchall()
+        return [
+            dict(
+                zip(
+                    (
+                        "attempt_ref",
+                        "resource_ref",
+                        "outcome",
+                        "reconciliation_ref",
+                        "operation_ref",
+                    ),
+                    row,
+                    strict=True,
+                )
+            )
+            for row in rows
+        ]
+
+    def _verify_reconciliations(self, db: sqlite3.Connection) -> None:
+        for ref, resource, outcome, evidence_ref in db.execute(
+            "SELECT * FROM effects WHERE outcome!='pending'"
+        ).fetchall():
+            receipt = self.read_private(evidence_ref, require_complete=True)
+            try:
+                data = json.loads(receipt["content"].get("body", ""))
+                valid = (
+                    isinstance(data, dict)
+                    and data.get("resource_ref") == resource
+                    and data["effects"][ref]
+                    == {
+                        "outcome": outcome,
+                        "settled": True,
+                    }
+                )
+            except (KeyError, TypeError, ValueError):
+                valid = False
+            if not valid:
+                raise EvidenceError("Effect reconciliation evidence is invalid")
 
     def read_case_result(self, ref: str, case_ref: str) -> dict[str, Any]:
         with self._db() as db:
@@ -300,6 +423,14 @@ class EvidenceLedger:
             ).fetchone()
             status = "missing" if attempt is None else attempt[1]
             evidence_ref = None
+            if status in {"started", "uncertain"} and attempt is not None:
+                effect = db.execute(
+                    "SELECT reconciliation_ref FROM effects WHERE attempt_ref=? "
+                    "AND outcome IN ('applied','not_applied')",
+                    (attempt[0],),
+                ).fetchone()
+                if effect is not None:
+                    status, evidence_ref = "reconciled", effect[0]
             if status == "observed" and attempt is not None:
                 artifact = db.execute(
                     "SELECT a.id,a.content,a.sha256,a.truncated FROM artifacts a "
@@ -331,7 +462,9 @@ class EvidenceLedger:
             "version": 1,
             "source": "approved_context_and_runtime_receipts",
             "essential_total": len(rows),
-            "essential_unfulfilled": sum(row["status"] != "observed" for row in rows),
+            "essential_unfulfilled": sum(
+                row["status"] not in {"observed", "reconciled"} for row in rows
+            ),
             "items": rows,
         }
 

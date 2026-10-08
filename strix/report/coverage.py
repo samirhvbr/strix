@@ -551,7 +551,7 @@ def assessment_coverage_gaps(run_record: dict[str, Any]) -> list[dict[str, Any]]
             ),
         }
         for item in plan.get("items", [])
-        if item.get("status") != "observed"
+        if item.get("status") not in {"observed", "reconciled"}
     ]
     case_gaps = (
         [
@@ -610,11 +610,14 @@ def _completeness(
         evidence.get("status") != "closed"
         or evidence.get("unresolved_attempts")
         or evidence.get("network_observation_gaps")
+        or evidence.get("pending_effects")
     ):
         caveats.append(
             "The evidence ledger is unavailable or contains attempts with an unknown outcome."
         )
     obligations = evidence.get("obligations")
+    if any(item.get("cleanup_complete") is False for item in evidence.get("case_evaluations", [])):
+        caveats.append("An effectful case has not demonstrated complete cleanup.")
     if any(
         item.get("verdict") not in {"compliant", "vulnerable"}
         for item in evidence.get("case_evaluations", [])

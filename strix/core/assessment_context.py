@@ -36,8 +36,16 @@ class Identity(BaseModel):
 
 class Operation(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
-    method: Literal["GET", "HEAD"]
+    method: Literal["GET", "HEAD", "POST"]
     url: str
+    resource_ref: Reference | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.resource_ref is None:
+            data.pop("resource_ref", None)
+        return data
 
 
 class AuthorizationCase(BaseModel):
@@ -51,18 +59,33 @@ class AuthorizationCase(BaseModel):
     resource_ref: Reference
 
 
+class BusinessCase(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    adapter: Literal["http.single-credit"]
+    version: Literal[1]
+    allow_effects: Literal[True]
+    state_operation: Reference
+    redeem_operation: Reference
+    cleanup_operation: Reference
+    resource_ref: Reference
+    credit: Annotated[int, Field(strict=True, ge=1, le=1000000)]
+
+
 class Case(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     version: Annotated[int, Field(strict=True, ge=1)]
     identities: Annotated[list[Reference], Field(min_length=1, max_length=64)]
     operations: Annotated[list[Reference], Field(min_length=1, max_length=64)]
     authorization: AuthorizationCase | None = None
+    business: BusinessCase | None = None
 
     @model_serializer(mode="wrap")
     def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
         data: dict[str, Any] = handler(self)
         if self.authorization is None:
             data.pop("authorization", None)
+        if self.business is None:
+            data.pop("business", None)
         return data
 
 
@@ -95,7 +118,8 @@ class AssessmentContext(BaseModel):
             ):
                 raise ValueError("Case contains unknown identity or operation references")
             self._validate_case_adapter(case)
-        for operation in self.operations.values():
+        for operation_ref, operation in self.operations.items():
+            self._validate_operation_effects(operation_ref, operation)
             try:
                 url = httpx.URL(operation.url)
             except httpx.InvalidURL:
@@ -128,7 +152,45 @@ class AssessmentContext(BaseModel):
             ):
                 raise ValueError("Identity operation is outside the assessment network grants")
 
+    def _validate_operation_effects(self, operation_ref: str, operation: Operation) -> None:
+        if operation.method == "POST" and not any(
+            case.business
+            and operation_ref in {case.business.redeem_operation, case.business.cleanup_operation}
+            for case in self.cases.values()
+        ):
+            raise ValueError("POST requires an explicitly approved business case")
+        if operation.method == "POST" and (self.version != 2 or operation.resource_ref is None):
+            raise ValueError("Effects require version 2 and an approved resource")
+        if operation.method != "POST" and operation.resource_ref is not None:
+            raise ValueError("Read operations must not carry effect payloads")
+
     def _validate_case_adapter(self, case: Case) -> None:
+        if case.business is not None:
+            business = case.business
+            if (
+                self.version != 2
+                or case.authorization is not None
+                or len(set(case.identities)) != 2
+                or len(
+                    {
+                        business.state_operation,
+                        business.redeem_operation,
+                        business.cleanup_operation,
+                    }
+                )
+                != 3
+                or set(case.operations)
+                != {business.state_operation, business.redeem_operation, business.cleanup_operation}
+                or self.operations[business.state_operation].method != "GET"
+                or any(not self.identities[actor].secret_ref for actor in case.identities)
+            ):
+                raise ValueError("Invalid single-credit case scope")
+            for op in (business.redeem_operation, business.cleanup_operation):
+                if (
+                    self.operations[op].method != "POST"
+                    or self.operations[op].resource_ref != business.resource_ref
+                ):
+                    raise ValueError("Single-credit effects need fixed approved POST operations")
         spec = case.authorization
         if spec is not None:
             if (
