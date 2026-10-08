@@ -544,11 +544,14 @@ async def run_strix_scan(
                 if identity_report is None or result["verdict"] != "vulnerable":
                     return
                 business = result["adapter"] == "http.single-credit"
+                transport = result["adapter"] in {"openssl.tls", "ssh-audit"}
                 title = (
                     f"Single-credit invariant violated ({result['case_ref']})"
                     if business
                     else f"Cross-tenant private resource access ({result['case_ref']})"
                 )
+                if transport:
+                    title = f"Transport inspection failed ({result['case_ref']})"
                 if any(
                     report.get("title") == title for report in identity_report.vulnerability_reports
                 ):
@@ -556,10 +559,21 @@ async def run_strix_scan(
                 identity_report.add_vulnerability_report(
                     title=title,
                     severity="high",
-                    cwe="CWE-841" if business else "CWE-639",
+                    cwe=(
+                        "CWE-295"
+                        if result["adapter"] == "openssl.tls"
+                        else "CWE-326"
+                        if transport
+                        else "CWE-841"
+                        if business
+                        else "CWE-639"
+                    ),
                     confidence="high",
                     description=(
-                        "Concurrent requests applied the approved single-use credit "
+                        "The approved transport inspection failed its versioned checks. "
+                        "See the private runtime evidence and recorded adapter version."
+                        if transport
+                        else "Concurrent requests applied the approved single-use credit "
                         "more than once. "
                         "Persistent balance and settled effects confirm the invariant violation."
                         if business
@@ -567,7 +581,11 @@ async def run_strix_scan(
                         "and data. Both identity controls and legitimate owner access passed."
                     ),
                     remediation_steps=(
-                        "Enforce single-use redemption atomically and retest with a fresh fixture."
+                        "Correct certificate trust or failed SSH algorithms and repeat "
+                        "the approved inspection."
+                        if transport
+                        else "Enforce single-use redemption atomically and retest "
+                        "with a fresh fixture."
                         if business
                         else "Enforce resource ownership and retest with valid identities."
                     ),

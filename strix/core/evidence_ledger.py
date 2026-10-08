@@ -225,7 +225,9 @@ class EvidenceLedger:
             ):
                 raise EvidenceError("Persisted obligation plan changed; execution blocked")
             expected_cases = sorted(
-                key for key, case in context.cases.items() if case.authorization or case.business
+                key
+                for key, case in context.cases.items()
+                if case.authorization or case.business or case.transport
             )
             db.executemany(
                 "INSERT OR IGNORE INTO case_plans VALUES (?)", [(key,) for key in expected_cases]
@@ -649,7 +651,11 @@ class EvidenceLedger:
             "operation_ref": row[8],
             "status": row[9],
             "content": json.loads(row[0]),
-            "source": "runtime_http_observation",
+            "source": (
+                "runtime_transport_observation"
+                if json.loads(row[0]).get("adapter") in {"openssl.tls", "ssh-audit"}
+                else "runtime_http_observation"
+            ),
             "event_ref": row[10],
             "observed_at": row[11],
             "credential_revision": row[12],
