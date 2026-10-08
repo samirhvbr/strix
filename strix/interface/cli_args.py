@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 from strix.config import apply_config_override
 from strix.config.settings import DEFAULT_MAX_TURNS
@@ -453,7 +454,7 @@ Strix Cloud:
             validate_assessment_scope(
                 policy,
                 {
-                    "targets": args.targets_info,
+                    "targets": cast("list[dict[str, Any]]", args.targets_info),
                     "network_policy": args.network_policy,
                 },
             )

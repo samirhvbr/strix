@@ -6,12 +6,11 @@ import dataclasses
 import hashlib
 import json
 import os
-from typing import TYPE_CHECKING, Annotated, Any, Literal
+from typing import TYPE_CHECKING, Annotated, Any, Literal, cast
 from urllib.parse import urlsplit
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from strix.core.inputs import build_scope_context
 from strix.runtime.network_policy import NetworkPolicy, parse_network_policy
 from strix.tools.mcp.config import (
     McpToolPolicy,  # noqa: TC001 -- Pydantic resolves this at runtime.
@@ -137,8 +136,15 @@ def read_assessment_policy(path: Path) -> AssessmentPolicy:
 
 def validate_assessment_scope(policy: AssessmentPolicy, scan_config: dict[str, Any]) -> None:
     """Match resolved target identities, without claiming HTTP path enforcement."""
-    targets = build_scope_context(scan_config)["authorized_targets"]
-    actual = [{"type": target["type"], "value": target["value"]} for target in targets]
+    actual: list[dict[str, Any]] = []
+    targets: list[dict[str, Any]] = scan_config.get("targets") or []
+    for target in targets:
+        kind = target.get("type")
+        if kind not in {"web_application", "ip_address"}:
+            raise ValueError("Assessment policy version 1 supports only URL and IP targets")
+        value_key = "target_url" if kind == "web_application" else "target_ip"
+        details: dict[str, Any] = target.get("details") or {}
+        actual.append({"type": kind, "value": details.get(value_key)})
     expected = [target.model_dump() for target in policy.targets]
     if actual != expected:
         raise ValueError("Assessment targets differ from the approved policy")
@@ -160,10 +166,12 @@ def bind_assessment_policy(
     if path.is_symlink():
         raise ValueError("Assessment binding must not be a symlink")
     if path.exists():
-        payload = _read_json(path)
+        raw_payload = _read_json(path)
+        if not isinstance(raw_payload, dict):
+            raise ValueError("Invalid assessment binding")
+        payload = cast("dict[str, Any]", raw_payload)
         if (
-            not isinstance(payload, dict)
-            or set(payload) != {"version", "scan_id", "policy"}
+            set(payload) != {"version", "scan_id", "policy"}
             or type(payload["version"]) is not int
             or payload["version"] != 1
             or payload["scan_id"] != scan_id
