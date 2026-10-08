@@ -111,6 +111,11 @@ class EvidenceLedger:
                 "ON attempts(case_ref,case_version,identity_ref,operation_ref)"
             )
             db.execute("CREATE INDEX IF NOT EXISTS events_attempt ON events(attempt_id)")
+            db.execute("CREATE TABLE IF NOT EXISTS case_plans (case_ref TEXT PRIMARY KEY)")
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS case_results (id TEXT PRIMARY KEY, "
+                "case_ref TEXT, attempt_seq INTEGER, content BLOB, sha256 TEXT)"
+            )
         path.chmod(0o600)
         self._publish()
 
@@ -161,6 +166,7 @@ class EvidenceLedger:
             artifacts = db.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0]
             denials = db.execute("SELECT COUNT(*) FROM execution_denials").fetchone()[0]
             obligations = self._obligations(db)
+            case_evaluations = self._case_evaluations(db)
             network_gaps = db.execute(
                 "SELECT COUNT(*) FROM network_snapshots WHERE counters IS NULL"
             ).fetchone()[0]
@@ -173,6 +179,7 @@ class EvidenceLedger:
             "authorization_denials": denials,
             "network_observation_gaps": network_gaps,
             "obligations": obligations,
+            "case_evaluations": case_evaluations,
         }
 
     def bind_obligations(self, context: AssessmentContext) -> None:
@@ -201,7 +208,81 @@ class EvidenceLedger:
                 or actual != expected
             ):
                 raise EvidenceError("Persisted obligation plan changed; execution blocked")
+            expected_cases = sorted(
+                key for key, case in context.cases.items() if case.authorization
+            )
+            db.executemany(
+                "INSERT OR IGNORE INTO case_plans VALUES (?)", [(key,) for key in expected_cases]
+            )
+            if db.execute("SELECT case_ref FROM case_plans ORDER BY 1").fetchall() != [
+                (key,) for key in expected_cases
+            ]:
+                raise EvidenceError("Persisted case plan changed")
         self._publish()
+
+    def record_case_result(self, case_ref: str, result: dict[str, Any]) -> dict[str, Any]:
+        ref = uuid.uuid4().hex
+        data = {**result, "case_result_ref": ref, "case_ref": case_ref, "evaluated_at": self._now()}
+        encoded = json.dumps(data, sort_keys=True).encode()
+        with self._db() as db:
+            if not db.execute("SELECT 1 FROM case_plans WHERE case_ref=?", (case_ref,)).fetchone():
+                raise EvidenceError("Unknown executable case")
+            seq = db.execute(
+                "SELECT MAX(rowid) FROM attempts WHERE case_ref=?", (case_ref,)
+            ).fetchone()[0]
+            db.execute(
+                "INSERT INTO case_results VALUES (?,?,?,?,?)",
+                (ref, case_ref, seq, encoded, hashlib.sha256(encoded).hexdigest()),
+            )
+        self._publish()
+        return data
+
+    def read_case_result(self, ref: str, case_ref: str) -> dict[str, Any]:
+        with self._db() as db:
+            row = db.execute(
+                "SELECT content,sha256 FROM case_results WHERE id=? AND case_ref=?", (ref, case_ref)
+            ).fetchone()
+        if row is None or hashlib.sha256(row[0]).hexdigest() != row[1]:
+            raise EvidenceError("Unknown, crossed or invalid case result")
+        data: dict[str, Any] = json.loads(row[0])
+        self._verify_case_evidence(data)
+        return data
+
+    def _verify_case_evidence(self, data: dict[str, Any]) -> None:
+        for receipt in data.get("evidence", []):
+            actual = self.read_private(
+                receipt["evidence_ref"],
+                case_ref=data["case_ref"],
+                require_complete=data["verdict"] in {"compliant", "vulnerable"},
+            )
+            if actual["sha256"] != receipt["sha256"]:
+                raise EvidenceError("Case evidence changed")
+
+    def _case_evaluations(self, db: sqlite3.Connection) -> list[dict[str, Any]]:
+        items: list[dict[str, Any]] = []
+        for (case_ref,) in db.execute("SELECT case_ref FROM case_plans ORDER BY 1").fetchall():
+            row = db.execute(
+                "SELECT attempt_seq,content,sha256 FROM case_results WHERE case_ref=? "
+                "ORDER BY rowid DESC LIMIT 1",
+                (case_ref,),
+            ).fetchone()
+            item: dict[str, Any] = {"case_ref": case_ref, "verdict": "missing"}
+            if row is not None:
+                seq = db.execute(
+                    "SELECT MAX(rowid) FROM attempts WHERE case_ref=?", (case_ref,)
+                ).fetchone()[0]
+                if hashlib.sha256(row[1]).hexdigest() != row[2]:
+                    item["verdict"] = "invalid_evidence"
+                elif seq != row[0]:
+                    item["verdict"] = "needs_retest"
+                else:
+                    item = json.loads(row[1])
+                    try:
+                        self._verify_case_evidence(item)
+                    except EvidenceError:
+                        item = {"case_ref": case_ref, "verdict": "invalid_evidence"}
+            items.append(item)
+        return items
 
     def _obligations(self, db: sqlite3.Connection) -> dict[str, Any] | None:
         plan = db.execute("SELECT * FROM obligation_plan").fetchall()
@@ -411,7 +492,8 @@ class EvidenceLedger:
         with self._db() as db:
             row = db.execute(
                 "SELECT a.content,a.sha256,a.truncated,t.id,t.agent_ref,t.case_ref,"
-                "t.case_version,t.identity_ref,t.operation_ref,t.status,e.id,e.occurred_at "
+                "t.case_version,t.identity_ref,t.operation_ref,t.status,e.id,e.occurred_at,"
+                "t.credential_revision "
                 "FROM artifacts a JOIN events e ON a.event_id=e.id "
                 "JOIN attempts t ON e.attempt_id=t.id WHERE a.id=?",
                 (artifact,),
@@ -437,6 +519,7 @@ class EvidenceLedger:
             "source": "runtime_http_observation",
             "event_ref": row[10],
             "observed_at": row[11],
+            "credential_revision": row[12],
         }
 
     def close(self) -> None:

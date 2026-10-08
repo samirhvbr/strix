@@ -11,7 +11,14 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Annotated, Any, Literal, cast
 
 import httpx
-from pydantic import BaseModel, ConfigDict, Field, SecretStr
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    SecretStr,
+    SerializerFunctionWrapHandler,
+    model_serializer,
+)
 
 from strix.core.assessment import AssessmentPolicy, Reference, read_assessment_json
 
@@ -33,16 +40,35 @@ class Operation(BaseModel):
     url: str
 
 
+class AuthorizationCase(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    adapter: Literal["http.private-read"]
+    version: Literal[1]
+    owner_ref: Reference
+    other_ref: Reference
+    control_operation: Reference
+    resource_operation: Reference
+    resource_ref: Reference
+
+
 class Case(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     version: Annotated[int, Field(strict=True, ge=1)]
     identities: Annotated[list[Reference], Field(min_length=1, max_length=64)]
     operations: Annotated[list[Reference], Field(min_length=1, max_length=64)]
+    authorization: AuthorizationCase | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.authorization is None:
+            data.pop("authorization", None)
+        return data
 
 
 class AssessmentContext(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
-    version: Literal[1]
+    version: Literal[1, 2]
     project_ref: Reference
     environment_ref: Reference
     identities: dict[Reference, Identity]
@@ -68,6 +94,7 @@ class AssessmentContext(BaseModel):
                 or set(case.operations) - self.operations.keys()
             ):
                 raise ValueError("Case contains unknown identity or operation references")
+            self._validate_case_adapter(case)
         for operation in self.operations.values():
             try:
                 url = httpx.URL(operation.url)
@@ -100,6 +127,28 @@ class AssessmentContext(BaseModel):
                 for rule in policy.network_policy.destinations
             ):
                 raise ValueError("Identity operation is outside the assessment network grants")
+
+    def _validate_case_adapter(self, case: Case) -> None:
+        spec = case.authorization
+        if spec is not None:
+            if (
+                self.version != 2
+                or spec.owner_ref == spec.other_ref
+                or spec.control_operation == spec.resource_operation
+                or set(case.identities) != {spec.owner_ref, spec.other_ref}
+                or set(case.operations) != {spec.control_operation, spec.resource_operation}
+            ):
+                raise ValueError("Invalid authorization case scope")
+            owner, other = self.identities[spec.owner_ref], self.identities[spec.other_ref]
+            if (
+                not owner.secret_ref
+                or not other.secret_ref
+                or owner.tenant_ref == other.tenant_ref
+                or any(self.operations[op].method != "GET" for op in case.operations)
+            ):
+                raise ValueError(
+                    "Authorization cases require authenticated distinct tenants and GET"
+                )
 
 
 def parse_context(value: Any) -> AssessmentContext | None:

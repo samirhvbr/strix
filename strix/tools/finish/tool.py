@@ -80,6 +80,9 @@ def _do_finish(
             "vulnerabilities_found": vuln_count,
         }
         result.update(coverage_summary)
+        case_evaluations = (report_state.run_record.get("evidence_ledger") or {}).get(
+            "case_evaluations", []
+        )
         obligations = (report_state.run_record.get("evidence_ledger") or {}).get("obligations")
         if obligations or report_state.run_record.get("assessment_context"):
             result["assessment_obligations"] = obligations
@@ -88,6 +91,9 @@ def _do_finish(
                 and obligations.get("version") == 1
                 and obligations.get("essential_total")
                 and obligations.get("essential_unfulfilled") == 0
+                and all(
+                    item.get("verdict") in {"compliant", "vulnerable"} for item in case_evaluations
+                )
             )
             if not result["essential_coverage_complete"]:
                 result["message"] = "Scan ended with essential assessment coverage gaps"

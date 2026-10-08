@@ -32,6 +32,7 @@ from strix.tools.assessment.tools import (
     execute_assessment_operation,
     list_assessment_cases,
     read_assessment_evidence,
+    run_assessment_case,
 )
 from strix.tools.coverage.tools import list_coverage, record_coverage, update_coverage
 from strix.tools.finish.tool import finish_scan
@@ -660,6 +661,7 @@ _CONTROLLED_TOOLS: tuple[Tool, ...] = (
     list_assessment_cases,
     execute_assessment_operation,
     read_assessment_evidence,
+    run_assessment_case,
     finish_scan,
     agent_finish,
     wait_for_user,
@@ -765,14 +767,20 @@ def build_strix_agent(
     agent_tools = [] if controlled else [*_EXTRA_TOOLS, *(extra_tools or [])]
     if system_prompt_context and system_prompt_context.get("assessment_context"):
         agent_tools.extend(
-            [list_assessment_cases, execute_assessment_operation, read_assessment_evidence]
+            [
+                list_assessment_cases,
+                execute_assessment_operation,
+                read_assessment_evidence,
+                run_assessment_case,
+            ]
         )
         instructions += (
             "\nThis assessment has host-approved cases and isolated identities. "
             "Use list_assessment_cases, then execute_assessment_operation for authenticated "
             "HTTP observations. Never request or copy credentials. Refer to returned evidence_ref "
             "receipts when reporting; unavailable identities and incomplete observations "
-            "are limitations."
+            "are limitations. Use run_assessment_case for cases with an approved adapter; "
+            "raw HTTP observations alone do not satisfy their required case verdict."
         )
     if interactive:
         # Yielding to the user is only meaningful when one is attached.
