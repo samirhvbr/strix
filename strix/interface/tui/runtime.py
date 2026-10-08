@@ -105,6 +105,8 @@ class GoTuiRuntime:
             "workspace_subdir": getattr(self.args, "workspace_subdir", None) or "",
             "network_policy": getattr(self.args, "network_policy", None),
             "assessment_policy": getattr(self.args, "assessment_policy", None),
+            "assessment_context": getattr(self.args, "assessment_context", None),
+            "identity_credentials": getattr(self.args, "identity_credentials", None),
         }
         self.report_state = ReportState(self.scan_config["run_name"])
         self.report_state.hydrate_from_run_dir()

@@ -93,6 +93,7 @@ UPDATABLE_REPORT_FIELDS = frozenset(
         "cwe",
         "code_locations",
         "http_exchange_ids",
+        "assessment_evidence",
         "fix_verification",
         "fix_pr_body",
     }
@@ -380,6 +381,7 @@ class ReportState:
         dependency_metadata: dict[str, str] | None = None,
         agent_id: str | None = None,
         agent_name: str | None = None,
+        assessment_evidence: list[dict[str, Any]] | None = None,
     ) -> str:
         report_id = self._next_report_id()
 
@@ -392,6 +394,8 @@ class ReportState:
 
         if description:
             report["description"] = description.strip()
+        if assessment_evidence is not None:
+            report["assessment_evidence"] = assessment_evidence
         if impact:
             report["impact"] = impact.strip()
         if target:

@@ -33,7 +33,9 @@ from strix.core.assessment import (
     bind_assessment_policy,
     validate_assessment_scope,
 )
+from strix.core.assessment_context import FileCredentials, bind_context
 from strix.core.authorization_audit import AuthorizationAudit
+from strix.core.evidence_ledger import EvidenceLedger
 from strix.core.execution import (
     respawn_subagents,
     run_agent_loop,
@@ -42,6 +44,7 @@ from strix.core.execution import (
     spawn_child_agent as start_child_agent,
 )
 from strix.core.hooks import BudgetExceededError, ReportUsageHooks, recomputed_budget_flags
+from strix.core.identity_executor import IdentityExecutor
 from strix.core.inputs import (
     build_root_task,
     build_scan_targets,
@@ -313,6 +316,26 @@ async def run_strix_scan(
     scan_config["network_policy"] = (
         network_policy.model_dump() if network_policy is not None else None
     )
+    identity_context = bind_context(
+        state_dir,
+        scan_id,
+        assessment_policy,
+        scan_config.get("assessment_context"),
+        resuming=(state_dir / "agents.json").exists(),
+    )
+    context_report = get_global_report_state()
+    saved_context = (
+        context_report.run_record.get("assessment_context")
+        if context_report is not None and context_report.run_id == scan_id
+        else None
+    )
+    if saved_context is not None and (
+        identity_context is None or saved_context.get("context_sha256") != identity_context.digest
+    ):
+        raise ValueError("Assessment context report and binding disagree")
+    credential_path = scan_config.get("identity_credentials")
+    if credential_path and Path(credential_path).resolve().is_relative_to(run_dir.resolve()):
+        raise ValueError("Identity credential files must stay outside run artifacts")
     teardown_logging = setup_scan_logging(run_dir)
     set_scan_id(scan_id)
 
@@ -455,8 +478,39 @@ async def run_strix_scan(
     sessions_to_close: list[SQLiteSession] = []
     mcp_registry: McpRegistry | None = None
     test_ledger: TestLedger | None = None
+    identity_executor: IdentityExecutor | None = None
 
     try:
+        if identity_context is not None and assessment_policy is not None:
+            identity_report = get_global_report_state()
+
+            def publish_evidence(summary: dict[str, Any]) -> None:
+                if identity_report is not None and identity_report.run_id == scan_id:
+                    identity_report.run_record["evidence_ledger"] = summary
+                    identity_report.run_record["assessment_context"] = {
+                        "project_ref": identity_context.project_ref,
+                        "environment_ref": identity_context.environment_ref,
+                        "context_sha256": identity_context.digest,
+                    }
+                    identity_report.save_run_data()
+
+            ledger = EvidenceLedger(
+                state_dir / "evidence.db",
+                scan_id=scan_id,
+                assessment_id=assessment_policy.assessment_id,
+                context_sha256=identity_context.digest,
+                owns_agent=lambda agent_ref: agent_ref in coordinator.statuses,
+                on_change=publish_evidence,
+                resuming=is_resume,
+            )
+            identity_executor = IdentityExecutor(
+                identity_context,
+                FileCredentials(
+                    Path(credential_path) if credential_path else None,
+                    assessment_policy.assessment_id,
+                ),
+                ledger,
+            )
         if assessment_policy is not None:
             report_state = get_global_report_state()
             if report_state is not None:
@@ -526,6 +580,8 @@ async def run_strix_scan(
             coordinator.set_budget_extender(hooks.extend_budget)
 
         scope_context = build_scope_context(scan_config)
+        if identity_executor is not None:
+            scope_context["assessment_context"] = identity_executor.catalog()
 
         # Attach the run's MCP connections and hold their live sessions in a
         # per-run registry. The connections are source-agnostic: a caller
@@ -654,6 +710,7 @@ async def run_strix_scan(
             "sandbox_session": bundle["session"],
             "caido_client": bundle["caido_client"],
             "mcp_registry": mcp_registry,
+            "identity_executor": identity_executor,
             "agent_id": root_id,
             "parent_id": None,
             "interactive": interactive,
@@ -813,6 +870,9 @@ async def run_strix_scan(
                 await mcp_registry.close()
         if authorization_audit is not None:
             authorization_audit.close()
+        if identity_executor is not None:
+            with contextlib.suppress(Exception):
+                await identity_executor.close()
         with contextlib.suppress(Exception):
             await coordinator._maybe_snapshot()
         if cleanup_on_exit:

@@ -16,6 +16,8 @@ from typing import TYPE_CHECKING, Any
 
 from agents import RunContextWrapper, function_tool
 
+from strix.core.evidence_ledger import EvidenceError
+from strix.core.identity_executor import IdentityExecutor
 from strix.report.coverage import selectable_finding_classes
 from strix.report.sarif import _build_physical_locations
 from strix.tools.nullish import clean_optional
@@ -401,6 +403,9 @@ def _collect_update_changes(  # noqa: PLR0912, PLR0915
     """Validate the fields a revision replaces and return them with any errors."""
     errors: list[str] = []
     changes: dict[str, Any] = {}
+
+    if fields.get("assessment_evidence") is not None:
+        changes["assessment_evidence"] = fields["assessment_evidence"]
 
     for name in _UPDATE_TEXT_FIELDS:
         value = clean_optional(fields.get(name))
@@ -808,6 +813,7 @@ async def _do_create(
     finding_class: str | None = None,
     agent_id: str | None = None,
     agent_name: str | None = None,
+    assessment_evidence: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     errors: list[str] = _validate_required_text(
         {
@@ -942,6 +948,9 @@ async def _do_create(
             "finding_class": finding_class,
         }
 
+        if assessment_evidence is not None:
+            report_fields["assessment_evidence"] = assessment_evidence
+
         # The duplicate check awaits an LLM call. Without a lock, two agents filing
         # the same finding at once each compare against a list the other has not
         # joined yet and both store it, so read, check and store as one step.
@@ -997,6 +1006,23 @@ async def _do_create(
         }
 
 
+def _assessment_receipts(
+    ctx: RunContextWrapper[dict[str, Any]], refs: list[str] | None
+) -> list[dict[str, Any]] | None:
+    executor = ctx.context.get("identity_executor")
+    if not isinstance(executor, IdentityExecutor):
+        if refs:
+            raise EvidenceError("This run has no assessment evidence ledger")
+        return None
+    if not refs or len(refs) > 64:
+        raise EvidenceError("Assessment findings require 1 to 64 runtime evidence references")
+    receipts: list[dict[str, Any]] = []
+    for ref in dict.fromkeys(refs):
+        item = executor.ledger.read(ref, require_complete=True)
+        receipts.append({key: value for key, value in item.items() if key != "content"})
+    return receipts
+
+
 def _caller_identity(ctx: RunContextWrapper) -> tuple[str | None, str | None]:
     """Return the (agent_id, agent_name) of the agent invoking this tool."""
     inner = ctx.context if isinstance(ctx.context, dict) else {}
@@ -1040,6 +1066,7 @@ async def create_vulnerability_report(
     fix_verification: str | None = None,
     fix_pr_body: str | None = None,
     finding_class: str | None = None,
+    evidence_refs: list[str] | None = None,
 ) -> str:
     """File a vulnerability report — one report per fully-verified finding.
 
@@ -1445,6 +1472,9 @@ async def create_vulnerability_report(
             fix (summary + rationale). Prose/markdown only — the code
             change itself belongs in ``code_locations``. Omit for
             black-box findings.
+        evidence_refs: Runtime artifact references from execute_assessment_operation.
+            Required in an assessment identity context. All references must belong
+            to this run and contain complete observations; no fabricated proof is accepted.
         finding_class: Optional machine-readable sub-class, default
             ``"dynamic"``. Set ``"client_side_path_traversal"`` for a
             confirmed CSPT finding — attacker-controlled client input
@@ -1462,6 +1492,11 @@ async def create_vulnerability_report(
             target path) and ``method``, or a ``code_location`` for the
             client sink. See the ``client_side_path_traversal`` skill.
     """
+    try:
+        assessment_evidence = _assessment_receipts(ctx, evidence_refs)
+    except EvidenceError as exc:
+        return json.dumps({"success": False, "error": str(exc)})
+
     (
         http_exchange_ids,
         http_exchange_errors,
@@ -1508,6 +1543,7 @@ async def create_vulnerability_report(
         finding_class=finding_class,
         agent_id=agent_id,
         agent_name=agent_name,
+        assessment_evidence=assessment_evidence,
     )
     return json.dumps(_with_warning(result, http_exchange_warning), ensure_ascii=False, default=str)
 
@@ -1542,6 +1578,7 @@ async def update_vulnerability_report(
     fix_verification: str | None = None,
     fix_pr_body: str | None = None,
     contextual_cvss_reasoning: str | None = None,
+    evidence_refs: list[str] | None = None,
 ) -> str:
     """Revise a vulnerability report that is already filed, keeping its id.
 
@@ -1618,7 +1655,15 @@ async def update_vulnerability_report(
         contextual_cvss_reasoning: Dependency findings only. What you
             observed in this codebase that justifies the contextual
             ``cvss_breakdown``.
+        evidence_refs: Complete runtime artifact references substantiating the revision.
+            Required in an assessment identity context, including when retaining the
+            previous evidence. References replace the finding's verified receipt list.
     """
+    try:
+        assessment_evidence = _assessment_receipts(ctx, evidence_refs)
+    except EvidenceError as exc:
+        return json.dumps({"success": False, "error": str(exc)})
+
     (
         http_exchange_ids,
         http_exchange_errors,
@@ -1662,6 +1707,8 @@ async def update_vulnerability_report(
         "fix_pr_body": fix_pr_body,
         "contextual_cvss_reasoning": contextual_cvss_reasoning,
     }
+    if assessment_evidence is not None:
+        fields["assessment_evidence"] = assessment_evidence
     if http_exchange_warning and all(value is None for value in fields.values()):
         return json.dumps(
             {"success": False, "error": http_exchange_warning, "report_id": report_id},

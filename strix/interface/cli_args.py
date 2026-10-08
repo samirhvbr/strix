@@ -12,9 +12,11 @@ from strix.config import apply_config_override
 from strix.config.settings import DEFAULT_MAX_TURNS
 from strix.core.assessment import (
     bind_assessment_policy,
+    read_assessment_json,
     read_assessment_policy,
     validate_assessment_scope,
 )
+from strix.core.assessment_context import bind_context, parse_context
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
 from strix.interface.update_check import self_update
@@ -325,12 +327,23 @@ Strix Cloud:
         metavar="FILE",
         help="Enforce an explicit IP/protocol/port policy in the Docker sandbox (JSON file).",
     )
+    parser.add_argument("--assessment-context", help="Host-approved identity/case context JSON")
+    parser.add_argument(
+        "--identity-credentials",
+        help="Private rotating credential file (never stored in run artifacts)",
+    )
     parser.add_argument(
         "--assessment-policy",
         metavar="FILE",
         help="Bind network targets and executor grants to a host-approved assessment (JSON file).",
     )
     args = parser.parse_args()
+    if args.assessment_context:
+        try:
+            identity_context = parse_context(read_assessment_json(Path(args.assessment_context)))
+            args.assessment_context = identity_context.model_dump() if identity_context else None
+        except (OSError, ValueError, TypeError):
+            parser.error("Invalid assessment identity context file")
     if args.assessment_policy:
         try:
             args.assessment_policy = read_assessment_policy(
@@ -459,8 +472,13 @@ Strix Cloud:
                 },
             )
             args.network_policy = policy.network_policy.model_dump()
+            identity_context = parse_context(args.assessment_context)
+            if identity_context is not None:
+                identity_context.validate_scope(policy)
         except ValueError as exc:
             parser.error(str(exc))
+    elif args.assessment_context is not None:
+        parser.error("--assessment-context requires --assessment-policy")
     return args
 
 
@@ -527,6 +545,26 @@ def load_resume_state(args: argparse.Namespace) -> None:
         assessment is None or state["assessment"] != assessment.summary()
     ):
         raise ResumeError("Assessment report and binding disagree")
+
+    try:
+        identity_context = bind_context(
+            runtime_state_dir(run_dir),
+            args.resume,
+            assessment,
+            getattr(args, "assessment_context", None),
+            resuming=True,
+        )
+        saved_context = state.get("assessment_context")
+        if saved_context is not None and (
+            identity_context is None
+            or saved_context.get("context_sha256") != identity_context.digest
+        ):
+            raise ResumeError("Assessment context report and binding disagree")
+        args.assessment_context = identity_context.model_dump() if identity_context else None
+    except (OSError, ValueError) as exc:
+        raise ResumeError(
+            "Cannot resume with a missing, changed or invalid identity context"
+        ) from exc
 
     try:
         saved_policy = parse_network_policy(state.get("network_policy"))
