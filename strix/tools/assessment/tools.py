@@ -51,6 +51,21 @@ async def execute_assessment_operation(
 
 
 @function_tool
+async def run_assessment_case(
+    ctx: RunContextWrapper[dict[str, Any]], case_ref: str, baseline_ref: str | None = None
+) -> dict[str, Any]:
+    """Run an approved deterministic case, or retest its earlier runtime result.
+
+    The runtime selects fixed operations and controls. Target bodies remain private.
+    A blocked, expired or invalid identity never establishes that a finding is fixed.
+    baseline_ref must identify a result for this same case and assessment.
+    """
+    return await _executor(ctx).run_case(
+        agent_ref=ctx.context["agent_id"], case_ref=case_ref, baseline_ref=baseline_ref
+    )
+
+
+@function_tool
 async def read_assessment_evidence(
     ctx: RunContextWrapper[dict[str, Any]], evidence_ref: str, case_ref: str
 ) -> dict[str, Any]:

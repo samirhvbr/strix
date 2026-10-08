@@ -539,6 +539,31 @@ async def run_strix_scan(
                 ledger,
                 authorize=authorization_check,
             )
+
+            def publish_case_result(result: dict[str, Any]) -> None:
+                if identity_report is None or result["verdict"] != "vulnerable":
+                    return
+                title = f"Cross-tenant private resource access ({result['case_ref']})"
+                if any(
+                    report.get("title") == title for report in identity_report.vulnerability_reports
+                ):
+                    return
+                identity_report.add_vulnerability_report(
+                    title=title,
+                    severity="high",
+                    cwe="CWE-639",
+                    confidence="high",
+                    description=(
+                        "A second authenticated tenant received the approved private resource "
+                        "and data. Both identity controls and legitimate owner access passed."
+                    ),
+                    remediation_steps=(
+                        "Enforce the resource ownership boundary and retest with valid identities."
+                    ),
+                    assessment_evidence=result["evidence"],
+                )
+
+            identity_executor.on_case_result = publish_case_result
             if authorization_check is not None:
                 try:
                     counters = await asyncio.to_thread(

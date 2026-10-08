@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 import httpx
 
 from strix.core.assessment_context import IdentityUnavailableError
+from strix.core.authorization_case import run_private_read_case
 from strix.core.evidence_ledger import EvidenceError
 from strix.core.web_authorization import WebAuthorizationError
 
@@ -38,6 +39,8 @@ class IdentityExecutor:
         self._revisions: dict[str, int] = {}
         self._locks = {name: asyncio.Lock() for name in context.identities}
         self._sensitive: set[str] = set()
+        self._case_locks = {name: asyncio.Lock() for name in context.cases}
+        self.on_case_result: Callable[[dict[str, Any]], None] | None = None
 
     def catalog(self) -> dict[str, Any]:
         return {
@@ -68,7 +71,32 @@ class IdentityExecutor:
                 text = text.replace(secret, "[REDACTED]")
         return text
 
-    async def request(  # noqa: PLR0912, PLR0915 -- One serialized request/receipt transaction.
+    async def run_case(
+        self, *, agent_ref: str, case_ref: str, baseline_ref: str | None = None
+    ) -> dict[str, Any]:
+        if case_ref not in self._case_locks:
+            self.ledger.record_denial(agent_ref, "scope_rejected")
+            raise EvidenceError("Unknown approved case")
+        async with self._case_locks[case_ref]:
+            return await run_private_read_case(
+                self, agent_ref=agent_ref, case_ref=case_ref, baseline_ref=baseline_ref
+            )
+
+    async def request(
+        self, *, agent_ref: str, case_ref: str, identity_ref: str, operation_ref: str
+    ) -> dict[str, Any]:
+        if case_ref not in self._case_locks:
+            self.ledger.record_denial(agent_ref, "scope_rejected")
+            raise EvidenceError("Operation or identity is outside the approved case")
+        async with self._case_locks[case_ref]:
+            return await self._request(
+                agent_ref=agent_ref,
+                case_ref=case_ref,
+                identity_ref=identity_ref,
+                operation_ref=operation_ref,
+            )
+
+    async def _request(  # noqa: PLR0912, PLR0915 -- One serialized request/receipt transaction.
         self, *, agent_ref: str, case_ref: str, identity_ref: str, operation_ref: str
     ) -> dict[str, Any]:
         case = self.context.cases.get(case_ref)

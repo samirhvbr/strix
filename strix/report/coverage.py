@@ -539,7 +539,7 @@ def assessment_coverage_gaps(run_record: dict[str, Any]) -> list[dict[str, Any]]
             if run_record.get("assessment_context")
             else []
         )
-    return [
+    operation_gaps = [
         {
             "kind": "essential_assessment_operation",
             "source": "runtime",
@@ -553,6 +553,22 @@ def assessment_coverage_gaps(run_record: dict[str, Any]) -> list[dict[str, Any]]
         for item in plan.get("items", [])
         if item.get("status") != "observed"
     ]
+    case_gaps = (
+        [
+            {
+                "kind": "essential_case_evaluation",
+                "source": "runtime",
+                "essential": True,
+                "case_ref": item["case_ref"],
+                "detail": f"Essential case {item['case_ref']}: {item['verdict']}.",
+            }
+            for item in evidence.get("case_evaluations", [])
+            if item.get("verdict") not in {"compliant", "vulnerable"}
+        ]
+        if isinstance(evidence, dict)
+        else []
+    )
+    return operation_gaps + case_gaps
 
 
 def _completeness(
@@ -599,6 +615,11 @@ def _completeness(
             "The evidence ledger is unavailable or contains attempts with an unknown outcome."
         )
     obligations = evidence.get("obligations")
+    if any(
+        item.get("verdict") not in {"compliant", "vulnerable"}
+        for item in evidence.get("case_evaluations", [])
+    ):
+        caveats.append("An essential executable case is missing, stale or inconclusive.")
     if run_record.get("assessment_context") and not isinstance(obligations, dict):
         caveats.append("The essential assessment obligation plan is unavailable.")
     if isinstance(obligations, dict) and (
@@ -679,6 +700,37 @@ def build_coverage_document(
         *skill_coverage_gaps(entries, agents),
         *_silent_agent_gaps(entries, agents),
     ]
+    evidence = run_record.get("evidence_ledger")
+    case_evaluations = evidence.get("case_evaluations", []) if isinstance(evidence, dict) else []
+    reported_refs = [
+        {receipt.get("evidence_ref") for receipt in report.get("assessment_evidence", [])}
+        for report in vulnerability_reports
+    ]
+    missing_findings = [
+        case
+        for case in case_evaluations
+        if case.get("verdict") == "vulnerable"
+        and not any(
+            {receipt["evidence_ref"] for receipt in case.get("evidence", [])} <= refs
+            for refs in reported_refs
+        )
+    ]
+    completeness = _completeness(run_record, agents, exit_reason)
+    if missing_findings:
+        completeness["complete"] = False
+        completeness["caveats"].append(
+            "A runtime-confirmed case finding is missing from the report."
+        )
+        gaps.extend(
+            {
+                "kind": "unreported_case_finding",
+                "source": "runtime",
+                "essential": True,
+                "case_ref": case["case_ref"],
+                "detail": "Runtime finding needs report linkage.",
+            }
+            for case in missing_findings
+        )
 
     return {
         "schema_version": COVERAGE_SCHEMA_VERSION,
@@ -703,13 +755,14 @@ def build_coverage_document(
             "skills_exercised": skills_exercised,
             "findings_filed": len(vulnerability_reports),
             "source": "runtime",
+            "case_evaluations": case_evaluations,
             "assessment_obligations": (
                 run_record["evidence_ledger"].get("obligations")
                 if isinstance(run_record.get("evidence_ledger"), dict)
                 else None
             ),
         },
-        "completeness": _completeness(run_record, agents, exit_reason),
+        "completeness": completeness,
         "entries": ledger,
         "gaps": gaps,
     }
