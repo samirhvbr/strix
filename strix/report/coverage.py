@@ -522,6 +522,39 @@ def _unresolved_gaps(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
+def assessment_coverage_gaps(run_record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Essential gaps come from runtime receipts, never agent attestations."""
+    evidence = run_record.get("evidence_ledger")
+    plan = evidence.get("obligations") if isinstance(evidence, dict) else None
+    if not isinstance(plan, dict):
+        return (
+            [
+                {
+                    "kind": "essential_plan_unavailable",
+                    "source": "runtime",
+                    "essential": True,
+                    "detail": "The approved assessment obligation plan is unavailable.",
+                }
+            ]
+            if run_record.get("assessment_context")
+            else []
+        )
+    return [
+        {
+            "kind": "essential_assessment_operation",
+            "source": "runtime",
+            **item,
+            "detail": (
+                f"Essential case {item['case_ref']} v{item['case_version']}, "
+                f"identity {item['identity_ref']}, operation {item['operation_ref']}: "
+                f"{item['status']}."
+            ),
+        }
+        for item in plan.get("items", [])
+        if item.get("status") != "observed"
+    ]
+
+
 def _completeness(
     run_record: dict[str, Any],
     agents: list[dict[str, Any]],
@@ -564,6 +597,18 @@ def _completeness(
     ):
         caveats.append(
             "The evidence ledger is unavailable or contains attempts with an unknown outcome."
+        )
+    obligations = evidence.get("obligations")
+    if run_record.get("assessment_context") and not isinstance(obligations, dict):
+        caveats.append("The essential assessment obligation plan is unavailable.")
+    if isinstance(obligations, dict) and (
+        obligations.get("version") != 1
+        or not obligations.get("essential_total")
+        or obligations.get("essential_unfulfilled") != 0
+    ):
+        caveats.append(
+            "Essential approved case/identity operations are missing, blocked, uncertain, "
+            "truncated or lack valid runtime evidence."
         )
     audit = cast("dict[str, Any]", raw_audit) if isinstance(raw_audit, dict) else {}
     if audit and (
@@ -629,6 +674,7 @@ def build_coverage_document(
     ]
 
     gaps = [
+        *assessment_coverage_gaps(run_record),
         *_unresolved_gaps(entries),
         *skill_coverage_gaps(entries, agents),
         *_silent_agent_gaps(entries, agents),
@@ -657,6 +703,11 @@ def build_coverage_document(
             "skills_exercised": skills_exercised,
             "findings_filed": len(vulnerability_reports),
             "source": "runtime",
+            "assessment_obligations": (
+                run_record["evidence_ledger"].get("obligations")
+                if isinstance(run_record.get("evidence_ledger"), dict)
+                else None
+            ),
         },
         "completeness": _completeness(run_record, agents, exit_reason),
         "entries": ledger,

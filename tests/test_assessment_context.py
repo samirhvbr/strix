@@ -404,7 +404,11 @@ def test_failed_observation_transaction_never_acknowledges_partial_evidence(tmp_
     executor = make_executor(tmp_path, 1234)
     ledger = executor.ledger
     attempt = ledger.begin(
-        agent_ref="agent", case_ref="case", case_version=1, identity_ref="a", operation_ref="read"
+        agent_ref="agent",
+        case_ref="cross-tenant",
+        case_version=1,
+        identity_ref="a",
+        operation_ref="private",
     )
     with closing(sqlite3.connect(ledger.path)) as db:
         db.execute(
@@ -425,7 +429,11 @@ def test_evidence_rejects_fabrication_cross_case_cross_run_and_tampering(tmp_pat
     executor = make_executor(tmp_path, 1234)
     ledger = executor.ledger
     attempt = ledger.begin(
-        agent_ref="agent", case_ref="case", case_version=2, identity_ref="a", operation_ref="read"
+        agent_ref="agent",
+        case_ref="cross-tenant",
+        case_version=1,
+        identity_ref="a",
+        operation_ref="private",
     )
     artifact = ledger.finish(attempt, status="observed", content={"body": "observed"})
     with pytest.raises(EvidenceError):
@@ -457,10 +465,10 @@ def test_concurrent_attempts_are_durable_and_unfinished_history_survives(tmp_pat
     def run(_: int) -> str:
         attempt = ledger.begin(
             agent_ref="agent",
-            case_ref="case",
+            case_ref="cross-tenant",
             case_version=1,
             identity_ref="a",
-            operation_ref="read",
+            operation_ref="private",
         )
         return ledger.finish(attempt, status="observed", content={"body": "test"})
 
@@ -468,7 +476,11 @@ def test_concurrent_attempts_are_durable_and_unfinished_history_survives(tmp_pat
         refs = list(pool.map(run, range(20)))
     assert len(set(refs)) == 20
     ledger.begin(
-        agent_ref="agent", case_ref="case", case_version=1, identity_ref="a", operation_ref="read"
+        agent_ref="agent",
+        case_ref="cross-tenant",
+        case_version=1,
+        identity_ref="a",
+        operation_ref="private",
     )
     ledger.close()
     resumed = make_executor(tmp_path, 1234)
@@ -646,7 +658,11 @@ def test_report_gate_rejects_nonconclusive_receipts(
 ) -> None:
     executor = make_executor(tmp_path, 1234)
     attempt = executor.ledger.begin(
-        agent_ref="agent", case_ref="case", case_version=1, identity_ref="a", operation_ref="read"
+        agent_ref="agent",
+        case_ref="cross-tenant",
+        case_version=1,
+        identity_ref="a",
+        operation_ref="private",
     )
     ref = executor.ledger.finish(
         attempt, status=status, content={"body": "partial"}, truncated=truncated

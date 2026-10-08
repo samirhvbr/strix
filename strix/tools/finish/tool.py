@@ -80,6 +80,17 @@ def _do_finish(
             "vulnerabilities_found": vuln_count,
         }
         result.update(coverage_summary)
+        obligations = (report_state.run_record.get("evidence_ledger") or {}).get("obligations")
+        if obligations or report_state.run_record.get("assessment_context"):
+            result["assessment_obligations"] = obligations
+            result["essential_coverage_complete"] = bool(
+                isinstance(obligations, dict)
+                and obligations.get("version") == 1
+                and obligations.get("essential_total")
+                and obligations.get("essential_unfulfilled") == 0
+            )
+            if not result["essential_coverage_complete"]:
+                result["message"] = "Scan ended with essential assessment coverage gaps"
         return result
 
 
@@ -249,10 +260,11 @@ async def finish_scan(
       so do NOT start a field with a heading such as ``# Executive
       Summary`` — it would print twice. Sub-headings (``##``) inside a
       field are fine.
-    - If **zero** vulnerabilities were found, say so plainly and
-      characterize the posture positively; ``technical_analysis`` should
-      summarize the areas tested and confirm no issues, and
-      ``recommendations`` should focus on general hardening.
+    - If **zero** vulnerabilities were found, say so plainly, limiting that
+      statement to the areas actually tested. Describe missing essential
+      cases, incomplete evidence and inconclusive work as coverage gaps;
+      they do not establish a healthy security posture. Recommend follow-up
+      for those gaps before general hardening.
 
     Example (abbreviated — mirror this structure, not the wording)::
 
