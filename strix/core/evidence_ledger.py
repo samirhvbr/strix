@@ -80,6 +80,15 @@ class EvidenceLedger:
                 db.executescript(_SCHEMA)
                 db.execute("INSERT INTO binding VALUES (?, ?, ?)", self._binding)
             self._validate(db)
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS execution_denials ("
+                "id TEXT PRIMARY KEY, agent_ref TEXT NOT NULL, reason TEXT NOT NULL, "
+                "occurred_at TEXT NOT NULL)"
+            )
+            db.execute(
+                "CREATE TABLE IF NOT EXISTS network_snapshots ("
+                "id TEXT PRIMARY KEY, occurred_at TEXT NOT NULL, counters TEXT)"
+            )
         path.chmod(0o600)
         self._publish()
 
@@ -126,12 +135,18 @@ class EvidenceLedger:
             ).fetchone()[0]
             attempts = db.execute("SELECT COUNT(*) FROM attempts").fetchone()[0]
             artifacts = db.execute("SELECT COUNT(*) FROM artifacts").fetchone()[0]
+            denials = db.execute("SELECT COUNT(*) FROM execution_denials").fetchone()[0]
+            network_gaps = db.execute(
+                "SELECT COUNT(*) FROM network_snapshots WHERE counters IS NULL"
+            ).fetchone()[0]
         return {
             "version": 1,
             "status": "recording",
             "attempts": attempts,
             "artifacts": artifacts,
             "unresolved_attempts": unresolved,
+            "authorization_denials": denials,
+            "network_observation_gaps": network_gaps,
         }
 
     def _publish(self) -> None:
@@ -190,6 +205,34 @@ class EvidenceLedger:
                 (row[0], revision, fingerprint),
             )
             db.execute("UPDATE attempts SET credential_revision=? WHERE id=?", (revision, attempt))
+
+    def record_denial(self, agent_ref: str, reason: str) -> str:
+        if not self._owns_agent(agent_ref) or reason not in {
+            "scope_rejected",
+            "authorization_rejected",
+        }:
+            raise EvidenceError("Invalid execution denial attribution")
+        receipt = uuid.uuid4().hex
+        with self._db() as db:
+            db.execute(
+                "INSERT INTO execution_denials VALUES (?, ?, ?, ?)",
+                (receipt, agent_ref, reason, self._now()),
+            )
+        return receipt
+
+    def record_network_snapshot(self, counters: dict[str, dict[str, int]] | None) -> str:
+        receipt = uuid.uuid4().hex
+        with self._db() as db:
+            db.execute(
+                "INSERT INTO network_snapshots VALUES (?, ?, ?)",
+                (
+                    receipt,
+                    self._now(),
+                    json.dumps(counters) if counters is not None else None,
+                ),
+            )
+        self._publish()
+        return receipt
 
     def finish(
         self, attempt: str, *, status: str, content: dict[str, Any], truncated: bool = False

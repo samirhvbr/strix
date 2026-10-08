@@ -402,7 +402,10 @@ def _bootstrap_scan(args: argparse.Namespace) -> None:
     """
     set_scan_phase("preflight")
     try:
-        asyncio.run(warm_up_llm())
+        # Controlled inference is authorized by the runner before every paid call.
+        # Do not issue untracked model/deduper probes before that gate exists.
+        if not getattr(args, "web_authorization", None):
+            asyncio.run(warm_up_llm())
     except ModelConnectionError as exc:
         report_error("model_connection_failed", exc)
         _print_model_connection_error(exc)

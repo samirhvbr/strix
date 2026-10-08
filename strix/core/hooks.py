@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import math
 from typing import TYPE_CHECKING, Any
@@ -9,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 from agents.lifecycle import RunHooks
 
 from strix.core.agents import BudgetPolicy, coordinator_from_context
+from strix.core.web_authorization import WebAuthorizationError
 from strix.report.state import get_global_report_state
 
 
@@ -195,6 +197,17 @@ class ReportUsageHooks(RunHooks[dict[str, Any]]):
         system_prompt: str | None,  # noqa: ARG002
         input_items: list[TResponseInputItem],
     ) -> None:
+        authorize = context.context.get("authorize_assessment")
+        if authorize is not None:
+            try:
+                await asyncio.to_thread(authorize)
+            except WebAuthorizationError:
+                executor = context.context.get("identity_executor")
+                if executor is not None:
+                    executor.ledger.record_denial(
+                        context.context["agent_id"], "authorization_rejected"
+                    )
+                raise
         if self._budget_policy == "pause":
             self._pause_if_limited(context)
         context.context[LLM_TURN_KEY] = int(context.context.get(LLM_TURN_KEY, 0)) + 1

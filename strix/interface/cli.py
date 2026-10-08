@@ -102,6 +102,7 @@ async def run_cli(args: Any) -> None:  # noqa: PLR0915
         "assessment_policy": getattr(args, "assessment_policy", None),
         "assessment_context": getattr(args, "assessment_context", None),
         "identity_credentials": getattr(args, "identity_credentials", None),
+        "web_authorization": getattr(args, "web_authorization", None),
     }
 
     report_state = ReportState(args.run_name)

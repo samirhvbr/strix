@@ -557,7 +557,11 @@ def _completeness(
     raw_audit = run_record.get("authorization_audit")
     raw_evidence = run_record.get("evidence_ledger")
     evidence = cast("dict[str, Any]", raw_evidence) if isinstance(raw_evidence, dict) else {}
-    if evidence and (evidence.get("status") != "closed" or evidence.get("unresolved_attempts")):
+    if evidence and (
+        evidence.get("status") != "closed"
+        or evidence.get("unresolved_attempts")
+        or evidence.get("network_observation_gaps")
+    ):
         caveats.append(
             "The evidence ledger is unavailable or contains attempts with an unknown outcome."
         )
