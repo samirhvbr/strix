@@ -191,8 +191,8 @@ def bind_assessment_policy(
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     except FileExistsError:
         return bind_assessment_policy(state_dir, scan_id, requested, resuming=resuming)
-    with os.fdopen(fd, "w") as stream:
-        json.dump(payload, stream, sort_keys=True)
+    with os.fdopen(fd, "w", encoding="utf-8") as stream:
+        json.dump(payload, stream, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         stream.flush()
         os.fsync(stream.fileno())
     return policy

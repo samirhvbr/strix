@@ -179,6 +179,17 @@ def test_mutated_nested_model_is_revalidated() -> None:
         parse_assessment_policy(approved)
 
 
+def test_large_unicode_grant_remains_resumable_within_the_size_limit(tmp_path: Path) -> None:
+    raw = policy().model_dump()
+    raw["mcp_connections"]["lab"]["tool_policies"]["read"]["argument_values"] = {
+        "project": ["é" * 90000]
+    }
+    approved = parse_assessment_policy(raw)
+    assert approved is not None
+    bind_assessment_policy(tmp_path, "scan", approved, resuming=False)
+    assert bind_assessment_policy(tmp_path, "scan", None, resuming=True) == approved
+
+
 def test_legacy_resume_cannot_gain_a_manifest(tmp_path: Path) -> None:
     assert bind_assessment_policy(tmp_path, "scan", None, resuming=True) is None
     with pytest.raises(ValueError, match="Missing"):
