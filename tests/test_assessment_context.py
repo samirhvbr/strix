@@ -314,6 +314,11 @@ def test_cli_restores_context_without_persisting_credentials_and_rejects_missing
 ) -> None:
     monkeypatch.chdir(tmp_path)
     policy, raw = config(1234)
+    # The CLI rewrites loopback targets for Docker; use a literal documentation IP.
+    policy = AssessmentPolicy.model_validate_json(
+        policy.model_dump_json().replace("127.0.0.1", "192.0.2.10")
+    )
+    raw = json.loads(json.dumps(raw).replace("127.0.0.1", "192.0.2.10"))
     policy_path, context_path = tmp_path / "policy.json", tmp_path / "context.json"
     policy_path.write_text(policy.model_dump_json())
     context_path.write_text(json.dumps(raw))
@@ -324,7 +329,7 @@ def test_cli_restores_context_without_persisting_credentials_and_rejects_missing
             "strix",
             "-n",
             "-t",
-            "127.0.0.1",
+            "192.0.2.10",
             "--assessment-policy",
             str(policy_path),
             "--assessment-context",
