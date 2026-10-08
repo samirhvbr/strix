@@ -159,7 +159,7 @@ def bind_context(  # noqa: PLR0912 -- Validate both initial and resumed immutabl
             "policy_sha256": policy.digest if policy else None,
             "context": context.model_dump() if context else None,
         }
-        state_dir.mkdir(parents=True, exist_ok=True)
+        state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd, "w") as stream:
             json.dump(data, stream, sort_keys=True, ensure_ascii=False)

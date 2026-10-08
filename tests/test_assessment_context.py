@@ -395,7 +395,8 @@ os._exit(17)
         owns_agent=lambda _: True,
         resuming=True,
     )
-    assert ledger.read(child.stdout.strip())["content"] == {"body": "committed"}
+    assert ledger.read_private(child.stdout.strip())["content"] == {"body": "committed"}
+    assert ledger.read(child.stdout.strip())["content"] == {"restricted_content": True}
     assert ledger.summary()["unresolved_attempts"] == 1
     ledger.close()
 

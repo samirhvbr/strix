@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import stat
 import threading
 import uuid
 from contextlib import closing, contextmanager
@@ -68,12 +69,18 @@ class EvidenceLedger:
         self._closed = False
         if path.is_symlink() or (resuming and not path.is_file()):
             raise EvidenceError("Required evidence ledger is missing or unsafe")
-        path.parent.mkdir(parents=True, exist_ok=True)
+        if path.parent.is_symlink():
+            raise EvidenceError("Evidence directory must not be a symlink")
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        if path.parent.stat().st_mode & 0o077:
+            raise EvidenceError("Evidence directory must be owner-only")
         created = False
         try:
             fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         except FileExistsError:
-            pass
+            mode = path.stat()
+            if not stat.S_ISREG(mode.st_mode) or mode.st_mode & 0o077:
+                raise EvidenceError("Existing evidence must be owner-only") from None
         else:
             os.close(fd)
             created = True
@@ -119,6 +126,8 @@ class EvidenceLedger:
             if self._failed or self._closed or self.path.is_symlink():
                 raise EvidenceError("Evidence ledger unavailable")
             try:
+                if self.path.stat().st_mode & 0o077 or self.path.parent.stat().st_mode & 0o077:
+                    raise EvidenceError("Evidence permissions are no longer private")
                 with closing(
                     sqlite3.connect(self.path.absolute().as_uri() + "?mode=rw", uri=True, timeout=1)
                 ) as db:
@@ -369,6 +378,36 @@ class EvidenceLedger:
     def read(
         self, artifact: str, *, case_ref: str | None = None, require_complete: bool = False
     ) -> dict[str, Any]:
+        """Model/report boundary: target text is restricted even when secrets are unknown."""
+        receipt = self.read_private(artifact, case_ref=case_ref, require_complete=require_complete)
+        content = receipt["content"]
+        public: dict[str, Any] = {}
+        code = content.get("status_code")
+        if type(code) is int and 100 <= code <= 599:
+            public["status_code"] = code
+        reason = content.get("reason")
+        if isinstance(reason, str) and reason in {
+            "authorization_unavailable",
+            "identity_expired",
+            "identity_unavailable",
+            "identity_rejected",
+            "redirect_blocked",
+            "transport_outcome_unknown",
+        }:
+            public["reason"] = reason
+        public["restricted_content"] = True
+        receipt["content"] = public
+        receipt["sanitization"] = {
+            "version": 1,
+            "policy": "metadata_only",
+            "digest_scope": "restricted_content",
+        }
+        return receipt
+
+    def read_private(
+        self, artifact: str, *, case_ref: str | None = None, require_complete: bool = False
+    ) -> dict[str, Any]:
+        """Trusted host inspection only; never register this method as an agent/viewer tool."""
         with self._db() as db:
             row = db.execute(
                 "SELECT a.content,a.sha256,a.truncated,t.id,t.agent_ref,t.case_ref,"

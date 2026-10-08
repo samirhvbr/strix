@@ -36,7 +36,7 @@ from strix.core.assessment import (
 )
 from strix.core.assessment_context import FileCredentials, bind_context
 from strix.core.authorization_audit import AuthorizationAudit
-from strix.core.evidence_ledger import EvidenceLedger
+from strix.core.evidence_ledger import EvidenceError, EvidenceLedger
 from strix.core.execution import (
     respawn_subagents,
     run_agent_loop,
@@ -504,6 +504,11 @@ async def run_strix_scan(
 
     try:
         if identity_context is not None and assessment_policy is not None:
+            if state_dir.is_symlink():
+                raise EvidenceError(  # noqa: TRY301 -- Refuse before tightening state permissions.
+                    "Assessment state directory must not be a symlink"
+                )
+            state_dir.chmod(0o700)
             identity_report = get_global_report_state()
 
             def publish_evidence(summary: dict[str, Any]) -> None:
