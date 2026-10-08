@@ -5,8 +5,9 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime, timedelta
 from functools import partial
+from types import SimpleNamespace
 from typing import TYPE_CHECKING, Any
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
 import httpx
 import pytest
@@ -14,11 +15,13 @@ from agents import RunContextWrapper
 from agents.tool import FunctionTool
 
 from strix.agents import factory
+from strix.core import runner
 from strix.core.assessment import AssessmentPolicy, assessment_mcp_requests, bind_assessment_policy
 from strix.core.assessment_context import parse_context
 from strix.core.hooks import ReportUsageHooks
 from strix.core.web_authorization import WebAuthorization, WebAuthorizationError
 from strix.interface.cli_args import parse_arguments
+from strix.report.state import ReportState
 from strix.runtime.network_guard import NetworkGuard
 from strix.runtime.network_policy import NetworkPolicy
 from tests.test_assessment_context import config, make_executor, request
@@ -27,6 +30,7 @@ from tests.test_assessment_context import (
 )
 from tests.test_assessment_policy import request as mcp_request
 from tests.test_network_guard import _docker
+from tests.test_runner_teardown import _wire_runner
 
 
 if TYPE_CHECKING:
@@ -289,8 +293,6 @@ async def test_controlled_tool_wrapper_does_not_invoke_even_local_tools_after_re
 async def test_version_two_cannot_start_without_live_web_authorization(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    from strix.core import runner
-    from tests.test_runner_teardown import _wire_runner
 
     _wire_runner(monkeypatch, tmp_path)
     create = Mock()
@@ -309,3 +311,55 @@ async def test_version_two_cannot_start_without_live_web_authorization(
             mcp_connection_requests=[],
         )
     create.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_runner_propagates_controlled_gate_and_persists_missing_packet_observation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _wire_runner(monkeypatch, tmp_path)
+    record = ReportState("controlled")
+    monkeypatch.setattr(record, "save_run_data", lambda: None)
+    monkeypatch.setattr(runner, "get_global_report_state", lambda: record)
+    counter = Mock(side_effect=[{"ipv4": {"packets": 0, "bytes": 0}}, RuntimeError("lost")])
+    monkeypatch.setattr(
+        runner.session_manager,
+        "create_or_reuse",
+        AsyncMock(
+            return_value={
+                "client": SimpleNamespace(
+                    network_guard=SimpleNamespace(image_id="fixture", denied_packets=counter)
+                ),
+                "session": object(),
+                "caido_client": None,
+            }
+        ),
+    )
+    authority = Mock()
+    monkeypatch.setattr(runner, "WebAuthorization", Mock(return_value=authority))
+    built = Mock(return_value=object())
+    monkeypatch.setattr(runner, "build_strix_agent", built)
+
+    async def run(**kwargs: Any) -> None:
+        assert callable(kwargs["context"]["authorize_assessment"])
+        assert kwargs["context"]["identity_executor"]._authorize is not None
+
+    monkeypatch.setattr(runner, "run_agent_loop", run)
+    approved = approval()
+    await runner.run_strix_scan(
+        scan_config={
+            "assessment_policy": approved["policy"],
+            "assessment_context": approved["context"],
+            "web_authorization": str(tmp_path.parent / "private-handoff.json"),
+            "targets": [{"type": "ip_address", "details": {"target_ip": "127.0.0.1"}}],
+        },
+        scan_id="controlled",
+        image="fixture",
+        max_budget_usd=1,
+        mcp_connection_requests=[],
+    )
+    assert built.call_args.kwargs["system_prompt_context"]["controlled_assessment"] is True
+    assert authority.check.call_count == 1
+    assert counter.call_count == 2
+    assert record.run_record["evidence_ledger"]["network_observation_gaps"] == 1
+    assert "private-handoff" not in json.dumps(record.run_record)
