@@ -262,8 +262,15 @@ async def create_or_reuse(
     local_sources: list[dict[str, Any]],
     extra_files: list[dict[str, Any]] | None = None,
     status_sink: StatusSink | None = None,
+    authorized_targets: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     """Return the existing session bundle for ``scan_id`` or create a new one.
+
+    ``authorized_targets`` is ``core.inputs.build_scope_context``'s
+    ``authorized_targets`` list; passed through to ``bootstrap_caido`` to
+    scope the sandbox's Caido project -- see its docstring and
+    ``caido_bootstrap._scope_allowlist`` for what that does and does not
+    guarantee (ENG-03 fatia 1, ``.continue/pentest/PENTEST-11`` §6.1/§13.1).
 
     Each ``local_sources`` entry exposes its host ``source_path`` at
     ``/workspace/<workspace_subdir>`` inside the container.
@@ -355,6 +362,8 @@ async def create_or_reuse(
                 session,
                 host_url=host_caido_url,
                 container_url=container_caido_url,
+                scan_id=scan_id,
+                authorized_targets=authorized_targets,
             ),
             name=f"caido-bootstrap-{scan_id}",
         )

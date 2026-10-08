@@ -351,6 +351,7 @@ async def run_strix_scan(
         local_sources=local_sources or [],
         extra_files=extra_files,
         status_sink=status_sink,
+        authorized_targets=build_scope_context(scan_config).get("authorized_targets", []),
     )
     report("Waiting for the first model response")
     logger.info("Sandbox ready for scan %s", scan_id)

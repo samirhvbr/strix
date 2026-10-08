@@ -48,7 +48,9 @@ def _wire_runner(monkeypatch: pytest.MonkeyPatch, tmp_path: Any) -> None:
     monkeypatch.setattr(session_manager, "create_or_reuse", _create_or_reuse)
     monkeypatch.setattr(session_manager, "cleanup", _cleanup)
     monkeypatch.setattr(runner, "build_root_task", lambda _scan_config: "task")
-    monkeypatch.setattr(runner, "build_scope_context", lambda _scan_config: "")
+    monkeypatch.setattr(
+        runner, "build_scope_context", lambda _scan_config: {"authorized_targets": []}
+    )
     monkeypatch.setattr(runner, "make_model_settings", lambda *_a, **_k: ModelSettings())
     monkeypatch.setattr(runner, "build_strix_agent", lambda **_kwargs: object())
     monkeypatch.setattr(runner, "make_child_factory", lambda **_kwargs: lambda **_k: object())

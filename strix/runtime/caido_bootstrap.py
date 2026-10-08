@@ -14,6 +14,7 @@ import contextlib
 import json
 import logging
 from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 
 
 if TYPE_CHECKING:
@@ -29,6 +30,38 @@ _LOGIN_AS_GUEST_BODY = (
 )
 _PROJECT_SETUP_TIMEOUT_MS = 45_000
 _BOOTSTRAP_ATTEMPTS = 3
+
+#: Target types build_scope_context (strix/core/inputs.py) can produce whose
+#: ``value`` names a network host Caido can scope to. ``api_spec`` targets
+#: are already expanded into ``web_application`` entries there, so they need
+#: no handling of their own here; ``repository``/``local_code`` name a path,
+#: not a host, and are skipped.
+_HOST_TARGET_TYPES = frozenset({"web_application", "ip_address"})
+
+
+def _scope_allowlist(authorized_targets: list[dict[str, str]]) -> list[str]:
+    """Hosts the scan is authorized against, Caido allowlist-shaped.
+
+    ENG-03 fatia 1 (.continue/pentest/PENTEST-11 §6.1/§13.1): this is
+    deliberately **not** a security boundary. ``scope_id`` is a query filter
+    the SDK's ``list_requests``/sitemap calls can take; the dispatch path
+    (``caido_api.replay_send_raw``, and ``repeat_request`` which calls it)
+    takes no ``scope_id`` and never consults a scope, so this allowlist
+    scopes what the agent's request **listings** default to, not what it can
+    actually send. A real dispatch-time gate is a later, separate increment.
+    """
+    hosts: list[str] = []
+    for target in authorized_targets:
+        ttype = target.get("type")
+        if ttype not in _HOST_TARGET_TYPES:
+            continue
+        value = (target.get("value") or "").strip()
+        if not value:
+            continue
+        host = urlsplit(value).hostname or value if ttype == "web_application" else value
+        if host and host not in hosts:
+            hosts.append(host)
+    return hosts
 
 
 async def _login_as_guest(
@@ -148,8 +181,20 @@ async def bootstrap_caido(
     *,
     host_url: str,
     container_url: str,
+    scan_id: str = "",
+    authorized_targets: list[dict[str, str]] | None = None,
 ) -> Client:
-    """Connect to the in-container Caido sidecar and select a fresh project."""
+    """Connect to the in-container Caido sidecar and select a fresh project.
+
+    ``authorized_targets`` (``core.inputs.build_scope_context``'s shape), when
+    it yields at least one host, creates a Caido scope allowlisting those
+    hosts -- best-effort and never fatal to the bootstrap; see
+    ``_scope_allowlist`` for what this does and, importantly, does not
+    guarantee. No scope is created for a target-less or host-less scan
+    (whitebox/local-code-only): an allowlist that exists but is empty would
+    read, to anyone auditing Caido later, as "nothing is authorized" --
+    worse than no scope at all.
+    """
     # The Caido SDK (and its generated GraphQL schema) is slow to import and is
     # only needed once a sandbox is actually being bootstrapped, so it is
     # imported here rather than at module scope.
@@ -186,7 +231,33 @@ async def bootstrap_caido(
                 await client.aclose()
             raise
         else:
+            await _apply_scope(client, scan_id=scan_id, authorized_targets=authorized_targets or [])
             return client
     raise RuntimeError(
         f"Caido client connect failed after {_BOOTSTRAP_ATTEMPTS} attempts"
     ) from last_exc
+
+
+async def _apply_scope(
+    client: Client,
+    *,
+    scan_id: str,
+    authorized_targets: list[dict[str, str]],
+) -> None:
+    """Best-effort: create the Caido scope from ``_scope_allowlist``.
+
+    Never fatal to the bootstrap -- a scope is an audit convenience here
+    (see ``_scope_allowlist``'s docstring), not something the scan's
+    traffic capture depends on; a failure here must not cost the run.
+    """
+    allowlist = _scope_allowlist(authorized_targets)
+    if not allowlist:
+        return
+    from strix.tools.proxy.caido_api import scope_create
+
+    try:
+        await scope_create(client, name=scan_id or "scan", allowlist=allowlist)
+    except Exception:  # noqa: BLE001
+        logger.warning("Caido scope creation failed (non-fatal)", exc_info=True)
+    else:
+        logger.info("Caido scope created for %s: %s", scan_id or "scan", allowlist)
