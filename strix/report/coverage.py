@@ -31,7 +31,7 @@ import json
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from strix.report.writer import atomic_write_text
 from strix.skills import get_available_skills
@@ -553,6 +553,19 @@ def _completeness(
         caveats.append(
             f"The run terminated via '{exit_reason}' rather than the root agent finishing, "
             "so remaining scope was not reached."
+        )
+    raw_audit = run_record.get("authorization_audit")
+    audit = cast("dict[str, Any]", raw_audit) if isinstance(raw_audit, dict) else {}
+    if audit and (
+        audit.get("status") != "closed"
+        or audit.get("write_failures", 0)
+        or audit.get("prior_failed_sessions", 0)
+        or audit.get("prior_unclosed_sessions", 0)
+        or audit.get("history_before_audit", False)
+    ):
+        caveats.append(
+            "The authorization audit has missing history, an unfinalized session or a "
+            "recording failure; its committed receipts do not establish a complete denial history."
         )
 
     return {

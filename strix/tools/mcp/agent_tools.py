@@ -31,7 +31,7 @@ from agents import RunContextWrapper, function_tool
 
 from strix.tools.mcp.client import _errored_tool_output
 from strix.tools.mcp.naming import namespaced_tool_name
-from strix.tools.mcp.policy import denied_call
+from strix.tools.mcp.policy import audit_unavailable_call, denied_call
 from strix.tools.mcp.registry import MCP_REGISTRY_CONTEXT_KEY, McpRegistry
 from strix.tools.mcp.session import McpConnectionUnavailableError
 
@@ -257,11 +257,18 @@ async def call_mcp(
             that ``get_mcp_tool_schema`` returned.
     """
     registry = _registry_from_ctx(ctx)
-    if registry is None or not registry:
+    if registry is None:
         return _NO_CONNECTIONS
+    audit = registry.authorization_audit
+    if audit is not None and not audit.available:
+        return audit_unavailable_call()
     entry = registry.get(connection)
     if entry is None:
-        return _unknown_connection(connection, registry)
+        if audit is not None:
+            return denied_call(
+                "connection_not_allowed", audit=audit, connection=connection, tool=tool
+            )
+        return _unknown_connection(connection, registry) if registry else _NO_CONNECTIONS
     invalid_arguments = (
         f"Invalid arguments for {connection!r}.{tool}: expected a JSON object of "
         "argument names to values, or none. Call get_mcp_tool_schema for the schema."
@@ -275,11 +282,19 @@ async def call_mcp(
         try:
             arguments = json.loads(stripped) if stripped else {}
         except json.JSONDecodeError:
+            if audit is not None:
+                return denied_call(
+                    "arguments_not_object", audit=audit, connection=connection, tool=tool
+                )
             return invalid_arguments
     if arguments is not None and not isinstance(arguments, dict):
+        if audit is not None:
+            return denied_call(
+                "arguments_not_object", audit=audit, connection=connection, tool=tool
+            )
         return invalid_arguments
     if reason := entry.dispatch_policy.rejection(tool, arguments or {}):
-        return denied_call(reason)
+        return denied_call(reason, audit=audit, connection=connection, tool=tool)
     try:
         available = await entry.ensure_catalog()
     except McpConnectionUnavailableError as exc:
