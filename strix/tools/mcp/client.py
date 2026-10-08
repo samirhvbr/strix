@@ -22,6 +22,7 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
+import httpx
 from agents.mcp import (
     MCPServer,
     MCPServerStdio,
@@ -39,8 +40,6 @@ from strix.tools.mcp.session import McpConnectionUnavailableError, SupervisedMcp
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-
-    import httpx
 
     from strix.tools.mcp.config import McpConnectionConfig
     from strix.tools.mcp.registry import McpConnectionRequest, McpRegistry
@@ -153,6 +152,7 @@ def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
         )
 
     recorder = HttpStatusRecorder()
+    pinned_endpoint = config.url if config.pin_http_endpoint else None
 
     def httpx_client_factory(
         headers: dict[str, str] | None = None,
@@ -160,6 +160,15 @@ def _build_server(config: McpConnectionConfig) -> BuiltMcpServer:
         auth: httpx.Auth | None = None,
     ) -> httpx.AsyncClient:
         client = create_mcp_http_client(headers=headers, timeout=timeout, auth=auth)
+        if pinned_endpoint is not None:
+            endpoint = httpx.URL(pinned_endpoint)
+
+            async def check_endpoint(request: httpx.Request) -> None:
+                if request.url != endpoint:
+                    raise ValueError("MCP request destination differs from the approved endpoint")
+
+            client.follow_redirects = False
+            client.event_hooks.setdefault("request", []).append(check_endpoint)
         client.event_hooks.setdefault("response", []).append(recorder)
         return client
 

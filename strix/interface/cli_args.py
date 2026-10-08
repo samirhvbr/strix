@@ -6,9 +6,15 @@ import argparse
 import os
 import sys
 from pathlib import Path
+from typing import Any, cast
 
 from strix.config import apply_config_override
 from strix.config.settings import DEFAULT_MAX_TURNS
+from strix.core.assessment import (
+    bind_assessment_policy,
+    read_assessment_policy,
+    validate_assessment_scope,
+)
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
 from strix.interface.update_check import self_update
@@ -319,7 +325,19 @@ Strix Cloud:
         metavar="FILE",
         help="Enforce an explicit IP/protocol/port policy in the Docker sandbox (JSON file).",
     )
+    parser.add_argument(
+        "--assessment-policy",
+        metavar="FILE",
+        help="Bind network targets and executor grants to a host-approved assessment (JSON file).",
+    )
     args = parser.parse_args()
+    if args.assessment_policy:
+        try:
+            args.assessment_policy = read_assessment_policy(
+                Path(args.assessment_policy).expanduser()
+            ).model_dump()
+        except (OSError, ValueError):
+            parser.error("--assessment-policy: cannot read a valid assessment policy JSON file")
     if args.network_policy:
         try:
             args.network_policy = read_network_policy(
@@ -331,7 +349,7 @@ Strix Cloud:
     # is established here so downstream code reads attributes directly.
     args.needs_setup = False
     args.resume_picker = False
-    args.targets_info = []
+    args.targets_info = cast("list[dict[str, Any]]", [])
     args.local_sources = []
     args.diff_scope = {"active": False}
     args.run_name = None
@@ -427,6 +445,22 @@ Strix Cloud:
         except ValueError as e:
             parser.error(str(e))
 
+    if args.assessment_policy is not None:
+        from strix.core.assessment import parse_assessment_policy
+
+        try:
+            policy = parse_assessment_policy(args.assessment_policy)
+            assert policy is not None
+            validate_assessment_scope(
+                policy,
+                {
+                    "targets": args.targets_info,
+                    "network_policy": args.network_policy,
+                },
+            )
+            args.network_policy = policy.network_policy.model_dump()
+        except ValueError as exc:
+            parser.error(str(exc))
     return args
 
 
@@ -476,6 +510,23 @@ def load_resume_state(args: argparse.Namespace) -> None:
         state = read_run_record(run_dir)
     except (RuntimeError, TypeError) as exc:
         raise ResumeError(f"--resume {args.resume}: run.json unreadable: {exc}") from exc
+
+    try:
+        assessment = bind_assessment_policy(
+            runtime_state_dir(run_dir),
+            args.resume,
+            getattr(args, "assessment_policy", None),
+            resuming=True,
+        )
+        args.assessment_policy = assessment.model_dump() if assessment is not None else None
+    except (OSError, ValueError) as exc:
+        raise ResumeError(
+            "Cannot resume with a missing, changed or invalid assessment binding"
+        ) from exc
+    if state.get("assessment") is not None and (
+        assessment is None or state["assessment"] != assessment.summary()
+    ):
+        raise ResumeError("Assessment report and binding disagree")
 
     try:
         saved_policy = parse_network_policy(state.get("network_policy"))

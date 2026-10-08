@@ -80,6 +80,9 @@ class McpConnectionConfig(BaseModel):
     url: str | None = Field(default=None, min_length=1)
     """The MCP server endpoint. Required for ``http``."""
 
+    pin_http_endpoint: StrictBool = False
+    """When enabled, every HTTP request must use the configured URL, without redirects."""
+
     auth: McpAuth | None = None
     """Bearer token for the server. Optional; a local stdio server usually
     needs none."""

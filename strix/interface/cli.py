@@ -99,6 +99,7 @@ async def run_cli(args: Any) -> None:  # noqa: PLR0915
         "diff_base": getattr(args, "diff_base", None),
         "resume_instruction": getattr(args, "user_explicit_instruction", None) or "",
         "network_policy": getattr(args, "network_policy", None),
+        "assessment_policy": getattr(args, "assessment_policy", None),
     }
 
     report_state = ReportState(args.run_name)
