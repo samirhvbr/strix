@@ -349,7 +349,7 @@ Strix Cloud:
     # is established here so downstream code reads attributes directly.
     args.needs_setup = False
     args.resume_picker = False
-    args.targets_info = []
+    args.targets_info = cast("list[dict[str, Any]]", [])
     args.local_sources = []
     args.diff_scope = {"active": False}
     args.run_name = None
@@ -454,7 +454,7 @@ Strix Cloud:
             validate_assessment_scope(
                 policy,
                 {
-                    "targets": cast("list[dict[str, Any]]", args.targets_info),
+                    "targets": args.targets_info,
                     "network_policy": args.network_policy,
                 },
             )
