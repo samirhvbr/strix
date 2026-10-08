@@ -1833,8 +1833,9 @@ async def test_reconnect_reuses_the_stored_config_and_never_logs_the_token(
     assert token not in repr(entry)
     listed = await list_mcps.on_invoke_tool(_ctx(registry), "{}")
     assert token not in json.dumps(listed)
-    # The config is still reachable in memory for the reconnect path.
-    assert entry.config is config
+    # Reconnect retains an equivalent private snapshot, independent of callers.
+    assert entry.config == config
+    assert entry.config is not config
 
     await session.aclose()
 

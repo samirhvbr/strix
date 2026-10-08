@@ -47,6 +47,7 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import copy
 import dataclasses
 import logging
 import secrets
@@ -56,6 +57,7 @@ from typing import TYPE_CHECKING, Any, Literal, cast
 
 from strix.tools.mcp.config import DEFAULT_MAX_CONCURRENT_CALLS
 from strix.tools.mcp.failures import FailureInfo, HttpStatusRecorder, classify
+from strix.tools.mcp.policy import McpDispatchPolicy, denied_call
 
 
 if TYPE_CHECKING:
@@ -159,7 +161,8 @@ class SupervisedMcpSession:
 
     def __init__(self, config: McpConnectionConfig) -> None:
         self._name = config.name
-        self._config: McpConnectionConfig | None = config
+        self._config: McpConnectionConfig | None = config.model_copy(deep=True)
+        self.dispatch_policy = McpDispatchPolicy(self._config)
         self._server: MCPServer | None = None
         self._supervised = True
         self._task: asyncio.Task[None] | None = None
@@ -192,7 +195,8 @@ class SupervisedMcpSession:
         """
         self = cls.__new__(cls)
         self._name = name
-        self._config = config
+        self._config = config.model_copy(deep=True) if config is not None else None
+        self.dispatch_policy = McpDispatchPolicy(self._config)
         self._server = server
         self._supervised = False
         self._task = None
@@ -356,7 +360,11 @@ class SupervisedMcpSession:
             raise McpConnectionUnavailableError(self._unavailable_message())
         if outcome.call_failure is not None:
             raise RuntimeError("MCP list_tools returned a call failure")
-        return cast("list[MCPTool]", outcome.value)
+        return [
+            tool
+            for tool in cast("list[MCPTool]", outcome.value)
+            if self.dispatch_policy.allows_tool(tool.name)
+        ]
 
     async def dispatch(
         self,
@@ -375,11 +383,17 @@ class SupervisedMcpSession:
         """
         from strix.tools.mcp.client import dispatch_mcp_call
 
+        # Own the request before the first await. A caller or a failed provider
+        # attempt must not change what a queued call or its retry will send.
+        request_arguments = copy.deepcopy(arguments)
+        if reason := self.dispatch_policy.rejection(tool_name, request_arguments):
+            return denied_call(reason)
+
         async def job(server: MCPServer) -> Any:
             return await dispatch_mcp_call(
                 server,
                 tool_name,
-                arguments,
+                copy.deepcopy(request_arguments),
                 label=label,
                 result_transform=result_transform,
             )

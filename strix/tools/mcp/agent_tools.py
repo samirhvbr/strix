@@ -31,6 +31,7 @@ from agents import RunContextWrapper, function_tool
 
 from strix.tools.mcp.client import _errored_tool_output
 from strix.tools.mcp.naming import namespaced_tool_name
+from strix.tools.mcp.policy import denied_call
 from strix.tools.mcp.registry import MCP_REGISTRY_CONTEXT_KEY, McpRegistry
 from strix.tools.mcp.session import McpConnectionUnavailableError
 
@@ -277,6 +278,8 @@ async def call_mcp(
             return invalid_arguments
     if arguments is not None and not isinstance(arguments, dict):
         return invalid_arguments
+    if reason := entry.dispatch_policy.rejection(tool, arguments or {}):
+        return denied_call(reason)
     try:
         available = await entry.ensure_catalog()
     except McpConnectionUnavailableError as exc:

@@ -28,6 +28,7 @@ import dataclasses
 import time
 from typing import TYPE_CHECKING, Any, Literal, NamedTuple
 
+from strix.tools.mcp.policy import McpDispatchPolicy
 from strix.tools.mcp.session import McpConnectionUnavailableError, SupervisedMcpSession
 
 
@@ -108,6 +109,16 @@ class McpConnectionEntry:
     )
     _retry_after: float = dataclasses.field(default=0.0, repr=False)
     _status_sink: Callable[[], None] | None = dataclasses.field(default=None, repr=False)
+    dispatch_policy: McpDispatchPolicy = dataclasses.field(init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        if self.connection_config is not None:
+            self.connection_config = self.connection_config.model_copy(deep=True)
+        self.dispatch_policy = (
+            self.session.dispatch_policy
+            if self.session is not None
+            else McpDispatchPolicy(self.connection_config)
+        )
 
     @property
     def server(self) -> MCPServer | None:
@@ -362,6 +373,8 @@ class McpRegistry:
         calls inline against it, and reconnects only when a ``config`` is also
         given. Exactly one of ``session`` or ``server`` is required.
         """
+        if session is not None and config is not None and config != session.config:
+            raise ValueError("A supplied MCP config must match the existing session's config")
         if session is None:
             if server is None:
                 raise ValueError("McpRegistry.add requires either 'session' or 'server'")
