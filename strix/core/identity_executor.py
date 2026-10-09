@@ -13,6 +13,7 @@ from strix.core.assessment_context import IdentityUnavailableError
 from strix.core.authorization_case import run_private_read_case
 from strix.core.business_case import run_single_credit_case
 from strix.core.evidence_ledger import EvidenceError
+from strix.core.transport_case import run_transport_case
 from strix.core.web_authorization import WebAuthorizationError
 
 
@@ -79,6 +80,10 @@ class IdentityExecutor:
             self.ledger.record_denial(agent_ref, "scope_rejected")
             raise EvidenceError("Unknown approved case")
         async with self._case_locks[case_ref]:
+            if self.context.cases[case_ref].transport is not None:
+                if baseline_ref is not None:
+                    raise EvidenceError("Transport baseline comparison is not implemented")
+                return await run_transport_case(self, agent_ref=agent_ref, case_ref=case_ref)
             if self.context.cases[case_ref].business is not None:
                 if baseline_ref is not None:
                     raise EvidenceError("Business retest requires a fresh approved assessment")
@@ -115,6 +120,7 @@ class IdentityExecutor:
             case is None
             or identity_ref not in case.identities
             or operation_ref not in case.operations
+            or self.context.operations[operation_ref].method in {"TLS", "SSH"}
             or (self.context.operations[operation_ref].method == "POST" and not allow_effects)
         ):
             self.ledger.record_denial(agent_ref, "scope_rejected")

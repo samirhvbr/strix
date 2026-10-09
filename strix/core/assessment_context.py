@@ -36,7 +36,7 @@ class Identity(BaseModel):
 
 class Operation(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
-    method: Literal["GET", "HEAD", "POST"]
+    method: Literal["GET", "HEAD", "POST", "TLS", "SSH"]
     url: str
     resource_ref: Reference | None = None
 
@@ -71,6 +71,13 @@ class BusinessCase(BaseModel):
     credit: Annotated[int, Field(strict=True, ge=1, le=1000000)]
 
 
+class TransportCase(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    adapter: Literal["openssl.tls", "ssh-audit"]
+    version: Literal[1]
+    ca_certificate: Annotated[str, Field(max_length=16384)] | None = None
+
+
 class Case(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     version: Annotated[int, Field(strict=True, ge=1)]
@@ -78,6 +85,7 @@ class Case(BaseModel):
     operations: Annotated[list[Reference], Field(min_length=1, max_length=64)]
     authorization: AuthorizationCase | None = None
     business: BusinessCase | None = None
+    transport: TransportCase | None = None
 
     @model_serializer(mode="wrap")
     def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
@@ -86,6 +94,8 @@ class Case(BaseModel):
             data.pop("authorization", None)
         if self.business is None:
             data.pop("business", None)
+        if self.transport is None:
+            data.pop("transport", None)
         return data
 
 
@@ -104,7 +114,7 @@ class AssessmentContext(BaseModel):
             json.dumps(self.model_dump(), sort_keys=True, separators=(",", ":")).encode()
         ).hexdigest()
 
-    def validate_scope(self, policy: AssessmentPolicy) -> None:
+    def validate_scope(self, policy: AssessmentPolicy) -> None:  # noqa: PLR0912 -- Typed transport/network scope intersection.
         if not self.identities or not self.operations or not self.cases:
             raise ValueError("Assessment context needs identities, operations and cases")
         if max(len(self.identities), len(self.operations), len(self.cases)) > 256:
@@ -124,7 +134,14 @@ class AssessmentContext(BaseModel):
                 url = httpx.URL(operation.url)
             except httpx.InvalidURL:
                 raise ValueError("Invalid assessment operation URL") from None
-            if url.scheme not in {"http", "https"} or url.userinfo or url.query or url.fragment:
+            schemes = (
+                {"tls"}
+                if operation.method == "TLS"
+                else {"ssh"}
+                if operation.method == "SSH"
+                else {"http", "https"}
+            )
+            if url.scheme not in schemes or url.userinfo or url.query or url.fragment:
                 raise ValueError(
                     "Operations need fixed HTTP URLs without credentials or query strings"
                 )
@@ -136,6 +153,10 @@ class AssessmentContext(BaseModel):
                 ) from None
             if str(url) != operation.url or "%" in operation.url or "\\" in operation.url:
                 raise ValueError("Operations need canonical, unencoded URLs")
+            if operation.method in {"TLS", "SSH"} and (
+                url.port is None or url.path not in {"", "/"}
+            ):
+                raise ValueError("Transport inspections require an explicit port and no path")
             # URL targets authorize their exact path; IP targets authorize that address.
             if not any(
                 target.value
@@ -153,6 +174,13 @@ class AssessmentContext(BaseModel):
                 raise ValueError("Identity operation is outside the assessment network grants")
 
     def _validate_operation_effects(self, operation_ref: str, operation: Operation) -> None:
+        if operation.method in {"TLS", "SSH"} and (
+            self.version != 2
+            or not any(
+                case.transport and operation_ref in case.operations for case in self.cases.values()
+            )
+        ):
+            raise ValueError("Transport inspection requires an approved version-2 case")
         if operation.method == "POST" and not any(
             case.business
             and operation_ref in {case.business.redeem_operation, case.business.cleanup_operation}
@@ -165,6 +193,18 @@ class AssessmentContext(BaseModel):
             raise ValueError("Read operations must not carry effect payloads")
 
     def _validate_case_adapter(self, case: Case) -> None:
+        if case.transport is not None and (
+            self.version != 2
+            or case.authorization is not None
+            or case.business is not None
+            or len(case.identities) != 1
+            or len(case.operations) != 1
+            or self.identities[case.identities[0]].secret_ref is not None
+            or self.operations[case.operations[0]].method
+            != ("TLS" if case.transport.adapter == "openssl.tls" else "SSH")
+            or (case.transport.adapter == "ssh-audit" and case.transport.ca_certificate is not None)
+        ):
+            raise ValueError("Invalid transport inspection scope")
         if case.business is not None:
             business = case.business
             if (
