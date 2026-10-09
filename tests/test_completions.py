@@ -8,6 +8,7 @@ from strix.interface.completions import completion_candidates, run_completions
 def test_root_completion_candidates() -> None:
     assert completion_candidates(["cl"]) == ["cloud"]
     assert "completions" in completion_candidates([""])
+    assert "review" in completion_candidates([""])
 
 
 def test_cloud_group_and_alias_candidates() -> None:

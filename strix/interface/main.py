@@ -65,6 +65,7 @@ Additional commands:
   strix cloud ...          Use the managed Strix platform
   strix auth ...           Manage model-subscription sign-in
   strix view [RUN]         View a completed or running scan
+  strix review RUN_DIR     Review verified controlled evidence offline as JSON
   strix completions SHELL  Generate zsh, bash, or fish tab completion
 """
 
@@ -436,6 +437,11 @@ def main() -> None:
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     setup_console_logging()
+
+    if len(sys.argv) > 1 and sys.argv[1] == "review":
+        from strix.interface.assessment_review import run_review
+
+        sys.exit(run_review(sys.argv[2:]))
 
     if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
         try:
