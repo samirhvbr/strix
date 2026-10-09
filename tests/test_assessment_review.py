@@ -12,7 +12,7 @@ import pytest
 
 from strix.core.assessment import bind_assessment_policy
 from strix.core.assessment_review import review_assessment
-from strix.core.evidence_ledger import EvidenceLedger
+from strix.core.evidence_ledger import EvidenceError, EvidenceLedger
 from strix.interface.assessment_review import run_review
 from tests.test_assessment_context import config
 from tests.test_authorization_case import executor_at
@@ -231,6 +231,21 @@ async def test_history_limit_is_explicit(tmp_path: Path, private_server: Any) ->
     report = review_assessment(run)
     assert len(report["history"]) == 100
     assert report["history_truncated"] is True
+    await executor.close()
+
+
+@pytest.mark.asyncio
+async def test_review_bounds_plan_before_expanding_obligations(tmp_path: Path) -> None:
+    _, executor = fixture_run(tmp_path)
+    case = executor.context.cases["cross-tenant"].model_copy(
+        update={
+            "identities": [f"identity-{i}" for i in range(65)],
+            "operations": [f"operation-{i}" for i in range(65)],
+        }
+    )
+    oversized = executor.context.model_copy(update={"cases": {"cross-tenant": case}})
+    with pytest.raises(EvidenceError, match="4096"):
+        executor.ledger.review(oversized)
     await executor.close()
 
 

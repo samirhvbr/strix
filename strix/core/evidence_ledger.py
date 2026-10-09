@@ -325,6 +325,9 @@ class EvidenceLedger:
 
     def review(self, context: AssessmentContext) -> dict[str, Any]:
         """Verify the exact approved plan and expose bounded history to trusted projection code."""
+        count = sum(len(case.identities) * len(case.operations) for case in context.cases.values())
+        if not count or count > 4096:
+            raise EvidenceError("Review requires between 1 and 4096 essential obligations")
         expected = sorted(
             (name, case.version, identity, operation)
             for name, case in context.cases.items()
