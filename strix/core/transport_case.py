@@ -121,6 +121,16 @@ async def inspect_ssh(host: str, port: int) -> dict[str, Any]:
             await process.wait()
 
 
+async def inspect_tls_drained(host: str, port: int, ca: str | None) -> dict[str, Any]:
+    """Cancellation must settle the bounded worker before controller ownership is released."""
+    task = asyncio.create_task(asyncio.to_thread(inspect_tls, host, port, ca))
+    try:
+        return await asyncio.shield(task)
+    except asyncio.CancelledError:
+        await task
+        raise
+
+
 async def run_transport_case(
     executor: IdentityExecutor, *, agent_ref: str, case_ref: str
 ) -> dict[str, Any]:
@@ -142,7 +152,7 @@ async def run_transport_case(
         if executor._authorize is not None:
             await asyncio.to_thread(executor._authorize)
         observation = (
-            await asyncio.to_thread(inspect_tls, url.host, url.port or 443, spec.ca_certificate)
+            await inspect_tls_drained(url.host, url.port or 443, spec.ca_certificate)
             if spec.adapter == "openssl.tls"
             else await inspect_ssh(url.host, url.port or 22)
         )

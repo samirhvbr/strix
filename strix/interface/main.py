@@ -16,7 +16,8 @@ from rich.panel import Panel
 from rich.text import Text
 
 from strix.config import codex, load_settings, persist_current
-from strix.core.paths import RUNS_DIR_NAME, run_dir_for
+from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
+from strix.core.run_lease import controller_lease
 from strix.interface.cli_args import (
     FAIL_ON_SEVERITIES,
     ResumeError,
@@ -498,6 +499,15 @@ def main() -> None:
     if args.non_interactive or not args.needs_setup:
         _bootstrap_scan(args)
 
+    if args.non_interactive and args.run_name:
+        # Keep reports and outer cleanup under the same ownership as target execution.
+        with controller_lease(runtime_state_dir(run_dir_for(args.run_name))):
+            _run_scan_interface(args)
+    else:
+        _run_scan_interface(args)
+
+
+def _run_scan_interface(args: argparse.Namespace) -> None:
     from strix.report.state import get_global_report_state
 
     exit_reason = "user_exit"

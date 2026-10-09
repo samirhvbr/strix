@@ -53,6 +53,7 @@ from strix.core.inputs import (
     make_model_settings,
 )
 from strix.core.paths import run_dir_for, runtime_state_dir
+from strix.core.run_lease import exclusive_scan
 from strix.core.sessions import open_agent_session
 from strix.core.targets import is_whitebox_scan
 from strix.core.test_catalog import TestCatalog
@@ -193,6 +194,7 @@ def _compose_root_instructions_override(
     )
 
 
+@exclusive_scan(lambda scan_id: runtime_state_dir(run_dir_for(scan_id)))
 async def run_strix_scan(
     *,
     scan_config: dict[str, Any],

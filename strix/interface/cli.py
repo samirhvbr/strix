@@ -14,6 +14,8 @@ from rich.text import Text
 
 from strix.config import load_settings
 from strix.config.settings import DEFAULT_MAX_TURNS
+from strix.core.paths import run_dir_for, runtime_state_dir
+from strix.core.run_lease import controller_owned
 from strix.core.runner import run_strix_scan
 from strix.report.state import ReportState, set_global_report_state
 from strix.runtime import session_manager
@@ -155,10 +157,14 @@ async def run_cli(args: Any) -> None:  # noqa: PLR0915
     report_state.vulnerability_deleted_callback = display_vulnerability_deleted
 
     def cleanup_on_exit() -> None:
-        report_state.cleanup()
+        # main() has already flushed before releasing ownership. A stale atexit callback
+        # must not rewrite a run that another controller has since resumed.
+        if controller_owned(runtime_state_dir(run_dir_for(args.run_name))):
+            report_state.cleanup()
 
     def signal_handler(_signum: int, _frame: Any) -> None:
-        report_state.cleanup(status="interrupted")
+        if controller_owned(runtime_state_dir(run_dir_for(args.run_name))):
+            report_state.cleanup(status="interrupted")
         sys.exit(1)
 
     atexit.register(cleanup_on_exit)
