@@ -8,6 +8,7 @@ import os
 import sqlite3
 import stat
 import threading
+import time
 import uuid
 from contextlib import closing, contextmanager
 from datetime import UTC, datetime
@@ -67,6 +68,7 @@ class EvidenceLedger:
         self._lock = threading.RLock()
         self._failed = False
         self._closed = False
+        self._snapshot: sqlite3.Connection | None = None
         if path.is_symlink() or (resuming and not path.is_file()):
             raise EvidenceError("Required evidence ledger is missing or unsafe")
         if path.parent.is_symlink():
@@ -128,6 +130,67 @@ class EvidenceLedger:
         path.chmod(0o600)
         self._publish()
 
+    @classmethod
+    @contextmanager
+    def snapshot(
+        cls, path: Path, *, scan_id: str, assessment_id: str, context_sha256: str
+    ) -> Generator[EvidenceLedger, None, None]:
+        """Review a consistent, read-only copy without migrations or recovery writes."""
+        ledger = cls.__new__(cls)
+        ledger.path = path
+        ledger._binding = (scan_id, assessment_id, context_sha256)
+        ledger._owns_agent = lambda _: False
+        ledger._on_change = None
+        ledger._lock = threading.RLock()
+        ledger._failed = ledger._closed = False
+        ledger._snapshot = None
+        try:
+            metadata = path.lstat()
+            parent = path.parent.lstat()
+            if (
+                not stat.S_ISREG(metadata.st_mode)
+                or not stat.S_ISDIR(parent.st_mode)
+                or (metadata.st_mode | parent.st_mode) & 0o077
+                or metadata.st_size > 64 * 1024 * 1024
+            ):
+                raise EvidenceError("Review requires a bounded, private evidence ledger")
+            # The runtime uses rollback journals. Refuse WAL before SQLite can create
+            # shared-memory sidecars, and refuse a pending rollback instead of recovering it.
+            with path.open("rb") as stream:
+                header = stream.read(100)
+            if (
+                header[:16] != b"SQLite format 3\x00"
+                or header[18:20] != b"\x01\x01"
+                or any(
+                    path.with_name(path.name + suffix).exists()
+                    for suffix in ("-wal", "-shm", "-journal")
+                )
+            ):
+                raise EvidenceError("Evidence journal must be settled before review")
+            with (
+                closing(
+                    sqlite3.connect(path.absolute().as_uri() + "?mode=ro", uri=True, timeout=1)
+                ) as source,
+                closing(sqlite3.connect(":memory:")) as copy,
+            ):
+                deadline = time.monotonic() + 5
+                page_size = source.execute("PRAGMA page_size").fetchone()[0]
+
+                def bounded_copy(_status: int, _remaining: int, pages: int) -> None:
+                    if time.monotonic() > deadline or pages * page_size > 64 * 1024 * 1024:
+                        raise EvidenceError("Review snapshot limit exceeded")
+
+                source.backup(copy, pages=128, progress=bounded_copy, sleep=0.01)
+                copy.execute("PRAGMA query_only=ON")
+                ledger._snapshot = copy
+                ledger._validate(copy)
+                yield ledger
+        except (OSError, sqlite3.Error):
+            raise EvidenceError("Evidence review unavailable") from None
+        finally:
+            ledger._closed = True
+            ledger._snapshot = None
+
     def _validate(self, db: sqlite3.Connection) -> None:
         if db.execute("PRAGMA user_version").fetchone()[0] != 1 or db.execute(
             "SELECT * FROM binding"
@@ -139,6 +202,11 @@ class EvidenceLedger:
         with self._lock:
             if self._failed or self._closed or self.path.is_symlink():
                 raise EvidenceError("Evidence ledger unavailable")
+            if self._snapshot is not None:
+                if validate:
+                    self._validate(self._snapshot)
+                yield self._snapshot
+                return
             try:
                 if self.path.stat().st_mode & 0o077 or self.path.parent.stat().st_mode & 0o077:
                     raise EvidenceError("Evidence permissions are no longer private")
@@ -254,6 +322,44 @@ class EvidenceLedger:
             )
         self._publish()
         return data
+
+    def review(self, context: AssessmentContext) -> dict[str, Any]:
+        """Verify the exact approved plan and expose bounded history to trusted projection code."""
+        expected = sorted(
+            (name, case.version, identity, operation)
+            for name, case in context.cases.items()
+            for identity in case.identities
+            for operation in case.operations
+        )
+        cases = sorted(
+            name
+            for name, case in context.cases.items()
+            if case.authorization or case.business or case.transport
+        )
+        with self._db() as db:
+            if (
+                context.digest != self._binding[2]
+                or db.execute("SELECT * FROM obligations ORDER BY 1,2,3,4").fetchall() != expected
+                or db.execute("SELECT * FROM obligation_plan").fetchall() != [(1, context.digest)]
+                or db.execute("SELECT case_ref FROM case_plans ORDER BY 1").fetchall()
+                != [(name,) for name in cases]
+            ):
+                raise EvidenceError("Review obligation plan does not match approved context")
+            rows = db.execute(
+                "SELECT id,case_ref FROM case_results ORDER BY rowid DESC LIMIT 101"
+            ).fetchall()
+        history = []
+        for ref, case in rows[:100]:
+            if case not in cases:
+                raise EvidenceError("Review contains an unapproved case")
+            try:
+                item = self.read_case_result(ref, case)
+                if item.get("case_ref") != case or item.get("case_result_ref") != ref:
+                    item = {"case_ref": case, "case_result_ref": ref, "verdict": "invalid_evidence"}
+            except EvidenceError:
+                item = {"case_ref": case, "case_result_ref": ref, "verdict": "invalid_evidence"}
+            history.append(item)
+        return {**self.summary(), "history": history, "history_truncated": len(rows) > 100}
 
     def claim_business_run(self, case_ref: str, pre_ref: str) -> tuple[bool, dict[str, Any]]:
         checkpoint = {"pre_ref": pre_ref, "phase": "dispatch_reserved"}
