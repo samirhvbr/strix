@@ -238,7 +238,7 @@ async def test_pause_policy_parks_every_agent_at_the_limit_and_resumes_in_place(
         await _wait_until(lambda: _all_parked(scan.coordinator, *agents))
         assert scan.ledger.cost == pytest.approx(5.0)
         assert len(scan.ledger.calls) == 5
-        assert scan.coordinator.budget_paused is False
+        assert scan.coordinator.pause_reasons == frozenset({"budget"})
         assert scan.coordinator.budget_stopped is False
         assert scan.coordinator.reserve_stopped is False
         assert all(not task.done() for task in scan.tasks())

@@ -234,6 +234,7 @@ async def run_cli(args: Any) -> None:  # noqa: PLR0915
                     local_sources=getattr(args, "local_sources", None) or [],
                     extra_files=read_workspace_files(getattr(args, "workspace_files", None)),
                     interactive=bool(getattr(args, "interactive", False)),
+                    pause_every_n_tests=getattr(args, "pause_every_n_tests", None),
                     max_budget_usd=getattr(args, "max_budget_usd", None),
                     max_turns=getattr(args, "max_turns", DEFAULT_MAX_TURNS),
                     status_sink=_note_startup_phase,

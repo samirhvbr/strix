@@ -298,6 +298,15 @@ Strix Cloud:
     )
 
     parser.add_argument(
+        "--pause-every-n-tests",
+        type=_positive_int,
+        default=None,
+        metavar="N",
+        help="Pause before the next model call after N completed catalog tests; "
+        "requires explicit controller resume. Restarts retain the pause and interval.",
+    )
+
+    parser.add_argument(
         "--max-turns",
         dest="max_turns",
         metavar="N",
@@ -613,6 +622,19 @@ def load_resume_state(args: argparse.Namespace) -> None:
     if requested_policy is not None and requested_policy != saved_policy:
         raise ResumeError("Network policy cannot change on resume; start a new run")
     args.network_policy = saved_policy.model_dump() if saved_policy is not None else None
+
+    from strix.core.test_pause import validate_interval
+
+    saved_interval = state.get("pause_every_n_tests")
+    requested_interval = getattr(args, "pause_every_n_tests", None)
+    try:
+        validate_interval(saved_interval)
+        validate_interval(requested_interval)
+    except ValueError as exc:
+        raise ResumeError("Invalid saved test pause interval") from exc
+    if saved_interval is not None and requested_interval not in (None, saved_interval):
+        raise ResumeError("Test pause interval cannot change on resume")
+    args.pause_every_n_tests = saved_interval or requested_interval
 
     args.targets_info = state.get("targets_info") or []
     # A target-less run has no targets_info at all. It is driven by its
