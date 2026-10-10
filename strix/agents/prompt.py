@@ -85,6 +85,7 @@ def render_system_prompt(
     interactive: bool = False,
     system_prompt_context: dict[str, Any] | None = None,
     include_scope: bool = True,
+    supports_images: bool = True,
 ) -> str:
     """Render the system prompt. Returns empty string on template failure.
 
@@ -119,7 +120,7 @@ def render_system_prompt(
             is_root=is_root,
             is_diff_scoped=is_diff_scoped,
         )
-        skill_content = load_skills(skills_to_load)
+        skill_content = load_skills(skills_to_load, supports_images=supports_images)
         env.globals["get_skill"] = lambda name: skill_content.get(name, "")
 
         # Skills every agent of this kind loads come first, so siblings share them

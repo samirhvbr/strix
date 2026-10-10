@@ -4,9 +4,12 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import inspect
 import logging
+import re
 import uuid
 from collections.abc import Callable
+from dataclasses import replace
 from functools import cache
 from typing import TYPE_CHECKING, Any, cast
 
@@ -30,6 +33,7 @@ from strix.core.sessions import (
     enforce_image_budget,
     open_agent_session,
     recover_session_items,
+    scrub_images_from_items,
     seed_initial_input,
     strip_all_images_from_session,
 )
@@ -44,6 +48,7 @@ if TYPE_CHECKING:
     from agents.lifecycle import RunHooks
     from agents.memory import Session, SQLiteSession
     from agents.result import RunResultBase
+    from agents.run_config import CallModelData, ModelInputData
 
     from strix.core.agents import AgentCoordinator, Status
     from strix.core.test_catalog import TestCatalog
@@ -54,6 +59,18 @@ logger = logging.getLogger(__name__)
 StreamEventSink = Callable[[str, Any], None]
 
 _INPUT_REJECTION_CODES = frozenset({400, 404, 422})
+# Replies meaning "this model takes no images", not image errors in general: a
+# context overflow that counts "image/vision expansion" must not match.
+_IMAGE_REJECTION = re.compile(
+    r"no endpoints found that support image input"  # OpenRouter
+    r"|image_url is only supported by certain models"  # OpenAI
+    r"|is not a multimodal model|at most 0 image\(s\)"  # vLLM
+    r"|does not support image input"  # LiteLLM's Fireworks check
+    r"|doesn't support the image field"  # Bedrock Converse
+    r"|unknown variant `image_url`"  # DeepSeek, e.g. via Vercel AI Gateway
+    r"|'[^']*image[^']*' functionality not supported",  # Vercel AI Gateway (AI SDK), unverified
+    re.IGNORECASE,
+)
 _MAX_COMPACTIONS_PER_CYCLE = 2
 
 
@@ -121,6 +138,28 @@ async def _compact_session(
     )
 
 
+_TEXT_ONLY_IMAGE_TEXT = "[error: this model cannot view images; use `snapshot -i` instead]"
+
+
+def _with_image_scrub(run_config: RunConfig, context: dict[str, Any]) -> RunConfig:
+    if context.get("supports_images", True):
+        return run_config
+    # Chain any filter already set; it sees the scrubbed input.
+    inner = run_config.call_model_input_filter
+
+    async def _scrub(data: CallModelData[Any]) -> ModelInputData:
+        model_data = replace(
+            data.model_data,
+            input=scrub_images_from_items(data.model_data.input, text=_TEXT_ONLY_IMAGE_TEXT),
+        )
+        if inner is None:
+            return model_data
+        result = inner(replace(data, model_data=model_data))
+        return await result if inspect.isawaitable(result) else result
+
+    return replace(run_config, call_model_input_filter=_scrub)
+
+
 _MAX_TRANSIENT_MODEL_RETRIES = 5
 _TRANSIENT_MODEL_RETRY_BASE_DELAY_S = 2.0
 _TRANSIENT_MODEL_RETRY_MAX_DELAY_S = 90.0
@@ -129,6 +168,12 @@ _TRANSIENT_MODEL_RETRY_MAX_DELAY_S = 90.0
 def _model_error_status_code(exc: BaseException) -> int | None:
     code = getattr(exc, "status_code", None)
     return code if isinstance(code, int) else None
+
+
+def _is_image_rejection(exc: BaseException) -> bool:
+    return _model_error_status_code(exc) in _INPUT_REJECTION_CODES and bool(
+        _IMAGE_REJECTION.search(str(exc))
+    )
 
 
 def _is_transient_model_error(exc: BaseException) -> bool:
@@ -142,9 +187,7 @@ def _is_transient_model_error(exc: BaseException) -> bool:
         return True
     code = _model_error_status_code(exc)
     if code is not None:
-        import litellm
-
-        return bool(litellm._should_retry(code))
+        return code >= 400 and code not in (401, 402, 403, 404)
     return isinstance(exc, APIError)
 
 
@@ -261,7 +304,7 @@ async def _run_agent_loop(
         raise SubagentBudgetReservedError("scan reached the sub-agent budget reserve")
 
     if reserve_stopped and start_parked and interactive and context.get("parent_id") is None:
-        await coordinator.send(agent_id, _reserve_notice())
+        await coordinator.send(agent_id, _reserve_notice(coordinator.root_finish_tool))
 
     if not (start_parked and interactive):
         with contextlib.suppress(BudgetPausedError):
@@ -615,6 +658,7 @@ async def _run_until_lifecycle(
         input_data = await _append_tool_required_message(
             session=session,
             context=context,
+            root_finish_tool=coordinator.root_finish_tool,
             attempt=recoveries,
             limit=recovery_limit,
             interactive=interactive,
@@ -763,7 +807,7 @@ async def _run_cycle(  # noqa: PLR0912, PLR0915
             stream = Runner.run_streamed(
                 agent,
                 input=input_data,
-                run_config=run_config,
+                run_config=_with_image_scrub(run_config, context),
                 context=context,
                 max_turns=max_turns,
                 session=session,
@@ -821,11 +865,7 @@ async def _run_cycle(  # noqa: PLR0912, PLR0915
             await coordinator.trigger_budget_stop()
             raise
         except Exception as exc:
-            if (
-                image_strips < 3
-                and session is not None
-                and getattr(exc, "status_code", None) in _INPUT_REJECTION_CODES
-            ):
+            if image_strips < 3 and session is not None and _is_image_rejection(exc):
                 try:
                     stripped = await strip_all_images_from_session(session)
                 except Exception:
@@ -965,8 +1005,9 @@ async def _append_tool_required_message(
     limit: int,
     interactive: bool,
     silent_yield: bool = False,
+    root_finish_tool: str = "finish_scan",
 ) -> list[dict[str, str]]:
-    finish_tool = "finish_scan" if context.get("parent_id") is None else "agent_finish"
+    finish_tool = root_finish_tool if context.get("parent_id") is None else "agent_finish"
     if silent_yield:
         message = (
             "You called wait_for_user without having written anything to the user since "
@@ -1084,7 +1125,7 @@ async def notify_parent_on_terminal(
     )
 
 
-def _reserve_notice() -> dict[str, Any]:
+def _reserve_notice(finish_tool: str) -> dict[str, Any]:
     return {
         "from": "system",
         "type": "budget_reserve_stop",
@@ -1094,7 +1135,7 @@ def _reserve_notice() -> dict[str, Any]:
             "sub-agent is being force-stopped as soon as its in-flight turn completes, and "
             "none will send a completion report. Their confirmed vulnerabilities are "
             "already filed as they were found. Do not wait on any sub-agents and do not "
-            "spawn new ones — wrap up now and call finish_scan."
+            f"spawn new ones — wrap up now and call {finish_tool}."
         ),
     }
 
@@ -1103,7 +1144,7 @@ async def _notify_root_on_budget_reserve(coordinator: AgentCoordinator) -> None:
     root = await coordinator.claim_reserve_notification()
     if root is None:
         return
-    await coordinator.send(root, _reserve_notice())
+    await coordinator.send(root, _reserve_notice(coordinator.root_finish_tool))
 
 
 async def _notify_parent_on_exit(

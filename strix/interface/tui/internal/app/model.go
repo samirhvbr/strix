@@ -90,6 +90,7 @@ type Model struct {
 	client                 *Client
 	width, height          int
 	snapshot               protocol.Snapshot
+	windowTitle            string
 	input                  textarea.Model
 	viewport               viewport.Model
 	viewportContent        string

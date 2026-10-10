@@ -33,6 +33,7 @@ from agents.mcp import (
 )
 from mcp.client.stdio import stdio_client
 from mcp.shared._httpx_utils import create_mcp_http_client
+from mcp.types import TextContent
 
 from strix.tools.mcp.failures import HttpStatusRecorder
 from strix.tools.mcp.session import McpConnectionUnavailableError, SupervisedMcpSession
@@ -208,6 +209,18 @@ def _build_server(
     )
 
 
+def _without_images(result: Any) -> Any:
+    content = [
+        TextContent(
+            type="text", text=f"[{item.mimeType} image omitted: this model cannot view images]"
+        )
+        if item.type == "image"
+        else item
+        for item in result.content
+    ]
+    return result.model_copy(update={"content": content})
+
+
 def _mcp_result_to_tool_output(server: MCPServer, result: Any) -> Any:
     """Serialize a ``CallToolResult`` to a tool output, mirroring the agents SDK.
 
@@ -242,6 +255,7 @@ async def dispatch_mcp_call(
     *,
     label: str,
     result_transform: ResultTransform | None = None,
+    supports_images: bool = True,
 ) -> Any:
     """Run one MCP tool call and convert its result to a tool output.
 
@@ -258,6 +272,8 @@ async def dispatch_mcp_call(
       corrupt the content the agent receives).
     """
     result = await server.call_tool(tool_name, arguments)
+    if not supports_images:
+        result = _without_images(result)
     if result_transform is not None:
         return result_transform(label, result.model_dump(mode="json"))
     tool_output = _mcp_result_to_tool_output(server, result)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import functools
 import logging
 import os
 import sys
@@ -78,6 +79,16 @@ class _StdoutQuietFilter(logging.Filter):
         )
 
 
+class _PtyThresholdFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return "PTY process count reached warning threshold" not in record.getMessage()
+
+
+@functools.cache  # install once; tests reset via ``cache_clear()``
+def _silence_pty_threshold_warning() -> None:
+    logging.getLogger("agents.sandbox.sandboxes.docker").addFilter(_PtyThresholdFilter())
+
+
 def configure_dependency_logging() -> None:
     """Quiet dependency logging/warnings that obscure Strix scan logs."""
     litellm = sys.modules.get("litellm")
@@ -89,6 +100,7 @@ def configure_dependency_logging() -> None:
     logging.getLogger("asyncio").propagate = False
     warnings.filterwarnings("ignore", category=RuntimeWarning, module="asyncio")
     _route_unraisable_to_log()
+    _silence_pty_threshold_warning()
 
 
 def _route_unraisable_to_log() -> None:

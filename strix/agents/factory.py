@@ -383,11 +383,15 @@ def _configure_filesystem_tools(
             )
 
 
-def _make_filesystem_configurator(*, chat_completions: bool, strict_schemas: bool) -> Any:
+def _make_filesystem_configurator(
+    *, chat_completions: bool, strict_schemas: bool, supports_images: bool = True
+) -> Any:
     def configure(toolset: Any) -> None:
         _configure_filesystem_tools(
             toolset, chat_completions=chat_completions, strict_schemas=strict_schemas
         )
+        if not supports_images:
+            toolset.view_image.is_enabled = False
 
     return configure
 
@@ -737,6 +741,8 @@ def build_strix_agent(
     system_prompt_context: dict[str, Any] | None = None,
     extra_tools: Sequence[Tool] | None = None,
     instructions_override: str | None = None,
+    supports_images: bool = True,
+    finish_tool: Tool = finish_scan,
 ) -> SandboxAgent[Any]:
     """Build a SandboxAgent for either root or child use.
 
@@ -749,6 +755,7 @@ def build_strix_agent(
             registered via ``register_agent_tools``.
         instructions_override: Use this verbatim as the system prompt instead
             of rendering the built-in scan prompt.
+        finish_tool: The tool that ends the run, given to the root agent.
     """
     if instructions_override is not None:
         instructions = instructions_override
@@ -761,6 +768,7 @@ def build_strix_agent(
             is_diff_scoped=is_diff_scoped,
             interactive=interactive,
             system_prompt_context=system_prompt_context,
+            supports_images=supports_images,
         )
 
     controlled = bool(system_prompt_context and system_prompt_context.get("controlled_assessment"))
@@ -786,7 +794,7 @@ def build_strix_agent(
         # Yielding to the user is only meaningful when one is attached.
         agent_tools.append(wait_for_user)
     if is_root:
-        tools: list[Tool] = [*_BASE_TOOLS, *agent_tools, finish_scan]
+        tools: list[Tool] = [*_BASE_TOOLS, *agent_tools, finish_tool]
     else:
         tools = [*_BASE_TOOLS, *agent_tools, agent_finish]
     if system_prompt_context and system_prompt_context.get("assessment_context"):
@@ -837,6 +845,7 @@ def build_strix_agent(
                 configure_tools=_make_filesystem_configurator(
                     chat_completions=chat_completions_tools,
                     strict_schemas=strict_tool_schemas,
+                    supports_images=supports_images,
                 ),
             ),
             Shell(
@@ -858,6 +867,7 @@ def make_child_factory(
     chat_completions_tools: bool = False,
     strict_tool_schemas: bool = True,
     system_prompt_context: dict[str, Any] | None = None,
+    supports_images: bool = True,
 ) -> Any:
     """Return the runner-owned builder used by ``spawn_child_agent``.
 
@@ -878,6 +888,7 @@ def make_child_factory(
             chat_completions_tools=chat_completions_tools,
             strict_tool_schemas=strict_tool_schemas,
             system_prompt_context=system_prompt_context,
+            supports_images=supports_images,
         )
 
     return _factory

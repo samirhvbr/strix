@@ -16,6 +16,7 @@ from strix.config.models import (
     _NonStreamingModel,
     _TurnGuardModel,
     configure_sdk_model_defaults,
+    model_supports_images,
     request_timeout_extra_args,
     resolve_api_type,
     routes_through_litellm,
@@ -202,3 +203,11 @@ def test_configure_sdk_api_route_follows_the_given_model(
     models.configure_sdk_api_route("my-private-model", settings)
 
     assert routes == ["responses", "chat_completions"]
+
+
+def test_image_support_follows_the_catalog(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setitem(litellm.model_cost, "acme-text", {})
+    monkeypatch.setitem(litellm.model_cost, "acme-vision", {"supports_vision": True})
+    assert model_supports_images("acme-text") is False
+    assert model_supports_images("litellm/openai/acme-vision") is True
+    assert model_supports_images("acme-unknown-model") is True

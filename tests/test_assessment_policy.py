@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import importlib
 import json
 import sys
@@ -408,7 +409,15 @@ async def test_runner_restores_omitted_assessment_and_snapshots_requests_before_
     helpers._wire_runner(monkeypatch, tmp_path)
     monkeypatch.setattr(runner, "get_global_report_state", lambda: None)
     monkeypatch.setattr(runner, "run_agent_loop", AsyncMock())
-    monkeypatch.setattr(mcp_pkg.McpRegistry, "start_warmup", lambda *_, **__: None)
+
+    def finished_warmup(*_args: Any, **_kwargs: Any) -> asyncio.Future[None]:
+        # The runner now waits on the warm-up task (upstream #1492), so a stub has to return
+        # something awaitable.
+        warmup: asyncio.Future[None] = asyncio.get_running_loop().create_future()
+        warmup.set_result(None)
+        return warmup
+
+    monkeypatch.setattr(mcp_pkg.McpRegistry, "start_warmup", finished_warmup)
     bind_assessment_policy(tmp_path, "scan", policy(), resuming=False)
     source = request()
     captured: list[McpConnectionRequest] = []
