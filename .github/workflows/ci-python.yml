@@ -76,3 +76,9 @@ jobs:
           LITELLM_MODE: PRODUCTION
           STRIX_NETWORK_GUARD_TESTS: '1'
         run: uv run --frozen pytest -q tests/test_network_guard_docker.py
+      - name: Check durable pause and process death twice against owned Docker
+        env:
+          LITELLM_MODE: PRODUCTION
+          STRIX_PAUSE_HARDENING_TESTS: '1'
+          STRIX_HARDENING_EVIDENCE_DIR: /tmp/strix-pause-hardening-evidence
+        run: uv run --frozen pytest -q tests/test_pause_hardening_docker.py
