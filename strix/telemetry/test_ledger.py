@@ -388,6 +388,47 @@ class TestLedger:
             ]
         )
 
+    def snapshot(self, *, limit: int = 256) -> dict[str, Any]:
+        """Bounded accounting only; never include tasks, surfaces or provider bodies."""
+        if not 1 <= limit <= 256:
+            raise ValueError("invalid telemetry snapshot limit")
+        with self._lock:
+
+            def rows(query: str) -> list[dict[str, Any]]:
+                cursor = self._db.execute(query, (limit + 1,))
+                keys = [column[0] for column in cursor.description]
+                return [dict(zip(keys, row, strict=True)) for row in cursor.fetchall()]
+
+            tests = rows("SELECT * FROM test_summary ORDER BY test_id LIMIT ?")
+            for item in tests:
+                unit = self._catalog.get(item["agent_id"])
+                item["parent_test_id"] = unit.parent_test_id if unit is not None else None
+            models = rows("SELECT * FROM model_usage ORDER BY agent_id, model, route LIMIT ?")
+            events = rows(
+                "SELECT event_id, test_id, agent_id, route, provider, model, cost_basis, "
+                "outcome, retry_attempt, status_code, input_tokens, output_tokens, "
+                "total_tokens, cost_usd, started_at, finished_at, duration_ms "
+                "FROM test_events ORDER BY started_at, event_id LIMIT ?"
+            )
+            incidents = rows(
+                "SELECT incident_id, test_id, agent_id, severity, source, occurred_at "
+                "FROM scan_incidents ORDER BY occurred_at, incident_id LIMIT ?"
+            )
+            cursor = self._db.execute("SELECT * FROM ledger_metadata WHERE singleton = 1")
+            metadata = dict(
+                zip([column[0] for column in cursor.description], cursor.fetchone(), strict=True)
+            )
+            return {
+                "metadata": metadata,
+                "tests": tests[:limit],
+                "models": models[:limit],
+                "events": events[:limit],
+                "incidents": incidents[:limit],
+                "truncated": any(
+                    len(group) > limit for group in (tests, models, events, incidents)
+                ),
+            }
+
     def close(self) -> None:
         with self._lock:
             if self._closed:

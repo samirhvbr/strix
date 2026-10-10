@@ -18,6 +18,7 @@ from strix.core.assessment import (
     validate_assessment_scope,
 )
 from strix.core.assessment_context import bind_context, parse_context
+from strix.core.native_control import validate_control_ref
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.core.web_authorization import WebAuthorization
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
@@ -65,6 +66,14 @@ def _positive_int(value: str) -> int:
     if parsed <= 0:
         raise argparse.ArgumentTypeError("must be an integer greater than 0")
     return parsed
+
+
+def _native_control_ref(value: str) -> str:
+    try:
+        validate_control_ref(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError("requires POSIX and a canonical controller UUID") from exc
+    return value
 
 
 def parse_arguments() -> argparse.Namespace:
@@ -295,6 +304,13 @@ Strix Cloud:
             "Maximum LLM cost in USD (> 0). The scan stops cleanly when this limit is reached. "
             "Graduated wrap-up warnings are sent to all agents as it is approached."
         ),
+    )
+
+    parser.add_argument(
+        "--native-control",
+        type=_native_control_ref,
+        metavar="CONTROLLER_UUID",
+        help="Enable a private Unix control socket for the owning native application.",
     )
 
     parser.add_argument(
