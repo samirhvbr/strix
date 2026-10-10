@@ -15,6 +15,9 @@ from strix.core.evidence_ledger import EvidenceError, EvidenceLedger
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from strix.core.assessment import AssessmentPolicy
+    from strix.core.assessment_context import AssessmentContext
+
 
 _VERDICTS = {
     "missing",
@@ -92,8 +95,8 @@ def _regular(path: Path) -> None:
         raise EvidenceError("Review requires regular local records")
 
 
-def review_assessment(directory: Path) -> dict[str, Any]:
-    """Read only immutable scope plus a consistent SQLite snapshot; never dispatch."""
+def load_review_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentContext]:
+    """Read and validate the existing immutable scope without creating state."""
     directory = directory.absolute()
     # Reject directory aliases as well as linked files; the OS account is the trust boundary.
     if any(path.is_symlink() for path in (directory, *directory.parents)):
@@ -120,6 +123,14 @@ def review_assessment(directory: Path) -> dict[str, Any]:
     if policy is None or context is None or context_record["policy_sha256"] != policy.digest:
         raise EvidenceError("Controlled assessment context required for review")
     context.validate_scope(policy)
+    return policy, context
+
+
+def review_assessment(directory: Path) -> dict[str, Any]:
+    """Read only immutable scope plus a consistent SQLite snapshot; never dispatch."""
+    directory = directory.absolute()
+    policy, context = load_review_scope(directory)
+    state = directory / ".state"
     with EvidenceLedger.snapshot(
         state / "evidence.db",
         scan_id=directory.name,
