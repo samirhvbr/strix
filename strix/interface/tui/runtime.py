@@ -230,6 +230,7 @@ class GoTuiRuntime:
                 coordinator=self.coordinator,
                 interactive=True,
                 max_turns=self.args.max_turns,
+                pause_every_n_tests=getattr(self.args, "pause_every_n_tests", None),
                 max_budget_usd=self.args.max_budget_usd,
                 event_sink=self.capture_event,
                 mcp_status_sink=self.capture_mcp_status,

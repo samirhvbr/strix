@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 Status = Literal["running", "waiting", "completed", "stopped", "crashed", "failed", "budget_paused"]
 
 BudgetPolicy = Literal["stop", "pause"]
+PauseReason = Literal["budget", "operator", "test"]
 
 TERMINAL_STATUSES: frozenset[str] = frozenset({"completed", "stopped", "crashed", "failed"})
 
@@ -73,7 +74,8 @@ class AgentCoordinator:
         self.is_shutting_down = False
         self._budget_stopped = False
         self._reserve_stopped = False
-        self._budget_paused = False
+        self._pause_reasons: set[PauseReason] = set()
+        self._pause_released: dict[PauseReason, Callable[[], None]] = {}
         self._resume_epoch = 0
         self._budget_policy: BudgetPolicy = "stop"
         self._extend_budget: Callable[[], None] | None = None
@@ -116,7 +118,31 @@ class AgentCoordinator:
 
     @property
     def budget_paused(self) -> bool:
-        return self._budget_paused
+        return bool(self._pause_reasons)
+
+    @property
+    def pause_reasons(self) -> frozenset[PauseReason]:
+        return frozenset(self._pause_reasons)
+
+    def request_pause(self, reason: PauseReason) -> None:
+        """Synchronous admission gate for same-event-loop catalog callbacks.
+
+        There is no await between a terminal event and this gate; another agent
+        cannot start a model call in that gap. Async callers persist afterward.
+        """
+        if reason not in {"budget", "operator", "test"}:
+            raise ValueError("unknown pause reason")
+        self._pause_reasons.add(reason)
+
+    def set_pause_release_callback(self, reason: PauseReason, callback: Callable[[], None]) -> None:
+        self._pause_released[reason] = callback
+
+    def recompute_budget_pause(self, limited: bool) -> None:
+        """Refresh the budget reason only; never release operator/test pauses."""
+        if limited:
+            self._pause_reasons.add("budget")
+        else:
+            self._pause_reasons.discard("budget")
 
     @property
     def resume_epoch(self) -> int:
@@ -138,7 +164,7 @@ class AgentCoordinator:
 
     async def pause_for_budget(self, agent_id: str) -> None:
         async with self._lock:
-            self._budget_paused = True
+            self.request_pause("budget")
         await self.set_status(agent_id, "budget_paused")
 
     async def park_for_budget(self, agent_id: str) -> bool:
@@ -155,33 +181,50 @@ class AgentCoordinator:
         await self._maybe_snapshot()
         return True
 
-    async def pause_budget(self) -> None:
+    async def pause_budget(self, *, reason: PauseReason = "operator") -> None:
         """Operator pause: every agent parks before its next LLM call.
 
         Agents mid-call or mid-tool finish that step first, so their spend still
         lands; nothing is cancelled.
         """
         async with self._lock:
-            self._budget_paused = True
-        logger.info("scan paused by the operator")
+            self.request_pause(reason)
+        logger.info("scan paused: %s", reason)
         await self._maybe_snapshot()
 
-    async def resume_budget(self, *, max_budget_usd: float | None = None) -> list[str]:
-        """Lift the pause and wake every parked agent; returns the woken agent ids.
+    async def resume_budget(
+        self, *, max_budget_usd: float | None = None, reason: PauseReason | None = None
+    ) -> list[str]:
+        """Release one pause reason; wake agents only when no reason remains.
+
+        With no explicit reason, release test, operator, then budget in that order.
+        Supplying a new budget does not release an independent test/operator pause.
 
         With ``max_budget_usd`` the scan's limit is replaced first (``None`` keeps
         the current one). Agents continue with the LLM call they parked on; no
         message is added to any session. An agent that parks again on its next
         call (the new limit is already spent) is not an error.
         """
+        if reason is not None and reason not in {"budget", "operator", "test"}:
+            raise ValueError("unknown pause reason")
         if max_budget_usd is not None and self._set_budget_limit is not None:
             self._set_budget_limit(max_budget_usd)
         async with self._lock:
-            self._budget_paused = False
-            self._resume_epoch += 1
-            woken = [aid for aid, status in self.statuses.items() if status == "budget_paused"]
-            for aid in woken:
-                self.runtimes.setdefault(aid, AgentRuntime()).wake.set()
+            selected = reason or next(
+                (item for item in ("test", "operator", "budget") if item in self._pause_reasons),
+                "budget",
+            )
+            selected = cast("PauseReason", selected)
+            callback = self._pause_released.get(selected)
+            if selected in self._pause_reasons and callback is not None:
+                callback()  # Persist acknowledgment before releasing the admission gate.
+            self._pause_reasons.discard(selected)
+            woken = []
+            if not self._pause_reasons:
+                self._resume_epoch += 1
+                woken = [aid for aid, status in self.statuses.items() if status == "budget_paused"]
+                for aid in woken:
+                    self.runtimes.setdefault(aid, AgentRuntime()).wake.set()
         logger.info("scan resumed; woke %d parked agent(s)", len(woken))
         await self._maybe_snapshot()
         return woken
@@ -201,7 +244,7 @@ class AgentCoordinator:
                 runtime = self.runtimes.setdefault(agent_id, AgentRuntime())
                 if self._budget_stopped or self.statuses.get(agent_id) != "budget_paused":
                     return
-                if self._resume_epoch != parked_epoch:
+                if self._resume_epoch != parked_epoch and not self._pause_reasons:
                     self._set_status_locked(agent_id, "running")
                     break
                 wake = runtime.wake
@@ -213,9 +256,9 @@ class AgentCoordinator:
     async def resume_from_budget_pause(self, *, exclude: str | None = None) -> None:
         """Legacy interactive resume: extend by the original budget and nudge agents."""
         async with self._lock:
-            if not self._budget_paused:
+            if self._pause_reasons != {"budget"}:
                 return
-            self._budget_paused = False
+            self._pause_reasons.discard("budget")
             paused = [aid for aid, status in self.statuses.items() if status == "budget_paused"]
         if self._extend_budget is not None:
             self._extend_budget()
@@ -245,7 +288,8 @@ class AgentCoordinator:
             self._budget_stopped = budget_stopped
             self._reserve_stopped = reserve_stopped
             if not budget_paused:
-                self._budget_paused = False
+                self._pause_reasons.discard("budget")
+            if not self._pause_reasons:
                 for aid, status in self.statuses.items():
                     if status == "budget_paused":
                         self.statuses[aid] = "waiting"
@@ -446,7 +490,7 @@ class AgentCoordinator:
         unknown, or it is terminal and its loop does not park for wake-ups.
         """
         from_user = message.get("from") == "user"
-        if from_user and self._budget_paused and self._budget_policy != "pause":
+        if from_user and "budget" in self._pause_reasons and self._budget_policy != "pause":
             await self.resume_from_budget_pause(exclude=target_agent_id)
         async with self._lock:
             if target_agent_id not in self.statuses:
@@ -661,7 +705,8 @@ class AgentCoordinator:
                 "errors": dict(self.errors),
                 "budget_stopped": self._budget_stopped,
                 "reserve_stopped": self._reserve_stopped,
-                "budget_paused": self._budget_paused,
+                "budget_paused": self.budget_paused,
+                "pause_reasons": sorted(self._pause_reasons),
             }
 
     async def restore(self, snap: dict[str, Any]) -> None:
@@ -683,7 +728,14 @@ class AgentCoordinator:
                         runtime.mailbox = [dict(m) for m in msgs if isinstance(m, dict)]
             self._budget_stopped = bool(snap.get("budget_stopped", False))
             self._reserve_stopped = bool(snap.get("reserve_stopped", False))
-            self._budget_paused = bool(snap.get("budget_paused", False))
+            reasons = snap.get("pause_reasons")
+            if reasons is None:
+                reasons = ["budget"] if snap.get("budget_paused", False) else []
+            if not isinstance(reasons, list) or any(
+                reason not in {"budget", "operator", "test"} for reason in reasons
+            ):
+                raise ValueError("invalid persisted pause reasons")
+            self._pause_reasons = set(cast("list[PauseReason]", reasons))
             for aid in self.statuses:
                 self.runtimes.setdefault(aid, AgentRuntime())
 

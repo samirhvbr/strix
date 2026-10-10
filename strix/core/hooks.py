@@ -67,9 +67,10 @@ class BudgetPausedError(RuntimeError):
     decided to park; the agent waits for a resume newer than that.
     """
 
-    def __init__(self, message: str, *, resume_epoch: int = 0) -> None:
+    def __init__(self, message: str, *, resume_epoch: int = 0, cooperative: bool = False) -> None:
         super().__init__(message)
         self.resume_epoch = resume_epoch
+        self.cooperative = cooperative
 
 
 def _validate_budget(max_budget_usd: float | None) -> None:
@@ -208,8 +209,7 @@ class ReportUsageHooks(RunHooks[dict[str, Any]]):
                         context.context["agent_id"], "authorization_rejected"
                     )
                 raise
-        if self._budget_policy == "pause":
-            self._pause_if_limited(context)
+        self._pause_if_limited(context)
         context.context[LLM_TURN_KEY] = int(context.context.get(LLM_TURN_KEY, 0)) + 1
         try:
             self._maybe_warn_turns(context, input_items)
@@ -226,21 +226,21 @@ class ReportUsageHooks(RunHooks[dict[str, Any]]):
         """
         coordinator = coordinator_from_context(context.context)
         epoch = coordinator.resume_epoch if coordinator is not None else 0
-        if coordinator is not None and coordinator.budget_paused:
-            raise BudgetPausedError(
-                "scan paused; waiting for the operator to resume", resume_epoch=epoch
+        limited = False
+        if self._budget_policy == "pause":
+            report_state = get_global_report_state()
+            limited = (
+                self._max_budget_usd is not None
+                and report_state is not None
+                and report_state.get_total_llm_cost() >= self._max_budget_usd
             )
-        if self._max_budget_usd is None:
-            return
-        report_state = get_global_report_state()
-        if report_state is None:
-            return
-        cost = report_state.get_total_llm_cost()
-        if cost >= self._max_budget_usd:
+            if coordinator is not None:
+                coordinator.recompute_budget_pause(limited)
+        if limited or (coordinator is not None and coordinator.budget_paused):
             raise BudgetPausedError(
-                f"Scan budget of ${self._max_budget_usd:.2f} reached (spent ${cost:.4f}); "
-                "pausing until the operator raises the limit",
+                "scan paused; waiting for the operator to release the active reasons",
                 resume_epoch=epoch,
+                cooperative=True,
             )
 
     def _maybe_warn_turns(

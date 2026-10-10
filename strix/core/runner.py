@@ -56,7 +56,8 @@ from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.run_lease import exclusive_scan
 from strix.core.sessions import open_agent_session
 from strix.core.targets import is_whitebox_scan
-from strix.core.test_catalog import TestCatalog
+from strix.core.test_catalog import TestCatalog, TestUnit
+from strix.core.test_pause import TestPauseController, validate_interval
 from strix.core.web_authorization import WebAuthorization
 from strix.llm import request_log
 from strix.report.state import get_global_report_state
@@ -207,6 +208,7 @@ async def run_strix_scan(
     max_turns: int = DEFAULT_MAX_TURNS,
     max_budget_usd: float | None = None,
     budget_policy: BudgetPolicy = "stop",
+    pause_every_n_tests: int | None = None,
     model: str | None = None,
     cleanup_on_exit: bool = True,
     event_sink: StreamEventSink | None = None,
@@ -232,6 +234,10 @@ async def run_strix_scan(
     agent before its next LLM call until the caller resumes the scan through
     ``coordinator.resume_budget()`` (optionally with a higher limit) or cancels
     it. ``coordinator.pause_budget()`` parks a running scan the same way.
+    ``pause_every_n_tests`` requests an independent durable pause after N unique
+    terminal catalog tests. An omitted interval retains any saved interval.
+    ``resume_budget(reason="test")`` releases only that reason, without spending
+    reset or budget extension. Operator pauses work under either budget policy.
     ``mcp_connection_requests`` supplies the run's MCP connections from any
     source: when given, the engine connects those requests; when ``None`` (the
     command-line default) it reads ``~/.strix/mcp-servers.json`` itself. Either
@@ -395,6 +401,7 @@ async def run_strix_scan(
     if not strict_tool_schemas:
         logger.info("Sending non-strict tool schemas: %s caps strict tools", resolved_model)
 
+    validate_interval(pause_every_n_tests)
     if budget_policy not in ("stop", "pause"):
         raise ValueError(f"unknown budget_policy: {budget_policy!r}")
     if coordinator is None:
@@ -468,6 +475,15 @@ async def run_strix_scan(
         )
     else:
         root_id = uuid.uuid4().hex[:8]
+
+    test_pause = TestPauseController(
+        coordinator, state_dir / "test_pause.json", pause_every_n_tests=pause_every_n_tests
+    )
+    test_catalog.set_change_callback(test_pause.observe)
+    report_state = get_global_report_state()
+    if report_state is not None and test_pause.interval is not None:
+        report_state.run_record["pause_every_n_tests"] = test_pause.interval
+        report_state.save_run_data()
 
     logger.info("Bringing up sandbox session for scan %s", scan_id)
     set_scan_phase("sandbox_init")
@@ -630,7 +646,12 @@ async def run_strix_scan(
             subscription=codex.auth_mode(resolved_model) == "subscription",
             resuming=is_resume,
         )
-        test_catalog.set_change_callback(test_ledger.sync_test)
+
+        def record_test_change(unit: TestUnit) -> None:
+            test_pause.observe(unit)
+            test_ledger.sync_test(unit)
+
+        test_catalog.set_change_callback(record_test_change)
 
         def record_test_status(agent_id: str, status: str) -> None:
             test_catalog.mark_status(agent_id, status)
