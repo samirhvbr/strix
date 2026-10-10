@@ -9,13 +9,20 @@ import sqlite3
 import stat
 import tempfile
 import time
-from contextlib import closing
+from contextlib import closing, contextmanager
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from strix.core.assessment_review import load_review_scope
 from strix.telemetry.read_snapshot import ledger_snapshot
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
+
+    from strix.core.assessment import AssessmentPolicy
+    from strix.core.assessment_context import AssessmentContext
 
 
 def _read(path: Path, limit: int) -> bytes:
@@ -68,7 +75,10 @@ def _runtime(record: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def export_history(directory: Path) -> dict[str, Any]:
+@contextmanager
+def stopped_assessment(
+    directory: Path,
+) -> Iterator[tuple[Path, AssessmentPolicy, AssessmentContext]]:
     if os.name != "posix":
         raise ValueError("Private history export requires POSIX")
     import fcntl  # noqa: PLC0415 -- POSIX-only ownership.
@@ -88,6 +98,14 @@ def export_history(directory: Path) -> dict[str, Any]:
         ):
             raise ValueError("Invalid controller ownership record")
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        yield directory, policy, context
+    finally:
+        os.close(lock)
+
+
+def export_history(run_directory: Path) -> dict[str, Any]:
+    with stopped_assessment(run_directory) as (directory, policy, context):
+        state = directory / ".state"
         record = json.loads(_read(directory / "run.json", 4 * 1024 * 1024))
         if record.get("run_id") != directory.name:
             raise ValueError("History belongs to a different run")
@@ -128,5 +146,3 @@ def export_history(directory: Path) -> dict[str, Any]:
             "runtime": _runtime(record),
             "telemetry": telemetry,
         }
-    finally:
-        os.close(lock)
