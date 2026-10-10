@@ -53,6 +53,7 @@ from strix.core.inputs import (
     build_scope_context,
     make_model_settings,
 )
+from strix.core.native_control import NativeControl, validate_control_ref
 from strix.core.paths import run_dir_for, runtime_state_dir
 from strix.core.run_lease import exclusive_scan
 from strix.core.sessions import open_agent_session
@@ -229,6 +230,7 @@ async def run_strix_scan(
     max_budget_usd: float | None = None,
     budget_policy: BudgetPolicy = "stop",
     pause_every_n_tests: int | None = None,
+    native_control: str | None = None,
     model: str | None = None,
     cleanup_on_exit: bool = True,
     event_sink: StreamEventSink | None = None,
@@ -427,6 +429,7 @@ async def run_strix_scan(
         logger.info("Leaving out image tools: %s does not accept images", resolved_model)
 
     validate_interval(pause_every_n_tests)
+    validate_control_ref(native_control)
     if budget_policy not in ("stop", "pause"):
         raise ValueError(f"unknown budget_policy: {budget_policy!r}")
     if coordinator is None:
@@ -506,6 +509,18 @@ async def run_strix_scan(
         coordinator, state_dir / "test_pause.json", pause_every_n_tests=pause_every_n_tests
     )
     test_catalog.set_change_callback(test_pause.observe)
+    control = (
+        NativeControl(
+            state_dir,
+            scan_id=scan_id,
+            controller_ref=native_control,
+            coordinator=coordinator,
+            test_pause=test_pause,
+            authorization_check=authorization_check,
+        )
+        if native_control is not None
+        else None
+    )
     report_state = get_global_report_state()
     if report_state is not None and test_pause.interval is not None:
         report_state.run_record["pause_every_n_tests"] = test_pause.interval
@@ -685,6 +700,8 @@ async def run_strix_scan(
 
         coordinator.set_status_change_callback(record_test_status)
         request_log.register_sink(test_ledger.record_llm_event)
+        if control is not None:
+            await control.start(test_ledger)
         targets = scan_config.get("targets") or []
         scan_mode = str(scan_config.get("scan_mode") or "deep")
         is_whitebox = is_whitebox_scan(targets)
@@ -1001,6 +1018,8 @@ async def run_strix_scan(
         raise
     finally:
         configure_spill_writer(None)
+        if control is not None:
+            await control.close()
         # Settle descendants before closing sessions: on a clean finish a child
         # can still be mid-turn, and closing its session underneath it crashes it.
         if root_id is not None:
