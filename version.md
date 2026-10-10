@@ -1,6 +1,6 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.25`
+**Current version:** `1.2.26`
 **Upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
