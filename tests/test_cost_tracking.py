@@ -18,6 +18,7 @@ from strix.config.models import (
     _install_openrouter_stream_cost_capture,
 )
 from strix.llm import request_log
+from strix.report.pricing import resolve_litellm_model
 from strix.report.state import (
     ReportState,
     litellm_cost_callback,
@@ -29,12 +30,30 @@ from strix.report.usage import LLMUsageLedger
 
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator
+
     from litellm.types.llms.openai import AllMessageValues
 
 
 @pytest.fixture(autouse=True)
 def _clear_streamed_costs() -> None:
     streamed_openrouter_costs.clear()
+
+
+@pytest.fixture(autouse=True)
+def _stable_cost_catalog(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """Callback tests use fixed prices, independent of LiteLLM's downloaded map."""
+    monkeypatch.setattr(
+        litellm,
+        "model_cost",
+        {
+            "openrouter/anthropic/claude-sonnet-4.5": {"litellm_provider": "openrouter"},
+            "openai/gpt-4o-mini": {"litellm_provider": "openai"},
+        },
+    )
+    resolve_litellm_model.cache_clear()
+    yield
+    resolve_litellm_model.cache_clear()
 
 
 def test_streaming_logging_stays_enabled_for_cost_callback() -> None:
