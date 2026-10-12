@@ -793,12 +793,11 @@ async def test_consume_pending_restore_preserves_arrival_order(
 
 
 @pytest.mark.asyncio
-async def test_consume_pending_reports_zero_when_no_session_attached() -> None:
-    """
-    Regression for a gap flagged alongside #1107: an agent with no SDK session attached
-    already logs that queued messages were not persisted, but used to still report them
-    as delivered via a positive count. The messages are genuinely dropped here (there is
-    no session to retry against), so the return value must say so.
+async def test_consume_pending_still_delivers_when_no_session_attached() -> None:
+    """An agent with no SDK session cannot persist its queued messages, but the caller still
+    receives them (count and items), so a waiting agent is told they arrived. Upstream PR
+    #1161 returned (0, []) here and dropped them, which broke the wait tool's
+    message_arrived outcome; the fork keeps delivering and only restores on write failure.
     """
     coordinator = AgentCoordinator()
     await coordinator.register("root", "strix", parent_id=None)
@@ -806,7 +805,8 @@ async def test_consume_pending_reports_zero_when_no_session_attached() -> None:
     assert await coordinator.send("root", {"from": "user", "content": "hello"}) is True
 
     count, items = await coordinator.consume_pending("root", include_items=True)
-    assert (count, items) == (0, [])
+    assert count == 1
+    assert len(items) == 1
 
 
 @pytest.mark.asyncio
