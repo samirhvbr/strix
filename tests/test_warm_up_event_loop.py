@@ -169,7 +169,7 @@ def test_scan_can_stream_on_the_shared_http_client_after_warm_up(
     monkeypatch.setattr(cli_main, "preflight_model_connection", preflight)
 
     # Loop #1: the headless warm-up, exactly as ``_bootstrap_scan`` runs it.
-    asyncio.run(cli_main.warm_up_llm(show_model_warning=False))
+    asyncio.run(cli_main.warm_up_llm())
 
     # Loop #2: the scan, on the same shared httpx client.
     scan_client = AsyncOpenAI(
@@ -201,7 +201,7 @@ def test_scan_can_stream_on_the_subscription_client_after_warm_up(
 
     monkeypatch.setattr(cli_main, "preflight_model_connection", preflight)
 
-    asyncio.run(cli_main.warm_up_llm(show_model_warning=False))
+    asyncio.run(cli_main.warm_up_llm())
 
     assert asyncio.run(_stream_turn(codex.get_subscription_client())) == "OK"
     assert warm_up_clients, "the warm-up never reached the model"
