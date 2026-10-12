@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import csv
 import json
-from typing import TYPE_CHECKING, Any
+from pathlib import Path
+from typing import Any
 
 import pytest
 
+from strix.report.state import ReportState
 from strix.report.writer import (
     atomic_write_text,
     read_run_record,
@@ -16,10 +18,6 @@ from strix.report.writer import (
     write_run_record,
     write_vulnerabilities,
 )
-
-
-if TYPE_CHECKING:
-    from pathlib import Path
 
 
 def _sample_report(**overrides: Any) -> dict[str, Any]:
@@ -240,6 +238,39 @@ def test_write_executive_report_writes_markdown(tmp_path: Path) -> None:
     assert "Scan complete. No critical issues." in content
 
 
+def test_write_executive_report_delegates_to_atomic_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    calls: list[tuple[Path, str]] = []
+
+    def fake_atomic(path: Path, payload: str) -> None:
+        calls.append((path, payload))
+
+    monkeypatch.setattr("strix.report.writer.atomic_write_text", fake_atomic)
+    write_executive_report(tmp_path, "Executive test summary.")
+
+    assert len(calls) == 1
+    assert calls[0][0] == tmp_path / "penetration_test_report.md"
+    assert "Executive test summary." in calls[0][1]
+
+
+def test_atomic_write_text_cleans_up_temp_file_on_replace_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = tmp_path / "report.md"
+
+    def fail_replace(_self: Path, _other: Path) -> Path:
+        raise OSError("Simulated disk replace error")
+
+    monkeypatch.setattr(Path, "replace", fail_replace)
+
+    with pytest.raises(OSError, match="Simulated disk replace error"):
+        atomic_write_text(target, "content")
+
+    # Assert no leaked .tmp files exist in directory
+    assert list(tmp_path.glob(".*.tmp")) == []
+
+
 def test_render_vulnerability_md_surfaces_calibration_metadata() -> None:
     """Confidence, the case against the finding, and retest status are part of
     the deliverable — storing them without rendering hides the reasoning."""
@@ -265,3 +296,65 @@ def test_render_vulnerability_md_surfaces_calibration_metadata() -> None:
     assert "## Confidence Rationale" in md
     assert "## What Would Change This Severity" in md
     assert "## Fix Verification" in md
+
+
+def test_format_final_scan_result_strips_duplicated_section_headings() -> None:
+    """The agent is asked for section prose and often prepends the same heading
+    the template already emits, doubling every H1 (# Executive Summary followed
+    by # Executive Summary). The formatter must strip the duplicated leading
+    heading while leaving the body — and any legitimately repeated heading later
+    in the body — intact."""
+    state = ReportState(run_name="t")
+    result = state._format_final_scan_result(
+        {
+            "executive_summary": "# Executive Summary\n\nThe app is broadly sound.",
+            "methodology": "# Methodology\n\nBlack-box, GET/HEAD only.",
+            "technical_analysis": "# Technical Analysis\n\n## Target Profile\n\nDetails.",
+            "recommendations": "# Recommendations\n\n## Immediate\n\nFix CSP.",
+        }
+    )
+    # Each template heading appears exactly once.
+    for heading in (
+        "# Executive Summary",
+        "# Methodology",
+        "# Technical Analysis",
+        "# Recommendations",
+    ):
+        assert result.count(heading) == 1, f"{heading} doubled:\n{result}"
+    # Bodies and genuine sub-headings survive.
+    assert "The app is broadly sound." in result
+    assert "## Target Profile" in result
+    assert "## Immediate" in result
+
+
+def test_format_final_scan_result_keeps_content_without_headings() -> None:
+    """Content that does not repeat the heading is left alone."""
+    state = ReportState(run_name="t")
+    result = state._format_final_scan_result(
+        {
+            "executive_summary": "The app is broadly sound.",
+            "methodology": "Black-box.",
+            "technical_analysis": "Some analysis.",
+            "recommendations": "Fix things.",
+        }
+    )
+    assert result.count("# Executive Summary") == 1
+    assert "The app is broadly sound." in result
+
+
+def test_format_final_scan_result_keeps_later_repeated_heading() -> None:
+    """Only the FIRST line is examined: a heading repeated later in the body is
+    legitimate content (e.g. a quoted section) and must be preserved."""
+    state = ReportState(run_name="t")
+    body = "Intro.\n\n# Executive Summary\n\nA quoted recap below.\n"
+    result = state._format_final_scan_result(
+        {
+            "executive_summary": body,
+            "methodology": "m",
+            "technical_analysis": "t",
+            "recommendations": "r",
+        }
+    )
+    # Template heading + the in-body repeat = two occurrences, not three.
+    assert result.count("# Executive Summary") == 2
+    assert "A quoted recap below." in result

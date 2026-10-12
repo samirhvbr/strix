@@ -8,7 +8,7 @@ import os
 import time
 import urllib.request
 from typing import TYPE_CHECKING, Any, Literal
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 
 # The generated Caido GraphQL schema module is slow to import and is only needed
@@ -302,9 +302,14 @@ def apply_modifications(
 
     if "params" in modifications:
         parsed = urlparse(final_url)
-        existing = {k: v[0] if v else "" for k, v in parse_qs(parsed.query).items()}
-        existing.update(modifications["params"])
-        final_url = urlunparse(parsed._replace(query=urlencode(existing)))
+        overrides = modifications["params"]
+        pairs = [
+            (key, value)
+            for key, value in parse_qsl(parsed.query, keep_blank_values=True)
+            if key not in overrides
+        ]
+        pairs.extend(overrides.items())
+        final_url = urlunparse(parsed._replace(query=urlencode(pairs, doseq=True)))
     if "headers" in modifications:
         headers.update(modifications["headers"])
     if "body" in modifications:
@@ -658,6 +663,9 @@ async def list_sitemap_with_client(
         )
         data = raw.get("sitemapDescendantEntries") or {}
     else:
+        # Caido's sitemapRootEntries scopeId is an i32 ID; an empty string
+        # from the agent is rejected, so omit it (null) instead.
+        scope_id = (scope_id or "").strip() or None
         raw = await client.graphql.query(
             _SITEMAP_ROOTS_QUERY,
             variables={"scopeId": scope_id},

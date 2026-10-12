@@ -101,6 +101,12 @@ def _render_completion_report(
         lines.extend(_render_filed_report(r) for r in filed_reports)
     else:
         lines.append("- (none)")
+        if findings:
+            lines.append(
+                "  [NOTICE: This agent noted narrative findings above with 0 formal "
+                "reports filed. If any finding represents an unfiled vulnerability, ensure it "
+                "is reported via create_vulnerability_report.]"
+            )
     lines.append("")
     lines.append("Open items (unresolved, need follow-up):")
     if open_items:
@@ -112,6 +118,28 @@ def _render_completion_report(
         lines.append("Recommendations:")
         lines.extend(f"- {r}" for r in recommendations)
     return "\n".join(lines)
+
+
+def _groq_compatible_empty_object_schema(schema: dict[str, Any]) -> dict[str, Any]:
+    """Drop the empty ``required``/``properties`` pair Groq rejects.
+
+    A no-argument strict schema is ``{"type": "object", "properties": {},
+    "required": []}``. Groq's tool validator treats a present ``required``
+    with no ``properties`` as invalid (``required is present but properties
+    is missing``) and rejects the whole request. Omitting both keys leaves an
+    object that accepts no arguments: ``additionalProperties`` stays false, so
+    extra arguments are still rejected, and tools that declare real parameters
+    keep their ``required`` lists.
+    """
+    properties = schema.get("properties")
+    required = schema.get("required")
+    if properties or required:
+        return schema
+    if properties is not None and not isinstance(properties, dict):
+        return schema
+    if required is not None and not isinstance(required, list):
+        return schema
+    return {key: value for key, value in schema.items() if key not in {"properties", "required"}}
 
 
 @function_tool(timeout=30)
@@ -164,6 +192,11 @@ async def view_agent_graph(ctx: RunContextWrapper) -> str:
         ensure_ascii=False,
         default=str,
     )
+
+
+view_agent_graph.params_json_schema = _groq_compatible_empty_object_schema(
+    view_agent_graph.params_json_schema
+)
 
 
 @function_tool(timeout=30)
@@ -707,6 +740,7 @@ async def agent_finish(
 
     filed_reports = _filed_reports_by(me)
     filed_report_ids = [str(r.get("id")) for r in filed_reports]
+    unfiled_findings = bool((findings or []) and not filed_report_ids)
 
     parent_notified = False
     if report_to_parent and await coordinator.claim_parent_notice(me):
@@ -732,6 +766,7 @@ async def agent_finish(
                 "type": "completion",
                 "priority": "high",
                 "filed_report_ids": filed_report_ids,
+                "unfiled_findings": unfiled_findings,
             },
         )
         parent_notified = True
@@ -749,19 +784,34 @@ async def agent_finish(
         len(filed_report_ids),
         parent_notified,
     )
+    if unfiled_findings:
+        logger.info(
+            "agent_finish: %s reported %d narrative finding(s) with 0 reports filed",
+            me,
+            len(findings or []),
+        )
+
+    response_payload: dict[str, Any] = {
+        "success": True,
+        "agent_completed": True,
+        "parent_notified": parent_notified,
+        "agent_id": me,
+        "summary": result_summary,
+        "filed_report_ids": filed_report_ids,
+        "findings_count": len(findings or []),
+        "open_items_count": len(open_items or []),
+        "has_recommendations": bool(final_recommendations),
+    }
+    if unfiled_findings:
+        response_payload["notice"] = (
+            f"Reported {len(findings or [])} finding(s)/observation(s) with 0 reports filed. "
+            "Narrative findings in agent_finish do not register vulnerabilities in the scan "
+            "report. If any finding represents an unfiled vulnerability, ensure it is filed "
+            "via create_vulnerability_report."
+        )
 
     return json.dumps(
-        {
-            "success": True,
-            "agent_completed": True,
-            "parent_notified": parent_notified,
-            "agent_id": me,
-            "summary": result_summary,
-            "filed_report_ids": filed_report_ids,
-            "findings_count": len(findings or []),
-            "open_items_count": len(open_items or []),
-            "has_recommendations": bool(final_recommendations),
-        },
+        response_payload,
         ensure_ascii=False,
         default=str,
     )
