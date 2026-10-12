@@ -339,4 +339,3 @@ def test_build_raw_request_avoids_duplicate_lowercase_host_or_user_agent() -> No
     )
     assert _headers_named(raw, "Host") == ["custom.example.com"]
     assert _headers_named(raw, "User-Agent") == ["CustomBot/1.0"]
-
