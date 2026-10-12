@@ -26,6 +26,7 @@ from strix.core.inference_source import (
 from strix.core.native_control import validate_control_ref
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.core.web_authorization import WebAuthorization
+from strix.fork_version import fork_version
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
 from strix.interface.update_check import self_update
 from strix.interface.utils import (
@@ -144,6 +145,17 @@ Strix Cloud:
         "--version",
         action="version",
         version=f"strix {get_version()}",
+    )
+
+    # ``--version`` prints the UPSTREAM package version (``strix 1.7.0``), which says nothing about
+    # which SHVIA build this is: a gate on it accepts every fork build, old ones included. The fork
+    # version has its own flag so a native client can compare it. ``unknown`` is not an ``X.Y.Z``
+    # and a strict client refuses it.
+    parser.add_argument(
+        "--fork-version",
+        action="version",
+        version=fork_version() or "unknown",
+        help="Print the SHVIA fork version (X.Y.Z) and exit; the upstream version is --version",
     )
 
     parser.add_argument(
