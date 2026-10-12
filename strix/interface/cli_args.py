@@ -18,6 +18,11 @@ from strix.core.assessment import (
     validate_assessment_scope,
 )
 from strix.core.assessment_context import bind_context, parse_context
+from strix.core.inference_source import (
+    CREDENTIALS_MISSING,
+    apply_choice,
+    local_credentials_state,
+)
 from strix.core.native_control import validate_control_ref
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.core.web_authorization import WebAuthorization
@@ -377,9 +382,8 @@ Strix Cloud:
         args.web_authorization = args.inspect_web_authorization
     if args.web_authorization:
         try:
-            approved_policy, approved_context, approved_budget = WebAuthorization(
-                Path(args.web_authorization)
-            ).fetch()
+            web_authorization = WebAuthorization(Path(args.web_authorization))
+            approved_policy, approved_context, approved_budget = web_authorization.fetch()
             if args.assessment_policy or args.assessment_context:
                 parser.error("WEB authorization supplies its own immutable assessment context")
             args.assessment_policy = approved_policy.model_dump()
@@ -388,6 +392,18 @@ Strix Cloud:
                 args.target = [target.value for target in approved_policy.targets]
             args.max_budget_usd = min(args.max_budget_usd or approved_budget, approved_budget)
             args.non_interactive = True
+            approved_inference = web_authorization.inference
+            args.inference = approved_inference.summary() if approved_inference else None
+            inference_summary: dict[str, str] | None = None
+            if approved_inference is not None:
+                apply_choice(approved_inference)
+                credentials = local_credentials_state(approved_inference.model)
+                inference_summary = {**approved_inference.summary(), "credentials": credentials}
+                if credentials == CREDENTIALS_MISSING and not args.inspect_web_authorization:
+                    parser.error(
+                        "The approved model has no credentials on this machine; "
+                        "configure them for that provider or ask for another model"
+                    )
             if args.inspect_web_authorization:
                 sys.stdout.write(
                     json.dumps(
@@ -395,6 +411,7 @@ Strix Cloud:
                             "policy": args.assessment_policy,
                             "context": args.assessment_context,
                             "max_budget_usd": approved_budget,
+                            "inference": inference_summary,
                         }
                     )
                     + "\n"
