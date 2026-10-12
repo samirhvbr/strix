@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import TYPE_CHECKING, Any
 
 import litellm
@@ -19,6 +20,7 @@ from strix.core.inference_source import (
     parse_inference,
 )
 from strix.core.web_authorization import WebAuthorizationError
+from strix.fork_version import fork_version
 from strix.interface.cli_args import parse_arguments
 from tests.test_controlled_assessment import (
     approval,
@@ -281,6 +283,7 @@ def test_consent_output_names_the_model_and_whether_this_machine_can_pay_for_it(
     block = {"model": "deepseek/deepseek-v4-pro", "source": "local"}
     out = inspect(tmp_path, monkeypatch, capsys, lab(approval()) | {"inference": block})
     assert out["inference"] == block | {"credentials": "missing"}
+    assert out["strix"] == {"fork_version": fork_version()}
     assert "sk-openai" not in json.dumps(out)
     # The pin was applied before the readiness answer, so the other vendor's key was dropped.
     assert loader.load_settings().llm.model == "deepseek/deepseek-v4-pro"
@@ -293,6 +296,11 @@ def test_consent_output_without_a_model_is_unchanged(
     use(monkeypatch, configured("openai/gpt-5", api_key="sk-openai"))
     out = inspect(tmp_path, monkeypatch, capsys, lab(approval()))
     assert out["inference"] is None
+    reported = out["strix"]["fork_version"]
+    assert reported == fork_version()
+    assert re.fullmatch(r"\d+\.\d+\.\d+", reported), (
+        "the native app compares this as a strict X.Y.Z"
+    )
     assert loader.load_settings().llm.model == "openai/gpt-5"
     assert loader.load_settings().llm.api_key == "sk-openai"
 

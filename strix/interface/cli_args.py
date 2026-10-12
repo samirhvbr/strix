@@ -26,6 +26,7 @@ from strix.core.inference_source import (
 from strix.core.native_control import validate_control_ref
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.core.web_authorization import WebAuthorization
+from strix.fork_version import fork_version
 from strix.interface.scan_setup import attach_workspace_mount, build_targets_info
 from strix.interface.update_check import self_update
 from strix.interface.utils import (
@@ -412,6 +413,9 @@ Strix Cloud:
                             "context": args.assessment_context,
                             "max_budget_usd": approved_budget,
                             "inference": inference_summary,
+                            # What this install is, so the native consent can refuse a Strix older
+                            # than the app supports instead of guessing from what it did not see.
+                            "strix": {"fork_version": fork_version()},
                         }
                     )
                     + "\n"
