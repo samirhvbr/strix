@@ -210,6 +210,50 @@ def test_ordinary_rate_limit_is_not_usage_limit() -> None:
         (400, "'Image URLs in user messages' functionality not supported.", True),
         (
             400,
+            "litellm.BadRequestError: OpenrouterException - "
+            '{"error":{"message":"Provider returned error","code":400,"metadata":{"raw":'
+            '"{\\"code\\":\\"invalid_image\\",\\"error\\":\\"code: \'Client specified an '
+            "invalid argument', message: Downloaded response does not contain a valid JPG, "
+            'PNG, WebP, or ICO image.\\"}","provider_name":"xAI"}}}',
+            True,
+        ),
+        (
+            400,
+            "Unsupported content-type encountered when downloading image. The only "
+            "supported content types are [image/jpeg, image/png, image/webp].",
+            True,
+        ),
+        (
+            400,
+            "The image data you provided does not represent a valid image. Please check "
+            "your input and try again with one of the supported image formats.",
+            True,
+        ),
+        (400, '{"type":"invalid_request_error","message":"Could not process image"}', True),
+        (
+            400,
+            '{"code":400,"message":"Provided image is not valid.","status":"INVALID_ARGUMENT"}',
+            True,
+        ),
+        (
+            400,
+            "Image, 'https://example.com/', could not be loaded as a valid image. "
+            "Allowed formats are JPEG, PNG, WEBP, GIF",
+            True,
+        ),
+        (
+            415,
+            '{"error":{"message":"URL did not return an image (received text/error content): '
+            'https://example.com/","code":415}}',
+            True,
+        ),
+        (400, "image_url content type is not an allowed image type: text/html", True),
+        (400, "cannot identify image file <_io.BytesIO object>", True),
+        (400, '{"error":{"code":"invalid_image_detail"}}', False),
+        (415, "Unsupported document format", False),
+        (500, '{"error":{"code":"invalid_image"}}', False),
+        (
+            400,
             "OpenRouterException: Message: This model's maximum context length is 1048576 "
             "tokens, but the request requires 1073484 tokens (942412 input including "
             "image/vision expansion + 131072 for the completion). Reduce the input length "
@@ -249,12 +293,20 @@ async def _run_with_image_session(
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("status", "message"),
+    [
+        (404, "No endpoints found that support image input"),
+        (400, '{"error":{"code":"invalid_image"}}'),
+        (415, "URL did not return an image"),
+    ],
+)
 async def test_run_cycle_strips_images_on_image_rejection(
-    monkeypatch: pytest.MonkeyPatch,
+    monkeypatch: pytest.MonkeyPatch, status: int, message: str
 ) -> None:
     rejection = APIStatusError(
-        "No endpoints found that support image input",
-        response=httpx.Response(status_code=404, request=_request()),
+        message,
+        response=httpx.Response(status_code=status, request=_request()),
         body=None,
     )
     streams = [_FakeStream(exc=rejection), _FakeStream()]
