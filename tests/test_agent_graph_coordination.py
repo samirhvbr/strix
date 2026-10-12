@@ -285,4 +285,3 @@ async def test_agent_finish_warns_when_findings_reported_without_filing() -> Non
     body = delivered[0]["content"]
     assert "0 formal reports filed" in body
     assert "create_vulnerability_report" in body
-

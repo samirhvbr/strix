@@ -1590,10 +1590,7 @@ def clone_repository(repo_url: str, run_name: str, dest_name: str | None = None)
     temp_dir = Path(tempfile.gettempdir()) / "strix_repos" / run_name
     temp_dir.mkdir(parents=True, exist_ok=True)
 
-    if dest_name:
-        repo_name = dest_name
-    else:
-        repo_name = derive_repo_base_name(repo_url)
+    repo_name = dest_name or derive_repo_base_name(repo_url)
 
     # Guard against path traversal: the derived name must resolve to a
     # strict child of the temp directory — not temp_dir itself, and not
@@ -1624,7 +1621,7 @@ def clone_repository(repo_url: str, run_name: str, dest_name: str | None = None)
                 [
                     git_executable,
                     "clone",
-                    "--",          # end-of-options: everything after is a positional arg
+                    "--",  # end-of-options: everything after is a positional arg
                     repo_url,
                     str(clone_path),
                 ],

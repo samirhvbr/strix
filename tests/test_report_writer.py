@@ -9,6 +9,7 @@ from typing import Any
 
 import pytest
 
+from strix.report.state import ReportState
 from strix.report.writer import (
     atomic_write_text,
     read_run_record,
@@ -270,7 +271,6 @@ def test_atomic_write_text_cleans_up_temp_file_on_replace_failure(
     assert list(tmp_path.glob(".*.tmp")) == []
 
 
-
 def test_render_vulnerability_md_surfaces_calibration_metadata() -> None:
     """Confidence, the case against the finding, and retest status are part of
     the deliverable — storing them without rendering hides the reasoning."""
@@ -304,8 +304,6 @@ def test_format_final_scan_result_strips_duplicated_section_headings() -> None:
     by # Executive Summary). The formatter must strip the duplicated leading
     heading while leaving the body — and any legitimately repeated heading later
     in the body — intact."""
-    from strix.report.state import ReportState
-
     state = ReportState(run_name="t")
     result = state._format_final_scan_result(
         {
@@ -331,8 +329,6 @@ def test_format_final_scan_result_strips_duplicated_section_headings() -> None:
 
 def test_format_final_scan_result_keeps_content_without_headings() -> None:
     """Content that does not repeat the heading is left alone."""
-    from strix.report.state import ReportState
-
     state = ReportState(run_name="t")
     result = state._format_final_scan_result(
         {
@@ -349,8 +345,6 @@ def test_format_final_scan_result_keeps_content_without_headings() -> None:
 def test_format_final_scan_result_keeps_later_repeated_heading() -> None:
     """Only the FIRST line is examined: a heading repeated later in the body is
     legitimate content (e.g. a quoted section) and must be preserved."""
-    from strix.report.state import ReportState
-
     state = ReportState(run_name="t")
     body = "Intro.\n\n# Executive Summary\n\nA quoted recap below.\n"
     result = state._format_final_scan_result(

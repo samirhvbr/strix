@@ -65,7 +65,6 @@ def _reset(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
         litellm.api_key = saved_api_key
 
 
-
 # ---------------------------------------------------------------------------
 # Core regression: litellm.api_key must NOT be set when api_base is active
 # ---------------------------------------------------------------------------

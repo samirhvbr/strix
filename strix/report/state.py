@@ -858,18 +858,23 @@ class ReportState:
             # examined, so a repeated heading later in the body is untouched.
             text = str(content or "").strip()
             first_line, _, rest = text.partition("\n")
-            if first_line.strip().lstrip("#").strip().lower() == heading.lstrip("#").strip().lower() and first_line.lstrip().startswith("#"):
+            if first_line.strip().lstrip("#").strip().lower() == heading.lstrip(
+                "#"
+            ).strip().lower() and first_line.lstrip().startswith("#"):
                 text = rest.strip()
             return f"{heading}\n\n{text}"
 
-        return "\n\n".join(
-            [
-                section("# Executive Summary", scan_results.get("executive_summary", "")),
-                section("# Methodology", scan_results.get("methodology", "")),
-                section("# Technical Analysis", scan_results.get("technical_analysis", "")),
-                section("# Recommendations", scan_results.get("recommendations", "")),
-            ]
-        ) + "\n"
+        return (
+            "\n\n".join(
+                [
+                    section("# Executive Summary", scan_results.get("executive_summary", "")),
+                    section("# Methodology", scan_results.get("methodology", "")),
+                    section("# Technical Analysis", scan_results.get("technical_analysis", "")),
+                    section("# Recommendations", scan_results.get("recommendations", "")),
+                ]
+            )
+            + "\n"
+        )
 
     def _coverage_document(self) -> dict[str, Any] | None:
         """Assemble the coverage record, or None when it can't be built.
