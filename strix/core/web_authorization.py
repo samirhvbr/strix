@@ -15,6 +15,7 @@ import httpx
 
 from strix.core.assessment import AssessmentPolicy, parse_assessment_policy
 from strix.core.assessment_context import AssessmentContext, parse_context
+from strix.core.inference_source import InferenceChoice, parse_inference
 
 
 if TYPE_CHECKING:
@@ -26,7 +27,11 @@ class WebAuthorizationError(ValueError):
 
 
 class WebAuthorization:
+    #: The model the last successful ``fetch`` approved, or None when the WEB approved none.
+    inference: InferenceChoice | None
+
     def __init__(self, path: Path) -> None:
+        self.inference = None
         try:
             fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
             with os.fdopen(fd, "rb") as stream:
@@ -85,6 +90,7 @@ class WebAuthorization:
             if policy is None or policy.version != 2 or context is None:
                 raise ValueError("Invalid authorization contract")
             context.validate_scope(policy)
+            inference = parse_inference(data.get("inference"))
             expiry = datetime.fromisoformat(data["expires_at"])
             budget = float(data["max_budget_usd"])
             if (
@@ -100,6 +106,7 @@ class WebAuthorization:
                 "WEB authorization expired, revoked or unavailable"
             ) from None
 
+        self.inference = inference
         return policy, context, budget
 
     def check(

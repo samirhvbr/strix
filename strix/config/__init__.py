@@ -9,12 +9,14 @@ Public surface:
 - :func:`load_settings` — memoized resolve (env > JSON file > defaults).
 - :func:`apply_config_override` — switch the JSON source to a custom path.
 - :func:`persist_current` — write currently-set env vars to the active file.
+- :func:`pin_run_model` — set the model for this process only; never persisted.
 """
 
 from strix.config.loader import (
     apply_config_override,
     load_settings,
     persist_current,
+    pin_run_model,
 )
 from strix.config.settings import (
     ContextSettings,
@@ -38,4 +40,5 @@ __all__ = [
     "apply_config_override",
     "load_settings",
     "persist_current",
+    "pin_run_model",
 ]

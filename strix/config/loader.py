@@ -60,6 +60,38 @@ def apply_config_override(path: Path) -> None:
     logger.info("config override applied: %s", path)
 
 
+def provider_scope(model: str | None) -> str:
+    """The credential scope a model name belongs to: its provider prefix.
+
+    Wrapper prefixes route to many upstreams through one gateway, so they keep the
+    upstream segment: ``litellm/openai/gpt-x`` and ``litellm/deepseek/y`` are different
+    scopes. Two names share a scope only when one stored key could legitimately serve both.
+    """
+    parts = (model or "").strip().lower().split("/")
+    if parts[0] in ("litellm", "any-llm") and len(parts) > 2:
+        return "/".join(parts[:2])
+    return parts[0]
+
+
+def pin_run_model(model: str) -> None:
+    """Make ``model`` the model of this process only, without borrowing another provider's key.
+
+    The pin lives in the memoized settings object, never in the environment or the config
+    file, so ``persist_current`` cannot write it into the operator's defaults. When the
+    pinned model belongs to a different provider than the configured one, the stored
+    connection (key, base URL, extra headers) is dropped: the generic ``LLM_API_KEY`` was
+    issued for the configured provider and must not be sent to another vendor. Credentials
+    for the new provider then come only from its own environment variables or its sign-in.
+    """
+    global _cached  # noqa: PLW0603
+    current = load_settings()
+    updates: dict[str, Any] = {"model": model.strip()}
+    if provider_scope(model) != provider_scope(current.llm.model):
+        updates.update(api_key=None, api_base=None, extra_headers=None)
+    _cached = current.model_copy(update={"llm": current.llm.model_copy(update=updates)})
+    logger.info("run model pinned: %s (provider scope %s)", model.strip(), provider_scope(model))
+
+
 def persist_current() -> None:
     """Merge currently-set env vars into the active config file (0o600).
 
