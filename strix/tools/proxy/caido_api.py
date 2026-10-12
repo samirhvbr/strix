@@ -127,6 +127,25 @@ async def close_client() -> None:
     await client.aclose()
 
 
+def _normalize_optional_id(value: str | None, *, name: str) -> str | None:
+    if value is None:
+        return None
+
+    normalized = value.strip()
+    if not normalized or normalized.lower() in {"null", "none", "undefined"}:
+        return None
+
+    try:
+        numeric_id = int(normalized, 10)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be an integer-shaped Caido ID") from exc
+
+    if not -(2**31) <= numeric_id < 2**31:
+        raise ValueError(f"{name} must fit in a signed 32-bit integer")
+
+    return str(numeric_id)
+
+
 async def list_requests_with_client(
     client: CaidoClient,
     *,
@@ -137,6 +156,8 @@ async def list_requests_with_client(
     sort_order: SortOrder = "desc",
     scope_id: str | None = None,
 ) -> Any:
+    scope_id = _normalize_optional_id(scope_id, name="scope_id")
+
     builder = client.request.list().first(first)
     if httpql_filter:
         builder = builder.filter(httpql_filter)
@@ -188,12 +209,13 @@ def build_raw_request(
         path = f"{path}?{parsed.query}"
 
     final_headers = {**headers}
-    final_headers.setdefault("Host", parsed.netloc)
-    final_headers.setdefault(
-        "User-Agent",
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-    )
+    if not any(k.lower() == "host" for k in final_headers):
+        final_headers["Host"] = parsed.netloc
+    if not any(k.lower() == "user-agent" for k in final_headers):
+        final_headers["User-Agent"] = (
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+        )
     # Framing headers inherited from the captured request describe the ORIGINAL
     # body; once the body is modified for replay they are stale. We always send a
     # plain (non-chunked) body with an explicit Content-Length, so drop any
@@ -300,6 +322,15 @@ def apply_modifications(
     body = components["body"]
     final_url = full_url
 
+    if "url" in modifications:
+        new_parsed = urlparse(final_url)
+        if new_parsed.netloc:
+            mod_headers = modifications.get("headers") or {}
+            custom_host_in_mods = any(k.lower() == "host" for k in mod_headers)
+            if not custom_host_in_mods:
+                headers = {k: v for k, v in headers.items() if k.lower() != "host"}
+                headers["Host"] = new_parsed.netloc
+
     if "params" in modifications:
         parsed = urlparse(final_url)
         overrides = modifications["params"]
@@ -311,16 +342,23 @@ def apply_modifications(
         pairs.extend(overrides.items())
         final_url = urlunparse(parsed._replace(query=urlencode(pairs, doseq=True)))
     if "headers" in modifications:
-        headers.update(modifications["headers"])
+        for new_k, new_v in modifications["headers"].items():
+            headers = {k: v for k, v in headers.items() if k.lower() != new_k.lower()}
+            headers[new_k] = new_v
+
     if "body" in modifications:
         body = modifications["body"]
+
     if "cookies" in modifications:
+        cookie_key = next((k for k in headers if k.lower() == "cookie"), None)
         cookies: dict[str, str] = {}
-        if headers.get("Cookie"):
-            for cookie in headers["Cookie"].split(";"):
+        if cookie_key:
+            for cookie in headers[cookie_key].split(";"):
                 if "=" in cookie:
                     k, v = cookie.split("=", 1)
                     cookies[k.strip()] = v.strip()
+            if cookie_key != "Cookie":
+                del headers[cookie_key]
         cookies.update(modifications["cookies"])
         headers["Cookie"] = "; ".join(f"{k}={v}" for k, v in cookies.items())
 
@@ -656,6 +694,9 @@ async def list_sitemap_with_client(
     pagination, so we fetch all edges for the requested level and slice
     client-side.
     """
+    scope_id = _normalize_optional_id(scope_id, name="scope_id")
+    parent_id = _normalize_optional_id(parent_id, name="parent_id")
+
     if parent_id:
         raw = await client.graphql.query(
             _SITEMAP_DESCENDANTS_QUERY,
