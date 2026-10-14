@@ -41,6 +41,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.pdfgen import canvas as pdfcanvas
 from reportlab.platypus import (
+    CondPageBreak,
     Flowable,
     KeepTogether,
     PageBreak,
@@ -128,6 +129,7 @@ _MONO = "Courier"
 _PAGE_W, _PAGE_H = A4
 _CONTENT_W = _PAGE_W - 40 * mm
 _CODE_COLUMNS = 90
+_SECTION_ROOM = 90 * mm
 
 _INLINE_MD = MarkdownIt("commonmark", {"html": False, "linkify": False}).disable(
     ["autolink", "image", "link"]
@@ -233,6 +235,7 @@ def _styles() -> dict[str, ParagraphStyle]:
             textColor=_INK,
             spaceBefore=12,
             spaceAfter=4,
+            keepWithNext=1,
         ),
         "field_label": style(
             "FieldLabel",
@@ -242,6 +245,7 @@ def _styles() -> dict[str, ParagraphStyle]:
             textColor=_MUTED,
             spaceBefore=10,
             spaceAfter=2,
+            keepWithNext=1,
         ),
         "body": style(
             "Body", fontName=_SANS, fontSize=10, leading=15, textColor=_TEXT, spaceAfter=8
@@ -603,6 +607,7 @@ def _cover(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowable]:
         Paragraph(_esc(doc.label("confidential")), styles["eyebrow"]),
         Spacer(1, 20),
         Paragraph(_esc(doc.label("title")), styles["cover_title"]),
+        Spacer(1, 6),
         Paragraph(_esc(doc.metadata.get("target") or doc.unknown()), styles["cover_target"]),
         Spacer(1, 28),
         meta_table,
@@ -686,9 +691,11 @@ def _finding(
         Spacer(1, 4),
         _severity_badge(doc, styles, finding.get("severity")),
     ]
+    if finding.get("id") is not None:
+        header.append(Paragraph(_esc(f"ID: {_clip(finding['id'], 128)}"), styles["muted"]))
     story: list[Flowable] = [KeepTogether(header)]
     for key, value in finding.items():
-        if key in {"title", "severity"} or value is None:
+        if key in {"title", "severity", "id"} or value is None:
             continue
         story.append(Paragraph(_esc((doc.labels.get(key) or key).upper()), styles["field_label"]))
         if isinstance(value, str) and key in doc.narrative:
@@ -748,15 +755,18 @@ def render_package_pdf(raw: Mapping[str, Any]) -> bytes:
     """
     doc = _Document(raw)
     styles = _styles()
-    story: list[Flowable] = [*_cover(doc, styles), *_summary(doc, styles), PageBreak()]
+    story: list[Flowable] = [*_cover(doc, styles), *_summary(doc, styles)]
+    # A section starts on a fresh page only when little room is left, so a short report is not
+    # ten mostly blank pages.
     for part in (
         _methodology(doc, styles),
-        [PageBreak(), *_section_with_prose(doc, styles, 3, "technical_analysis")],
-        [PageBreak(), *_coverage(doc, styles)],
-        [PageBreak(), *_section_with_prose(doc, styles, 5, "recommendations")],
-        [PageBreak(), *_findings(doc, styles)],
-        [PageBreak(), *_appendix(doc, styles)],
+        _section_with_prose(doc, styles, 3, "technical_analysis"),
+        _coverage(doc, styles),
+        _section_with_prose(doc, styles, 5, "recommendations"),
+        _findings(doc, styles),
+        _appendix(doc, styles),
     ):
+        story.append(CondPageBreak(_SECTION_ROOM))
         story.extend(part)
 
     buffer = BytesIO()

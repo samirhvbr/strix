@@ -163,12 +163,59 @@ def test_english_document_has_every_section_and_the_finding() -> None:
     ):
         assert f"{number:02d} / {EN[key]}" in text
     assert "SQL injection in the login form" in text
+    assert "ID: F-1" in text
     assert "CRITICAL" in text
     assert "first step" in text
     assert "POST /login" in text
     assert "https://example.test" in text
     assert "Page 2 /" in text
     assert "Page 1 /" not in text, "the cover carries no page number"
+
+
+def test_a_short_report_is_not_padded_with_blank_pages() -> None:
+    pages = PdfReader(BytesIO(render_package_pdf(_document()))).pages
+
+    assert len(pages) <= 6
+
+
+def test_no_page_ends_on_a_heading_whatever_the_page_boundary() -> None:
+    headings = {
+        EN[key]
+        for key in (
+            "executive_summary",
+            "methodology",
+            "technical_analysis",
+            "coverage",
+            "recommendations",
+            "findings",
+            "appendix",
+            "provenance",
+            "gaps",
+            "models",
+            "incidents",
+            "authorization",
+            "reported",
+            "needs_follow_up",
+            "description",
+            "evidence",
+        )
+    }
+    for paragraphs in range(0, 60, 3):
+        document = _document()
+        document["scan_results"]["technical_analysis"] = "\n\n".join(
+            f"paragraph {i} " * 30 for i in range(paragraphs)
+        )
+        for page in PdfReader(BytesIO(render_package_pdf(document))).pages:
+            last = [line.strip() for line in page.extract_text().splitlines() if line.strip()]
+            footer_free = [line for line in last if not line.startswith("Page ")]
+            tail = footer_free[-1] if footer_free else ""
+            assert tail.upper() not in {h.upper() for h in headings}, (paragraphs, tail)
+            assert not tail.startswith(
+                ("01 / ", "02 / ", "03 / ", "04 / ", "05 / ", "06 / ", "07 / ")
+            ), (
+                paragraphs,
+                tail,
+            )
 
 
 def test_portuguese_document_uses_its_glossary_and_keeps_accents() -> None:
