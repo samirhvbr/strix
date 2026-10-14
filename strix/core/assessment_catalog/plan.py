@@ -63,6 +63,7 @@ def build_catalog_plan(context: AssessmentContext) -> dict[str, Any]:
             "family": item.family_id,
             "weight": item.weight,
             "label": item.label,
+            "text": item.text,
             "coverage_class": item.coverage_class,
         }
         if item.weight == "essential":
@@ -70,6 +71,7 @@ def build_catalog_plan(context: AssessmentContext) -> dict[str, Any]:
                 "adapter": item.adapter,
                 "scope": item.scope,
                 "limits": item.limits,
+                "limits_pt": item.limits_pt,
                 "case_refs": facts[item.applies_when[0]],
             }
         else:

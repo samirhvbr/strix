@@ -24,6 +24,7 @@ items:
       adapter: http.private-read
       scope: partial
       limits: Exercises read access only; modify, delete, export and share are not exercised.
+      limits_pt: "Exercita apenas o acesso de leitura; alterar, excluir, exportar e compartilhar não são exercitados."
   "5.13.5":
     weight: essential
     label: Single-use credit under concurrency
@@ -33,6 +34,7 @@ items:
       adapter: http.single-credit
       scope: full
       limits: Covers the one single-credit resource the approved case declares.
+      limits_pt: "Cobre o único recurso de crédito único que o caso aprovado declara."
   "5.3.1":
     weight: essential
     label: Certificate chain, name and validity
@@ -42,6 +44,7 @@ items:
       adapter: openssl.tls
       scope: full
       limits: Verified with the default trust store plus the CA the case declares, if any.
+      limits_pt: "Verificado com o repositório de confiança padrão mais a CA que o caso declara, se houver."
   "5.3.2":
     weight: essential
     label: TLS protocols and algorithms
@@ -53,6 +56,7 @@ items:
       limits: >-
         Enforces TLS 1.2 or newer and records the negotiated protocol; cipher suites and
         parameters are not evaluated.
+      limits_pt: "Exige TLS 1.2 ou superior e registra o protocolo negociado; suítes de cifras e parâmetros não são avaliados."
   "5.3.5":
     weight: essential
     label: SSH algorithms, host keys and authentication
@@ -64,6 +68,7 @@ items:
       limits: >-
         Audits key exchange, host key, cipher and MAC algorithms; authentication methods are
         not audited.
+      limits_pt: "Audita algoritmos de troca de chaves, chave do host, cifras e MACs; os métodos de autenticação não são auditados."
 
   # Consultative in the first cut. 5.12.2 and 5.12.6 need identities the private-read adapter does
   # not compare (other role, administrator, anonymous); the web items below need a runtime proxy

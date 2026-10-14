@@ -57,6 +57,21 @@ _SECRETS = re.compile(
     r"|(\b(?:api[_-]?key|access[_-]?token|password|secret)\s*[=:]\s*[\"']?)[^\s\"',;]+"
 )
 _PRIVATE_PATH = re.compile(r"/(?:home|Users|tmp|workspace)/[^\s`\"'<>]+")
+_CATALOG_TOTALS = (
+    "catalog",
+    "selected",
+    "essential",
+    "covered",
+    "partially_covered",
+    "open",
+    "consultative",
+    "unmet_facts",
+    "not_selected",
+)
+_CATALOG_ITEM_TEXT = ("label", "text", "coverage_class", "limits", "limits_pt", "reason")
+_CATALOG_ITEM_ID = re.compile(r"^\d{1,2}(?:\.\d{1,3}){1,3}$")
+_CATALOG_STATUSES = frozenset({"covered", "partially_covered", "open", "consultative"})
+_CATALOG_MAX_ITEMS = 64
 
 
 def redact(value: Any, depth: int = 0) -> Any:
@@ -78,6 +93,70 @@ def redact(value: Any, depth: int = 0) -> Any:
     if value is None or isinstance(value, bool | int | float):
         return value
     raise ValueError("Unsupported report value")
+
+
+def _catalog_item(row: Any) -> dict[str, Any] | None:
+    if not isinstance(row, dict):
+        return None
+    if not isinstance(row.get("id"), str) or not _CATALOG_ITEM_ID.match(row["id"]):
+        return None
+    if row.get("weight") not in {"essential", "consultative"}:
+        return None
+    if row.get("status") not in _CATALOG_STATUSES or row.get("scope") not in {
+        "full",
+        "partial",
+        None,
+    }:
+        return None
+    item: dict[str, Any] = {key: row[key] for key in ("id", "weight", "status")}
+    item["scope"] = row.get("scope")
+    for key in _CATALOG_ITEM_TEXT:
+        value = row.get(key)
+        if value is not None and (not isinstance(value, str) or len(value) > 600):
+            return None
+        item[key] = value
+    return item if item["label"] else None
+
+
+def _catalog_section(value: Any) -> dict[str, Any] | None:
+    """The informational catalog projection, narrowed to what a reader needs.
+
+    It carries no case references, digests or agent text, only the plan's own labels and statuses.
+    A malformed projection is left out: informational data must never block the report.
+    """
+    if not isinstance(value, dict) or not isinstance(value.get("version"), int):
+        return None
+    if value.get("status") == "unavailable":
+        reason = value.get("reason")
+        if not isinstance(reason, str) or len(reason) > 200:
+            return None
+        return {"version": value["version"], "status": "unavailable", "reason": reason}
+    totals = value.get("totals")
+    rows = value.get("items")
+    if (
+        value.get("status") != "ready"
+        or not isinstance(totals, dict)
+        or not isinstance(rows, list)
+        or len(rows) > _CATALOG_MAX_ITEMS
+        or not all(isinstance(value.get(k), int) for k in ("catalog_version", "selection_version"))
+        or not all(
+            isinstance(totals.get(key), int) and not isinstance(totals.get(key), bool)
+            for key in _CATALOG_TOTALS
+        )
+    ):
+        return None
+    items = [_catalog_item(row) for row in rows]
+    if any(item is None for item in items):
+        return None
+    return {
+        "version": value["version"],
+        "status": "ready",
+        "informational": True,
+        "catalog_version": value["catalog_version"],
+        "selection_version": value["selection_version"],
+        "totals": {key: totals[key] for key in _CATALOG_TOTALS},
+        "items": items,
+    }
 
 
 def export_report(run_directory: Path) -> dict[str, Any]:
@@ -132,6 +211,9 @@ def export_report(run_directory: Path) -> dict[str, Any]:
             ),
             "omitted_fields": sorted(omitted),
         }
+        catalog = _catalog_section(coverage.get("catalog")) if coverage else None
+        if catalog is not None:
+            result["catalog"] = catalog
         # Machine context must not transfer the private agent graph or original task.
         if result["coverage"]:
             machine = result["coverage"].get("machine_observed") or {}
