@@ -25,6 +25,11 @@ for jinja_file in strix_root.rglob('agents/**/*.jinja'):
     rel_path = jinja_file.relative_to(project_root)
     datas.append((str(jinja_file), str(rel_path.parent)))
 
+# Assessment catalog data (read through importlib.resources).
+for catalog_file in strix_root.rglob('core/assessment_catalog/*.yaml'):
+    rel_path = catalog_file.relative_to(project_root)
+    datas.append((str(catalog_file), str(rel_path.parent)))
+
 for xml_file in strix_root.rglob('*.xml'):
     rel_path = xml_file.relative_to(project_root)
     datas.append((str(xml_file), str(rel_path.parent)))

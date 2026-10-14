@@ -239,6 +239,8 @@ ignore = [
 "tests/test_codex_auth.py" = ["S105", "S106", "SLF001"]
 # Hatchling loads the build hook by path, not as an importable package.
 "scripts/tui_sidecar_hook.py" = ["INP001"]
+# Run by path to regenerate the catalog data; not an importable package.
+"scripts/generate_assessment_catalog.py" = ["INP001"]
 # Stdlib HTTP handler overrides (do_GET/do_POST).
 "strix/interface/auth_cli.py" = ["N802"]
 "tests/test_codex_streaming.py" = ["N802"]
