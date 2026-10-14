@@ -35,6 +35,7 @@ from strix.core.assessment import (
     bind_assessment_policy,
     validate_assessment_scope,
 )
+from strix.core.assessment_catalog.plan import catalog_plan_for
 from strix.core.assessment_context import FileCredentials, bind_context
 from strix.core.authorization_audit import AuthorizationAudit
 from strix.core.evidence_ledger import EvidenceError, EvidenceLedger
@@ -569,10 +570,13 @@ async def run_strix_scan(
                 )
             state_dir.chmod(0o700)
             identity_report = get_global_report_state()
+            catalog_plan = catalog_plan_for(identity_context)
 
             def publish_evidence(summary: dict[str, Any]) -> None:
                 if identity_report is not None and identity_report.run_id == scan_id:
                     identity_report.run_record["evidence_ledger"] = summary
+                    # A resumed run keeps the plan it started with, whatever the catalog says now.
+                    identity_report.run_record.setdefault("assessment_catalog", catalog_plan)
                     identity_report.run_record["assessment_context"] = {
                         "project_ref": identity_context.project_ref,
                         "environment_ref": identity_context.environment_ref,

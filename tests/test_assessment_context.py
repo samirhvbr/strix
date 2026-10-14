@@ -503,13 +503,17 @@ async def test_storage_failure_prevents_network_execution(tmp_path: Path, server
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("resumed", [False, True])
 async def test_runner_wires_identity_tools_and_closes_ledger(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, server: Any
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, server: Any, resumed: bool
 ) -> None:
 
     port, _ = server
     importlib.import_module("tests.test_runner_teardown")._wire_runner(monkeypatch, tmp_path)
     report = ReportState("scan")
+    started_with = {"version": 2, "status": "ready", "catalog_version": 0}
+    if resumed:
+        report.run_record["assessment_catalog"] = dict(started_with)
     monkeypatch.setattr(report, "save_run_data", lambda: None)
     monkeypatch.setattr(runner, "get_global_report_state", lambda: report)
     monkeypatch.setattr(
@@ -553,6 +557,13 @@ async def test_runner_wires_identity_tools_and_closes_ledger(
     )
     assert report.run_record["evidence_ledger"]["status"] == "closed"
     assert report.run_record["evidence_ledger"]["artifacts"] == 1
+    plan = report.run_record["assessment_catalog"]
+    if resumed:
+        # A resumed run keeps the plan it started with, whatever the catalog says now.
+        assert plan == started_with
+    else:
+        assert plan["status"] == "ready"
+        assert plan["context_sha256"] == report.run_record["assessment_context"]["context_sha256"]
 
 
 @pytest.mark.asyncio
