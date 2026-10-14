@@ -33,6 +33,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, cast
 
+from strix.core.assessment_catalog.projection import project_catalog
 from strix.report.writer import atomic_write_text
 from strix.skills import get_available_skills
 
@@ -740,6 +741,7 @@ def build_coverage_document(
             for case in missing_findings
         )
 
+    catalog = project_catalog(run_record)
     return {
         "schema_version": COVERAGE_SCHEMA_VERSION,
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%d %H:%M:%S UTC"),
@@ -773,6 +775,8 @@ def build_coverage_document(
         "completeness": completeness,
         "entries": ledger,
         "gaps": gaps,
+        # Informational: the version-1 obligations decide completeness and the exit code.
+        **({"catalog": catalog} if catalog is not None else {}),
     }
 
 

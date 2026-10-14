@@ -1,0 +1,105 @@
+# Curated selection over items.yaml (the 171-check catalog stays whole there).
+#
+# weight: essential    A runtime adapter receipt can close it (see closes_with). Gated by the
+#                      version-1 obligation plan, not by this file.
+# weight: consultative Shown in the report, never fails a run. Applicable only when its facts hold.
+# Every other catalog item is consultative with no declared fact, so it is counted as "not
+# selected" and never gates anything.
+#
+# closes_with.scope says how much of the item as written the adapter exercises:
+#   full     the adapter exercises the item for the asset the approved case declares
+#   partial  the adapter exercises only part of what the item names; `limits` says what is left
+#
+# Facts are a closed vocabulary (see FACTS in catalog.py); an unknown fact fails the load.
+# At most `essential_limit` items may be essential (the owner's 10-15 ceiling is a ceiling).
+selection_version: 1
+essential_limit: 15
+items:
+  "5.12.1":
+    weight: essential
+    label: Cross-tenant private object read
+    coverage_class: idor
+    applies_when: [case.authorization]
+    closes_with:
+      adapter: http.private-read
+      scope: partial
+      limits: Exercises read access only; modify, delete, export and share are not exercised.
+  "5.13.5":
+    weight: essential
+    label: Single-use credit under concurrency
+    coverage_class: race_conditions
+    applies_when: [case.business]
+    closes_with:
+      adapter: http.single-credit
+      scope: full
+      limits: Covers the one single-credit resource the approved case declares.
+  "5.3.1":
+    weight: essential
+    label: Certificate chain, name and validity
+    coverage_class: null
+    applies_when: [transport.tls]
+    closes_with:
+      adapter: openssl.tls
+      scope: full
+      limits: Verified with the default trust store plus the CA the case declares, if any.
+  "5.3.2":
+    weight: essential
+    label: TLS protocols and algorithms
+    coverage_class: null
+    applies_when: [transport.tls]
+    closes_with:
+      adapter: openssl.tls
+      scope: partial
+      limits: >-
+        Enforces TLS 1.2 or newer and records the negotiated protocol; cipher suites and
+        parameters are not evaluated.
+  "5.3.5":
+    weight: essential
+    label: SSH algorithms, host keys and authentication
+    coverage_class: null
+    applies_when: [transport.ssh]
+    closes_with:
+      adapter: ssh-audit
+      scope: partial
+      limits: >-
+        Audits key exchange, host key, cipher and MAC algorithms; authentication methods are
+        not audited.
+
+  # Consultative in the first cut. 5.12.2 and 5.12.6 need identities the private-read adapter does
+  # not compare (other role, administrator, anonymous); the web items below need a runtime proxy
+  # receipt before they can be essential.
+  "5.12.2":
+    weight: consultative
+    label: Functions reserved to other roles
+    coverage_class: broken_function_level_authorization
+    applies_when: [case.authorization]
+  "5.12.6":
+    weight: consultative
+    label: Owner, other user, other tenant, administrator and anonymous
+    coverage_class: idor
+    applies_when: [case.authorization]
+  "5.13.4":
+    weight: consultative
+    label: Idempotency and identifier binding
+    coverage_class: business_logic
+    applies_when: [case.business]
+  "5.17.4":
+    weight: consultative
+    label: Controllable redirects
+    coverage_class: open_redirect
+    applies_when: [operation.http]
+  "5.17.5":
+    weight: consultative
+    label: CORS and origin validation
+    coverage_class: browser_security
+    applies_when: [operation.http]
+  "5.17.6":
+    weight: consultative
+    label: Cookies, storage and isolation policies
+    coverage_class: browser_security
+    applies_when: [operation.http]
+  "5.20.1":
+    weight: consultative
+    label: Disclosure in responses, errors and published files
+    coverage_class: information_disclosure
+    applies_when: [operation.http]
