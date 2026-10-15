@@ -71,6 +71,18 @@ EXIT_INVALID_INPUT = 2
 EXIT_RENDER_FAILED = 3
 
 _SEVERITIES = ("critical", "high", "medium", "low", "info")
+_CATALOG_STATUSES = ("covered", "partially_covered", "open", "consultative")
+_CATALOG_TOTALS = (
+    "catalog",
+    "selected",
+    "essential",
+    "covered",
+    "partially_covered",
+    "open",
+    "consultative",
+    "unmet_facts",
+    "not_selected",
+)
 _OUTCOMES = ("reported", "no_issue_found", "ruled_out", "not_applicable", "needs_follow_up")
 _COVER_KEYS = (
     "scan_id",
@@ -419,6 +431,24 @@ def _markdown_flowables(  # noqa: PLR0915 - cohesive block parser, splitting hur
     return flow
 
 
+def _check_catalog(catalog: Any) -> None:
+    if not isinstance(catalog, dict) or catalog.get("status") not in {"ready", "unavailable"}:
+        raise DocumentError("catalog must be null or an object with a ready or unavailable status")
+    if catalog["status"] == "unavailable":
+        return
+    totals, groups = catalog.get("totals"), catalog.get("groups")
+    if not isinstance(totals, dict) or not isinstance(groups, list):
+        raise DocumentError("catalog needs totals and groups")
+    for group in groups:
+        if (
+            not isinstance(group, dict)
+            or group.get("status") not in _CATALOG_STATUSES
+            or not isinstance(group.get("items"), list)
+            or not all(isinstance(item, dict) for item in group["items"])
+        ):
+            raise DocumentError("catalog groups must hold a known status and a list of objects")
+
+
 class _Document:
     """A validated ``report-pdf-v1`` document plus the small helpers the layout needs."""
 
@@ -452,6 +482,9 @@ class _Document:
         counts = raw.get("counts")
         if counts is not None and not isinstance(counts, dict):
             raise DocumentError("counts must be null or an object")
+        catalog = raw.get("catalog")
+        if catalog is not None:
+            _check_catalog(catalog)
         narrative = raw.get("narrative_fields")
         if narrative is not None and not (
             isinstance(narrative, list) and all(isinstance(item, str) for item in narrative)
@@ -464,6 +497,9 @@ class _Document:
         self.scan_results: Mapping[str, Any] = scan_results
         self.findings: list[dict[str, Any]] | None = findings
         self.coverage: Mapping[str, Any] | None = coverage
+        self.catalog: Mapping[str, Any] | None = catalog
+        # The catalog section sits after coverage, so the sections after it move down by one.
+        self.shift = 1 if catalog is not None else 0
         self.counts: Mapping[str, Any] = counts or {}
         self.incomplete = bool(raw.get("incomplete"))
         self.omitted_fields = bool(raw.get("omitted_fields"))
@@ -706,8 +742,67 @@ def _finding(
     return story
 
 
+def _catalog(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowable]:
+    """Informational: what the runtime evidence closed, a partial item with what is left."""
+    story: list[Flowable] = [
+        _section(doc, styles, 5, "catalog"),
+        Spacer(1, 10),
+        Paragraph(_esc(doc.label("catalog_intro")), styles["muted"]),
+    ]
+    catalog = doc.catalog
+    if catalog is None or catalog.get("status") != "ready":
+        story.append(_warning(styles, doc.label("catalog_unavailable")))
+        return story
+    rows = [
+        [
+            Paragraph(_esc(_clip(doc.label(f"catalog_{key}"), 80)), styles["meta_value"]),
+            Paragraph(_esc(_clip(catalog["totals"].get(key, 0), 12)), styles["meta_value"]),
+        ]
+        for key in _CATALOG_TOTALS
+    ]
+    totals = Table(rows, colWidths=[_CONTENT_W - 30 * mm, 30 * mm])
+    totals.setStyle(
+        TableStyle(
+            [
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                ("LINEBELOW", (0, 0), (-1, -2), 0.5, _BORDER),
+            ]
+        )
+    )
+    story.extend([Spacer(1, 6), totals])
+    for group in catalog["groups"]:
+        story.append(Paragraph(_esc(doc.label(f"catalog_{group['status']}")), styles["subhead"]))
+        for item in group["items"]:
+            lines = [
+                Paragraph(
+                    f"<b>{_esc(_clip(item.get('id') or '', 16))}</b> \u00b7 "
+                    f"{_esc(_clip(item.get('title') or doc.unknown(), 600))}",
+                    styles["body"],
+                )
+            ]
+            if item.get("scope") == "partial" and item.get("limits"):
+                lines.append(
+                    Paragraph(
+                        _esc(f"{doc.label('catalog_limits')}: {_clip(item['limits'], 600)}"),
+                        styles["muted"],
+                    )
+                )
+            if item.get("reason"):
+                lines.append(
+                    Paragraph(
+                        _esc(f"{doc.label('catalog_reason')}: {_clip(item['reason'], 200)}"),
+                        styles["muted"],
+                    )
+                )
+            story.append(KeepTogether(lines))
+    return story
+
+
 def _findings(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowable]:
-    story: list[Flowable] = [_section(doc, styles, 6, "findings"), Spacer(1, 12)]
+    story: list[Flowable] = [_section(doc, styles, 6 + doc.shift, "findings"), Spacer(1, 12)]
     if doc.findings is None:
         story.append(_warning(styles, doc.unknown()))
     elif not doc.findings:
@@ -721,7 +816,7 @@ def _findings(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowabl
 
 def _appendix(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowable]:
     story: list[Flowable] = [
-        _section(doc, styles, 7, "appendix"),
+        _section(doc, styles, 7 + doc.shift, "appendix"),
         Spacer(1, 10),
         Paragraph(_esc(doc.label("ai")), styles["body"]),
         Paragraph(_esc(doc.label("provenance")), styles["subhead"]),
@@ -758,14 +853,19 @@ def render_package_pdf(raw: Mapping[str, Any]) -> bytes:
     story: list[Flowable] = [*_cover(doc, styles), *_summary(doc, styles)]
     # A section starts on a fresh page only when little room is left, so a short report is not
     # ten mostly blank pages.
-    for part in (
+    parts = [
         _methodology(doc, styles),
         _section_with_prose(doc, styles, 3, "technical_analysis"),
         _coverage(doc, styles),
-        _section_with_prose(doc, styles, 5, "recommendations"),
+    ]
+    if doc.catalog is not None:
+        parts.append(_catalog(doc, styles))
+    parts += [
+        _section_with_prose(doc, styles, 5 + doc.shift, "recommendations"),
         _findings(doc, styles),
         _appendix(doc, styles),
-    ):
+    ]
+    for part in parts:
         story.append(CondPageBreak(_SECTION_ROOM))
         story.extend(part)
 

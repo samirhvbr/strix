@@ -65,6 +65,20 @@ EN = {
     "description": "Description",
     "evidence": "Evidence",
     "poc_script_code": "Proof of Concept Code",
+    "catalog": "Assessment Catalog",
+    "catalog_intro": "Informational. Shows which checks the runtime evidence closed.",
+    "catalog_unavailable": "The catalog plan was not available for this run.",
+    "catalog_covered": "Covered",
+    "catalog_partially_covered": "Partially covered",
+    "catalog_open": "Open",
+    "catalog_consultative": "Consultative",
+    "catalog_limits": "What is left",
+    "catalog_reason": "Reason",
+    "catalog_catalog": "Checks in the catalog",
+    "catalog_selected": "Selected for this run",
+    "catalog_essential": "Essential",
+    "catalog_unmet_facts": "Curated checks that do not apply to this target",
+    "catalog_not_selected": "Not selected",
 }
 PT = {
     **EN,
@@ -84,6 +98,9 @@ PT = {
     "description": "Descrição",
     "evidence": "Evidência",
     "translation_notice": "O inglês é a fonte de verdade.",
+    "catalog": "Catálogo de Verificações",
+    "catalog_partially_covered": "Parcialmente coberta",
+    "catalog_limits": "O que falta",
 }
 FINDING = {
     "id": "F-1",
@@ -92,6 +109,60 @@ FINDING = {
     "description": "User input reaches the query.\n\n- first step\n- second step",
     "evidence": {"request": "POST /login", "status": 500},
     "poc_script_code": 'curl -d "user=\' or 1=1" https://example.test/login',
+}
+
+
+CATALOG = {
+    "status": "ready",
+    "totals": {
+        "catalog": 171,
+        "selected": 3,
+        "essential": 2,
+        "covered": 1,
+        "partially_covered": 1,
+        "open": 0,
+        "consultative": 1,
+        "unmet_facts": 5,
+        "not_selected": 163,
+    },
+    "groups": [
+        {
+            "status": "covered",
+            "items": [
+                {
+                    "id": "5.13.5",
+                    "title": "Single-use credit under concurrency",
+                    "scope": "full",
+                    "limits": "Covers the one resource.",
+                    "reason": None,
+                }
+            ],
+        },
+        {
+            "status": "partially_covered",
+            "items": [
+                {
+                    "id": "5.12.1",
+                    "title": "Cross-tenant private object read",
+                    "scope": "partial",
+                    "limits": "Exercises read access only.",
+                    "reason": None,
+                }
+            ],
+        },
+        {
+            "status": "consultative",
+            "items": [
+                {
+                    "id": "5.17.4",
+                    "title": "Controllable redirects",
+                    "scope": None,
+                    "limits": None,
+                    "reason": None,
+                }
+            ],
+        },
+    ],
 }
 
 
@@ -459,3 +530,122 @@ def test_the_renderer_stays_a_leaf_that_never_imports_strix() -> None:
 
     allowed = set(sys.stdlib_module_names) | {"reportlab", "markdown_it"}
     assert imported <= allowed, sorted(imported - allowed)
+
+
+def test_a_catalog_adds_a_section_and_renumbers_the_ones_after_it() -> None:
+    text = _text(render_package_pdf(_document(catalog=CATALOG)))
+
+    assert "04 / Coverage and Follow-up" in text
+    assert "05 / Assessment Catalog" in text
+    assert "06 / Recommendations" in text
+    assert "07 / Detailed Findings" in text
+    assert "08 / AI Execution and Accounting" in text
+    assert "05 / Recommendations" not in text
+
+
+def test_without_a_catalog_the_numbering_is_unchanged() -> None:
+    for document in (_document(), _document(catalog=None)):
+        text = _text(render_package_pdf(document))
+        assert "05 / Recommendations" in text
+        assert "Assessment Catalog" not in text
+
+
+def test_the_catalog_shows_groups_totals_and_what_is_left_for_a_partial_item() -> None:
+    text = _text(render_package_pdf(_document(catalog=CATALOG)))
+
+    for expected in (
+        "Informational. Shows which checks the runtime evidence closed.",
+        "Checks in the catalog",
+        "171",
+        "Curated checks that do not apply to this target",
+        "Covered",
+        "Partially covered",
+        "Consultative",
+        "5.12.1",
+        "Cross-tenant private object read",
+        "What is left: Exercises read access only.",
+        "5.17.4",
+    ):
+        assert expected in text, expected
+    assert "What is left: Covers the one resource." not in text, "a full item has nothing left"
+
+
+def test_the_catalog_prints_in_the_language_the_document_carries() -> None:
+    catalog = copy.deepcopy(CATALOG)
+    catalog["groups"][1]["items"][0].update(
+        title="Testar acesso a objetos de outro usuário ou tenant.",
+        limits="Exercita apenas o acesso de leitura.",
+    )
+
+    text = _text(render_package_pdf(_document("pt-BR", catalog=catalog)))
+
+    assert "05 / Catálogo de Verificações" in text
+    assert "Parcialmente coberta" in text
+    assert "O que falta: Exercita apenas o acesso de leitura." in text
+    assert "Testar acesso a objetos de outro usuário ou tenant." in text
+
+
+def test_an_unavailable_catalog_is_stated() -> None:
+    text = _text(render_package_pdf(_document(catalog={"status": "unavailable", "reason": "x"})))
+
+    assert "05 / Assessment Catalog" in text
+    assert "The catalog plan was not available for this run." in text
+
+
+def test_an_open_item_prints_its_reason() -> None:
+    catalog = copy.deepcopy(CATALOG)
+    catalog["groups"].append(
+        {
+            "status": "open",
+            "items": [
+                {
+                    "id": "5.3.1",
+                    "title": "Certificate chain",
+                    "scope": "full",
+                    "limits": None,
+                    "reason": "receipts_unavailable",
+                }
+            ],
+        }
+    )
+
+    text = _text(render_package_pdf(_document(catalog=catalog)))
+
+    assert "Reason: receipts_unavailable" in text
+
+
+@pytest.mark.parametrize(
+    "catalog",
+    [
+        "text",
+        [],
+        {"status": "maybe"},
+        {"status": "ready"},
+        {"status": "ready", "totals": {}, "groups": {}},
+        {"status": "ready", "totals": [], "groups": []},
+        {"status": "ready", "totals": {}, "groups": ["x"]},
+        {"status": "ready", "totals": {}, "groups": [{"status": "done", "items": []}]},
+        {"status": "ready", "totals": {}, "groups": [{"status": "open", "items": "x"}]},
+        {"status": "ready", "totals": {}, "groups": [{"status": "open", "items": ["x"]}]},
+    ],
+)
+def test_catalog_contract_violations_are_refused(catalog: Any) -> None:
+    with pytest.raises(DocumentError):
+        render_package_pdf(_document(catalog=catalog))
+
+
+@pytest.mark.parametrize("payload", HOSTILE)
+def test_hostile_catalog_text_neither_breaks_the_render_nor_adds_actions(payload: str) -> None:
+    catalog = copy.deepcopy(CATALOG)
+    for group in catalog["groups"]:
+        for item in group["items"]:
+            item.update(id=payload, title=payload, limits=payload, reason=payload, scope="partial")
+    catalog["totals"] = dict.fromkeys(catalog["totals"], payload)
+    document = _document(catalog=catalog)
+    document["labels"]["catalog_limits"] = payload
+
+    pdf = render_package_pdf(document)
+
+    assert pdf.startswith(b"%PDF-")
+    for forbidden in FORBIDDEN_IN_PDF:
+        assert forbidden not in pdf

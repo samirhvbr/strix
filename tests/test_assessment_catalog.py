@@ -113,6 +113,8 @@ def test_catalog_keeps_every_check_and_caps_the_essentials() -> None:
         (lambda i: i["5.12.1"].update(weight="critical"), "unknown weight"),
         (lambda i: i["5.12.2"].update(closes_with=i["5.12.1"]["closes_with"]), "cannot close"),
         (lambda i: i["5.12.1"].pop("label"), "English label"),
+        (lambda i: i["5.12.1"]["closes_with"].pop("limits_pt"), "incomplete"),
+        (lambda i: i["5.12.1"]["closes_with"].update(limits_pt=""), "incomplete"),
         (lambda i: i.update({"9.9.9": dict(i["5.12.2"])}), "not a catalog item"),
     ],
 )
@@ -182,6 +184,26 @@ def test_essential_rows_name_their_adapter_scope_and_cases() -> None:
         ["cross-tenant"],
     )
     assert "read access only" in row["limits"]
+    assert "apenas o acesso de leitura" in row["limits_pt"]
+
+
+def test_every_selected_row_carries_the_portuguese_source_text() -> None:
+    plan = build_catalog_plan(authorization_context())
+    assert plan["items"], "the fixture selects something"
+    for row in plan["items"]:
+        assert row["text"] and isinstance(row["text"], str), row["id"]
+        if row["weight"] == "essential":
+            assert row["limits_pt"], row["id"]
+    projection = project_catalog(record(plan, [{"status": "observed"}], ["compliant"]))
+    assert projection is not None
+    by_id = {row["id"]: row for row in projection["items"]}
+    assert by_id["5.12.1"]["text"].startswith("Testar acesso a objetos de outro usuário")
+    assert by_id["5.12.1"]["limits_pt"] == plan_row(plan, "5.12.1")["limits_pt"]
+    assert "limits_pt" not in by_id["5.12.2"], "consultative rows carry no limits"
+
+
+def plan_row(plan: dict[str, Any], item: str) -> dict[str, Any]:
+    return next(row for row in plan["items"] if row["id"] == item)
 
 
 def record(plan: dict[str, Any], rows: list[dict[str, str]], verdicts: list[str]) -> dict[str, Any]:

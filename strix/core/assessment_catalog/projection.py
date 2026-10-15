@@ -41,10 +41,15 @@ def project_catalog(run_record: dict[str, Any]) -> dict[str, Any] | None:
     evidence = run_record.get("evidence_ledger")
     rows: list[dict[str, Any]] = []
     for item in plan.get("items", []):
-        row = {key: item[key] for key in ("id", "weight", "label", "coverage_class") if key in item}
+        row = {
+            key: item[key]
+            for key in ("id", "weight", "label", "text", "coverage_class")
+            if key in item
+        }
         if item.get("weight") == "essential":
             status, reason = _essential_status(item, evidence)
             row |= {"status": status, "scope": item.get("scope"), "limits": item.get("limits")}
+            row["limits_pt"] = item.get("limits_pt")
             row |= {"case_refs": item.get("case_refs", [])}
             if reason:
                 row["reason"] = reason

@@ -50,6 +50,7 @@ class CatalogItem:
     adapter: str | None = None
     scope: str | None = None
     limits: str | None = None
+    limits_pt: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,12 +113,13 @@ def _curate(item: CatalogItem, entry: dict[str, Any]) -> CatalogItem:
     if not isinstance(facts, list) or not facts or not set(facts) <= FACTS:
         raise CatalogError(f"selection.yaml: {item.id} needs facts from the closed vocabulary")
     closes = entry.get("closes_with")
-    adapter = scope = limits = None
+    adapter = scope = limits = limits_pt = None
     if weight == "essential":
         if not isinstance(closes, dict):
             raise CatalogError(f"selection.yaml: essential {item.id} needs closes_with")
         adapter, scope, limits = closes.get("adapter"), closes.get("scope"), closes.get("limits")
-        if adapter not in ADAPTER_FACTS or scope not in SCOPES or not limits:
+        limits_pt = closes.get("limits_pt")
+        if adapter not in ADAPTER_FACTS or scope not in SCOPES or not limits or not limits_pt:
             raise CatalogError(f"selection.yaml: {item.id} closes_with is incomplete")
         if facts != [ADAPTER_FACTS[adapter]]:
             raise CatalogError(f"selection.yaml: {item.id} facts must be its adapter's fact")
@@ -135,6 +137,7 @@ def _curate(item: CatalogItem, entry: dict[str, Any]) -> CatalogItem:
         adapter,
         scope,
         " ".join(str(limits).split()) if limits else None,
+        " ".join(str(limits_pt).split()) if limits_pt else None,
     )
 
 
