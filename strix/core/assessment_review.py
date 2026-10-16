@@ -28,7 +28,55 @@ _VERDICTS = {
     "vulnerable",
 }
 _RETEST = {"not_requested", "no_vulnerable_baseline", "fixed", "not_fixed", "inconclusive"}
-_ADAPTERS = {"http.private-read", "http.single-credit", "openssl.tls", "ssh-audit"}
+_ADAPTERS = {
+    "http.private-read",
+    "http.single-credit",
+    "openssl.tls",
+    "ssh-audit",
+    "http.web-hygiene",
+}
+_CHECK_VERDICTS = {"compliant", "vulnerable", "inconclusive"}
+_CHECK_REASONS = {
+    "no_cookie_observed",
+    "cookie_missing_secure_or_samesite",
+    "samesite_none_without_secure",
+    "cookie_attributes_present",
+    "no_cors_header_observed",
+    "wildcard_origin_with_credentials",
+    "cors_header_present_without_risk",
+    "no_version_header_observed",
+    "version_header_disclosed",
+    "redirect_probe_not_declared",
+    "probe_did_not_redirect",
+    "redirect_location_unparseable",
+    "redirect_followed_declared_canary",
+    "redirect_did_not_follow_declared_canary",
+}
+_DISCLOSURE_HEADER_NAMES = {"server", "x-powered-by"}
+
+
+def _checks(item: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Forward only known check names, each with a closed-vocabulary verdict and reason."""
+    raw = item.get("checks")
+    if not isinstance(raw, dict):
+        return {}
+    sanitized: dict[str, dict[str, Any]] = {}
+    for check, entry in raw.items():
+        if (
+            check not in {"redirect", "cors", "cookies", "disclosure"}
+            or not isinstance(entry, dict)
+            or entry.get("verdict") not in _CHECK_VERDICTS
+            or entry.get("reason") not in _CHECK_REASONS
+        ):
+            continue
+        clean: dict[str, Any] = {"verdict": entry["verdict"], "reason": entry["reason"]}
+        if check == "disclosure":
+            headers = entry.get("headers")
+            clean["headers"] = sorted(
+                set(headers) & _DISCLOSURE_HEADER_NAMES if isinstance(headers, list) else []
+            )
+        sanitized[check] = clean
+    return sanitized
 
 
 def _ref(value: Any) -> str | None:
@@ -65,6 +113,8 @@ def _case(item: dict[str, Any], ledger: EvidenceLedger, approved: set[str]) -> d
     retest = item.get("retest_status")
     result["retest_status"] = retest if retest in _RETEST else "not_requested"
     result["baseline_ref"] = _ref(item.get("baseline_ref"))
+    if adapter == "http.web-hygiene":
+        result["checks"] = _checks(item)
     # Never forward stored narrative, reason text, target content or arbitrary fields.
     receipts = []
     for evidence in item.get("evidence", []):

@@ -24,7 +24,17 @@ if TYPE_CHECKING:
 
 
 PACKAGE = Path(catalog_module.__file__).parent
-ESSENTIAL = {"5.3.1", "5.3.2", "5.3.5", "5.12.1", "5.13.5"}
+ESSENTIAL = {
+    "5.3.1",
+    "5.3.2",
+    "5.3.5",
+    "5.12.1",
+    "5.13.5",
+    "5.17.4",
+    "5.17.5",
+    "5.17.6",
+    "5.20.1",
+}
 
 
 @pytest.fixture(autouse=True)
@@ -53,6 +63,29 @@ def authorization_context() -> AssessmentContext:
             "resource_ref": "private-42",
         },
     )
+    context = parse_context(raw)
+    assert context is not None
+    return context
+
+
+def web_hygiene_context(*, declare_redirect: bool = True) -> AssessmentContext:
+    _, raw = config(8080)
+    raw["version"] = 2
+    raw["operations"] = {"probe": {"method": "GET", "url": "http://127.0.0.1:8080/probe"}}
+    web_hygiene = {"adapter": "http.web-hygiene", "version": 1, "probe_operation": "probe"}
+    if declare_redirect:
+        web_hygiene |= {
+            "redirect_param": "next",
+            "redirect_target": "http://canary.invalid/landing",
+        }
+    raw["cases"] = {
+        "hygiene": {
+            "version": 1,
+            "identities": ["a"],
+            "operations": ["probe"],
+            "web_hygiene": web_hygiene,
+        }
+    }
     context = parse_context(raw)
     assert context is not None
     return context
@@ -151,17 +184,27 @@ def test_more_essentials_than_the_limit_fails_the_load(monkeypatch: pytest.Monke
 def test_plan_holds_exactly_the_items_the_declared_facts_make_applicable() -> None:
     authorization = build_catalog_plan(authorization_context())
     assert ids(authorization, "essential") == {"5.12.1"}
-    assert ids(authorization, "consultative") == {
-        "5.12.2",
-        "5.12.6",
-        "5.17.4",
-        "5.17.5",
-        "5.17.6",
-        "5.20.1",
-    }
+    assert ids(authorization, "consultative") == {"5.12.2", "5.12.6"}
     transport = build_catalog_plan(transport_context())
     assert ids(transport, "essential") == {"5.3.1", "5.3.2", "5.3.5"}
     assert ids(transport, "consultative") == set()  # TLS and SSH operations are not HTTP
+    hygiene = build_catalog_plan(web_hygiene_context())
+    assert ids(hygiene, "essential") == {"5.17.4", "5.17.5", "5.17.6", "5.20.1"}
+    assert ids(hygiene, "consultative") == set()  # no authorization/business case here
+
+
+def test_web_hygiene_essential_rows_each_name_their_own_sub_check() -> None:
+    plan = build_catalog_plan(web_hygiene_context())
+    checks = {row["id"]: row["check"] for row in plan["items"]}
+    assert checks == {
+        "5.17.4": "redirect",
+        "5.17.5": "cors",
+        "5.17.6": "cookies",
+        "5.20.1": "disclosure",
+    }
+    assert all(row["adapter"] == "http.web-hygiene" for row in plan["items"])
+    assert all(row["scope"] == "partial" for row in plan["items"])
+    assert all(row["case_refs"] == ["hygiene"] for row in plan["items"])
 
 
 def test_curated_items_without_their_facts_are_listed_never_dropped() -> None:
@@ -170,6 +213,8 @@ def test_curated_items_without_their_facts_are_listed_never_dropped() -> None:
     assert unmet["5.13.5"] == ["case.business"]
     assert unmet["5.3.1"] == ["transport.tls"]
     assert unmet["5.3.5"] == ["transport.ssh"]
+    for item in ("5.17.4", "5.17.5", "5.17.6", "5.20.1"):
+        assert unmet[item] == ["case.web_hygiene"]
     assert len(plan["items"]) + len(plan["unmet"]) + plan["not_selected"] == 171
     assert plan["catalog_items"] == 171
 
@@ -264,6 +309,39 @@ def test_no_ledger_means_open_not_covered() -> None:
     assert status(run_record) == ("open", "receipts_unavailable")
 
 
+def test_each_web_hygiene_item_reads_its_own_named_sub_check() -> None:
+    """One http.web-hygiene case, one overall verdict, four independent item statuses."""
+    plan = build_catalog_plan(web_hygiene_context())
+    run_record = {
+        "assessment_catalog": plan,
+        "evidence_ledger": {
+            "obligations": {"items": [{"case_ref": "hygiene", "status": "observed"}]},
+            "case_evaluations": [
+                {
+                    "case_ref": "hygiene",
+                    "verdict": "vulnerable",  # overall: at least one check failed
+                    "checks": {
+                        "redirect": {"verdict": "inconclusive"},
+                        "cors": {"verdict": "compliant"},
+                        "cookies": {"verdict": "vulnerable"},
+                        "disclosure": {"verdict": "compliant"},
+                    },
+                }
+            ],
+        },
+    }
+    projection = project_catalog(run_record)
+    assert projection is not None
+    by_id = {row["id"]: row for row in projection["items"]}
+    # Reading the case's bare overall verdict for every item would make all four identical;
+    # they are not, because each reads only its own named check.
+    assert by_id["5.17.4"]["status"] == "open"  # redirect: inconclusive, not in VERDICT_CLOSED
+    assert by_id["5.17.4"]["reason"] == "inconclusive"
+    assert by_id["5.17.5"]["status"] == "partially_covered"  # cors: compliant
+    assert by_id["5.17.6"]["status"] == "partially_covered"  # cookies: vulnerable, still closed
+    assert by_id["5.20.1"]["status"] == "partially_covered"  # disclosure: compliant
+
+
 def test_totals_count_every_state() -> None:
     plan = build_catalog_plan(authorization_context())
     projection = project_catalog(record(plan, [{"status": "observed"}], ["compliant"]))
@@ -271,13 +349,13 @@ def test_totals_count_every_state() -> None:
     assert projection["informational"] is True
     assert projection["totals"] == {
         "catalog": 171,
-        "selected": 7,
+        "selected": 3,
         "essential": 1,
         "covered": 0,
         "partially_covered": 1,
         "open": 0,
-        "consultative": 6,
-        "unmet_facts": 5,
+        "consultative": 2,
+        "unmet_facts": 9,
         "not_selected": 159,
     }
 

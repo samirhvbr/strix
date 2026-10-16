@@ -603,8 +603,63 @@ async def run_strix_scan(
                 authorize=authorization_check,
             )
 
+            def publish_web_hygiene_findings(result: dict[str, Any]) -> None:
+                assert identity_report is not None
+                descriptions = {
+                    "redirect": (
+                        "Open redirect",
+                        "CWE-601",
+                        "The declared redirect parameter sent the approved identity to the "
+                        "declared out-of-scope canary destination.",
+                        "Validate the redirect target against an allow-list before issuing it.",
+                    ),
+                    "cors": (
+                        "Permissive CORS with credentials",
+                        "CWE-942",
+                        "The response allowed credentialed cross-origin requests from any "
+                        "origin (Access-Control-Allow-Origin: * with credentials enabled).",
+                        "Echo a specific allow-listed origin instead of a wildcard whenever "
+                        "credentials are allowed.",
+                    ),
+                    "cookies": (
+                        "Cookie without required attributes",
+                        "CWE-614",
+                        "A Set-Cookie response header was missing Secure or SameSite, or set "
+                        "SameSite=None without Secure.",
+                        "Set Secure and SameSite on every cookie the application issues.",
+                    ),
+                    "disclosure": (
+                        "Server or framework version disclosed",
+                        "CWE-200",
+                        "A response header named the server software or framework version.",
+                        "Remove or genericize the Server/X-Powered-By response headers.",
+                    ),
+                }
+                for check, entry in result.get("checks", {}).items():
+                    if entry.get("verdict") != "vulnerable" or check not in descriptions:
+                        continue
+                    name, cwe, description, remediation = descriptions[check]
+                    title = f"{name} ({result['case_ref']})"
+                    if any(
+                        report.get("title") == title
+                        for report in identity_report.vulnerability_reports
+                    ):
+                        continue
+                    identity_report.add_vulnerability_report(
+                        title=title,
+                        severity="high",
+                        cwe=cwe,
+                        confidence="high",
+                        description=description,
+                        remediation_steps=remediation,
+                        assessment_evidence=result["evidence"],
+                    )
+
             def publish_case_result(result: dict[str, Any]) -> None:
                 if identity_report is None or result["verdict"] != "vulnerable":
+                    return
+                if result["adapter"] == "http.web-hygiene":
+                    publish_web_hygiene_findings(result)
                     return
                 business = result["adapter"] == "http.single-credit"
                 transport = result["adapter"] in {"openssl.tls", "ssh-audit"}

@@ -27,7 +27,7 @@ HTTP_METHODS = frozenset({"GET", "HEAD", "POST"})
 
 
 def _adapter(case: Any) -> str | None:
-    for spec in (case.authorization, case.business, case.transport):
+    for spec in (case.authorization, case.business, case.transport, case.web_hygiene):
         if spec is not None:
             return str(spec.adapter)
     return None
@@ -74,6 +74,8 @@ def build_catalog_plan(context: AssessmentContext) -> dict[str, Any]:
                 "limits_pt": item.limits_pt,
                 "case_refs": facts[item.applies_when[0]],
             }
+            if item.check is not None:
+                row["check"] = item.check
         else:
             row["facts"] = list(item.applies_when)
         selected.append(row)

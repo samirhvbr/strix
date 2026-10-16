@@ -15,6 +15,22 @@ OBLIGATION_CLOSED = frozenset({"observed", "reconciled"})
 VERDICT_CLOSED = frozenset({"compliant", "vulnerable"})
 
 
+def _verdict_of(item: dict[str, Any], evaluation: dict[str, Any]) -> Any:
+    """The verdict that closes this item: a case's own, or one named sub-check of it.
+
+    http.web-hygiene is one case producing four independent sub-verdicts (PT-23); an essential
+    item that names ``check`` reads that one instead of the case's overall verdict, so one
+    vulnerable check never marks a compliant sibling item as open, or vice versa.
+    """
+    check = item.get("check")
+    if check is None:
+        return evaluation.get("verdict")
+    checks = evaluation.get("checks")
+    if not isinstance(checks, dict):
+        return "missing"
+    return checks.get(check, {}).get("verdict", "missing")
+
+
 def _essential_status(item: dict[str, Any], evidence: Any) -> tuple[str, str | None]:
     if not isinstance(evidence, dict) or not isinstance(evidence.get("obligations"), dict):
         return "open", "receipts_unavailable"
@@ -24,7 +40,7 @@ def _essential_status(item: dict[str, Any], evidence: Any) -> tuple[str, str | N
     if not refs or not rows or len(evaluations) < len(refs):
         return "open", "receipts_unavailable"
     unclosed = {r.get("status") for r in rows} - OBLIGATION_CLOSED
-    unclosed |= {e.get("verdict") for e in evaluations} - VERDICT_CLOSED
+    unclosed |= {_verdict_of(item, e) for e in evaluations} - VERDICT_CLOSED
     if unclosed:
         return "open", ",".join(sorted(str(value) for value in unclosed))
     return ("covered" if item.get("scope") == "full" else "partially_covered"), None
