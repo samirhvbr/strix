@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+"""List our open pull requests on the upstream and flag the ones that need attention.
+
+A PR can go stale without anybody noticing: upstream fixes the same thing another way
+(PR #1173 stayed open for 40 days after that), the branch starts to conflict, a reviewer
+asks a question that nobody answers, or CI never ran because a maintainer has not
+approved the run. Run this after every sync (step 7 of the checklist in version.md) and
+whenever the table "Contributions sent upstream" in FORK.md is touched.
+
+    bin/pr-watch              # all open PRs authored by the fork owner
+    bin/pr-watch 1174 1279    # only these
+
+Needs `gh` (authenticated) and the `upstream` and `origin` remotes of this checkout.
+Read-only: it fetches and prints, and never pushes or comments.
+"""
+
+# ruff: noqa: T201 - a command-line script: printing is its output.
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+from datetime import UTC, datetime
+
+
+UPSTREAM = "usestrix/strix"
+OWNER = "samirhvbr"
+STALE_DAYS = 30
+# Review bots that comment as a plain user (without the "[bot]" suffix).
+KNOWN_BOTS = {"greptile-apps", "copilot", "copilot-pull-request-reviewer"}
+
+
+def run(*cmd: str, check: bool = True) -> str:
+    done = subprocess.run(cmd, capture_output=True, text=True, check=False)  # noqa: S603
+    if check and done.returncode != 0:
+        sys.exit(f"{' '.join(cmd)}\n{done.stderr.strip()}")
+    return done.stdout.strip()
+
+
+def gh_json(*args: str) -> object:
+    return json.loads(run("gh", *args) or "null")
+
+
+def days_since(stamp: str) -> int:
+    then = datetime.fromisoformat(stamp.replace("Z", "+00:00"))
+    return (datetime.now(UTC) - then).days
+
+
+def feedback_flags(pr: dict) -> list[str]:
+    # Feedback from people, judged against our own last word: a question we already
+    # answered stops being flagged. Bots (greptile, copilot) are counted apart because
+    # they often leave a valid P1/P2 that nobody reads.
+    people: dict[str, str] = {}
+    bots: list[str] = []
+    ours = ""
+    for item in [*pr["comments"], *pr["reviews"]]:
+        login = (item.get("author") or {}).get("login", "")
+        stamp = item.get("createdAt") or item.get("submittedAt") or ""
+        if login == OWNER:
+            ours = max(ours, stamp)
+        elif login.endswith("[bot]") or login.lower() in KNOWN_BOTS:
+            bots.append(login)
+        else:
+            people[login] = max(people.get(login, ""), stamp)
+    unanswered = sorted(login for login, stamp in people.items() if stamp > ours)
+    flags: list[str] = []
+    if unanswered:
+        flags.append(f"HUMAN FEEDBACK from {', '.join(unanswered)} not answered yet")
+    if bots:
+        flags.append(f"bot reviews: {len(bots)} (read the inline findings)")
+
+    return flags
+
+
+def inspect(number: int) -> tuple[str, list[str]]:
+    pr = gh_json(
+        "pr", "view", str(number), "-R", UPSTREAM, "--json",
+        "state,title,headRefName,headRefOid,updatedAt,mergeable,reviewDecision,files,"
+        "comments,reviews",
+    )  # fmt: skip
+    flags: list[str] = []
+    if pr["state"] != "OPEN":
+        return pr["title"], [f"{pr['state']} (update the FORK.md table)"]
+
+    if pr["mergeable"] == "CONFLICTING":
+        flags.append("CONFLICT with upstream/main")
+
+    # Upstream touching the files this PR changes since the PR branched off is the signal
+    # that it may already be fixed another way, or about to conflict.
+    run("git", "fetch", "-q", "origin", pr["headRefName"], check=False)
+    base = run("git", "merge-base", "upstream/main", pr["headRefOid"], check=False)
+    paths = [f["path"] for f in pr["files"]]
+    if base and paths:
+        touched = run("git", "diff", "--name-only", base, "upstream/main", "--", *paths).split()
+        if touched:
+            commits = run("git", "log", "--oneline", f"{base}..upstream/main", "--", *paths)
+            state = "still mergeable" if pr["mergeable"] == "MERGEABLE" else pr["mergeable"].lower()
+            flags.append(
+                f"UPSTREAM TOUCHED {len(touched)} of its files since it branched "
+                f"({len(commits.splitlines())} commits, {state}): {', '.join(touched[:4])}"
+            )
+
+    flags.extend(feedback_flags(pr))
+
+    runs = run(
+        "gh", "run", "list", "-R", UPSTREAM, "--branch", pr["headRefName"],
+        "--limit", "5", "--json", "conclusion", "-q", ".[].conclusion",
+    ).split()  # fmt: skip
+    if not runs:
+        flags.append("CI never ran")
+    elif all(r == "action_required" for r in runs):
+        flags.append("CI waiting for a maintainer to approve the run")
+    elif "failure" in runs[:1]:
+        flags.append("CI failed on the latest run")
+
+    idle = days_since(pr["updatedAt"])
+    if idle >= STALE_DAYS:
+        flags.append(f"STALE: {idle} days without activity")
+    return pr["title"], flags
+
+
+def main() -> None:
+    run("git", "fetch", "-q", "upstream")
+    numbers = [int(arg) for arg in sys.argv[1:]]
+    if not numbers:
+        listed = gh_json(
+            "pr", "list", "-R", UPSTREAM, "--author", OWNER, "--state", "open",
+            "--json", "number,title", "--limit", "100",
+        )  # fmt: skip
+        numbers = sorted(item["number"] for item in listed)
+    if not numbers:
+        print("No open pull requests.")
+        return
+    for number in numbers:
+        title, flags = inspect(number)
+        mark = "!!" if any(f.split()[0] in {"CONFLICT", "UPSTREAM", "HUMAN", "CLOSED", "MERGED"}
+                           for f in flags) else "  "  # fmt: skip
+        print(f"{mark} #{number} {title}")
+        for flag in flags or ["nothing to do"]:
+            print(f"      - {flag}")
+
+
+if __name__ == "__main__":
+    main()

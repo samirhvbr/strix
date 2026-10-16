@@ -111,12 +111,16 @@ def test_resolver_uses_provider_when_bare_entry_has_one() -> None:
 
 def test_resolver_does_not_guess_between_differently_priced_providers() -> None:
     original = litellm.model_cost
+    # Real catalog entries always carry ``litellm_provider``; without it the native
+    # route could never match and this guard would not exercise the preference.
     litellm.model_cost = {
         "provider-a/example": {
+            "litellm_provider": "provider-a",
             "input_cost_per_token": 1.0,
             "output_cost_per_token": 2.0,
         },
         "provider-b/example": {
+            "litellm_provider": "provider-b",
             "input_cost_per_token": 3.0,
             "output_cost_per_token": 4.0,
         },
@@ -154,9 +158,10 @@ def test_resolver_prefers_native_provider_over_aggregator() -> None:
         resolve_litellm_model.cache_clear()
 
 
-def test_resolver_prefers_unique_native_provider_over_differently_priced_aggregators() -> None:
-    # A unique first-party listing wins even when aggregators price the model
-    # differently, where price consensus alone would give up and return None.
+def test_resolver_does_not_guess_when_a_native_route_exists_but_prices_differ() -> None:
+    # The native preference only breaks ties between routes that price the model the
+    # same. When an aggregator charges differently, the cost depends on the route and
+    # the resolver still declines to guess, as it did before the native preference.
     original = litellm.model_cost
     litellm.model_cost = {
         "deepinfra/x/example-model": {
@@ -172,7 +177,7 @@ def test_resolver_prefers_unique_native_provider_over_differently_priced_aggrega
     }
     try:
         resolve_litellm_model.cache_clear()
-        assert resolve_litellm_model("example-model") == "example/example-model"
+        assert resolve_litellm_model("example-model") is None
     finally:
         litellm.model_cost = original
         resolve_litellm_model.cache_clear()
