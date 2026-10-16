@@ -1,6 +1,6 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.39`
+**Current version:** `1.2.40`
 **Upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
@@ -72,6 +72,29 @@ keeps the wording of its time, so a `shvia.N` there is the old name.
 
    Never create a Release for an older version without `--latest=false`, or it steals the
    "Latest" badge.
+6. After a sync, and whenever the "Contribuições enviadas ao upstream" table in `FORK.md`
+   changes, review our open upstream pull requests with `bin/pr-watch` (read-only) and deal
+   with every `!!` line (below).
+
+## Reviewing our pull requests upstream
+
+A pull request can go stale without anybody noticing: upstream fixes the same thing another
+way (PR #1173 stayed open for 40 days after that), the branch starts to conflict, a reviewer
+asks a question nobody answers, or CI never runs. `bin/pr-watch` lists every open PR of ours
+and flags what to do:
+
+| Flag | What to do |
+|---|---|
+| `CLOSED` / `MERGED` | Update the "Contribuições enviadas ao upstream" table in `FORK.md`; if it was merged, drop our carried copy at the next sync and keep upstream's. |
+| `CONFLICT` | Merge `upstream/main` into the PR branch, resolve, test on the merged tree and push. Do not force-push: the auto-mode classifier blocks it, and a merge keeps the review history anyway. |
+| `UPSTREAM TOUCHED` | Read the listed commits. If they fix the same thing, close our PR with a comment that names them and update the table and `CLAUDE.md`. If not, and it is still mergeable, nothing to do. |
+| `HUMAN FEEDBACK ... not answered` | Read it, check the claim by measuring, answer. Measure before agreeing or disagreeing; a reviewer's number is a claim until reproduced (for #1279 it was right). |
+| `bot reviews` | Read the inline findings (`gh api repos/usestrix/strix/pulls/<n>/comments`); each P1/P2 is either fixed or answered. |
+| `CI waiting for a maintainer` | We cannot approve our own first-time runs. Run `ruff`, `mypy` and the touched tests on the PR merged into `upstream/main`, in a venv from the upstream `uv.lock`, and say so in the PR. |
+
+The fork carries our own PRs by merge. When a PR is changed after review, bring the same
+change into `master` as a commit of its own (the updated PR branch contains a merge of
+`upstream/main`, which `master` does not want before the next sync).
 
 > **`Build & Release` (`build-release.yml`) must stay disabled on the fork.** It is inherited
 > from upstream and fires on every `v*` tag (5-OS PyInstaller build plus an auto-created
