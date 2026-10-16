@@ -104,7 +104,7 @@ git checkout master && git merge main        # traz a evolução deles para a no
 | PR | Título | Status |
 |----|--------|--------|
 | [#1279](https://github.com/usestrix/strix/pull/1279) | fix(pricing): prefer a native provider over aggregator re-listings | open |
-| [#1173](https://github.com/usestrix/strix/pull/1173) | fix(warmup): pre-import the agents SDK to avoid a thread-race crash | superseded (upstream reworked warm-up in v1.6.x) |
+| [#1173](https://github.com/usestrix/strix/pull/1173) | fix(warmup): pre-import the agents SDK to avoid a thread-race crash | closed 2026-10-16, superseded (upstream fixed the race itself in `1f3f9b31`, `7f46dd17` and `e60fd839`; adopted in the `1.1.0` sync) |
 | [#1174](https://github.com/usestrix/strix/pull/1174) | fix(retry): treat provider usage-limit errors as terminal, not transient | aberto |
 | [#1469](https://github.com/usestrix/strix/pull/1469) | fix(reporting): serialize the duplicate check so concurrent agents cannot file a finding twice | open |
 | [#1470](https://github.com/usestrix/strix/pull/1470) | fix(core): treat a cloned repository as a source-aware (white-box) scan | open |
