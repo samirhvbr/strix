@@ -295,7 +295,7 @@ class EvidenceLedger:
             expected_cases = sorted(
                 key
                 for key, case in context.cases.items()
-                if case.authorization or case.business or case.transport
+                if case.authorization or case.business or case.transport or case.web_hygiene
             )
             db.executemany(
                 "INSERT OR IGNORE INTO case_plans VALUES (?)", [(key,) for key in expected_cases]
@@ -337,7 +337,7 @@ class EvidenceLedger:
         cases = sorted(
             name
             for name, case in context.cases.items()
-            if case.authorization or case.business or case.transport
+            if case.authorization or case.business or case.transport or case.web_hygiene
         )
         with self._db() as db:
             if (
