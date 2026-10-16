@@ -88,23 +88,57 @@ items:
     label: Idempotency and identifier binding
     coverage_class: business_logic
     applies_when: [case.business]
+  # Essential since 15/10 (PT-23, owner answer on `pt23-via`): http.web-hygiene is one runtime
+  # case, one real request, four independent sub-verdicts — each item below names which.
   "5.17.4":
-    weight: consultative
+    weight: essential
     label: Controllable redirects
     coverage_class: open_redirect
-    applies_when: [operation.http]
+    applies_when: [case.web_hygiene]
+    closes_with:
+      adapter: http.web-hygiene
+      check: redirect
+      scope: partial
+      limits: >-
+        Exercises only the one declared redirect parameter against one declared out-of-scope
+        destination; other parameters and the consequence further down the flow are not exercised.
+      limits_pt: "Exercita apenas o parâmetro de redirecionamento declarado contra um destino fora do escopo também declarado; outros parâmetros e a consequência mais adiante no fluxo não são exercitados."
   "5.17.5":
-    weight: consultative
+    weight: essential
     label: CORS and origin validation
     coverage_class: browser_security
-    applies_when: [operation.http]
+    applies_when: [case.web_hygiene]
+    closes_with:
+      adapter: http.web-hygiene
+      check: cors
+      scope: partial
+      limits: >-
+        Reads only the Access-Control-Allow-Origin and -Credentials headers on the one probe
+        response; window messaging and embedded contexts are not exercised.
+      limits_pt: "Lê apenas os cabeçalhos Access-Control-Allow-Origin e -Credentials na resposta da única sondagem; comunicação entre janelas e contextos incorporados não são exercitados."
   "5.17.6":
-    weight: consultative
+    weight: essential
     label: Cookies, storage and isolation policies
     coverage_class: browser_security
-    applies_when: [operation.http]
+    applies_when: [case.web_hygiene]
+    closes_with:
+      adapter: http.web-hygiene
+      check: cookies
+      scope: partial
+      limits: >-
+        Reads only the Set-Cookie attributes (Secure, SameSite) on the one probe response;
+        storage, workers and other isolation headers are not exercised.
+      limits_pt: "Lê apenas os atributos do Set-Cookie (Secure, SameSite) na resposta da única sondagem; armazenamento, workers e outros cabeçalhos de isolamento não são exercitados."
   "5.20.1":
-    weight: consultative
+    weight: essential
     label: Disclosure in responses, errors and published files
     coverage_class: information_disclosure
-    applies_when: [operation.http]
+    applies_when: [case.web_hygiene]
+    closes_with:
+      adapter: http.web-hygiene
+      check: disclosure
+      scope: partial
+      limits: >-
+        Reads only the Server and X-Powered-By headers on the one probe response; error bodies,
+        logs, backups, published files and build artifacts are not exercised.
+      limits_pt: "Lê apenas os cabeçalhos Server e X-Powered-By na resposta da única sondagem; corpos de erro, logs, backups, arquivos publicados e artefatos de build não são exercitados."

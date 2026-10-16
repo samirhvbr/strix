@@ -78,6 +78,33 @@ class TransportCase(BaseModel):
     ca_certificate: Annotated[str, Field(max_length=16384)] | None = None
 
 
+class WebHygieneCase(BaseModel):
+    """Redirect/CORS/cookie/disclosure probe (PENTEST-15, PT-23).
+
+    ``redirect_param`` and ``redirect_target`` are operator-declared, not agent-supplied: the
+    runtime appends this one fixed query parameter, naming the app's own redirect parameter, with
+    a fixed out-of-scope destination, and records only whether the response's ``Location`` header
+    followed it. Both or neither must be set.
+    """
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+    adapter: Literal["http.web-hygiene"]
+    version: Literal[1]
+    probe_operation: Reference
+    redirect_param: (
+        Annotated[str, Field(min_length=1, max_length=64, pattern=r"^[A-Za-z0-9_-]+$")] | None
+    ) = None
+    redirect_target: Annotated[str, Field(min_length=1, max_length=2048)] | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
+        data: dict[str, Any] = handler(self)
+        if self.redirect_param is None:
+            data.pop("redirect_param", None)
+            data.pop("redirect_target", None)
+        return data
+
+
 class Case(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
     version: Annotated[int, Field(strict=True, ge=1)]
@@ -86,6 +113,7 @@ class Case(BaseModel):
     authorization: AuthorizationCase | None = None
     business: BusinessCase | None = None
     transport: TransportCase | None = None
+    web_hygiene: WebHygieneCase | None = None
 
     @model_serializer(mode="wrap")
     def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
@@ -96,6 +124,8 @@ class Case(BaseModel):
             data.pop("business", None)
         if self.transport is None:
             data.pop("transport", None)
+        if self.web_hygiene is None:
+            data.pop("web_hygiene", None)
         return data
 
 
@@ -192,7 +222,30 @@ class AssessmentContext(BaseModel):
         if operation.method != "POST" and operation.resource_ref is not None:
             raise ValueError("Read operations must not carry effect payloads")
 
+    def _validate_web_hygiene_case(self, case: Case, spec: WebHygieneCase) -> None:
+        if (
+            self.version != 2
+            or case.authorization is not None
+            or case.business is not None
+            or case.transport is not None
+            or len(case.identities) != 1
+            or case.operations != [spec.probe_operation]
+            or self.operations[spec.probe_operation].method not in {"GET", "HEAD"}
+            or (spec.redirect_param is None) != (spec.redirect_target is None)
+        ):
+            raise ValueError("Invalid web-hygiene inspection scope")
+        if spec.redirect_target is not None:
+            try:
+                canary = httpx.URL(spec.redirect_target)
+            except httpx.InvalidURL:
+                raise ValueError("Invalid web-hygiene redirect canary") from None
+            probe_host = httpx.URL(self.operations[spec.probe_operation].url).host
+            if canary.scheme not in {"http", "https"} or canary.host == probe_host:
+                raise ValueError("Invalid web-hygiene redirect canary scope")
+
     def _validate_case_adapter(self, case: Case) -> None:
+        if case.web_hygiene is not None:
+            self._validate_web_hygiene_case(case, case.web_hygiene)
         if case.transport is not None and (
             self.version != 2
             or case.authorization is not None

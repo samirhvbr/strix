@@ -26,11 +26,15 @@ ADAPTER_FACTS = {
     "http.single-credit": "case.business",
     "openssl.tls": "transport.tls",
     "ssh-audit": "transport.ssh",
+    "http.web-hygiene": "case.web_hygiene",
 }
 #: The closed vocabulary ``applies_when`` may use.
 FACTS = frozenset({*ADAPTER_FACTS.values(), "operation.http"})
 WEIGHTS = frozenset({"essential", "consultative"})
 SCOPES = frozenset({"full", "partial"})
+#: http.web-hygiene is one case producing four independent sub-verdicts (PENTEST-15/PT-23); each
+#: essential item that closes with it must name exactly which one it reads.
+WEB_HYGIENE_CHECKS = frozenset({"redirect", "cors", "cookies", "disclosure"})
 
 
 class CatalogError(ValueError):
@@ -51,6 +55,7 @@ class CatalogItem:
     scope: str | None = None
     limits: str | None = None
     limits_pt: str | None = None
+    check: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -113,7 +118,7 @@ def _curate(item: CatalogItem, entry: dict[str, Any]) -> CatalogItem:
     if not isinstance(facts, list) or not facts or not set(facts) <= FACTS:
         raise CatalogError(f"selection.yaml: {item.id} needs facts from the closed vocabulary")
     closes = entry.get("closes_with")
-    adapter = scope = limits = limits_pt = None
+    adapter = scope = limits = limits_pt = check = None
     if weight == "essential":
         if not isinstance(closes, dict):
             raise CatalogError(f"selection.yaml: essential {item.id} needs closes_with")
@@ -123,6 +128,15 @@ def _curate(item: CatalogItem, entry: dict[str, Any]) -> CatalogItem:
             raise CatalogError(f"selection.yaml: {item.id} closes_with is incomplete")
         if facts != [ADAPTER_FACTS[adapter]]:
             raise CatalogError(f"selection.yaml: {item.id} facts must be its adapter's fact")
+        # http.web-hygiene is one case with four independent sub-verdicts; every essential item
+        # that closes with it must name exactly which one, so two items never silently share a
+        # verdict the way the other, single-outcome adapters do.
+        check = closes.get("check")
+        if adapter == "http.web-hygiene":
+            if check not in WEB_HYGIENE_CHECKS:
+                raise CatalogError(f"selection.yaml: {item.id} needs a known web-hygiene check")
+        elif check is not None:
+            raise CatalogError(f"selection.yaml: {item.id} adapter does not use check")
     elif closes is not None:
         raise CatalogError(f"selection.yaml: consultative {item.id} cannot close with an adapter")
     return CatalogItem(
@@ -138,6 +152,7 @@ def _curate(item: CatalogItem, entry: dict[str, Any]) -> CatalogItem:
         scope,
         " ".join(str(limits).split()) if limits else None,
         " ".join(str(limits_pt).split()) if limits_pt else None,
+        check,
     )
 
 

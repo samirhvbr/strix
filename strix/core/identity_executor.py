@@ -15,6 +15,7 @@ from strix.core.business_case import run_single_credit_case
 from strix.core.evidence_ledger import EvidenceError
 from strix.core.transport_case import run_transport_case
 from strix.core.web_authorization import WebAuthorizationError
+from strix.core.web_hygiene_case import run_web_hygiene_case
 
 
 if TYPE_CHECKING:
@@ -88,6 +89,10 @@ class IdentityExecutor:
                 if baseline_ref is not None:
                     raise EvidenceError("Business retest requires a fresh approved assessment")
                 return await run_single_credit_case(self, agent_ref=agent_ref, case_ref=case_ref)
+            if self.context.cases[case_ref].web_hygiene is not None:
+                if baseline_ref is not None:
+                    raise EvidenceError("Web-hygiene retest requires a fresh approved assessment")
+                return await run_web_hygiene_case(self, agent_ref=agent_ref, case_ref=case_ref)
             return await run_private_read_case(
                 self, agent_ref=agent_ref, case_ref=case_ref, baseline_ref=baseline_ref
             )
