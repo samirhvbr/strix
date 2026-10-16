@@ -19,6 +19,7 @@ import httpx
 
 from strix.core.assessment_context import IdentityUnavailableError
 from strix.core.evidence_ledger import EvidenceError
+from strix.core.server_name import request_presentation
 from strix.core.web_authorization import WebAuthorizationError
 
 
@@ -209,9 +210,15 @@ async def run_web_hygiene_case(
             checks=None,
         )
     try:
+        name_headers, name_extensions = request_presentation(operation)
         async with (
             httpx.AsyncClient(follow_redirects=False, trust_env=False, timeout=20) as client,
-            client.stream(operation.method, url, headers=headers) as response,
+            client.stream(
+                operation.method,
+                url,
+                headers={**headers, **name_headers},
+                extensions=name_extensions,
+            ) as response,
         ):
             # Headers are already available; the body is never read, only bounded and
             # discarded, so a hostile or misconfigured target cannot exhaust memory here.

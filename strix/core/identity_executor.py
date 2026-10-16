@@ -13,6 +13,7 @@ from strix.core.assessment_context import IdentityUnavailableError
 from strix.core.authorization_case import run_private_read_case
 from strix.core.business_case import run_single_credit_case
 from strix.core.evidence_ledger import EvidenceError
+from strix.core.server_name import request_presentation
 from strix.core.transport_case import run_transport_case
 from strix.core.web_authorization import WebAuthorizationError
 from strix.core.web_hygiene_case import run_web_hygiene_case
@@ -193,9 +194,14 @@ class IdentityExecutor:
                 self.ledger.register_effect(attempt, operation.resource_ref)
                 headers["Idempotency-Key"] = attempt
                 payload = {"resource_ref": operation.resource_ref}
+            name_headers, name_extensions = request_presentation(operation)
             try:
                 async with client.stream(
-                    operation.method, operation.url, headers=headers, json=payload
+                    operation.method,
+                    operation.url,
+                    headers={**headers, **name_headers},
+                    json=payload,
+                    extensions=name_extensions,
                 ) as response:
                     for cookie in client.cookies.jar:
                         if cookie.value:

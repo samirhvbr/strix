@@ -21,14 +21,16 @@ if TYPE_CHECKING:
     from strix.core.identity_executor import IdentityExecutor
 
 
-def inspect_tls(host: str, port: int, ca: str | None) -> dict[str, Any]:
+def inspect_tls(
+    host: str, port: int, ca: str | None, server_name: str | None = None
+) -> dict[str, Any]:
     result: dict[str, Any] = {"tool_version": ssl.OPENSSL_VERSION}
     try:
         context = ssl.create_default_context(cadata=ca)
         context.minimum_version = ssl.TLSVersion.TLSv1_2
         with (
             socket.create_connection((host, port), timeout=5) as raw,
-            context.wrap_socket(raw, server_hostname=host) as secure,
+            context.wrap_socket(raw, server_hostname=server_name or host) as secure,
         ):
             result.update(
                 verdict="compliant",
@@ -121,9 +123,11 @@ async def inspect_ssh(host: str, port: int) -> dict[str, Any]:
             await process.wait()
 
 
-async def inspect_tls_drained(host: str, port: int, ca: str | None) -> dict[str, Any]:
+async def inspect_tls_drained(
+    host: str, port: int, ca: str | None, server_name: str | None = None
+) -> dict[str, Any]:
     """Cancellation must settle the bounded worker before controller ownership is released."""
-    task = asyncio.create_task(asyncio.to_thread(inspect_tls, host, port, ca))
+    task = asyncio.create_task(asyncio.to_thread(inspect_tls, host, port, ca, server_name))
     try:
         return await asyncio.shield(task)
     except asyncio.CancelledError:
@@ -152,7 +156,9 @@ async def run_transport_case(
         if executor._authorize is not None:
             await asyncio.to_thread(executor._authorize)
         observation = (
-            await inspect_tls_drained(url.host, url.port or 443, spec.ca_certificate)
+            await inspect_tls_drained(
+                url.host, url.port or 443, spec.ca_certificate, operation.server_name
+            )
             if spec.adapter == "openssl.tls"
             else await inspect_ssh(url.host, url.port or 22)
         )

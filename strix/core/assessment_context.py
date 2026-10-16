@@ -17,10 +17,12 @@ from pydantic import (
     Field,
     SecretStr,
     SerializerFunctionWrapHandler,
+    field_validator,
     model_serializer,
 )
 
 from strix.core.assessment import AssessmentPolicy, Reference, read_assessment_json
+from strix.core.server_name import validate_server_name
 
 
 if TYPE_CHECKING:
@@ -39,12 +41,22 @@ class Operation(BaseModel):
     method: Literal["GET", "HEAD", "POST", "TLS", "SSH"]
     url: str
     resource_ref: Reference | None = None
+    # The DNS name the site answers to. The address in ``url`` stays the only authority; the
+    # name is presented as SNI and Host (see strix/core/server_name.py).
+    server_name: str | None = None
+
+    @field_validator("server_name")
+    @classmethod
+    def _check_server_name(cls, value: str | None) -> str | None:
+        return None if value is None else validate_server_name(value)
 
     @model_serializer(mode="wrap")
     def serialize(self, handler: SerializerFunctionWrapHandler) -> dict[str, Any]:
         data: dict[str, Any] = handler(self)
         if self.resource_ref is None:
             data.pop("resource_ref", None)
+        if self.server_name is None:
+            data.pop("server_name", None)
         return data
 
 
@@ -175,6 +187,8 @@ class AssessmentContext(BaseModel):
                 raise ValueError(
                     "Operations need fixed HTTP URLs without credentials or query strings"
                 )
+            if operation.server_name is not None and operation.method == "SSH":
+                raise ValueError("A server name applies to HTTP and TLS operations, not SSH")
             try:
                 address = ipaddress.ip_address(url.host)
             except ValueError:
