@@ -391,6 +391,27 @@ async def run_strix_scan(
             max_budget_usd or 0,
         )
         authorization_check()
+    elif (
+        assessment_policy is not None
+        and assessment_policy.version == 1
+        and scan_config.get("web_authorization")
+    ):
+        # A scope-only WEB authorization: no identity context to narrow the agent's tools,
+        # so the full scanning agent runs, confined to the policy's own network grant.
+        if identity_context is not None:
+            raise ValueError("A scope-only assessment accepts no identity context")
+        handoff = Path(scan_config["web_authorization"])
+        if handoff.resolve().is_relative_to(run_dir.resolve()):
+            raise ValueError("WEB authorization must stay outside run artifacts")
+        web_authorization = WebAuthorization(handoff)
+        if interactive or budget_policy != "stop":
+            raise ValueError(
+                "A WEB-authorized assessment requires headless execution and a fixed budget"
+            )
+        authorization_check = partial(
+            web_authorization.check_scope_only, scan_id, assessment_policy, max_budget_usd or 0
+        )
+        authorization_check()
     teardown_logging = setup_scan_logging(run_dir)
     set_scan_id(scan_id)
 

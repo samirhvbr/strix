@@ -96,7 +96,13 @@ async def retest_assessment(
         approved_policy, approved_context, budget = await asyncio.to_thread(
             authorization.fetch, directory.name
         )
-        if approved_policy.digest != policy.digest or approved_context.digest != context.digest:
+        # A retest is only ever directed at the controlled profile (checked above), which
+        # always carries a context; a scope-only authorization has none to compare.
+        if (
+            approved_context is None
+            or approved_policy.digest != policy.digest
+            or approved_context.digest != context.digest
+        ):
             raise WebAuthorizationError("Retest differs from the original WEB authorization")
 
         # No model or billable provider runs here. The grant ceiling and all recorded
