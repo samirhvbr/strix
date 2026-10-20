@@ -15,6 +15,7 @@ from agents import RunContextWrapper
 from agents.tool import FunctionTool
 
 from strix.agents import factory
+from strix.config import loader
 from strix.core import runner
 from strix.core.assessment import AssessmentPolicy, assessment_mcp_requests, bind_assessment_policy
 from strix.core.assessment_context import parse_context
@@ -194,6 +195,12 @@ async def test_revocation_blocks_inference_before_a_paid_call(tmp_path: Path) ->
 def test_cli_uses_web_scope_and_cannot_raise_approved_budget(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    # No model was approved by WEB, so the CLI falls back to whatever is locally configured
+    # and checks it has credentials before anything else; give it one so the test, which is
+    # about budget capping, does not fail on an unrelated missing-model error.
+    monkeypatch.setattr(loader, "_cached", None)
+    monkeypatch.setenv("STRIX_LLM", "openai/gpt-5")
+    monkeypatch.setenv("LLM_API_KEY", "sk-test")
     monkeypatch.chdir(tmp_path)
     raw = json.loads(json.dumps(approval()).replace("127.0.0.1", "192.0.2.10"))
     web_gate(tmp_path, monkeypatch, {"body": raw})

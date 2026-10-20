@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 import litellm
@@ -7,6 +8,10 @@ from agents.usage import Usage
 
 from strix.report.pricing import resolve_litellm_model
 from strix.report.usage import LLMUsageLedger
+
+
+if TYPE_CHECKING:
+    import pytest
 
 
 def test_resolves_common_bare_model_names() -> None:
@@ -24,6 +29,38 @@ def test_resolves_common_bare_model_names() -> None:
     # the resolver must not guess from its bare name. A provider-qualified
     # model remains deterministic.
     assert resolve_litellm_model("minimax/MiniMax-M3") == "minimax/MiniMax-M3"
+
+
+def test_resolver_never_falls_back_to_a_provider_that_signs_in(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A synthetic price map, so the test does not depend on what LiteLLM lists
+    # today: the only listing of this model is under a device-flow provider.
+    price = {"input_cost_per_token": 3e-06, "output_cost_per_token": 1.5e-05}
+    monkeypatch.setattr(
+        litellm,
+        "model_cost",
+        {
+            "github_copilot/vendor-model-9": {**price, "litellm_provider": "github_copilot"},
+            "chatgpt/other-model-9": {**price, "litellm_provider": "chatgpt"},
+            "xai/native-model-9": {**price, "litellm_provider": "xai"},
+        },
+    )
+    resolve_litellm_model.cache_clear()
+    try:
+        # Pricing used to resolve these to the device-flow listing, and the cost
+        # call then waited on a GitHub or OpenAI sign-in that never came.
+        assert resolve_litellm_model("vendor-model-9") is None
+        assert resolve_litellm_model("openrouter/anthropic/vendor-model-9") is None
+        assert resolve_litellm_model("other-model-9") is None
+        # A model named with the provider prefix is the operator's own choice.
+        assert resolve_litellm_model("github_copilot/vendor-model-9") == (
+            "github_copilot/vendor-model-9"
+        )
+        # Other providers keep resolving by suffix.
+        assert resolve_litellm_model("native-model-9") == "xai/native-model-9"
+    finally:
+        resolve_litellm_model.cache_clear()
 
 
 def test_resolver_returns_none_for_unresolvable_model() -> None:

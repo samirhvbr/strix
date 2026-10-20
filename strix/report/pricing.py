@@ -6,6 +6,15 @@ from functools import lru_cache
 from typing import Any, cast
 
 
+# LiteLLM providers whose auth runs an interactive OAuth device flow, polling the
+# vendor with ``time.sleep`` until a person approves, when a request is built
+# without a saved token. ``litellm.completion_cost`` builds that request just to
+# resolve the provider, so pricing a name that suffix-matched one of these used
+# to sign in (and block for about a minute per attempt) instead of looking up a
+# price. A model is only priced through them when it is named with their prefix.
+_INTERACTIVE_LOGIN = frozenset({"github_copilot", "chatgpt"})
+
+
 @lru_cache(maxsize=512)
 def resolve_litellm_model(model: str) -> str | None:
     """Return a provider-qualified model name that LiteLLM can price."""
@@ -36,7 +45,11 @@ def resolve_litellm_model(model: str) -> str | None:
         if "/" in normalized:
             names.append(normalized.rsplit("/", 1)[-1])
         for name in names:
-            matches = sorted(key for key in model_cost if key.endswith(f"/{name}"))
+            matches = sorted(
+                key
+                for key in model_cost
+                if key.endswith(f"/{name}") and key.split("/", 1)[0] not in _INTERACTIVE_LOGIN
+            )
             if not matches:
                 continue
             prices = {

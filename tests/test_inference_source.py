@@ -287,12 +287,25 @@ def test_consent_output_names_the_model_and_whether_this_machine_can_pay_for_it(
     assert loader.load_settings().llm.api_key is None
 
 
-def test_consent_output_without_a_model_is_unchanged(
+def test_consent_output_without_an_approved_model_names_the_local_configuration(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
+    """WEB approved no model: this run pays with whatever is already configured here.
+
+    Until this was fixed, that case reported ``inference: null`` and nothing ever checked
+    the local configuration before a run started — a missing or broken provider key only
+    surfaced deep inside the run, after the sandbox had already started. The consent output
+    now names what will actually be used and whether this machine can pay for it, the same
+    as it already did for an approved model.
+    """
     use(monkeypatch, configured("openai/gpt-5", api_key="sk-openai"))
     out = inspect(tmp_path, monkeypatch, capsys, lab(approval()))
-    assert out["inference"] is None
+    assert out["inference"] == {
+        "source": "local",
+        "model": "openai/gpt-5",
+        "credentials": "available",
+    }
+    assert "sk-openai" not in json.dumps(out)
     assert loader.load_settings().llm.model == "openai/gpt-5"
     assert loader.load_settings().llm.api_key == "sk-openai"
 
@@ -311,6 +324,39 @@ def test_a_run_refuses_to_start_when_the_approved_model_has_no_credentials(
         parse_arguments()
     assert exit_code.value.code == 2
     assert "no credentials on this machine" in capsys.readouterr().err
+
+
+def test_a_run_refuses_to_start_when_no_model_is_configured_locally_either(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """No model approved by WEB, and nothing configured on this machine: fail before the sandbox."""
+    use(monkeypatch, Settings())
+    web_gate(tmp_path, monkeypatch, {"body": lab(approval())})
+    monkeypatch.setattr(
+        "sys.argv", ["strix", "-n", "--web-authorization", str(tmp_path / "authorization.json")]
+    )
+    with pytest.raises(SystemExit) as exit_code:
+        parse_arguments()
+    assert exit_code.value.code == 2
+    assert "No model is configured on this machine" in capsys.readouterr().err
+
+
+def test_a_run_refuses_to_start_when_the_local_model_has_no_credentials(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """No model approved by WEB; a model IS configured locally, but it has no credentials."""
+    monkeypatch.delenv("DEEPSEEK_API_KEY", raising=False)
+    use(monkeypatch, configured("deepseek/deepseek-v4-pro"))
+    web_gate(tmp_path, monkeypatch, {"body": lab(approval())})
+    monkeypatch.setattr(
+        "sys.argv", ["strix", "-n", "--web-authorization", str(tmp_path / "authorization.json")]
+    )
+    with pytest.raises(SystemExit) as exit_code:
+        parse_arguments()
+    assert exit_code.value.code == 2
+    err = capsys.readouterr().err
+    assert "deepseek/deepseek-v4-pro" in err
+    assert "no credentials on this machine" in err
 
 
 def test_module_exposes_only_the_local_source_for_now() -> None:

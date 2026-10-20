@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any, cast
 
-from strix.config import apply_config_override
+from strix.config import apply_config_override, load_settings
 from strix.config.settings import DEFAULT_MAX_TURNS
 from strix.core.assessment import (
     bind_assessment_policy,
@@ -410,7 +410,9 @@ Strix Cloud:
             if args.assessment_policy or args.assessment_context:
                 parser.error("WEB authorization supplies its own immutable assessment context")
             args.assessment_policy = approved_policy.model_dump()
-            args.assessment_context = approved_context.model_dump()
+            args.assessment_context = (
+                approved_context.model_dump() if approved_context is not None else None
+            )
             if not args.target and not args.resume:
                 args.target = [target.value for target in approved_policy.targets]
             args.max_budget_usd = min(args.max_budget_usd or approved_budget, approved_budget)
@@ -427,6 +429,36 @@ Strix Cloud:
                         "The approved model has no credentials on this machine; "
                         "configure them for that provider or ask for another model"
                     )
+            else:
+                # No model was approved: this run pays with whatever is already configured on
+                # this machine (``inference_source: local``), exactly like an unauthorized scan.
+                # Nothing until now ever checked that configuration exists before spending the
+                # budget's time; surface it here, before the sandbox even starts.
+                local_model = (load_settings().llm.model or "").strip()
+                if not local_model:
+                    inference_summary = {
+                        "source": "local",
+                        "model": "",
+                        "credentials": CREDENTIALS_MISSING,
+                    }
+                    if not args.inspect_web_authorization:
+                        parser.error(
+                            "No model is configured on this machine for Strix to use; "
+                            "run 'strix auth login' or set a provider's API key, then try again"
+                        )
+                else:
+                    credentials = local_credentials_state(local_model)
+                    inference_summary = {
+                        "source": "local",
+                        "model": local_model,
+                        "credentials": credentials,
+                    }
+                    if credentials == CREDENTIALS_MISSING and not args.inspect_web_authorization:
+                        parser.error(
+                            f"The locally configured model '{local_model}' has no credentials "
+                            "on this machine; configure its provider's API key, or sign in again"
+                            " if it is a subscription model, then try again"
+                        )
             if args.inspect_web_authorization:
                 sys.stdout.write(
                     json.dumps(
