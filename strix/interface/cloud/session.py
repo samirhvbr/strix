@@ -134,7 +134,7 @@ def _run_scopes_set(console: Console, argv: list[str]) -> int:
                     http.CloudError(
                         "the platform updated the session scopes, but the local session "
                         f"metadata could not be stored: {exc}. Check the active scopes with "
-                        "`strix cloud session show`; fix local storage and rerun the same "
+                        "`strix cloud session scopes`; fix local storage and rerun the same "
                         "scopes set command to refresh the stored metadata.",
                         payload={"scopes_updated": True, "local_record_updated": False},
                     ),
