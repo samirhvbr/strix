@@ -50,7 +50,7 @@ EN = {
     "started_at": "Started",
     "ended_at": "Ended",
     "duration_s": "Duration (s)",
-    "strix_version": "Strix version",
+    "strix_version": "Pentest version",
     "operator": "Operator",
     "authorization_ref": "Authorization reference",
     "empty": "No findings were recorded in the supplied artifact.",
@@ -301,6 +301,18 @@ def test_portuguese_document_uses_its_glossary_and_keeps_accents() -> None:
 
 def test_english_document_has_no_translation_notice() -> None:
     assert "English is the source of truth." not in _text(render_package_pdf(_document()))
+
+
+def test_the_cover_the_author_and_the_text_name_the_product_pentest() -> None:
+    # The product is Pentest wherever a client reads it. The metadata key stays `strix_version`
+    # (the engine's own report-package field); only what is printed changes.
+    pdf = render_package_pdf(_document())
+    reader = PdfReader(BytesIO(pdf))
+
+    assert "SHVIA / PENTEST" in reader.pages[0].extract_text()
+    assert reader.metadata is not None
+    assert reader.metadata.author == "SHVIA Pentest"
+    assert "strix" not in _text(pdf).lower()
 
 
 def test_output_is_deterministic() -> None:

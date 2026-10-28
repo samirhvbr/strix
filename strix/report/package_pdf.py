@@ -638,7 +638,7 @@ def _cover(doc: _Document, styles: dict[str, ParagraphStyle]) -> list[Flowable]:
     )
     confidential.hAlign = "CENTER"
     flow: list[Flowable] = [
-        Paragraph("SHVIA / STRIX", styles["brand"]),
+        Paragraph("SHVIA / PENTEST", styles["brand"]),
         Spacer(1, 130),
         Paragraph(_esc(doc.label("confidential")), styles["eyebrow"]),
         Spacer(1, 20),
@@ -879,7 +879,7 @@ def render_package_pdf(raw: Mapping[str, Any]) -> bytes:
         buffer,
         pagesize=A4,
         title=_normalize_text(doc.label("title")),
-        author="SHVIA Strix",
+        author="SHVIA Pentest",
         leftMargin=20 * mm,
         rightMargin=20 * mm,
         topMargin=22 * mm,
