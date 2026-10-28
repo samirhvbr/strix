@@ -162,7 +162,7 @@ def test_session_scope_update_reports_local_storage_failure(
         assert payload["local_record_updated"] is False
         output = payload["error"]
     assert "disk full" in output
-    assert "session show" in output
+    assert "session scopes" in output
     assert "platform updated the session scopes" in output
     assert calls == [("PATCH", "/cli/session")]
     assert auth_path.read_text(encoding="utf-8") == before
