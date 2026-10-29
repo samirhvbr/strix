@@ -24,7 +24,7 @@ from openai.types.responses import ResponseOutputMessage, ResponseOutputText
 from strix.config import loader
 from strix.report import dedupe
 from strix.report.state import ReportState, set_global_report_state
-from strix.tools.reporting.tool import _do_create
+from strix.tools.reporting.tool import _do_create, _do_create_dependency
 
 
 if TYPE_CHECKING:
@@ -103,6 +103,30 @@ def _vulnerability(title: str = "SQL injection in /login") -> dict[str, Any]:
     }
 
 
+def _dependency() -> dict[str, Any]:
+    return {
+        "title": "Vulnerable example-package dependency",
+        "description": "The package is pinned to an affected version.",
+        "target": "package-lock.json",
+        "cve": "CVE-2024-0001",
+        "package_name": "example-package",
+        "installed_version": "1.0.0",
+        "impact": "The dependency exposes the vulnerable code path.",
+        "remediation_steps": "Upgrade to the fixed version.",
+        "assumptions": "The lockfile describes the deployed application.",
+        "package_ecosystem": "npm",
+        "manifest_path": "package-lock.json",
+        "fixed_version": "1.0.1",
+        "cwe": None,
+        "advisory_cvss": 7.5,
+        "technical_analysis": "The package is present in the lockfile.",
+        "fix_effort": "low",
+        "reachability_evidence": "The package is installed; call sites have not been traced.",
+        "contextual_cvss_breakdown": _CVSS,
+        "contextual_cvss_reasoning": "The fixture retains the advisory impact assumptions.",
+    }
+
+
 @pytest.fixture
 def model(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> _FakeDedupeModel:
     fake = _FakeDedupeModel()
@@ -158,6 +182,42 @@ async def test_distinct_findings_filed_concurrently_are_all_stored(state: Report
 
     assert all(result["success"] for result in results)
     assert len(state.vulnerability_reports) == 4
+
+
+async def test_dependency_model_fallback_serializes_concurrent_filings(
+    state: ReportState, model: _FakeDedupeModel
+) -> None:
+    # A finding with the same CVE but no package identity makes the real
+    # dependency check fall back to the model instead of returning synchronously.
+    legacy = await _do_create(
+        **{**_vulnerability("Existing application finding"), "cve": "CVE-2024-0001"}
+    )
+    assert legacy["success"] is True
+    calls_before = model.calls
+
+    first, second = await asyncio.gather(
+        _do_create_dependency(**_dependency()), _do_create_dependency(**_dependency())
+    )
+
+    assert sorted([first["success"], second["success"]]) == [False, True]
+    stored = [r for r in state.vulnerability_reports if r.get("finding_class") == "dependency_cve"]
+    assert len(stored) == 1
+    rejected = first if not first["success"] else second
+    assert rejected["duplicate_of"] == stored[0]["id"]
+    # The first filing calls the model; the next sees its package identity.
+    assert model.calls - calls_before == 1
+
+
+async def test_dependency_identity_fast_path_still_needs_no_model(
+    state: ReportState, model: _FakeDedupeModel
+) -> None:
+    first, second = await asyncio.gather(
+        _do_create_dependency(**_dependency()), _do_create_dependency(**_dependency())
+    )
+
+    assert sorted([first["success"], second["success"]]) == [False, True]
+    assert len(state.vulnerability_reports) == 2
+    assert model.calls == 0
 
 
 async def test_a_failing_check_does_not_leave_the_lock_held(
