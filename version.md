@@ -1,7 +1,12 @@
 # Version — SHVIA fork of Strix
 
 **Current version:** `1.2.43`
-**Upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
+**Released upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
+
+**Review branch upstream base:** `6b7ae2ebe4d47037a927aade23265ff4e4f27e84` on
+`feat/upstream-sync-contributions-20261029` (unreleased; see
+[the integration record](docs/UPSTREAM_INTEGRATION_2026-10-29.md)). The version bump
+and release procedure apply only after review and delivery on `master`.
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
 > line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you

@@ -165,6 +165,10 @@ class AgentCoordinator:
             self._pause_reasons.discard("budget")
 
     @property
+    def operator_paused(self) -> bool:
+        return "operator" in self._pause_reasons
+
+    @property
     def resume_epoch(self) -> int:
         """Bumped by every ``resume_budget``; an agent parks against the value it read."""
         return self._resume_epoch
@@ -533,7 +537,9 @@ class AgentCoordinator:
                 self.recovery_counts.pop(target_agent_id, None)
                 self.idle_resume_counts.pop(target_agent_id, None)
                 self._parent_notified.discard(target_agent_id)
-                self.statuses[target_agent_id] = "waiting"
+                held = self.budget_paused and self.statuses[target_agent_id] == "budget_paused"
+                if not held:
+                    self.statuses[target_agent_id] = "waiting"
             runtime.wake.set()
             stream = runtime.stream
             interrupt_on_message = runtime.interrupt_on_message
@@ -736,6 +742,7 @@ class AgentCoordinator:
                 "reserve_stopped": self._reserve_stopped,
                 "budget_paused": self.budget_paused,
                 "pause_reasons": sorted(self._pause_reasons),
+                "operator_paused": self.operator_paused,
             }
 
     async def restore(self, snap: dict[str, Any]) -> None:
@@ -759,7 +766,13 @@ class AgentCoordinator:
             self._reserve_stopped = bool(snap.get("reserve_stopped", False))
             reasons = snap.get("pause_reasons")
             if reasons is None:
-                reasons = ["budget"] if snap.get("budget_paused", False) else []
+                reasons = (
+                    ["operator"]
+                    if snap.get("operator_paused", False)
+                    else ["budget"]
+                    if snap.get("budget_paused", False)
+                    else []
+                )
             if not isinstance(reasons, list) or any(
                 reason not in {"budget", "operator", "test"} for reason in reasons
             ):

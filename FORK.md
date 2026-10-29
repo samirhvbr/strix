@@ -4,6 +4,20 @@ Fork de [`usestrix/strix`](https://github.com/usestrix/strix) mantido em
 [`samirhvbr/strix`](https://github.com/samirhvbr/strix). Este arquivo rastreia a
 **nossa** evolução versus a do upstream.
 
+## Pending integration — 2026-10-29
+
+Branch `feat/upstream-sync-contributions-20261029` starts from fork `master`
+`8aa0791e` (1.2.43) and merges upstream `main` at `6b7ae2eb` (49 commits not
+previously reachable from the fork). The actual common ancestor is `f7a32ae6`;
+the previous release record names `62b4964`, which is an earlier documented base.
+The merge preserves the fork's independent pause reasons, assessment authorization,
+network guard, credential scoping, local report viewer and terminal usage-limit handling.
+Guarded sessions wait for the real sandbox even when deferred startup is requested.
+
+This is an unreleased review branch. Version 1.2.43, `master`, the `main` mirror,
+tags and releases are unchanged. See [the integration record](docs/UPSTREAM_INTEGRATION_2026-10-29.md)
+for the inventory, individual decisions, validation boundaries and continuation.
+
 ## Version
 
 The fork has its own `X.Y.Z`, independent of upstream's number: `Z` is one delivery, `Y` a new

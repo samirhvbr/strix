@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import inspect
 import io
 import logging
 import os
@@ -19,10 +21,13 @@ from strix.config import load_settings
 from strix.runtime.backends import backend_supports_bind_mounts, get_backend
 from strix.runtime.caido_bootstrap import bootstrap_caido
 from strix.runtime.caido_handle import CaidoBootstrapHandle
+from strix.runtime.deferred_session import DeferredSandboxClient, DeferredSandboxSession
 from strix.runtime.network_policy import NetworkPolicy, parse_network_policy
 
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable
+
     from agents.sandbox.session import BaseSandboxSession
 
     from strix.runtime.status import StatusSink
@@ -297,16 +302,25 @@ def _gitdir_from_pointer(git_file: Path) -> Path | None:
     return None
 
 
-async def create_or_reuse(
+async def _resolve_extra_file_archive(
+    extra_files: list[dict[str, Any]] | Awaitable[list[dict[str, Any]] | None] | None,
+    local_sources: list[dict[str, Any]],
+) -> bytes | None:
+    files = await extra_files if inspect.isawaitable(extra_files) else extra_files
+    return build_extra_file_archive(files, local_sources) if files else None
+
+
+async def create_or_reuse(  # noqa: PLR0915 - eager/deferred lifecycle and network-policy admission
     scan_id: str,
     *,
     image: str,
     local_sources: list[dict[str, Any]],
-    extra_files: list[dict[str, Any]] | None = None,
+    extra_files: list[dict[str, Any]] | Awaitable[list[dict[str, Any]] | None] | None = None,
     status_sink: StatusSink | None = None,
     authorized_targets: list[dict[str, str]] | None = None,
     network_policy: NetworkPolicy | None = None,
     run_dir: Path | None = None,
+    defer: bool = False,
 ) -> dict[str, Any]:
     """Return the existing session bundle for ``scan_id`` or create a new one.
 
@@ -322,7 +336,9 @@ async def create_or_reuse(
     Each ``extra_files`` entry (``{"workspace_path": "/workspace/<rel>",
     "content": bytes | str}``) lands as a regular, agent-writable file at its
     ``workspace_path`` on every backend: the files are uploaded as one archive
-    and unpacked inside the sandbox right after bring-up.
+    and unpacked inside the sandbox right after bring-up. ``extra_files`` may
+    also be an awaitable resolving to that list: provisioning starts at once and
+    the files are awaited only when the sandbox is ready to receive them.
     """
 
     def report(phase: str) -> None:
@@ -352,9 +368,6 @@ async def create_or_reuse(
     else:
         bind_mounts = []
         entries = build_manifest_entries(local_sources)
-    extra_file_archive = (
-        build_extra_file_archive(extra_files, local_sources) if extra_files else None
-    )
 
     # Caido runs as an in-container sidecar; HTTP(S) traffic from any
     # process started via ``session.exec`` (the SDK's Shell tool, etc.)
@@ -373,48 +386,79 @@ async def create_or_reuse(
         backend_name,
         image,
     )
-    report("Starting sandbox container")
-    client, session = await backend(
-        image=image,
-        manifest=manifest,
-        exposed_ports=(_CONTAINER_CAIDO_PORT,),
-        bind_mounts=bind_mounts,
-        **({"network_policy": policy} if policy is not None else {}),
-    )
 
-    if extra_file_archive is not None:
-        report("Placing workspace files")
+    async def _bring_up() -> tuple[Any, Any]:
+        report("Starting sandbox container")
+        client, session = await _create_or_discard(
+            backend(
+                image=image,
+                manifest=manifest,
+                exposed_ports=(_CONTAINER_CAIDO_PORT,),
+                bind_mounts=bind_mounts,
+                **({"network_policy": policy} if policy is not None else {}),
+            )
+        )
         try:
-            await stage_extra_files(session, extra_file_archive)
+            extra_file_archive = await _resolve_extra_file_archive(extra_files, local_sources)
+            if extra_file_archive is not None:
+                report("Placing workspace files")
+                await stage_extra_files(session, extra_file_archive)
         except BaseException:
             await _discard_session(client, session)
             raise
+        return client, session
 
-    report("Setting up the proxy")
-    try:
+    async def _caido_url(session: Any) -> str:
+        report("Setting up the proxy")
         caido_endpoint = await session.resolve_exposed_port(_CONTAINER_CAIDO_PORT)
+        scheme = "https" if caido_endpoint.tls else "http"
+        host_caido_url = f"{scheme}://{caido_endpoint.host}:{caido_endpoint.port}"
+        logger.debug("Caido host endpoint resolved: %s", host_caido_url)
+        return host_caido_url
+
+    def _caido(session: Any, host_caido_url: str) -> Any:
+        return bootstrap_caido(
+            session,
+            host_url=host_caido_url,
+            container_url=container_caido_url,
+            scan_id=scan_id,
+            authorized_targets=authorized_targets,
+        )
+
+    # Guarded scans inspect the live firewall before starting agents, so their
+    # client must be ready when the bundle is returned.
+    if defer and policy is None:
+        bring_up = asyncio.create_task(_bring_up(), name=f"sandbox-bring-up-{scan_id}")
+        deferred = DeferredSandboxSession(
+            bring_up,
+            manifest=manifest,
+            exposed_ports=(_CONTAINER_CAIDO_PORT,),
+        )
+
+        async def _caido_when_up() -> Any:
+            session = await deferred.resolve()
+            return await _caido(session, await _caido_url(session))
+
+        bundle = {
+            "client": DeferredSandboxClient(deferred),
+            "session": deferred,
+            "network_policy": policy,
+            "caido_client": CaidoBootstrapHandle(
+                asyncio.create_task(_caido_when_up(), name=f"caido-bootstrap-{scan_id}")
+            ),
+        }
+        _SESSION_CACHE[scan_id] = bundle
+        logger.info("Sandbox session for scan %s deferred and cached", scan_id)
+        return bundle
+
+    client, session = await _bring_up()
+    try:
+        host_caido_url = await _caido_url(session)
     except BaseException:
         await _discard_session(client, session)
         raise
-    scheme = "https" if caido_endpoint.tls else "http"
-    host_caido_url = f"{scheme}://{caido_endpoint.host}:{caido_endpoint.port}"
-    logger.debug("Caido host endpoint resolved: %s", host_caido_url)
-
-    # The Caido login + project setup polls the guest for a couple of seconds
-    # and nothing needs the client before the first proxy tool call, so it
-    # runs concurrently with the rest of scan start; consumers resolve the
-    # handle at first use (see CaidoBootstrapHandle).
     caido_client = CaidoBootstrapHandle(
-        asyncio.create_task(
-            bootstrap_caido(
-                session,
-                host_url=host_caido_url,
-                container_url=container_caido_url,
-                scan_id=scan_id,
-                authorized_targets=authorized_targets,
-            ),
-            name=f"caido-bootstrap-{scan_id}",
-        )
+        asyncio.create_task(_caido(session, host_caido_url), name=f"caido-bootstrap-{scan_id}")
     )
 
     bundle = {
@@ -426,6 +470,26 @@ async def create_or_reuse(
     _SESSION_CACHE[scan_id] = bundle
     logger.info("Sandbox session for scan %s ready and cached", scan_id)
     return bundle
+
+
+_DISCARD_TASKS: set[asyncio.Task[None]] = set()
+
+
+async def _create_or_discard(create: Awaitable[tuple[Any, Any]]) -> tuple[Any, Any]:
+    pending = asyncio.ensure_future(create)
+    try:
+        return await asyncio.shield(pending)
+    except asyncio.CancelledError:
+        discard = asyncio.create_task(_discard_when_created(pending))
+        _DISCARD_TASKS.add(discard)
+        discard.add_done_callback(_DISCARD_TASKS.discard)
+        raise
+
+
+async def _discard_when_created(create: asyncio.Future[tuple[Any, Any]]) -> None:
+    with contextlib.suppress(BaseException):
+        client, session = await create
+        await _discard_session(client, session)
 
 
 async def _discard_session(client: Any, session: Any) -> None:

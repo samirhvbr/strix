@@ -349,3 +349,26 @@ async def test_legacy_user_message_cannot_release_an_independent_pause():
     await coordinator.resume_from_budget_pause()
     assert coordinator.pause_reasons == {"budget", "test"}
     extender.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_upstream_snapshot_preserves_operator_pause_separately_from_budget():
+    coordinator = AgentCoordinator()
+    await coordinator.restore({"budget_paused": True, "operator_paused": True})
+    await coordinator.reset_budget_stops(budget_stopped=False, reserve_stopped=False)
+    assert coordinator.pause_reasons == {"operator"}
+    assert coordinator.operator_paused
+    await coordinator.resume_budget(reason="operator")
+    assert not coordinator.budget_paused
+
+
+@pytest.mark.asyncio
+async def test_user_message_does_not_release_a_parked_test_pause():
+    coordinator = AgentCoordinator()
+    await coordinator.register("root", "root", parent_id=None)
+    await coordinator.pause_budget(reason="test")
+    await coordinator.park_for_budget("root")
+    await coordinator.send("root", {"from": "user", "content": "continue after acknowledgment"})
+    assert coordinator.statuses["root"] == "budget_paused"
+    assert coordinator.pause_reasons == {"test"}
+    assert coordinator.pending_counts["root"] == 1
