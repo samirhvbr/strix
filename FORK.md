@@ -131,6 +131,7 @@ CI never ran on these (upstream waits for a maintainer to approve the first run 
 | [#1470](https://github.com/usestrix/strix/pull/1470) | fix(core): treat a cloned repository as a source-aware (white-box) scan | open; telemetry label test added 2026-10-16 |
 | [#1471](https://github.com/usestrix/strix/pull/1471) | test: keep the suite from writing the developer's real home and working directory | open |
 | [#1472](https://github.com/usestrix/strix/pull/1472) | feat(viewer): show confidence, CWE/CVE and the reasoning fields in the PDF report | open |
+| [#1613](https://github.com/usestrix/strix/pull/1613) | fix(tools): preserve records when an update is rejected | open; backport proposed for master; preserves rejected note/todo updates |
 
 ## PRs de terceiros carregados no fork
 
