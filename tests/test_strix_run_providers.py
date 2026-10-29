@@ -15,6 +15,7 @@ generic ``LLM_API_KEY`` is only a fallback for providers the launcher does not k
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -126,8 +127,12 @@ def _launch(tmp_path: Path, model: str, extra_env: dict[str, str]) -> dict[str, 
         **AMBIENT,
         **extra_env,
     }
+    # Resolve before isolating PATH: macOS ships Bash 3, while the launcher
+    # requires Bash 4+ for provider-name case conversion.
+    bash = shutil.which("bash")
+    assert bash is not None
     done = subprocess.run(  # noqa: S603
-        ["/usr/bin/env", "bash", str(LAUNCHER), "-n", "--agent", model, "https://t.example"],
+        [bash, str(LAUNCHER), "-n", "--agent", model, "https://t.example"],
         env=env,
         capture_output=True,
         text=True,
