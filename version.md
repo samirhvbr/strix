@@ -1,16 +1,13 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.43`
-**Released upstream base:** Strix `1.7.0` + 15 commits (`f7a32ae6`, verified ancestry).
-The previous release notes recorded +14 (`62b4964`); the extra commit changes only README
-and arrived through carried PR #1510. Published historical notes are preserved.
+**Current version:** `1.2.44`
+**Released upstream base:** Strix `1.7.0` + 64 commits (`6b7ae2eb`, verified ancestry).
+The previous release, 1.2.43, sat on `1.7.0` + 15 commits (`f7a32ae6`); its published notes
+name `62b4964` (+14), one README-only commit earlier, and are preserved.
 
-**Review branch upstream base:** `6b7ae2ebe4d47037a927aade23265ff4e4f27e84` on
-`feat/upstream-sync-contributions-20261029` (unreleased; see
-[the continuity record](docs/upstream-tracking.md)). The version bump
-and release procedure apply only after review and delivery on `master`.
-**Before that delivery:** the branch's default sandbox image tag (`strix-sandbox:1.3.1`) is not published in the
-registry; `master` pins the published `1.3.0`. Resolve it first (see the continuity record).
+**Sandbox image:** the fork pins `ghcr.io/usestrix/strix-sandbox:1.3.0` in `RuntimeSettings.image` and
+`scripts/install.sh` (a test keeps them equal). Upstream's own default, `1.3.1`, is not in the registry yet.
+Move both pins when `docker manifest inspect` finds it; see [the continuity record](docs/upstream-tracking.md).
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
 > line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you
@@ -120,8 +117,8 @@ change into `master` as a commit of its own (the updated PR branch contains a me
 ## Release audit — 2026-10-29
 
 The latest [SHVIA 1.2.43 release](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.43)
-and its tag resolve to delivered `master` at `8aa0791e`. The review branch is unreleased;
-`.fork-version` stays 1.2.43 and `pyproject.toml` intentionally stays upstream 1.7.0.
+and its tag resolve to delivered `master` at `8aa0791e`. The audit below was taken before the
+1.2.44 delivery branch existed; `pyproject.toml` intentionally stays upstream 1.7.0.
 See [the full audit](docs/upstream-tracking/release-audit.json).
 
 - Deliveries 1.2.41 and 1.2.42 have no corresponding tags/releases. All 61 existing fork

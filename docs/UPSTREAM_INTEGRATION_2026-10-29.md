@@ -172,7 +172,7 @@ real provider scan or new published sandbox image was validated by this local ma
 | #1053 |Caido readiness deadline is useful but patch predates deferred lifecycle and fork project-setup retry. |Preserve #1205 retry/authorization, adapt timeout propagation and add readiness regressions. |
 | #1176 |Already covered by upstream #1192 tokenized MarkdownIt/fallback. |Only revisit on a new PDF rendering regression; do not reintroduce obsolete regex code. |
 | #1546 |Author explicitly marks experimental work not ready to merge. |Author evaluation/readiness changes; no implementation assumed available. |
-| Sandbox image 1.3.1 (#1617) |Tag defaulted by the synchronized source is not in the registry (404); master pins the published 1.3.0. |Decide: wait for upstream's image, pin 1.3.0 meanwhile, or publish an image under the fork's control. Required before any master delivery. |
+| Sandbox image 1.3.1 (#1617) |Tag defaulted by the synchronized source is not in the registry (404); master pins the published 1.3.0. |Pinned to 1.3.0 on the delivery branch (see the decision below). Move the pin when upstream publishes 1.3.1. |
 | Routing/auth, Strix2, MCP server changes |Material architecture/product expansion, not bounded reliability patches. |Explicit scope decision and compatibility design. |
 
 Remaining useful triage candidates include #1319 SDK refusal, #1307 report revision,
@@ -237,6 +237,14 @@ built from this branch cannot pull its default sandbox image (`STRIX_IMAGE` over
 wait for upstream's image; pin the fork to 1.3.0 meanwhile (the runtime works, but libbrotli 1.2.0-4,
 CVE-2026-111497, stays in the image used against hostile targets); or build and publish an image under the
 fork's control from `containers/Dockerfile`. This must be decided before any master delivery.
+
+**Decision (delivery branch `feat/upstream-sync-delivery-20261029`, 1.2.44): pin 1.3.0.** Between `master` and this
+branch the image sources differ in three places only: the brotli packages, trufflehog 3.99.2 (it self-updates its
+detectors at runtime) and the #1499 NSS guard that matters on container restart. The proxy tools run host-side and
+`strix/tools/proxy/caido_api.py`, the one host file copied into the image, is unchanged, so the engine runs against
+1.3.0. `RuntimeSettings.image` and `scripts/install.sh` carry the pin and `test_installer_pulls_the_image_the_engine_defaults_to`
+fails when they drift (verified by reverting one of them). The cost is unchanged exposure to CVE-2026-111497 in the
+image used against hostile targets until 1.3.1 exists; the registry was re-checked at 2026-10-29T23:27:50Z (1.3.1: 404).
 
 ## Coverage and exact next step
 

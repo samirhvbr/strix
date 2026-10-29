@@ -97,6 +97,7 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
 
 - **Third-party PRs carried with changes** (FORK.md `1.2.33`): #1161 keeps master's no-session branch in `AgentCoordinator.consume_pending` (it warns and still delivers; the PR returned `(0, [])` and dropped the messages); #1505 keeps #681's query-parameter handling in `apply_modifications`; #1362's tests call `warm_up_llm()` without `show_model_warning`. If upstream merges these PRs as they are, re-run `tests/test_wait_dedupe.py`, `tests/test_execution.py` and `tests/test_proxy_modifications.py` before taking upstream's version.
 - **cryptography without upstream's `<49` cap** (`pyproject.toml`, `uv.lock`; carried from upstream PR #1067, lock at 50.0.2): upstream keeps the cap for its Intel macOS universal2 wheel; the fork is Linux-only and needs 50.x for CVE-2026-69247. On a sync conflict in that line keep `cryptography>=50.0.0` and run `uv lock`; drop this note once upstream's floor reaches 50.
+- **Sandbox image pinned to a published tag** (`RuntimeSettings.image` in `strix/config/settings.py` and `STRIX_IMAGE` in `scripts/install.sh`; fork 1.2.44): upstream moved its default to `strix-sandbox:1.3.1` (#1617) before publishing that tag, so the fork keeps `1.3.0`. A test keeps the two lines equal. On a sync conflict in them, keep the newest tag that `docker manifest inspect` finds in the registry, and recheck before every delivery (`release-audit.json`, `sandbox_image_audit`). Upstream's CVE-2026-111497 brotli patch is in the image only from 1.3.1 on.
 
 ## Regras
 

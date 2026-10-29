@@ -102,10 +102,11 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Delivery blocker (found in the second pass):** the synchronized source defaults to the sandbox image
-`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; `master` pins the published 1.3.0). Decide
-between waiting for upstream's image, pinning 1.3.0 meanwhile, or publishing an image under the fork's control
-before any master delivery. See the latest round.
+**Sandbox image (found in the second pass, resolved for delivery):** the synchronized source defaults to
+`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; `master` pins the published 1.3.0). The
+delivery branch `feat/upstream-sync-delivery-20261029` pins 1.3.0 in `RuntimeSettings.image` and `scripts/install.sh`
+(a test keeps them equal). The libbrotli CVE-2026-111497 patch stays out of the image until upstream publishes 1.3.1;
+then move both pins and drop this paragraph. On a sync conflict in those lines keep the published tag.
 
 Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
 The release is still 1.2.43, with upstream package version 1.7.0 by policy. Existing published

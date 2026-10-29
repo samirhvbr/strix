@@ -2076,6 +2076,16 @@
     ],
     "implication": "A scan or an engine binary built from the review branch cannot pull its default sandbox image until 1.3.1 exists in the registry; STRIX_IMAGE can override it. Delivering the synchronization to master without resolving this would break the default runtime.",
     "tradeoff": "Pinning 1.3.0 keeps the runtime working but leaves libbrotli 1.2.0-4 (CVE-2026-111497) in the image used against hostile targets.",
-    "decision": "Not taken in this round; recorded in checkpoints.json decisions_required."
+    "decision": "Pinned to 1.3.0 on the delivery branch feat/upstream-sync-delivery-20261029 (RuntimeSettings.image and scripts/install.sh, kept equal by a test). The host-side tools and caido_api.py are unchanged between the two images; the Dockerfile and entrypoint differ only by the brotli patch, trufflehog 3.99.2 and the #1499 NSS restart guard, so the engine runs against 1.3.0 and the brotli CVE stays unpatched in the image until 1.3.1 is published. Revisit: when `manifest inspect` finds 1.3.1, move both pins and drop this note.",
+    "rechecked_at_utc": "2026-10-29T23:27:50Z",
+    "rechecked_manifest_http_status": {
+      "1.3.0": 200,
+      "1.3.1": 404
+    },
+    "image_source_diff_vs_master": {
+      "containers/Dockerfile": "trufflehog 3.95.9 -> 3.99.2; brotli 1.2.0-4.1 packages for CVE-2026-111497",
+      "containers/docker-entrypoint.sh": "certutil -N skipped when cert9.db exists (#1499, restart only)",
+      "strix/tools/proxy/caido_api.py": "unchanged; tools run host-side"
+    }
   }
 }

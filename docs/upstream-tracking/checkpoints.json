@@ -148,9 +148,9 @@
     },
     "decisions_required": [
       "Historical per-model cost ledger and SARIF identity migration need bounded policy/design before incorporation.",
-      "Master delivery/version bump/tag/release and retrospective historical releases are outside this authorized review branch.",
+      "Master delivery (merge, tag, Release, main mirror push) needs the owner: the delivery branch feat/upstream-sync-delivery-20261029 carries the 1.2.44 bump; retrospective historical releases remain out of scope.",
       "Remote Actions account availability must be resolved before relying on its builds.",
-      "Delivery blocker: the sandbox image tag the synchronized source defaults to (ghcr.io/usestrix/strix-sandbox:1.3.1) is not published; master defaults to the published 1.3.0. Choose: wait for upstream's image, pin the fork to 1.3.0 until then (keeps the brotli CVE unpatched in the image), or build and publish an image under the fork's control."
+      "Sandbox image: resolved for delivery by pinning ghcr.io/usestrix/strix-sandbox:1.3.0 on the delivery branch (the synchronized source's 1.3.1 is not published). Revisit when upstream publishes 1.3.1; the brotli CVE-2026-111497 stays unpatched in the image until then."
     ],
     "second_pass": {
       "recorded_at": "2026-10-29T21:04:34.141249+00:00",
@@ -177,6 +177,15 @@
     "tags_changed": false,
     "releases_changed": false,
     "upstream_messages_created": false,
-    "version_bumped": false
+    "version_bumped": false,
+    "delivery_branch": {
+      "branch": "feat/upstream-sync-delivery-20261029",
+      "prepared_version": "1.2.44",
+      "contains_review_branch": "feat/upstream-sync-contributions-20261029",
+      "merged_to_master": false,
+      "tag_created": false,
+      "release_created": false,
+      "note": "Last_delivered above stays 1.2.43 until the merge happens; advance it after the delivery commit exists."
+    }
   }
 }
