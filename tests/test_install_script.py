@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import stat
 import subprocess
 import sys
@@ -7,6 +8,8 @@ import tarfile
 from pathlib import Path
 
 import pytest
+
+from strix.config.settings import RuntimeSettings
 
 
 RELEASE_VERSION = "9.9.9"
@@ -152,3 +155,13 @@ def test_installer_rejects_unsupported_architecture(tmp_path: Path) -> None:
     assert "Unsupported OS/Arch: linux/riscv64" in result.stdout
     assert not curl_log_path.exists()
     assert not (home_path / ".strix").exists()
+
+
+def test_installer_pulls_the_image_the_engine_defaults_to() -> None:
+    script = (Path(__file__).resolve().parents[1] / "scripts/install.sh").read_text(
+        encoding="utf-8"
+    )
+    match = re.search(r'^STRIX_IMAGE="([^"]+)"$', script, re.MULTILINE)
+
+    assert match is not None
+    assert match.group(1) == RuntimeSettings.model_fields["image"].default
