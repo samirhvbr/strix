@@ -14,9 +14,17 @@ The merge preserves the fork's independent pause reasons, assessment authorizati
 network guard, credential scoping, local report viewer and terminal usage-limit handling.
 Guarded sessions wait for the real sandbox even when deferred startup is requested.
 
+The branch also integrates 16 selected PRs, six follow-up commits from already-carried
+CSPT PR #1446, and a compatibility fix for queued input on sessionless resume. Final code
+`b4fb64c0`: 3567 tests passed, 12 skipped, 3 xfailed; 12 controlled Docker tests passed.
+Ruff/Mypy/Bandit, TUI/viewer/wheel builds pass; Pyright remains red with 1259 diagnostics
+(the exact delta and remote-CI limits are recorded). No full external scan was performed.
+
 This is an unreleased review branch. Version 1.2.43, `master`, the `main` mirror,
 tags and releases are unchanged. See [the integration record](docs/UPSTREAM_INTEGRATION_2026-10-29.md)
-for the inventory, individual decisions, validation boundaries and continuation.
+for the round summary. The permanent [continuity record](docs/upstream-tracking.md) and
+[per-item ledger](docs/upstream-tracking/items.json) track states, source versions,
+implementation commits, decision history and the next review checkpoint.
 
 ## Version
 
@@ -124,19 +132,19 @@ CI never ran on these (upstream waits for a maintainer to approve the first run 
 
 | PR | Título | Status |
 |----|--------|--------|
-| [#1612](https://github.com/usestrix/strix/pull/1612) | fix(runtime): honor shell-selected Docker contexts | open; backport proposed for `master`; honors `DOCKER_CONTEXT` and keeps `DOCKER_HOST` precedence |
+| [#1612](https://github.com/usestrix/strix/pull/1612) | fix(runtime): honor shell-selected Docker contexts | open; incorporated on the unreleased review branch; `master` unchanged; honors `DOCKER_CONTEXT` and keeps `DOCKER_HOST` precedence |
 | [#1279](https://github.com/usestrix/strix/pull/1279) | fix(pricing): prefer a native provider over aggregator re-listings | open; narrowed 2026-10-16 after an external review (the preference now only breaks same-price ties, so no name goes from `None` to a guess) |
 | [#1173](https://github.com/usestrix/strix/pull/1173) | fix(warmup): pre-import the agents SDK to avoid a thread-race crash | closed 2026-10-16, superseded (upstream fixed the race itself in `1f3f9b31`, `7f46dd17` and `e60fd839`; adopted in the `1.1.0` sync) |
 | [#1174](https://github.com/usestrix/strix/pull/1174) | fix(retry): treat provider usage-limit errors as terminal, not transient | open; `upstream/main` merged into the branch 2026-10-16 (it conflicted in `runner.py`, `models.py` and a test); upstream still retries a 429 usage limit |
-| [#1469](https://github.com/usestrix/strix/pull/1469) | fix(reporting): serialize the duplicate check so concurrent agents cannot file a finding twice | open; protects both application and dependency filings, including the model fallback for same-CVE legacy reports without package metadata; regression tests drive the real `check_duplicate`; dependency fix backport proposed for `master` |
+| [#1469](https://github.com/usestrix/strix/pull/1469) | fix(reporting): serialize the duplicate check so concurrent agents cannot file a finding twice | open; protects both application and dependency filings, including the model fallback for same-CVE legacy reports without package metadata; regression tests drive the real `check_duplicate`; dependency fix incorporated on the unreleased review branch; `master` unchanged |
 | [#1470](https://github.com/usestrix/strix/pull/1470) | fix(core): treat a cloned repository as a source-aware (white-box) scan | open; telemetry label test added 2026-10-16 |
 | [#1471](https://github.com/usestrix/strix/pull/1471) | test: keep the suite from writing the developer's real home and working directory | open |
 | [#1472](https://github.com/usestrix/strix/pull/1472) | feat(viewer): show confidence, CWE/CVE and the reasoning fields in the PDF report | open |
-| [#1613](https://github.com/usestrix/strix/pull/1613) | fix(tools): preserve records when an update is rejected | open; backport proposed for master; preserves rejected note/todo updates |
-| [#1614](https://github.com/usestrix/strix/pull/1614) | fix(cloud): report scope metadata persistence failures | open; backport proposed for `master`; reports an actionable error after the server updates session scopes if saving the local metadata fails |
-| [#1615](https://github.com/usestrix/strix/pull/1615) | fix(llm): distinguish duplicate tool call IDs within a response | open; backport proposed for master; preserves the fork's blank-name normalization |
-| [#1624](https://github.com/usestrix/strix/pull/1624) | fix(cloud): handle interrupted download error bodies | open; fixes [#1620](https://github.com/usestrix/strix/issues/1620); bounded transport errors preserve JSON/stdout output handling and existing download files; backport proposed for `master` |
-| [#1621](https://github.com/usestrix/strix/pull/1621) | fix(cli): restore staged API specifications on resume | open; backport proposed for master; fixes missing resumed API-spec mounts ([#1619](https://github.com/usestrix/strix/issues/1619)) |
+| [#1613](https://github.com/usestrix/strix/pull/1613) | fix(tools): preserve records when an update is rejected | open; incorporated on the unreleased review branch; master unchanged; preserves rejected note/todo updates |
+| [#1614](https://github.com/usestrix/strix/pull/1614) | fix(cloud): report scope metadata persistence failures | open; incorporated on the unreleased review branch; `master` unchanged; reports an actionable error after the server updates session scopes if saving the local metadata fails |
+| [#1615](https://github.com/usestrix/strix/pull/1615) | fix(llm): distinguish duplicate tool call IDs within a response | open; incorporated on the unreleased review branch; master unchanged; preserves the fork's blank-name normalization |
+| [#1624](https://github.com/usestrix/strix/pull/1624) | fix(cloud): handle interrupted download error bodies | open; fixes [#1620](https://github.com/usestrix/strix/issues/1620); bounded transport errors preserve JSON/stdout output handling and existing download files; incorporated on the unreleased review branch; `master` unchanged |
+| [#1621](https://github.com/usestrix/strix/pull/1621) | fix(cli): restore staged API specifications on resume | open; incorporated on the unreleased review branch; master unchanged; fixes missing resumed API-spec mounts ([#1619](https://github.com/usestrix/strix/issues/1619)) |
 
 ## PRs de terceiros carregados no fork
 
@@ -167,12 +175,12 @@ próximo sync: se o upstream já tem um deles, **fica o do upstream** e o nosso 
 | [#1448](https://github.com/usestrix/strix/pull/1448) | fix(report): dedupe doubled section headings in penetration_test_report.md | open |
 | [#1379](https://github.com/usestrix/strix/pull/1379) | fix(agents): accept empty view_agent_graph schema | open |
 | [#681](https://github.com/usestrix/strix/pull/681) | fix(proxy): preserve existing query params when replaying requests | open |
-| [#1113](https://github.com/usestrix/strix/pull/1113) | fix(proxy): normalize empty sitemap scope filters | open |
+| [#1113](https://github.com/usestrix/strix/pull/1113) | fix(proxy): normalize empty sitemap scope filters | closed without merge; author closure, reason not stated; carried fix retained after recheck |
 | [#735](https://github.com/usestrix/strix/pull/735) | fix: strip chatgpt transcript tags from agent messages | open |
 | [#736](https://github.com/usestrix/strix/pull/736) | fix: propagate sandbox proxy environment aliases | open |
 | [#662](https://github.com/usestrix/strix/pull/662) | fix(report): keep ReDoS distinct from generic DoS in SARIF class hash | open |
 | [#1503](https://github.com/usestrix/strix/pull/1503) | fix(api_spec): extract path-level and operation-level servers for scope authorization | open |
-| [#1157](https://github.com/usestrix/strix/pull/1157) | fix(interface): prevent path traversal and argument injection in clone_repository | open |
+| [#1157](https://github.com/usestrix/strix/pull/1157) | fix(interface): prevent path traversal and argument injection in clone_repository | closed without merge; author closure, reason not stated; carried fix retained after recheck |
 | [#1362](https://github.com/usestrix/strix/pull/1362) | fix(cli): close warm-up HTTP clients before the headless scan loop (tests adapted) | open |
 | [#1161](https://github.com/usestrix/strix/pull/1161) | fix: restore mailbox on consume_pending session write failure (no-session change reverted) | open |
 | [#1151](https://github.com/usestrix/strix/pull/1151) | fix(caido): normalize string null and sentinels for scopeId and parentId (#1140) | open |

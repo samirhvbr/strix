@@ -2,6 +2,14 @@
 
 Guia para agentes/sessões futuras trabalhando neste repositório. **Leia antes de mexer.**
 
+## Continuidade das revisões
+
+Comece por [docs/upstream-tracking.md](docs/upstream-tracking.md), pelo ledger e pela última rodada.
+Confira todos os itens conhecidos antes de novas incorporações, inclusive fechados, adiados
+e já carregados. Atualize os marcos de sincronização e de revisão separadamente; preserve
+o último estado validado se houver trabalho parcial. O histórico da conversa não substitui
+esse registro. Uma branch de revisão não é uma entrega em `master` nem autoriza release.
+
 ## O que é
 
 Fork de [`usestrix/strix`](https://github.com/usestrix/strix) (ferramenta de

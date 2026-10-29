@@ -41,6 +41,8 @@
 ---
 
 
+> **SHVIA fork maintenance:** start with the [upstream continuity record](docs/upstream-tracking.md) for reviewed contributions, source SHAs, validation and pending work. See [version.md](version.md) for release policy.
+
 ## Strix Overview
 
 Strix are autonomous AI penetration testing agents that act just like real hackers - they run your code dynamically, find vulnerabilities, and validate them through actual proofs-of-concept. Built for developers and security teams who need fast, accurate security testing without the overhead of manual pentesting or the false positives of static analysis tools.

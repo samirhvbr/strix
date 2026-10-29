@@ -1,0 +1,15 @@
+{
+  "wheel": "strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl",
+  "sha256": "da2d5092d24a78c21a9ef4ac4f2ad928708e0ce7048083e415585371f0e10a3d",
+  "entries": 276,
+  "source_sha": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+  "source_files_checked": [
+    "strix/report/coverage.py",
+    "strix/report/sarif.py",
+    "strix/core/execution.py",
+    "strix/skills/vulnerabilities/client_side_path_traversal.md"
+  ],
+  "sidecar_present": true,
+  "environment_or_node_modules_packaged": false,
+  "runtime_execution": false
+}

@@ -1,11 +1,13 @@
 # Version — SHVIA fork of Strix
 
 **Current version:** `1.2.43`
-**Released upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
+**Released upstream base:** Strix `1.7.0` + 15 commits (`f7a32ae6`, verified ancestry).
+The previous release notes recorded +14 (`62b4964`); the extra commit changes only README
+and arrived through carried PR #1510. Published historical notes are preserved.
 
 **Review branch upstream base:** `6b7ae2ebe4d47037a927aade23265ff4e4f27e84` on
 `feat/upstream-sync-contributions-20261029` (unreleased; see
-[the integration record](docs/UPSTREAM_INTEGRATION_2026-10-29.md)). The version bump
+[the continuity record](docs/upstream-tracking.md)). The version bump
 and release procedure apply only after review and delivery on `master`.
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
@@ -112,3 +114,21 @@ change into `master` as a commit of its own (the updated PR branch contains a me
 
 > The house COMMITTER does not operate on this repository (no `.committer.yml`): versioning is
 > manual, done by the agent that delivers.
+
+## Release audit — 2026-10-29
+
+The latest [SHVIA 1.2.43 release](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.43)
+and its tag resolve to delivered `master` at `8aa0791e`. The review branch is unreleased;
+`.fork-version` stays 1.2.43 and `pyproject.toml` intentionally stays upstream 1.7.0.
+See [the full audit](docs/upstream-tracking/release-audit.json).
+
+- Deliveries 1.2.41 and 1.2.42 have no corresponding tags/releases. All 61 existing fork
+  version tags do have matching releases. No historical release was created by this audit.
+- Tags 1.2.37 and 1.2.43 are lightweight, contrary to the annotated-tag rule above. Preserve
+  published refs; create future tags according to the rule instead of rewriting them.
+- Current release assets are documented as coming from build 047cc8cb, before the tagged
+  source 8aa0791e. API digests match the notes and SHA256SUMS manifest; this audit did not
+  download or execute the four binaries or establish fresh-build equivalence.
+- Build & Release remains disabled. The observed Actions billing lock still prevents
+  treating remote jobs as successful. Exact-tag binary builds and native acceptance are
+  required for a future delivery; this review branch does not update installed binaries.

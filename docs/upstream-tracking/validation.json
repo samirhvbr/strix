@@ -1,0 +1,1053 @@
+{
+  "schema_version": 1,
+  "environment": {
+    "python": "3.12.14",
+    "os": "macOS arm64",
+    "dependencies": "uv --frozen; repository uv.lock",
+    "bash": "5.3.15 from Homebrew before restricted child PATH",
+    "go": "1.27.3 official archive SHA256 verified",
+    "isolation": "temporary HOME, minimal environment, LITELLM_MODE=PRODUCTION, local model-cost map, telemetry and update checks disabled",
+    "targets": "owned local Docker fixtures and synthetic responses only; no live cloud/provider/external scan"
+  },
+  "checks": [
+    {
+      "label": "baseline-pytest-complete",
+      "source_revision": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "--deselect=tests/test_resume_picker.py::test_posix_key_reader_handles_multibyte_and_arrows",
+        "--junitxml=LOCAL_LOG_DIR/baseline-pytest-complete.xml"
+      ],
+      "exit_code": 1,
+      "timed_out": false,
+      "elapsed_seconds": 338.53,
+      "portable_summary": "16 failed, 3219 passed, 12 skipped, 1 deselected, 3 xfailed, 114 warnings in 336.48s (0:05:36)",
+      "local_raw_log": "baseline-pytest-complete.log",
+      "raw_log_persisted_in_repository": false,
+      "non_passing_cases": [
+        {
+          "test": "tests.test_inference_source::test_pin_stays_out_of_the_environment_and_the_operators_saved_defaults",
+          "kind": "failure",
+          "reason": "AssertionError: assert {'env': {'STR...EMETRY': '0'}} == {'env': {'STR... 'sk-openai'}}\n  \n  Differing items:\n  {'env': {'STRIX_LLM': 'openai/gpt-5', 'LLM_API_KEY': 'sk-openai', 'STRIX_TELEMETRY': '0'}} != {'env': {'STRIX_LLM': 'openai/gpt-5', 'LLM_API_KEY': 'sk-openai'}}\n  Use -v to get more diff"
+        },
+        {
+          "test": "tests.test_network_guard_docker::test_real_packets_root_tampering_control_port_and_cleanup",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_network_guard_docker::test_empty_policy_blocks_reachable_target",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[minimax]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'minimax/MiniMax-M3', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[deepseek]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'deepseek/deepseek-v4-pro', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[moonshot]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'moonshot/kimi-k3', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[openai]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'openai/gpt-5.6-sol', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[convention-xai]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'xai/grok-4.7', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[convention-underscore]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'together_ai/Qwen/Qwen3-235B-A22B', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[alias-claude]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'claude/claude-sonnet-5', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[alias-google]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'google/gemini-3.1-pro-preview', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[alias-kimi]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'kimi/kimi-k3', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[budget-falls-back-to-default]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'openai/gpt-5.6-sol', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[generic-fallback]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'mistral/mistral-large-latest', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_launcher_resolves_key_and_budget_per_provider[known-provider-without-key-is-not-lent-the-generic-one]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'deepseek/deepseek-v4-pro', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_subscription_models_get_no_key_and_no_budget[chatgpt/gpt-5.6-sol]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'chatgpt/gpt-5.6-sol', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_subscription_models_get_no_key_and_no_budget[codex/gpt-5.6-sol]",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'codex/gpt-5.6-sol', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_strix_run_providers::test_missing_key_warning_names_the_variable_to_define",
+          "kind": "failure",
+          "reason": "subprocess.CalledProcessError: Command '['/usr/bin/env', 'bash', 'BASELINE_CHECKOUT/bin/strix-run', '-n', '--agent', 'xai/grok-4.7', 'https://t.example']' returned non-zero exit status 1."
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-null-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-missing-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-mixed-blank-and-recycled-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        }
+      ]
+    },
+    {
+      "label": "baseline-check-all",
+      "source_revision": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "command": [
+        "make",
+        "check-all"
+      ],
+      "exit_code": 2,
+      "timed_out": false,
+      "elapsed_seconds": 17.0,
+      "portable_summary": "  BASELINE_CHECKOUT/strix/utils/api_spec.py:345:61 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n1259 errors, 0 warnings, 0 informations\nmake: *** [type-check] Error 1",
+      "local_raw_log": "baseline-check-all.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "baseline-bandit",
+      "source_revision": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "bandit",
+        "-r",
+        "strix/",
+        "-c",
+        "pyproject.toml"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.71,
+      "portable_summary": "\t\tLow: 0\n\t\tMedium: 0\n\t\tHigh: 0\nFiles skipped (0):",
+      "local_raw_log": "baseline-bandit.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "sync-core-tests-v3",
+      "source_revision": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_budget_pause_policy.py",
+        "tests/test_test_pause.py",
+        "tests/test_execution.py",
+        "tests/test_execution_transient_retry.py",
+        "tests/test_model_retry.py",
+        "tests/test_runner_rate_limit.py",
+        "tests/test_hooks.py",
+        "tests/test_agent_tool_registration.py",
+        "tests/test_agent_factory_tool_arguments.py",
+        "tests/test_agent_factory_shell.py",
+        "tests/test_runner_root_prompt.py",
+        "tests/test_cost_tracking.py",
+        "tests/test_pricing.py",
+        "tests/test_proxy_client.py",
+        "tests/test_proxy_modifications.py",
+        "tests/test_runner_mcp.py",
+        "tests/test_runner_teardown.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 7.47,
+      "portable_summary": "414 passed, 10 warnings in 6.08s",
+      "local_raw_log": "sync-core-tests-v3.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "sync-tui-v2",
+      "source_revision": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+      "command": [
+        "make",
+        "tui-test",
+        "tui-lint",
+        "tui-build"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 22.83,
+      "portable_summary": "ok  \tgithub.com/usestrix/strix/tui/internal/render\t1.635s\ncd strix/interface/tui && test -z \"$(gofmt -l .)\" && go vet ./...\nmkdir -p build/sidecar\ncd strix/interface/tui && CGO_ENABLED=0 go build -trimpath -ldflags=\"-s -w\" -o ../../../build/sidecar/strix-tui ./cmd/strix-tui",
+      "local_raw_log": "sync-tui-v2.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "sync-viewer",
+      "source_revision": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+      "command": [
+        "make",
+        "viewer"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 6.53,
+      "portable_summary": "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks\n- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\n✓ built in 1.35s\n✅ Viewer built to strix/interface/viewer/static/ (commit the changes).",
+      "local_raw_log": "sync-viewer.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "sync-pty",
+      "source_revision": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-vv",
+        "tests/test_resume_picker.py::test_posix_key_reader_handles_multibyte_and_arrows"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.08,
+      "portable_summary": "\ntests/test_resume_picker.py::test_posix_key_reader_handles_multibyte_and_arrows PASSED [100%]\n\n============================== 1 passed in 0.09s ===============================",
+      "local_raw_log": "sync-pty.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "carried-fixes-tests-v2",
+      "source_revision": "9c365eac",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_notes.py",
+        "tests/test_todo.py",
+        "tests/test_todo_ids.py",
+        "tests/test_cloud_cli.py",
+        "tests/test_cloud_cli_runtime.py",
+        "tests/test_cloud_idempotency.py",
+        "tests/test_cloud_payment_proxy.py",
+        "tests/test_cloud_session.py",
+        "tests/test_cloud_source_upload.py",
+        "tests/test_cloud_wallet.py",
+        "tests/test_docker_connection.py",
+        "tests/test_docker_client_delete.py",
+        "tests/test_session_entries.py",
+        "tests/test_network_guard.py",
+        "tests/test_reporting_dedupe_race.py",
+        "tests/test_reporting_fields.py",
+        "tests/test_reporting_tool.py",
+        "tests/test_report_writer.py",
+        "tests/test_dedupe_model.py",
+        "tests/test_api_spec.py",
+        "tests/test_api_spec_targets.py",
+        "tests/test_cli_resume_picker.py",
+        "tests/test_resume_scope.py",
+        "tests/test_diff_scope_default_branch.py",
+        "tests/test_tool_call_ids.py",
+        "tests/test_tool_call_ids_providers.py",
+        "tests/test_tool_call_limits.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 240.76,
+      "portable_summary": "1111 passed, 3 xfailed, 125 warnings in 239.03s (0:03:59)",
+      "local_raw_log": "carried-fixes-tests-v2.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "fork-test-harness",
+      "source_revision": "188e9550",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_inference_source.py",
+        "tests/test_strix_run_providers.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 3.63,
+      "portable_summary": "62 passed in 2.27s",
+      "local_raw_log": "fork-test-harness.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-pytest",
+      "source_revision": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "--junitxml=LOCAL_LOG_DIR/final-pytest.xml"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 383.93,
+      "portable_summary": "3548 passed, 12 skipped, 3 xfailed, 134 warnings in 382.20s (0:06:22)",
+      "local_raw_log": "final-pytest.log",
+      "raw_log_persisted_in_repository": false,
+      "non_passing_cases": [
+        {
+          "test": "tests.test_network_guard_docker::test_real_packets_root_tampering_control_port_and_cleanup",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_network_guard_docker::test_empty_policy_blocks_reachable_target",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-null-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-missing-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-mixed-blank-and-recycled-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        }
+      ]
+    },
+    {
+      "label": "final-check-all",
+      "source_revision": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+      "command": [
+        "make",
+        "check-all"
+      ],
+      "exit_code": 2,
+      "timed_out": false,
+      "elapsed_seconds": 7.49,
+      "portable_summary": "  REVIEW_CHECKOUT/strix/utils/api_spec.py:345:61 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n1259 errors, 0 warnings, 0 informations\nmake: *** [type-check] Error 1",
+      "local_raw_log": "final-check-all.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-docker",
+      "source_revision": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+      "command": [
+        "env",
+        "DOCKER_HOST=LOCAL_DOCKER_SOCKET",
+        "STRIX_NETWORK_GUARD_TESTS=1",
+        "STRIX_PAUSE_HARDENING_TESTS=1",
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_network_guard_docker.py",
+        "tests/test_pause_hardening_docker.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 27.99,
+      "portable_summary": "12 passed in 26.99s",
+      "local_raw_log": "final-docker.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-wheel",
+      "source_revision": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+      "command": [
+        "uv",
+        "build",
+        "--wheel"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 6.13,
+      "portable_summary": "go: downloading github.com/dlclark/regexp2 v1.11.0\ngo: downloading github.com/charmbracelet/colorprofile v0.2.3-0.20250311203215-f60798e515dc\ngo: downloading github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e\nSuccessfully built dist/strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl",
+      "local_raw_log": "final-wheel.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-mailbox-focused",
+      "source_revision": "e552b459",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_budget_pause_policy.py",
+        "tests/test_agent_messages.py",
+        "tests/test_execution_retry.py"
+      ],
+      "exit_code": 4,
+      "timed_out": false,
+      "elapsed_seconds": 0.94,
+      "portable_summary": "\nno tests ran in 0.00s\nERROR: file or directory not found: tests/test_execution_retry.py\n",
+      "local_raw_log": "final-mailbox-focused.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-mailbox-focused-v2",
+      "source_revision": "e552b459",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_budget_pause_policy.py",
+        "tests/test_execution.py",
+        "tests/test_wait_dedupe.py",
+        "tests/test_test_pause.py",
+        "tests/test_hooks.py",
+        "tests/test_execution_transient_retry.py",
+        "tests/test_model_retry.py",
+        "tests/test_runner_rate_limit.py"
+      ],
+      "exit_code": 1,
+      "timed_out": false,
+      "elapsed_seconds": 23.39,
+      "portable_summary": "1 failed, 248 passed in 22.06s",
+      "local_raw_log": "final-mailbox-focused-v2.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-pause-isolated",
+      "source_revision": "e552b459",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_test_pause.py::test_n_one_parks_real_agent_loops_under_stop_policy_without_duplicate_calls"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.35,
+      "portable_summary": "1 passed in 0.34s",
+      "local_raw_log": "final-pause-isolated.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "baseline-pause-isolated",
+      "source_revision": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_test_pause.py::test_n_one_parks_real_agent_loops_under_stop_policy_without_duplicate_calls"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.22,
+      "portable_summary": "1 passed in 0.16s",
+      "local_raw_log": "baseline-pause-isolated.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-integrated-docker",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "env",
+        "DOCKER_HOST=LOCAL_DOCKER_SOCKET",
+        "STRIX_NETWORK_GUARD_TESTS=1",
+        "STRIX_PAUSE_HARDENING_TESTS=1",
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "tests/test_network_guard_docker.py",
+        "tests/test_pause_hardening_docker.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 26.97,
+      "portable_summary": "12 passed in 25.88s",
+      "local_raw_log": "final-integrated-docker.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-integrated-wheel",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "uv",
+        "build",
+        "--wheel"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 4.42,
+      "portable_summary": "go: downloading github.com/mattn/go-isatty v0.0.20\ngo: downloading github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e\ngo: downloading github.com/dlclark/regexp2 v1.11.0\nSuccessfully built dist/strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl",
+      "local_raw_log": "final-integrated-wheel.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-integrated-pytest",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pytest",
+        "-q",
+        "--junitxml=LOCAL_LOG_DIR/final-integrated-pytest.xml"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 381.19,
+      "portable_summary": "3567 passed, 12 skipped, 3 xfailed, 134 warnings in 379.47s (0:06:19)",
+      "local_raw_log": "final-integrated-pytest.log",
+      "raw_log_persisted_in_repository": false,
+      "non_passing_cases": [
+        {
+          "test": "tests.test_network_guard_docker::test_real_packets_root_tampering_control_port_and_cleanup",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_network_guard_docker::test_empty_policy_blocks_reachable_target",
+          "kind": "skipped",
+          "reason": "requires local Docker fixture images"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[clean_boundary-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_paused-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[killed_running-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[independent_reasons-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-1]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_pause_hardening_docker::test_durable_pause_against_owned_docker[retained_context-2]",
+          "kind": "skipped",
+          "reason": "requires owned local Docker fixture"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-null-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-missing-id-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        },
+        {
+          "test": "tests.test_tool_call_ids_providers::test_tool_call_ids_are_repaired_on_every_route[openai/gpt-5.4-mixed-blank-and-recycled-non-streamed]",
+          "kind": "skipped",
+          "reason": "the Agents SDK's Chat Completions converter rejects a null tool-call id in a non-streamed response before the turn guard sees it"
+        }
+      ]
+    },
+    {
+      "label": "final-integrated-check-all",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "make",
+        "check-all"
+      ],
+      "exit_code": 2,
+      "timed_out": false,
+      "elapsed_seconds": 5.26,
+      "portable_summary": "  REVIEW_CHECKOUT/strix/utils/api_spec.py:345:61 - error: Type of \"get\" is partially unknown\n    Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\" (reportUnknownMemberType)\n1259 errors, 0 warnings, 0 informations\nmake: *** [type-check] Error 1",
+      "local_raw_log": "final-integrated-check-all.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-integrated-bandit",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "bandit",
+        "-r",
+        "strix/",
+        "-c",
+        "pyproject.toml"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 1.53,
+      "portable_summary": "\t\tLow: 0\n\t\tMedium: 0\n\t\tHigh: 0\nFiles skipped (0):",
+      "local_raw_log": "final-integrated-bandit.log",
+      "raw_log_persisted_in_repository": false
+    },
+    {
+      "label": "final-integrated-pyright",
+      "source_revision": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "command": [
+        "uv",
+        "run",
+        "--frozen",
+        "pyright",
+        "strix/",
+        "--outputjson"
+      ],
+      "exit_code": 1,
+      "timed_out": false,
+      "elapsed_seconds": 3.99,
+      "portable_summary": "        \"timeInSec\": 3.52\n    }\n}\n",
+      "local_raw_log": "final-integrated-pyright.log",
+      "raw_log_persisted_in_repository": false
+    }
+  ],
+  "interpretation": {
+    "baseline_failures": "16 unchanged-fork fixture failures:15 launcher tests selected macOS Bash3 after PATH isolation;1 test assumed config had no explicitly supplied telemetry setting. Fixed in188e9550. Baseline PTY test excluded after reproduced hang; integrated full suites do not exclude it.",
+    "pause_timeout": "Focused249-case attempt:248pass plus pre-existing intermittent test-pause timeout. Isolated baseline and final reruns pass; retain failed attempt as evidence.",
+    "invalid_invocation": "final-mailbox-focused used nonexistent test_execution_retry.py; no tests collected. It is not a result about the implementation.",
+    "docker": "12 controlled tests passed with owned network sandbox/guard fixture images. The main sandbox image was not rebuilt.",
+    "quality_gate": "make check-all fails at Pyright; Ruff/Mypy pass and Bandit independently passes. Equal diagnostic counts do not imply identical signatures.",
+    "remote": "No green remote CI claim: fork billing lock; candidate action_required or separately noted failures.",
+    "artifacts": "Wheel/TUI build and viewer assets verified locally; no release, install, signed Desktop acceptance or deployment."
+  },
+  "focused_contributions": {
+    "cspt-followup-report.json": {
+      "checked_at": "2026-10-29T20:17:25.741188+00:00",
+      "url": "https://github.com/usestrix/strix/pull/1446",
+      "original_imported_head": "2a76196f78040436037ef746ebceba4c2493275c",
+      "original_fork_merge": "75ea64ca9c4c671d517a35b39330bce7dcb1fda6",
+      "analyzed_sha": "ac70e0ed1034ca5bdf38f6d6f5a4b7b06e28026f",
+      "base": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+      "worktree": "/Users/samir/x/shvia/strix-integration-cspt-followups-20261029",
+      "branch": "feat/integration-cspt-followups-20261029",
+      "head": "85f78bd33e1ab54bc9e0d9fef07c1082ae2e865a",
+      "status": "integrated_review_branch_not_published",
+      "commit_mapping": [
+        {
+          "source": "358fb2e508038789d2ae2580f12afc8cf5084d22",
+          "prepared": "8490f81eac2ec3371dfa5688cd1df7ddc2ff4a9a",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "8490f81eac2ec3371dfa5688cd1df7ddc2ff4a9a"
+        },
+        {
+          "source": "e8a43cb035ca752df4a90ae829ff9d2c4da7147a",
+          "prepared": "899ada6c1830af44f5939650ff8426b5c3f57e4b",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "899ada6c1830af44f5939650ff8426b5c3f57e4b"
+        },
+        {
+          "source": "c804111e0631d1159b0b4d335bcf8cce029d1c10",
+          "prepared": "d651acef451bfac38194450e4e373455823b34a7",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "d651acef451bfac38194450e4e373455823b34a7"
+        },
+        {
+          "source": "d49130e764ec65d45b995025a0022c9884bec69c",
+          "prepared": "8adba04ef40c825f66f231f5a70bc405b4af308d",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "8adba04ef40c825f66f231f5a70bc405b4af308d"
+        },
+        {
+          "source": "ac70e0ed1034ca5bdf38f6d6f5a4b7b06e28026f",
+          "prepared": "4d7c20105d3fc4cc3486f279be87fc76808668bf",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "4d7c20105d3fc4cc3486f279be87fc76808668bf"
+        },
+        {
+          "source": "f9bdd38725202278a8ddc9fda77fb840749729f0",
+          "prepared": "85f78bd33e1ab54bc9e0d9fef07c1082ae2e865a",
+          "author": "Abdelrahman Mostafa <a.abdo.mae@gmail.com>",
+          "integrated": "85f78bd33e1ab54bc9e0d9fef07c1082ae2e865a"
+        }
+      ],
+      "skipped_commits": [
+        {
+          "source": "cd09eb951fb2c92d355b9da8343d133c1c496b3f",
+          "reason": "Only Ruff formatting already applied by the original fork integration. Current relevant files pass Ruff format."
+        }
+      ],
+      "benefits": [
+        "CSPT proof revisions use the PoC-backed path; dependency-only revisions are rejected without changing the stored record.",
+        "Dependency report-type markers no longer collapse separate locationless CVEs into one SARIF alert; titled findings with no known class keyword retain historical fingerprints.",
+        "Dynamic creation reserves dependency_cve for the dependency tool and handles nullish class strings consistently.",
+        "CSPT source-page endpoint guidance avoids unstable payload-destination identity.",
+        "Dedicated CSPT agent coverage satisfies the corresponding browser surface; inflected vulnerability names, browser headings and generic browser entries produce accurate gaps."
+      ],
+      "adaptations": [
+        "Six bounded source commits were cherry-picked instead of merging the whole current PR branch; each original author is preserved.",
+        "No production conflict resolution or custom production patch was required. The fork dedupe locks, assessment evidence and failed/budget_paused completeness rules remain unchanged.",
+        "f9bdd387 overlaps the existing superseded-author fixture adaptation; cherry-pick retains it and adds the previously absent current agent_id assertion (one line).",
+        "Formatting-only cd09eb95 is redundant; broader upstream merge bf949ad1 is already covered by the integration baseline and was not replayed."
+      ],
+      "validation": {
+        "before": {
+          "base": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+          "test_files": [
+            "tests/test_cspt_finding_class.py",
+            "tests/test_report_coverage.py"
+          ],
+          "result": "13 failed, 43 passed in 2.03s",
+          "log": "LOCAL_LOG_DIR/cspt-followup-before.log",
+          "test_only_diff": "LOCAL_LOG_DIR/cspt-followup-before-tests.patch"
+        },
+        "after": {
+          "result": "671 passed in 47.39s across 29 reporting/SARIF/coverage/dedupe/assessment files",
+          "log": "LOCAL_LOG_DIR/cspt-followup-after-pytest.log",
+          "extra_assertion": "20 tests in tests/test_coverage_tool.py passed after the final one-line assertion cherry-pick; Ruff and format also pass."
+        },
+        "gates": [
+          {
+            "gate": "ruff",
+            "command": [
+              "uv",
+              "run",
+              "--frozen",
+              "--no-sync",
+              "ruff",
+              "check",
+              "strix/report/coverage.py",
+              "strix/report/sarif.py",
+              "strix/tools/reporting/tool.py",
+              "tests/test_cspt_finding_class.py",
+              "tests/test_report_coverage.py"
+            ],
+            "exit": 0,
+            "log": "LOCAL_LOG_DIR/cspt-followup-after-ruff.log",
+            "tail": "All checks passed!\n"
+          },
+          {
+            "gate": "format",
+            "command": [
+              "uv",
+              "run",
+              "--frozen",
+              "--no-sync",
+              "ruff",
+              "format",
+              "--check",
+              "strix/report/coverage.py",
+              "strix/report/sarif.py",
+              "strix/tools/reporting/tool.py",
+              "tests/test_cspt_finding_class.py",
+              "tests/test_report_coverage.py"
+            ],
+            "exit": 0,
+            "log": "LOCAL_LOG_DIR/cspt-followup-after-format.log",
+            "tail": "5 files already formatted\n"
+          },
+          {
+            "gate": "mypy",
+            "command": [
+              "uv",
+              "run",
+              "--frozen",
+              "--no-sync",
+              "mypy",
+              "strix/report/coverage.py",
+              "strix/report/sarif.py",
+              "strix/tools/reporting/tool.py"
+            ],
+            "exit": 0,
+            "log": "LOCAL_LOG_DIR/cspt-followup-after-mypy.log",
+            "tail": "pyproject.toml: note: unused section(s): module = ['docker.*', 'pypdf.*', 'reportlab.*', 'tests.*']\nSuccess: no issues found in 3 source files\n"
+          },
+          {
+            "gate": "bandit",
+            "command": [
+              "uv",
+              "run",
+              "--frozen",
+              "--no-sync",
+              "bandit",
+              "-q",
+              "-c",
+              "pyproject.toml",
+              "strix/report/coverage.py",
+              "strix/report/sarif.py",
+              "strix/tools/reporting/tool.py"
+            ],
+            "exit": 0,
+            "log": "LOCAL_LOG_DIR/cspt-followup-after-bandit.log",
+            "tail": ""
+          }
+        ],
+        "git_diff_check": "passed",
+        "worktree_status": "clean",
+        "environment": "Python 3.12.14 fixed absolute UV interpreter; uv --frozen --no-sync after initialization; temporary HOME and explicit minimal environment; LITELLM_MODE=PRODUCTION, local pricing map, STRIX_TELEMETRY=0; no credentials supplied."
+      },
+      "risks": [
+        "Existing reports that were already authored with payload destination as endpoint are not migrated. The corrected source-page contract applies to future filings/revisions.",
+        "Coverage classification remains a deterministic wording heuristic; source changes intentionally expand long-term prefix matching while keeping short-token boundaries."
+      ],
+      "limitations": [
+        "No browser execution, real target scan, external LLM calls or Docker/Caido validation was performed. CSPT HTML fixtures were validated by unit tests only.",
+        "The full repository suite and repository-wide Pyright were not rerun in this isolated worktree; coordinator owns final integration gates.",
+        "Current upstream CI and maintainer approval are not claimed; the original PR remains open.",
+        "Coordinator merged these commits into the local review branch as b4fb64c0. Master, releases and upstream remain unchanged; no publication performed. Final integration gates are running separately."
+      ],
+      "integration_merge": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "integration_branch": "feat/upstream-sync-contributions-20261029"
+    },
+    "resume-mailbox-validation.json": [
+      {
+        "name": "pytest",
+        "command": [
+          "uv",
+          "run",
+          "--frozen",
+          "--no-sync",
+          "pytest",
+          "-q",
+          "tests/test_budget_pause_policy.py",
+          "tests/test_execution.py",
+          "tests/test_wait_dedupe.py",
+          "tests/test_test_pause.py",
+          "tests/test_hooks.py",
+          "tests/test_execution_transient_retry.py",
+          "tests/test_model_retry.py",
+          "tests/test_runner_rate_limit.py"
+        ],
+        "exit_code": 0,
+        "output": "........................................................................ [ 28%]\n........................................................................ [ 57%]\n........................................................................ [ 86%]\n.................................                                        [100%]\n249 passed in 16.62s\n"
+      },
+      {
+        "name": "ruff",
+        "command": [
+          "uv",
+          "run",
+          "--frozen",
+          "--no-sync",
+          "ruff",
+          "check",
+          "strix/core/execution.py",
+          "tests/test_budget_pause_policy.py"
+        ],
+        "exit_code": 0,
+        "output": "All checks passed!\n"
+      },
+      {
+        "name": "format",
+        "command": [
+          "uv",
+          "run",
+          "--frozen",
+          "--no-sync",
+          "ruff",
+          "format",
+          "--check",
+          "strix/core/execution.py",
+          "tests/test_budget_pause_policy.py"
+        ],
+        "exit_code": 0,
+        "output": "2 files already formatted\n"
+      },
+      {
+        "name": "mypy",
+        "command": [
+          "uv",
+          "run",
+          "--frozen",
+          "--no-sync",
+          "mypy",
+          "strix/core/execution.py"
+        ],
+        "exit_code": 0,
+        "output": "pyproject.toml: note: unused section(s): module = ['caido_sdk_client.*', 'cvss.*', 'pypdf.*', 'reportlab.*', 'tests.*']\nSuccess: no issues found in 1 source file\n"
+      },
+      {
+        "name": "bandit",
+        "command": [
+          "uv",
+          "run",
+          "--frozen",
+          "--no-sync",
+          "bandit",
+          "-r",
+          "strix/core/execution.py",
+          "-c",
+          "pyproject.toml"
+        ],
+        "exit_code": 0,
+        "output": "Run started:2026-10-29 20:03:49.961846+00:00\n\nTest results:\n\tNo issues identified.\n\nCode scanned:\n\tTotal lines of code: 1143\n\tTotal lines skipped (#nosec): 0\n\tTotal potential issues skipped due to specifically being disabled (e.g., #nosec BXXX): 0\n\nRun metrics:\n\tTotal issues (by severity):\n\t\tUndefined: 0\n\t\tLow: 0\n\t\tMedium: 0\n\t\tHigh: 0\n\tTotal issues (by confidence):\n\t\tUndefined: 0\n\t\tLow: 0\n\t\tMedium: 0\n\t\tHigh: 0\nFiles skipped (0):\n[main]\tINFO\tprofile include tests: None\n[main]\tINFO\tprofile exclude tests: B601,B607,B603,B101,B404\n[main]\tINFO\tcli include tests: None\n[main]\tINFO\tcli exclude tests: None\n[main]\tINFO\tusing config: pyproject.toml\n[main]\tINFO\trunning on Python 3.12.14\n"
+      }
+    ]
+  }
+}

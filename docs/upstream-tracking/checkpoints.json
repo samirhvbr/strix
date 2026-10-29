@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-10-29T20:25:48.854304+00:00",
+  "repositories": {
+    "fork": "https://github.com/samirhvbr/strix",
+    "upstream": "https://github.com/usestrix/strix"
+  },
+  "code_synchronization": {
+    "last_delivered": {
+      "fork_ref": "refs/heads/master",
+      "fork_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "fork_version": "1.2.43",
+      "tag": "shvia-v1.2.43",
+      "upstream_effective_ancestor": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
+      "previous_documented_upstream_base": "62b496430da5df5e9e79a190e7af6f92529883a3",
+      "validation_scope": "Historical delivered state; current audit separately confirms tag/master equality and records baseline failures."
+    },
+    "last_completed": {
+      "upstream_ref": "refs/heads/main",
+      "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "sync_merge_sha": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+      "fork_ref": "refs/heads/feat/upstream-sync-contributions-20261029",
+      "fork_validated_code_sha": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "validated_at": "2026-10-29T20:25:48.854304+00:00",
+      "status": "locally_validated_with_documented_limits",
+      "full_quality_gate": "failed_at_pyright_1259_diagnostics",
+      "validation_record": "validation.json",
+      "delivered_to_master": false,
+      "released": false
+    },
+    "history": [
+      {
+        "fork_sha": "834c8d77f9f20e692fc59b4962104ceb77deb21b",
+        "status": "prior_integrated_suite_passed",
+        "result": "3548passed,12skipped,3xfailed; superseded by final code checkpoint after mailbox/CSPT corrections."
+      },
+      {
+        "fork_sha": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+        "status": "final_functional_checks_completed",
+        "result": "3567passed,12skipped,3xfailed plus12controlledDocker; check-all still fails at Pyright,5new Ollama unknown-type diagnostics documented."
+      }
+    ],
+    "in_progress": null
+  },
+  "contribution_review": {
+    "round": "2026-10-29",
+    "report": "../UPSTREAM_INTEGRATION_2026-10-29.md",
+    "ledger": "items.json",
+    "last_completed_inventory_at": "2026-10-29T20:18:34.998964+00:00",
+    "inventory_method": "Paginated full open PR/issue inventories; second full fetch including bodies/heads/updatedAt has no additions/removals/changes. Counts match earlier API totals.",
+    "state": "complete_inventory_triage_and_selected_integrations; deeper_backlog_pending",
+    "coverage": {
+      "total_records": 570,
+      "upstream_open_inventory": {
+        "issue": 203,
+        "pr": 320
+      },
+      "known_additional": 3,
+      "fork_catalog": 44,
+      "review_depth": {
+        "identified": 36,
+        "triage": 504,
+        "deep": 30
+      },
+      "review_depth_upstream": {
+        "triage": 503,
+        "deep": 23
+      },
+      "review_depth_fork": {
+        "identified": 36,
+        "triage": 1,
+        "deep": 7
+      },
+      "fork_decisions": {
+        "pending": 160,
+        "incorporated_fully": 46,
+        "adapted": 13,
+        "already_covered": 87,
+        "deferred": 238,
+        "discarded": 25,
+        "incorporated_partially": 1
+      },
+      "implementation_phases": {
+        "unknown": 106,
+        "present_before_round": 41,
+        "integrated_review_branch": 36,
+        "decision_required": 112,
+        "deferred": 238,
+        "not_planned": 25,
+        "pending": 12
+      }
+    },
+    "known_items_checked": {
+      "count": 51,
+      "prs": 43,
+      "issues": 8,
+      "third_party_carried": 35,
+      "closed_unmerged": 3,
+      "note": "All Strix references including bare numbers from baseline FORK.md. shvia-desktop#145 is another repository and excluded."
+    },
+    "selected_new_or_updated_prs": [
+      1613,
+      1614,
+      1612,
+      1615,
+      1469,
+      1624,
+      1621,
+      1562,
+      1563,
+      1531,
+      1420,
+      1515,
+      1580,
+      1502,
+      1499,
+      1571,
+      1446
+    ],
+    "next_discovery": {
+      "since_inclusive": "2026-10-27T20:18:34Z",
+      "overlap_hours": 48,
+      "include_closed_and_merged": true,
+      "recheck_all_ledger_ids_first": true,
+      "number_watermark": null
+    },
+    "partial_work": {
+      "code_integrations_pending": [],
+      "deep_review_pending": "500 current-open items remain at triage depth;36 additional fork-catalog entries are metadata-only. Deep review is not claimed for the full inventory.",
+      "priority_queue": [
+        "usestrix/strix#issue:1622",
+        "usestrix/strix#issue:1623",
+        "usestrix/strix#pr:1117",
+        "usestrix/strix#issue:1108",
+        "usestrix/strix#pr:1053",
+        "usestrix/strix#pr:1590",
+        "usestrix/strix#pr:1319",
+        "usestrix/strix#pr:1307",
+        "usestrix/strix#pr:1145",
+        "usestrix/strix#pr:911",
+        "usestrix/strix#pr:677"
+      ]
+    },
+    "decisions_required": [
+      "Historical per-model cost ledger and SARIF identity migration need bounded policy/design before incorporation.",
+      "Master delivery/version bump/tag/release and retrospective historical releases are outside this authorized review branch.",
+      "Remote Actions account availability must be resolved before relying on its builds."
+    ]
+  },
+  "version_release_audit": "release-audit.json",
+  "publication_scope": {
+    "review_branch": "feat/upstream-sync-contributions-20261029",
+    "master_changed": false,
+    "mirror_changed": false,
+    "tags_changed": false,
+    "releases_changed": false,
+    "upstream_messages_created": false,
+    "version_bumped": false
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "baseline": {
+    "filesAnalyzed": 174,
+    "errorCount": 1259,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 4.349
+  },
+  "upstream": {
+    "filesAnalyzed": 136,
+    "errorCount": 941,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 3.266
+  },
+  "sync": {
+    "filesAnalyzed": 176,
+    "errorCount": 1263,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 3.928
+  },
+  "final": {
+    "filesAnalyzed": 176,
+    "errorCount": 1259,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 4.023
+  },
+  "added_vs_fork": [
+    {
+      "signature": [
+        "agents/factory.py",
+        "reportUnknownArgumentType",
+        "Argument type is partially unknown\n  Argument corresponds to parameter \"parsed\" in function \"_annotate_running_non_tty\"\n  Argument type is \"dict[Unknown, Unknown]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/models.py",
+        "reportUnknownMemberType",
+        "Type of \"get\" is partially unknown\n  Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/models.py",
+        "reportUnknownMemberType",
+        "Type of \"chunk_parser\" is partially unknown\n  Type of \"chunk_parser\" is \"(chunk: dict[Unknown, Unknown]) -> ModelResponseStream\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/models.py",
+        "reportUnknownMemberType",
+        "Type of \"__init__\" is partially unknown\n  Type of \"__init__\" is \"(streaming_response: Unknown, sync_stream: bool, json_mode: bool | None = False) -> None\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/models.py",
+        "reportUnknownVariableType",
+        "Type of \"tool_calls\" is partially unknown\n  Type of \"tool_calls\" is \"Unknown | None\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/models.py",
+        "reportUnknownVariableType",
+        "Type of \"tool_call\" is unknown"
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/tool_call_arguments.py",
+        "reportUnknownMemberType",
+        "Type of \"get\" is partially unknown\n  Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\""
+      ],
+      "count": 2
+    },
+    {
+      "signature": [
+        "config/tool_call_arguments.py",
+        "reportUnknownArgumentType",
+        "Argument type is partially unknown\n  Argument corresponds to parameter \"arguments\" in function \"repair_arguments\"\n  Argument type is \"Unknown | None\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "config/tool_call_arguments.py",
+        "reportUnknownVariableType",
+        "Type of \"item\" is partially unknown\n  Type of \"item\" is \"dict[Unknown | str, Unknown | str]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "core/hooks.py",
+        "reportUnnecessaryIsInstance",
+        "Unnecessary isinstance call; \"dict[str, Any]\" is always an instance of \"dict[Unknown, Unknown]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "report/usage.py",
+        "reportUnknownMemberType",
+        "Type of \"get\" is partially unknown\n  Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "runtime/docker_client.py",
+        "reportUnknownArgumentType",
+        "Argument type is partially unknown\n  Argument corresponds to parameter \"object\" in function \"__new__\"\n  Argument type is \"Any | Unknown\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "runtime/docker_client.py",
+        "reportUnknownVariableType",
+        "Type of \"item\" is partially unknown\n  Type of \"item\" is \"Any | Unknown\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "tools/load_skill/tool.py",
+        "reportUnknownMemberType",
+        "Type of \"get\" is partially unknown\n  Type of \"get\" is \"Overload[(key: Unknown, default: None = None, /) -> (Unknown | None), (key: Unknown, default: Unknown, /) -> Unknown, (key: Unknown, default: _T@get, /) -> (Unknown | _T@get)]\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "tools/load_skill/tool.py",
+        "reportUnknownArgumentType",
+        "Argument type is unknown\n  Argument corresponds to parameter \"coverage_tools\" in function \"load_skills\""
+      ],
+      "count": 1
+    }
+  ],
+  "removed_vs_fork": [
+    {
+      "signature": [
+        "config/tool_call_ids.py",
+        "reportUnknownMemberType",
+        "Type of \"_used\" is partially unknown\n  Type of \"_used\" is \"set[Unknown] | set[str]\""
+      ],
+      "count": 2
+    },
+    {
+      "signature": [
+        "config/tool_call_ids.py",
+        "reportUnknownMemberType",
+        "Type of \"add\" is partially unknown\n  Type of \"add\" is \"((element: Unknown, /) -> None) | ((element: str, /) -> None)\""
+      ],
+      "count": 2
+    },
+    {
+      "signature": [
+        "core/runner.py",
+        "reportUnnecessaryComparison",
+        "Condition will always evaluate to True since the types \"str\" and \"None\" have no overlap"
+      ],
+      "count": 7
+    },
+    {
+      "signature": [
+        "interface/cli_args.py",
+        "reportUnknownMemberType",
+        "Type of \"targets_info\" is partially unknown\n  Type of \"targets_info\" is \"Any | list[Unknown]\""
+      ],
+      "count": 3
+    },
+    {
+      "signature": [
+        "interface/cli_args.py",
+        "reportUnknownVariableType",
+        "Type of \"target\" is partially unknown\n  Type of \"target\" is \"Any | Unknown\""
+      ],
+      "count": 1
+    },
+    {
+      "signature": [
+        "interface/cli_args.py",
+        "reportUnknownArgumentType",
+        "Argument type is partially unknown\n  Argument corresponds to parameter \"targets_info\" in function \"collect_local_sources\"\n  Argument type is \"Any | list[Unknown]\""
+      ],
+      "count": 1
+    }
+  ],
+  "post_followup": {
+    "filesAnalyzed": 176,
+    "errorCount": 1259,
+    "warningCount": 0,
+    "informationCount": 0,
+    "timeInSec": 3.52
+  },
+  "post_followup_added_vs_834c": [],
+  "post_followup_removed_vs_834c": []
+}

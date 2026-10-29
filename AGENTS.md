@@ -67,3 +67,10 @@ Target-specific workflows built on the same engine:
 - Run from source: `uv run strix --target <target>`.
 - Layout: `strix/agents` (agent graph + prompts), `strix/tools` (proxy, browser, terminal, scanners), `strix/runtime` (Docker sandbox), `strix/report` (findings, SARIF), `strix/skills` (internal knowledge packs the pentest agents load — different from the consumer skills in `skills/`), `strix/interface` (CLI/TUI), `containers/` (sandbox image).
 - Pre-commit hooks: `make pre-commit` (or `uv run pre-commit install`).
+
+## Fork upstream maintenance
+
+For work in the SHVIA fork, start with [docs/upstream-tracking.md](docs/upstream-tracking.md).
+Recheck known items before new contributions and preserve separate code-sync and review
+checkpoints. Record actual imported SHAs, local adaptations and validation; review-branch
+work must not be represented as a master delivery or published release.
