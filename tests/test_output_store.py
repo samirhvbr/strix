@@ -235,4 +235,3 @@ def test_fast_bounding_does_not_thrash_on_large_budgets() -> None:
     assert len(suffix) == budget
     # Fast path avoids per-character list/bytes allocations (< 250 KB vs ~500 KB previously).
     assert peak < 250_000
-
