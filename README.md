@@ -20,7 +20,6 @@
 <a href="https://app.strix.ai?utm_source=github&utm_medium=readme&utm_content=badge_cloud"><img src="https://img.shields.io/badge/Strix%20Cloud-app.strix.ai-2b9246?style=for-the-badge&logoColor=white" alt="Strix Cloud"></a>
 <a href="https://strix.ai/demo?utm_source=github&utm_medium=readme&utm_content=badge_demo"><img src="https://img.shields.io/badge/Try%20Strix%20Enterprise-555555?style=for-the-badge&logoColor=white" alt="Try Strix Enterprise"></a>
 
-<a href="https://deepwiki.com/usestrix/strix"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
 <a href="https://github.com/usestrix/strix"><img src="https://img.shields.io/github/stars/usestrix/strix?style=flat-square" alt="GitHub Stars"></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache%202.0-3b82f6?style=flat-square" alt="License"></a>
 <a href="https://pypi.org/project/strix-agent/"><img src="https://img.shields.io/pypi/v/strix-agent?style=flat-square" alt="PyPI Version"></a>
@@ -85,7 +84,8 @@ Strix are autonomous AI penetration testing agents that act just like real hacke
 curl -sSL https://strix.ai/install | bash
 
 # Configure your AI provider
-export STRIX_LLM="openrouter/z-ai/glm-5.3"
+export STRIX_LLM="vercel_ai_gateway/zai/glm-5.3"   # Vercel AI Gateway
+# export STRIX_LLM="openrouter/z-ai/glm-5.3"       # OpenRouter
 export LLM_API_KEY="your-api-key"
 
 # Run your first security assessment
@@ -94,6 +94,18 @@ strix --target ./app-directory
 
 > [!NOTE]
 > First run automatically pulls the sandbox Docker image. Results are saved to `strix_runs/<run-name>`
+
+### Updating
+
+```bash
+# Self-update the standalone binary to the latest release
+strix --update
+
+# ...or re-run the installer
+curl -sSL https://strix.ai/install | bash
+```
+
+Installed with pipx, uv, or pip? `strix --update` prints the matching upgrade command instead (`pipx upgrade strix-agent`, `uv tool upgrade strix-agent`, `pip install --upgrade strix-agent`). Strix also shows a notice with the right command when a new version is available.
 
 ---
 
@@ -285,7 +297,8 @@ jobs:
 ### Configuration
 
 ```bash
-export STRIX_LLM="openrouter/z-ai/glm-5.3"
+export STRIX_LLM="vercel_ai_gateway/zai/glm-5.3"   # Vercel AI Gateway
+# export STRIX_LLM="openrouter/z-ai/glm-5.3"       # OpenRouter
 export LLM_API_KEY="your-api-key"
 
 # Optional
@@ -341,12 +354,14 @@ Each server's tools are namespaced by `name`, for example `github_list_issues`. 
 
 **Recommended models for best results:**
 
-- [Z.ai GLM-5.3 on OpenRouter](https://openrouter.ai/z-ai/glm-5.3) - `openrouter/z-ai/glm-5.3` (the default pick)
-- [OpenAI GPT-5.4](https://openai.com/api/) - `openai/gpt-5.4`
-- [Anthropic Claude Sonnet 4.6](https://claude.com/platform/api) - `anthropic/claude-sonnet-4-6`
-- [Google Gemini 3 Pro Preview](https://cloud.google.com/vertex-ai) - `vertex_ai/gemini-3-pro-preview`
+- [Z.ai GLM-5.3 on Vercel AI Gateway](https://vercel.com/ai-gateway/models/glm-5.3) - `vercel_ai_gateway/zai/glm-5.3` (recommended)
+- [Z.ai GLM-5.3 on OpenRouter](https://openrouter.ai/z-ai/glm-5.3) - `openrouter/z-ai/glm-5.3` (recommended)
+- [DeepSeek V4.1 Flash on OpenRouter](https://openrouter.ai/deepseek/deepseek-v4.1-flash-1017) - `openrouter/deepseek/deepseek-v4.1-flash-1017`
+- [OpenAI GPT-6.1 Sol](https://openai.com/api/) - `openai/gpt-6.1-sol` (needs [Daybreak](https://openai.com/daybreak/) access)
+- [Anthropic Claude Opus 5.5](https://claude.com/platform/api) - `anthropic/claude-opus-5-5` (needs [CVP](https://support.claude.com/en/articles/14604842-cyber-verification-program) access)
+- [Google Gemini 4 Argon](https://cloud.google.com/vertex-ai) - `vertex_ai/gemini-4-argon` (needs [Fairwind](https://deepmind.google/fairwind-program/) access)
 - [DeepSeek V4 Pro](https://platform.deepseek.com) - `deepseek/deepseek-v4-pro`
-- [Moonshot Kimi K3](https://platform.kimi.ai) - `moonshot/kimi-k3`
+- [Moonshot Kimi K3.1 Pro](https://platform.kimi.ai) - `moonshot/kimi-k3.1-pro`
 
 See the [LLM Providers documentation](https://docs.strix.ai/llm-providers/overview) for all supported providers including Vertex AI, Bedrock, Azure, and local models.
 

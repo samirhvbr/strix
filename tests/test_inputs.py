@@ -70,7 +70,6 @@ def _cache_points(model_name: str) -> Any:
 def test_make_model_settings_enables_prompt_cache_for_bedrock_claude() -> None:
     assert _cache_points("bedrock/global.anthropic.claude-opus-4-8") == [
         {"location": "message", "role": "system"},
-        {"location": "tool_config"},
         {"location": "message", "index": -1},
     ]
 
@@ -315,6 +314,12 @@ def test_make_model_settings_disables_parallel_tool_calls_by_default() -> None:
     assert make_model_settings("none", model_name="gpt-4o").parallel_tool_calls is False
 
 
+def test_make_model_settings_enables_parallel_tool_calls_when_requested() -> None:
+    settings = make_model_settings("none", model_name="gpt-4o", parallel_tool_calls=True)
+
+    assert settings.parallel_tool_calls is True
+
+
 def test_make_model_settings_omits_parallel_tool_calls_without_tools() -> None:
     settings = make_model_settings("none", model_name="gpt-4o", has_tools=False)
 
@@ -360,6 +365,58 @@ def test_make_model_settings_extra_headers_survive_reasoning_resolve() -> None:
     )
 
     assert settings.extra_headers == {"X-Feature-Key": "svc"}
+
+
+def test_make_model_settings_sets_extra_body() -> None:
+    settings = make_model_settings(
+        "none",
+        model_name="openai/gpt-5",
+        extra_body={"service_tier": "flex", "safety_identifier": "user-hash"},
+    )
+
+    assert settings.extra_body == {"service_tier": "flex", "safety_identifier": "user-hash"}
+
+
+def test_make_model_settings_omits_extra_body_when_unset() -> None:
+    assert make_model_settings("none", model_name="gpt-4o").extra_body is None
+
+
+def test_make_model_settings_extra_body_survives_reasoning_resolve() -> None:
+    settings = make_model_settings(
+        "high",
+        model_name="openai/o3",
+        extra_body={"service_tier": "flex"},
+    )
+
+    assert settings.extra_body == {"service_tier": "flex"}
+
+
+def test_make_model_settings_extra_body_merges_with_max_reasoning_field() -> None:
+    settings = make_model_settings(
+        "max",
+        model_name="deepseek/deepseek-v4-flash",
+        extra_body={"safety_identifier": "user-hash"},
+    )
+
+    assert settings.extra_body == {"safety_identifier": "user-hash", "reasoning_effort": "max"}
+
+
+def test_make_model_settings_max_reasoning_overrides_extra_body_reasoning_field() -> None:
+    settings = make_model_settings(
+        "max",
+        model_name="deepseek/deepseek-v4-flash",
+        extra_body={"reasoning_effort": "low"},
+    )
+
+    assert settings.extra_body == {"reasoning_effort": "max"}
+
+
+def test_make_model_settings_does_not_mutate_caller_extra_body() -> None:
+    extra_body = {"safety_identifier": "user-hash"}
+
+    make_model_settings("max", model_name="deepseek/deepseek-v4-flash", extra_body=extra_body)
+
+    assert extra_body == {"safety_identifier": "user-hash"}
 
 
 def test_make_model_settings_timeout_survives_reasoning_resolve() -> None:
@@ -417,6 +474,11 @@ def test_openrouter_attribution_rides_on_the_request_headers() -> None:
     }
 
 
+def test_vercel_ai_gateway_attribution_rides_on_the_request_headers() -> None:
+    headers = make_model_settings(None, model_name="vercel_ai_gateway/zai/glm-5.3").extra_headers
+    assert headers == {"HTTP-Referer": "https://strix.ai", "X-Title": "Strix"}
+
+
 def test_openrouter_attribution_absent_for_other_providers() -> None:
     assert make_model_settings(None, model_name="anthropic/claude-sonnet-4-5").extra_headers is None
 
@@ -431,3 +493,10 @@ def test_user_headers_override_openrouter_attribution() -> None:
     assert headers["X-Title"] == "Custom"
     assert headers["X-Tenant"] == "acme"
     assert headers["HTTP-Referer"] == "https://strix.ai"
+
+
+def test_reasoning_effort_sent_as_configured_and_none_omitted() -> None:
+    assert make_model_settings("none", model_name="gpt-5.6-sol").reasoning is None
+    settings = make_model_settings("high", model_name="gpt-daybreak-blue-latest")
+    assert settings.reasoning is not None
+    assert settings.reasoning.effort == "high"

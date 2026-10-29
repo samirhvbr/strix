@@ -110,7 +110,7 @@ def test_exa_content_requests_summaries_and_renders_results(
 
     assert captured["url"] == "https://api.exa.ai/search"
     assert captured["headers"]["x-api-key"] == "ek"
-    assert "OpenSSH 7.4 RCE?" in captured["json"]["query"]
+    assert captured["json"]["query"] == "OpenSSH 7.4 RCE?"
     assert captured["json"]["type"] == "auto"
     assert captured["json"]["numResults"] == 5
     assert captured["json"]["contents"] == {"summary": {"query": tool._EXA_SUMMARY_PROMPT}}
