@@ -132,6 +132,7 @@ CI never ran on these (upstream waits for a maintainer to approve the first run 
 | [#1471](https://github.com/usestrix/strix/pull/1471) | test: keep the suite from writing the developer's real home and working directory | open |
 | [#1472](https://github.com/usestrix/strix/pull/1472) | feat(viewer): show confidence, CWE/CVE and the reasoning fields in the PDF report | open |
 | [#1613](https://github.com/usestrix/strix/pull/1613) | fix(tools): preserve records when an update is rejected | open; backport proposed for master; preserves rejected note/todo updates |
+| [#1614](https://github.com/usestrix/strix/pull/1614) | fix(cloud): report scope metadata persistence failures | open; backport proposed for `master`; reports an actionable error after the server updates session scopes if saving the local metadata fails |
 
 ## PRs de terceiros carregados no fork
 
