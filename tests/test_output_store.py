@@ -235,3 +235,31 @@ def test_fast_bounding_does_not_thrash_on_large_budgets() -> None:
     assert len(suffix) == budget
     # Fast path avoids per-character list/bytes allocations (< 250 KB vs ~500 KB previously).
     assert peak < 250_000
+
+
+@pytest.mark.parametrize("line_count", [1, 4, 7, 8, 9, 12, 16, 20])
+@pytest.mark.parametrize("max_lines", [1, 8, 16, 28])
+def test_head_tail_preserves_tail_slice_when_only_bytes_exceed_limit(
+    line_count: int, max_lines: int
+) -> None:
+    lines = ["a" * 1_000, *(f"line-{i}" for i in range(1, line_count))]
+    text = "\n".join(lines)
+    result = _head_tail(text, max_lines=max_lines, max_bytes=400)
+    assert result is not None
+    head, tail, dropped_lines, dropped_bytes = result
+
+    tail_lines = max_lines - max(1, max_lines // 2)
+    legacy_tail = "\n".join(lines[len(lines) - tail_lines :]) if tail_lines > 0 else ""
+    # Slicing precedes the byte cap. Compare the exact legacy tail at the same
+    # resulting byte length, including the seven-line / sixteen-line-budget case.
+    expected_tail = _take_suffix(legacy_tail, len(tail.encode("utf-8")))
+    assert tail == expected_tail
+    if len(legacy_tail.encode("utf-8")) <= 100:
+        assert tail == legacy_tail
+    if line_count == 7 and max_lines == 16:
+        assert tail == "line-6"
+    kept_lines = len(head.split("\n")) + (len(tail.split("\n")) if tail else 0)
+    assert dropped_lines == max(0, line_count - kept_lines)
+    assert dropped_bytes == len(text.encode("utf-8")) - len(head.encode("utf-8")) - len(
+        tail.encode("utf-8")
+    )

@@ -112,7 +112,11 @@ def _head_tail(
     head_lines = max(1, max_lines // 2)
     tail_lines = max_lines - head_lines
     head = "\n".join(text.split("\n", head_lines)[:head_lines])
-    tail = "\n".join(text.rsplit("\n", tail_lines)[-tail_lines:]) if tail_lines > 0 else ""
+    # Preserve the original lines[line_count - tail_lines:] slice, including
+    # its negative start when only the byte limit requires truncation.
+    tail_start = slice(line_count - tail_lines, None).indices(line_count)[0]
+    tail_count = line_count - tail_start
+    tail = "\n".join(text.rsplit("\n", tail_count)[-tail_count:]) if tail_count > 0 else ""
 
     half_bytes = max(1, byte_budget // 2)
     if _byte_len(head) > half_bytes:
