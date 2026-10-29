@@ -552,6 +552,64 @@ def _pause_flags(coordinator: AgentCoordinator) -> tuple[bool, bool]:
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("with_session", [False, True])
+@pytest.mark.parametrize(
+    "initial_input", ["original task", [{"role": "user", "content": "original task"}]]
+)
+async def test_resume_delivers_queued_messages_with_or_without_session(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    with_session: bool,
+    initial_input: Any,
+) -> None:
+    coordinator = AgentCoordinator()
+    await coordinator.register("root", "root", parent_id=None)
+    session = open_agent_session("root", tmp_path / "agents.db") if with_session else None
+    inputs: list[Any] = []
+
+    async def cycle(*_args: Any, input_data: Any, **_kwargs: Any) -> Any:
+        inputs.append(input_data)
+        if len(inputs) == 1:
+            await coordinator.pause_budget()
+            epoch = coordinator.resume_epoch
+            await coordinator.park_for_budget("root")
+            await coordinator.send("root", {"from": "user", "content": "queued while paused"})
+            await coordinator.resume_budget()
+            raise BudgetPausedError("paused", resume_epoch=epoch, operator_pause=True)
+        await coordinator.set_status("root", "completed")
+        return MagicMock(final_output=None)
+
+    monkeypatch.setattr(execution, "_run_cycle", cycle)
+    try:
+        await run_agent_loop(
+            agent=MagicMock(),
+            initial_input=initial_input,
+            run_config=MagicMock(),
+            context={"coordinator": coordinator, "agent_id": "root"},
+            max_turns=10,
+            coordinator=coordinator,
+            agent_id="root",
+            interactive=False,
+            session=session,
+        )
+        assert len(inputs) == 2
+        expected = [
+            {"role": "user", "content": "original task"},
+            {"role": "user", "content": "queued while paused"},
+        ]
+        if session is None:
+            assert inputs[1] == expected
+        else:
+            assert inputs == [[], []]
+            assert await session.get_items() == expected
+        assert coordinator.pending_counts["root"] == 0
+        assert coordinator.runtimes["root"].mailbox == []
+    finally:
+        if session is not None:
+            session.close()
+
+
+@pytest.mark.asyncio
 async def test_operator_pause_holds_under_the_stop_policy(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

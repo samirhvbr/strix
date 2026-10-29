@@ -699,9 +699,14 @@ async def _run_until_lifecycle(
                 # Stopped while parked (operator stop or a parent's stop_agent).
                 await coordinator.reset_recovery(agent_id)
                 return result
-            await coordinator.consume_pending(agent_id)
-            if session is not None:
-                input_data = []
+            _, pending_items = await coordinator.consume_pending(
+                agent_id, include_items=session is None
+            )
+            input_data = (
+                []
+                if session is not None
+                else ItemHelpers.input_to_new_input_list(input_data) + pending_items
+            )
             continue
 
         said_to_user = said_to_user or _said_to_user(result)
