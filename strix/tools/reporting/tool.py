@@ -2123,7 +2123,6 @@ async def _do_create_dependency(  # noqa: PLR0912, PLR0915
 
         from strix.report.dedupe import check_duplicate
 
-        existing = report_state.get_existing_vulnerabilities()
         candidate = {
             "title": title,
             "description": description,
@@ -2132,41 +2131,45 @@ async def _do_create_dependency(  # noqa: PLR0912, PLR0915
             "dependency_metadata": dependency_metadata,
             "technical_analysis": technical_analysis,
         }
-        dedupe = await check_duplicate(candidate, existing)
-        if dedupe.get("is_duplicate"):
-            duplicate_id = dedupe.get("duplicate_id", "")
-            return {
-                "success": False,
-                "error": (
-                    f"Potential duplicate (id={duplicate_id[:8]}...) — "
-                    "do not re-report the same dependency finding"
-                ),
-                "duplicate_of": duplicate_id,
-                "confidence": dedupe.get("confidence", 0.0),
-                "reason": dedupe.get("reason", ""),
-            }
+        # A same-CVE report without package metadata can send dependency
+        # deduplication through the model too, so it shares the filing lock.
+        async with report_state.dedupe_lock:
+            existing = report_state.get_existing_vulnerabilities()
+            dedupe = await check_duplicate(candidate, existing)
+            if dedupe.get("is_duplicate"):
+                duplicate_id = dedupe.get("duplicate_id", "")
+                return {
+                    "success": False,
+                    "error": (
+                        f"Potential duplicate (id={duplicate_id[:8]}...) — "
+                        "do not re-report the same dependency finding"
+                    ),
+                    "duplicate_of": duplicate_id,
+                    "confidence": dedupe.get("confidence", 0.0),
+                    "reason": dedupe.get("reason", ""),
+                }
 
-        report_id = report_state.add_vulnerability_report(
-            title=title,
-            description=description,
-            severity=severity,
-            impact=impact,
-            target=target,
-            technical_analysis=technical_analysis,
-            remediation_steps=remediation_steps,
-            evidence=evidence,
-            assumptions=assumptions,
-            fix_effort=fix_effort,
-            cvss=cvss_score if advisory_cvss is not None else None,
-            cve=parsed_cve,
-            cwe=cwe,
-            code_locations=parsed_locations,
-            fix_verification=fix_verification,
-            finding_class="dependency_cve",
-            dependency_metadata=dependency_metadata,
-            agent_id=agent_id if isinstance(agent_id, str) else None,
-            agent_name=agent_name if isinstance(agent_name, str) else None,
-        )
+            report_id = report_state.add_vulnerability_report(
+                title=title,
+                description=description,
+                severity=severity,
+                impact=impact,
+                target=target,
+                technical_analysis=technical_analysis,
+                remediation_steps=remediation_steps,
+                evidence=evidence,
+                assumptions=assumptions,
+                fix_effort=fix_effort,
+                cvss=cvss_score if advisory_cvss is not None else None,
+                cve=parsed_cve,
+                cwe=cwe,
+                code_locations=parsed_locations,
+                fix_verification=fix_verification,
+                finding_class="dependency_cve",
+                dependency_metadata=dependency_metadata,
+                agent_id=agent_id if isinstance(agent_id, str) else None,
+                agent_name=agent_name if isinstance(agent_name, str) else None,
+            )
     except Exception as e:
         logger.exception("create_dependency_report persistence failed")
         return {
