@@ -110,6 +110,7 @@ CI never ran on these (upstream waits for a maintainer to approve the first run 
 
 | PR | Título | Status |
 |----|--------|--------|
+| [#1612](https://github.com/usestrix/strix/pull/1612) | fix(runtime): honor shell-selected Docker contexts | open; backport proposed for `master`; honors `DOCKER_CONTEXT` and keeps `DOCKER_HOST` precedence |
 | [#1279](https://github.com/usestrix/strix/pull/1279) | fix(pricing): prefer a native provider over aggregator re-listings | open; narrowed 2026-10-16 after an external review (the preference now only breaks same-price ties, so no name goes from `None` to a guess) |
 | [#1173](https://github.com/usestrix/strix/pull/1173) | fix(warmup): pre-import the agents SDK to avoid a thread-race crash | closed 2026-10-16, superseded (upstream fixed the race itself in `1f3f9b31`, `7f46dd17` and `e60fd839`; adopted in the `1.1.0` sync) |
 | [#1174](https://github.com/usestrix/strix/pull/1174) | fix(retry): treat provider usage-limit errors as terminal, not transient | open; `upstream/main` merged into the branch 2026-10-16 (it conflicted in `runner.py`, `models.py` and a test); upstream still retries a 429 usage limit |
