@@ -650,7 +650,55 @@
       "summary": "3567 passed,12 skipped,3 xfailed;12 controlled Docker tests pass;Ruff/Mypy/Bandit/builds pass. Pyright1259 remains red; see validation.json and pyright-comparison.json.",
       "report": "../UPSTREAM_INTEGRATION_2026-10-29.md",
       "validation": "validation.json"
-    }
+    },
+    "incremental_updates": [
+      {
+        "id": "round-2026-10-29-second-pass",
+        "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+        "inventory_snapshot_at": "2026-10-29T20:58:03.199291+00:00",
+        "method": "Full paginated open PR/issue inventories, issues?state=all&since=2026-10-27T20:18:34Z (48 h overlap, closed and merged included), live fork PR list, live recheck of the three closed upstream PRs.",
+        "inputs": {
+          "open-prs.jsonl": {
+            "sha256": "6262ba1860ab2cbfd9cd9dd6b3b36b7bedb77e8f598b951d5fa8b5d675e215f3",
+            "count": 320
+          },
+          "open-issues.jsonl": {
+            "sha256": "9f7f37e3592b836ab7a81eeb564ca576f11ba1dfd0a9b14293c6de5c9f95fc59",
+            "count": 203
+          },
+          "updated-since.jsonl": {
+            "sha256": "088a13b86f19819e55f1299131da220efd724874b86e6d26abd2d38b2ff8e3fe",
+            "count": 29
+          },
+          "fork-prs.jsonl": {
+            "sha256": "f06dd22d4eab5350de489bea1fa998f2d626f3b5312ecca6c143135671aa95ff",
+            "count": 44
+          }
+        },
+        "results": {
+          "open_inventory": {
+            "pr": 320,
+            "issue": 203,
+            "matches_previous": true
+          },
+          "ledger_records_compared": 570,
+          "changed": [
+            "usestrix/strix#pr:1393"
+          ],
+          "new_records": [
+            "usestrix/strix#pr:1616",
+            "usestrix/strix#pr:1617",
+            "usestrix/strix#pr:1603",
+            "usestrix/strix#issue:1529"
+          ],
+          "removed_from_open": [],
+          "fork_prs_compared": 44,
+          "fork_prs_changed": 0
+        },
+        "note": "Records other than the ones listed were compared on updated_at, head SHA and state and were identical; their stored decisions are unchanged."
+      }
+    ],
+    "last_incremental_update_at": "2026-10-29T21:04:34.141249+00:00"
   },
   "records": [
     {
@@ -70402,12 +70450,12 @@
       "url": "https://github.com/usestrix/strix/pull/1393",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-10-29T20:18:34.998964+00:00",
-      "last_checked_basis": "Explicit confirmed source collection/recheck timestamp",
-      "updated_at": "2026-09-30T22:44:30Z",
+      "last_checked": "2026-10-29T21:04:34.141249+00:00",
+      "last_checked_basis": "Live GitHub API read during the second pass of the 2026-10-29 round",
+      "updated_at": "2026-10-29T20:28:28Z",
       "source": {
-        "observed_head_sha": "8c475019e6dc1a82172c106bce68403888683de6",
-        "base_sha": "007ed1a94e7dbf7b096c81e5b0354533ce94e0db",
+        "observed_head_sha": "e36603632e6148a36a4de562e43ba0c926ebb2bb",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
         "base_branch": null,
         "merge_commit": null,
         "closed_at": null,
@@ -70415,21 +70463,22 @@
         "state_reason": null,
         "draft": false,
         "snapshots": [
-          "open-prs.json"
+          "open-prs.json",
+          "open-prs.jsonl (second pass 2026-10-29)"
         ],
         "present_in_current_open_inventory": true
       },
-      "review_depth": "triage",
-      "reviewed_sha": "8c475019e6dc1a82172c106bce68403888683de6",
-      "review_scope": "Description and historical-fit triage; not a complete diff or behavior review.",
-      "review_checked_at": "2026-10-29T20:01:27.124805+00:00",
+      "review_depth": "deep",
+      "reviewed_sha": "e36603632e6148a36a4de562e43ba0c926ebb2bb",
+      "review_scope": "Head e3660363 (rebased onto upstream 6b7ae2eb; four PR-specific commits). Read: description, discussion, checks, the web_search adapter, settings, environment prompts and the persistence test. No PR code was executed here.",
+      "review_checked_at": "2026-10-29T21:04:34.141249+00:00",
       "fork_decision": "deferred",
-      "rationale": "Explicit Parallel search provider is additive and body describes mocked coverage, but adds credential/provider support obligation; verify truncation and config persistence on current fork first. Inventory review only; not deeply reviewed unless review_depth is later upgraded.",
+      "rationale": "Re-reviewed after the head moved from 8c475019 to e3660363. The earlier condition (check truncation and config persistence) is met: source links survive truncation (58419990), the key is repr-hidden and persisted with mode 0600, responses are type-checked and output is bounded. It remains an optional vendor provider: the fork's launcher and .env.example configure no web-search provider, its egress profile equals the existing Perplexity/Exa providers (opt-in key, requests.post with timeout=300, no profile gating in this fork), and keeping it would add about 200 lines to a shared module. Benefit to this fork is not demonstrated; keep deferred.",
       "assessment": {
-        "benefit": "Not individually assessed beyond the recorded rationale.",
-        "risk": "Not individually assessed at the recorded review depth.",
-        "effort": "Not estimated.",
-        "maintenance": "Not individually estimated."
+        "benefit": "Lets an operator use Parallel for public CVE/advisory research; no demand in this fork's launcher configuration.",
+        "risk": "Another credential and third-party egress for model-written queries, same class as the existing providers; mocked tests only.",
+        "effort": "Low to import (7 files); future conflicts likely in strix/tools/web_search/tool.py and settings.",
+        "maintenance": "A provider integration from an external author; a support obligation for a service this fork does not use."
       },
       "implementation": {
         "phase": "deferred",
@@ -70445,9 +70494,10 @@
         "provenance_unknown_reason": null
       },
       "validation": {
-        "summary": "No new per-item runtime test at inventory depth; author-reported tests are not independently accepted.",
+        "summary": "Diff and discussion read; no PR code executed here. Upstream checks seen: supply-chain success, Mintlify preview waiting for a maintainer.",
         "limits": [
-          "GitHub state, content review, local validation, integration and release are separate facts."
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Tests are mocked; no live Parallel call was made."
         ]
       },
       "evidence": [
@@ -70461,7 +70511,8 @@
       ],
       "linked_items": [],
       "revisit_conditions": [
-        "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
+        "An operator needs Parallel, or upstream merges the PR (then it arrives with the next synchronization).",
+        "Recheck if the head changes again; compare strix/tools/web_search/tool.py and strix/config/settings.py with the fork copies before importing."
       ],
       "source_triage": [
         {
@@ -70524,12 +70575,48 @@
               "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+          "fingerprint": "43aa7f102607bef27296aefb836dd57b0a30d1d7aa9da61a481572cf5fcee38e",
+          "event": "head_changed_rereviewed_decision_confirmed",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "e36603632e6148a36a4de562e43ba0c926ebb2bb",
+            "fork_decision": "deferred",
+            "rationale": "Re-reviewed after the head moved from 8c475019 to e3660363. The earlier condition (check truncation and config persistence) is met: source links survive truncation (58419990), the key is repr-hidden and persisted with mode 0600, responses are type-checked and output is bounded. It remains an optional vendor provider: the fork's launcher and .env.example configure no web-search provider, its egress profile equals the existing Perplexity/Exa providers (opt-in key, requests.post with timeout=300, no profile gating in this fork), and keeping it would add about 200 lines to a shared module. Benefit to this fork is not demonstrated; keep deferred.",
+            "implementation": {
+              "phase": "deferred",
+              "source_reviewed_sha": "8c475019e6dc1a82172c106bce68403888683de6",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [
+                "None applied"
+              ],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Diff and discussion read; no PR code executed here. Upstream checks seen: supply-chain success, Mintlify preview waiting for a maintainer.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Tests are mocked; no live Parallel call was made."
+              ]
+            },
+            "revisit_conditions": [
+              "An operator needs Parallel, or upstream merges the PR (then it arrives with the next synchronization).",
+              "Recheck if the head changes again; compare strix/tools/web_search/tool.py and strix/config/settings.py with the fork copies before importing."
+            ]
+          }
         }
       ],
       "analyzed_version": {
         "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
         "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-        "reviewed_item_sha": "8c475019e6dc1a82172c106bce68403888683de6",
+        "reviewed_item_sha": "e36603632e6148a36a4de562e43ba0c926ebb2bb",
         "scope": "Round context; per-item review depth and evidence determine what was actually examined."
       },
       "review_head_status": "matches_observed_head"
@@ -84787,6 +84874,459 @@
         "scope": "Round context; per-item review depth and evidence determine what was actually examined."
       },
       "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1616",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1616,
+      "title": "fix(STR-1654): price LLM usage from model config",
+      "url": "https://github.com/usestrix/strix/pull/1616",
+      "upstream_state": "MERGED",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-29T21:04:34.141249+00:00",
+      "last_checked_basis": "Live GitHub API read during the second pass of the 2026-10-29 round",
+      "updated_at": "2026-10-29T01:30:49Z",
+      "source": {
+        "observed_head_sha": "36b2e4225c4e69a54be69ea7afecebdd139cfd7f",
+        "base_sha": "98e3df14258cd58d8b26d6ba8d17014c6182f755",
+        "base_branch": "main",
+        "merge_commit": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "closed_at": "2026-10-29T01:30:49Z",
+        "merged_at": "2026-10-29T01:30:49Z",
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "updated-since query (since 2026-10-27T20:18:34Z, closed and merged included)"
+        ],
+        "present_in_current_open_inventory": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": null,
+      "review_scope": "Merge state, file list and ancestry on the review branch only; no diff review is implied.",
+      "review_checked_at": "2026-10-29T21:04:34.141249+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Merged upstream by a maintainer (2026-10-29T01:30:49Z, merge commit 6b7ae2eb) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. Its follow-up interaction with resume under another model is tracked in issue #1622, not here.",
+      "assessment": {
+        "benefit": "Manual model prices come from settings and apply to the configured model; the base of the open question about repricing history on a model switch (#1622).",
+        "risk": "None added by this record: the code is part of the synchronized base.",
+        "effort": "None.",
+        "maintenance": "Follows upstream; nothing carried locally."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1616,
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1616",
+        "https://github.com/usestrix/strix/commit/6b7ae2ebe4d47037a927aade23265ff4e4f27e84"
+      ],
+      "linked_items": [
+        "usestrix/strix#issue:1622"
+      ],
+      "revisit_conditions": [
+        "Reread when #1622 is designed: the manual-price accounting interacts with resume under another model."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+          "fingerprint": "0c2ea2353354fd530c3a94b91b3ec0d7280c2ee54e147af1949cd50e1200d82b",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": null,
+            "fork_decision": "already_covered",
+            "rationale": "Merged upstream by a maintainer (2026-10-29T01:30:49Z, merge commit 6b7ae2eb) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. Its follow-up interaction with resume under another model is tracked in issue #1622, not here.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1616,
+              "fork_commits": [
+                "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+              ]
+            },
+            "revisit_conditions": [
+              "Reread when #1622 is designed: the manual-price accounting interacts with resume under another model."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_merged"
+    },
+    {
+      "id": "usestrix/strix#pr:1617",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1617,
+      "title": "fix(image): patch brotli decoder (CVE-2026-111497) in sandbox, bump t…",
+      "url": "https://github.com/usestrix/strix/pull/1617",
+      "upstream_state": "MERGED",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-29T21:04:34.141249+00:00",
+      "last_checked_basis": "Live GitHub API read during the second pass of the 2026-10-29 round",
+      "updated_at": "2026-10-29T00:00:09Z",
+      "source": {
+        "observed_head_sha": "865fa2b08fdcf8a660133a9db721d8ee6452d7fa",
+        "base_sha": "98e3df14258cd58d8b26d6ba8d17014c6182f755",
+        "base_branch": "main",
+        "merge_commit": "dfdbe4b2ababae9b24588efd181b41ba50efc2ee",
+        "closed_at": "2026-10-28T23:58:05Z",
+        "merged_at": "2026-10-28T23:58:05Z",
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "updated-since query (since 2026-10-27T20:18:34Z, closed and merged included)"
+        ],
+        "present_in_current_open_inventory": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": null,
+      "review_scope": "Merge state, file list and ancestry on the review branch only; no diff review is implied.",
+      "review_checked_at": "2026-10-29T21:04:34.141249+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Merged upstream by a maintainer (2026-10-28T23:58:05Z, merge commit dfdbe4b2) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. The synchronized source defaults to image tag 1.3.1, which is not published yet; see the delivery decision in the round report.",
+      "assessment": {
+        "benefit": "Patches the brotli decoder (CVE-2026-111497) in the sandbox image source and moves the image tag from 1.3.0 to 1.3.1.",
+        "risk": "None added by this record: the code is part of the synchronized base.",
+        "effort": "None.",
+        "maintenance": "Follows upstream; nothing carried locally."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "dfdbe4b2ababae9b24588efd181b41ba50efc2ee",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1617,
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1617",
+        "https://github.com/usestrix/strix/commit/dfdbe4b2ababae9b24588efd181b41ba50efc2ee"
+      ],
+      "linked_items": [],
+      "revisit_conditions": [
+        "DELIVERY BLOCKER: the registry has no ghcr.io/usestrix/strix-sandbox:1.3.1 (checked 2026-10-29, see release-audit.json); the review branch defaults to that tag. Do not deliver to master until the tag exists or the fork pins/builds its own image."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+          "fingerprint": "3a71d410296339865d183648c74a8bdda46bf8886a76f6118c52dcce3a6aa8ed",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": null,
+            "fork_decision": "already_covered",
+            "rationale": "Merged upstream by a maintainer (2026-10-28T23:58:05Z, merge commit dfdbe4b2) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. The synchronized source defaults to image tag 1.3.1, which is not published yet; see the delivery decision in the round report.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "dfdbe4b2ababae9b24588efd181b41ba50efc2ee",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1617,
+              "fork_commits": [
+                "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+              ]
+            },
+            "revisit_conditions": [
+              "DELIVERY BLOCKER: the registry has no ghcr.io/usestrix/strix-sandbox:1.3.1 (checked 2026-10-29, see release-audit.json); the review branch defaults to that tag. Do not deliver to master until the tag exists or the fork pins/builds its own image."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_merged"
+    },
+    {
+      "id": "usestrix/strix#pr:1603",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1603,
+      "title": "feat(llm): send app attribution headers to Vercel AI Gateway",
+      "url": "https://github.com/usestrix/strix/pull/1603",
+      "upstream_state": "MERGED",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-29T21:04:34.141249+00:00",
+      "last_checked_basis": "Live GitHub API read during the second pass of the 2026-10-29 round",
+      "updated_at": "2026-10-28T03:04:45Z",
+      "source": {
+        "observed_head_sha": "cd4c13a2421262a7868e9bbdfa124db3947dd868",
+        "base_sha": "ffa35e22d32e7f63310988ffdb5cb2c22936e20d",
+        "base_branch": "main",
+        "merge_commit": "98e3df14258cd58d8b26d6ba8d17014c6182f755",
+        "closed_at": "2026-10-28T03:04:42Z",
+        "merged_at": "2026-10-28T03:04:42Z",
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "updated-since query (since 2026-10-27T20:18:34Z, closed and merged included)"
+        ],
+        "present_in_current_open_inventory": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": null,
+      "review_scope": "Merge state, file list and ancestry on the review branch only; no diff review is implied.",
+      "review_checked_at": "2026-10-29T21:04:34.141249+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Merged upstream by a maintainer (2026-10-28T03:04:42Z, merge commit 98e3df14) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. No fork code uses Vercel AI Gateway.",
+      "assessment": {
+        "benefit": "Vercel AI Gateway requests carry the same app-attribution headers OpenRouter already received.",
+        "risk": "None added by this record: the code is part of the synchronized base.",
+        "effort": "None.",
+        "maintenance": "Follows upstream; nothing carried locally."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "98e3df14258cd58d8b26d6ba8d17014c6182f755",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1603,
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1603",
+        "https://github.com/usestrix/strix/commit/98e3df14258cd58d8b26d6ba8d17014c6182f755"
+      ],
+      "linked_items": [],
+      "revisit_conditions": [
+        "None: provider attribution only; no fork behavior depends on it."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+          "fingerprint": "2d318ff570bf5e82f16da927abbf2a9cdc7c157ef054aa809027a19164a8aa47",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": null,
+            "fork_decision": "already_covered",
+            "rationale": "Merged upstream by a maintainer (2026-10-28T03:04:42Z, merge commit 98e3df14) at or before the synchronized base 6b7ae2eb, so it reached the review branch through sync merge d3654fb2; nothing is imported separately. No fork code uses Vercel AI Gateway.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "98e3df14258cd58d8b26d6ba8d17014c6182f755",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1603,
+              "fork_commits": [
+                "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Covered only by the integrated suite of the base synchronization (3567 passed at b4fb64c0); item-level behavior was not validated separately.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Metadata, file list and merge ancestry were read; the diff was not reviewed in this pass."
+              ]
+            },
+            "revisit_conditions": [
+              "None: provider attribution only; no fork behavior depends on it."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_merged"
+    },
+    {
+      "id": "usestrix/strix#issue:1529",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1529,
+      "title": "Question: How to generate reports in Chinese?",
+      "url": "https://github.com/usestrix/strix/issues/1529",
+      "upstream_state": "CLOSED",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-29T21:04:34.141249+00:00",
+      "last_checked_basis": "Live GitHub API read during the second pass of the 2026-10-29 round",
+      "updated_at": "2026-10-29T12:01:45Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": "2026-10-29T12:01:45Z",
+        "merged_at": null,
+        "state_reason": "completed",
+        "draft": null,
+        "snapshots": [
+          "updated-since query (since 2026-10-27T20:18:34Z, closed and merged included)"
+        ],
+        "present_in_current_open_inventory": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": null,
+      "review_scope": "Body and the single reply read; classified as a usage question.",
+      "review_checked_at": "2026-10-29T21:04:34.141249+00:00",
+      "fork_decision": "discarded",
+      "rationale": "Usage question about report language, closed as completed. The only reply says to put the language requirement in an instruction file (--instruction-file); there is no code, PR or fix to import and no fork change is needed.",
+      "assessment": {
+        "benefit": "None to import; the answer is documentation-level.",
+        "risk": "None.",
+        "effort": "None.",
+        "maintenance": "None."
+      },
+      "implementation": {
+        "phase": "not_planned",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": "Usage question with no code or linked change to import."
+      },
+      "validation": {
+        "summary": "No validation applicable: no code involved.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "The suggested instruction was not run against the fork in this pass."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1529"
+      ],
+      "linked_items": [],
+      "revisit_conditions": [
+        "Revisit only if upstream adds a first-class report-language option."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-29T21:04:34.141249+00:00",
+          "fingerprint": "0d4f65d409ac0fd71db863effe51cb26ed5e2276443382c70c1389612189e574",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": null,
+            "fork_decision": "discarded",
+            "rationale": "Usage question about report language, closed as completed. The only reply says to put the language requirement in an instruction file (--instruction-file); there is no code, PR or fix to import and no fork change is needed.",
+            "implementation": {
+              "phase": "not_planned",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": "Usage question with no code or linked change to import."
+            },
+            "validation": {
+              "summary": "No validation applicable: no code involved.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "The suggested instruction was not run against the fork in this pass."
+              ]
+            },
+            "revisit_conditions": [
+              "Revisit only if upstream adds a first-class report-language option."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
     }
   ]
 }

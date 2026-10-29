@@ -172,6 +172,7 @@ real provider scan or new published sandbox image was validated by this local ma
 | #1053 |Caido readiness deadline is useful but patch predates deferred lifecycle and fork project-setup retry. |Preserve #1205 retry/authorization, adapt timeout propagation and add readiness regressions. |
 | #1176 |Already covered by upstream #1192 tokenized MarkdownIt/fallback. |Only revisit on a new PDF rendering regression; do not reintroduce obsolete regex code. |
 | #1546 |Author explicitly marks experimental work not ready to merge. |Author evaluation/readiness changes; no implementation assumed available. |
+| Sandbox image 1.3.1 (#1617) |Tag defaulted by the synchronized source is not in the registry (404); master pins the published 1.3.0. |Decide: wait for upstream's image, pin 1.3.0 meanwhile, or publish an image under the fork's control. Required before any master delivery. |
 | Routing/auth, Strix2, MCP server changes |Material architecture/product expansion, not bounded reliability patches. |Explicit scope decision and compatibility design. |
 
 Remaining useful triage candidates include #1319 SDK refusal, #1307 report revision,
@@ -198,18 +199,59 @@ release needs exact-tag builds, native smoke tests and asset provenance; Desktop
 sidecar pinning and installed acceptance remain separate. Full evidence is in
 [release-audit.json](upstream-tracking/release-audit.json).
 
+## Second pass (same day, 20:58 UTC inventory)
+
+Run from the review branch with both remotes fetched. The upstream code did not move: `main` is still
+`6b7ae2eb`, the synchronized base, so no code checkpoint advanced.
+
+- **Known items rechecked.** All 530 upstream ledger records and all 44 fork PRs were compared with the live API on
+  state, `updated_at` and head SHA. One changed: **#1393** (opt-in Parallel web-search provider) was rebased onto
+  `6b7ae2eb` and carries four commits of its own. It is now deep-reviewed and stays **deferred**: the earlier
+  condition (truncation and config persistence) is met, but the fork configures no web-search provider and the
+  provider adds about 200 lines to a shared module for a service this fork does not use. Its egress profile is the
+  same as the existing Perplexity and Exa providers, so that is not the reason.
+- **Discovery.** Open inventory unchanged: 320 PRs + 203 issues, equal to the API's `open_issues_count`. The
+  update query (48 h overlap, closed and merged included) returned 29 items; every one was already in the ledger
+  except four closed items, now recorded: **#1616** (price LLM usage from model config; merge commit
+  `6b7ae2eb`, the synchronized head itself), **#1617** (brotli CVE patch in the sandbox image, tag 1.3.1,
+  merge `dfdbe4b2`), **#1603** (Vercel AI Gateway attribution headers, merge `98e3df14`) and issue **#1529**
+  (a usage question about report language; no code). The three PRs are ancestors of the review branch, so they
+  arrived through the base synchronization and need no import. The next discovery window starts at
+  `2026-10-27T20:58:03Z`.
+- **`bin/pr-watch`.** The upstream-touched flags on #1469, #1470 and #1612 are the ones already checked during
+  the integration; the only "human feedback" flag is Mintlify's preview-approval bot.
+- **Version and releases rechecked.** Unchanged and consistent: `.fork-version`, `version.md`, tag
+  `shvia-v1.2.43` and the Latest Release all say 1.2.43 and resolve to `8aa0791e`, equal to remote `master`; the
+  upstream latest release is still v1.7.0 and the package version 1.7.0 on both sides. `origin/main` is 50 commits
+  behind `upstream/main`. Tags 1.2.41 and 1.2.42 are still absent and 1.2.37/1.2.43 are lightweight.
+
+### New delivery blocker: the sandbox image tag
+
+#1617 moved the default sandbox image to `ghcr.io/usestrix/strix-sandbox:1.3.1`, and the synchronized source
+(`strix/config/settings.py`, `scripts/install.sh`) points at it. **That tag is not published**: an anonymous
+manifest request returns 404 for 1.3.1 and 200 for 1.3.0 (the positive control for the token). The published
+semver tags end at 1.3.0; the delivered `master` pins 1.3.0 and works. Upstream's `main` is ahead of its own
+registry until it cuts a release, which is normal for them, but it matters here: a scan or an engine binary
+built from this branch cannot pull its default sandbox image (`STRIX_IMAGE` overrides it). Evidence is in
+[release-audit.json](upstream-tracking/release-audit.json) (`sandbox_image_audit`). Options, none taken:
+wait for upstream's image; pin the fork to 1.3.0 meanwhile (the runtime works, but libbrotli 1.2.0-4,
+CVE-2026-111497, stays in the image used against hostile targets); or build and publish an image under the
+fork's control from `containers/Dockerfile`. This must be decided before any master delivery.
+
 ## Coverage and exact next step
 
-**523 current-open upstream items: 320 PRs + 203 issues**, all triaged; **23 deeply reviewed
-(21 PRs and 2 issues)**. Another **3 historical closed PRs** were rechecked, bringing the
-upstream ledger to 526. The **44 fork PRs** are recorded separately: 7 deep, 1 release-provenance
-triage and 36 metadata-only. Total: **570 unique records**. Historical recheck covers all
+**523 current-open upstream items: 320 PRs + 203 issues**, all triaged; **24 deeply reviewed
+(22 PRs and 2 issues)** after the second pass (#1393 was re-reviewed in depth when its head moved). Another **7
+known items outside the open inventory** are in the ledger: 3 closed PRs rechecked, 3 PRs merged upstream during the
+window and 1 closed question, bringing the upstream ledger to 530. The **44 fork PRs** are recorded separately: 7
+deep, 1 release-provenance triage and 36 metadata-only. Total: **574 unique records**. Historical recheck covers all
 51 previously known Strix items; it overlaps the inventory and must not be added to it again.
 
 The full inventory was fetched again at **2026-10-29 20:18:34 UTC** and was identical,
-including bodies, heads and updated dates. No pages were truncated. Discussions are disabled.
+including bodies, heads and updated dates, and once more in the second pass at **20:58:03 UTC** (identical totals;
+only #1393's head and update date differ). No pages were truncated. Discussions are disabled.
 The whole closed/merged backlog was not deeply reviewed; related catalog/timeline searches
-were targeted. The remaining 500 open items have triage, not complete code review.
+were targeted. The remaining 499 open items have triage, not complete code review.
 
 No partial code integration is left in progress. The latest validated code is
 `b4fb64c04d3bf3a6c8193651049941d84b5c8424`; the documentation commit does not change that code.
@@ -218,7 +260,7 @@ current upstream head before taking new candidates. Source SHA/commit mappings, 
 fork decisions and re-evaluation reasons survive in the ledger and Git history.
 
 Recheck every ledger item, including the three closed upstream PRs, then query all updates
-since 2026-10-27T20:18:34Z (48-hour overlap with this completed inventory) and compare against
+since 2026-10-27T20:58:03Z (48-hour overlap with the second-pass inventory) and compare against
 the saved keys. The final base/head check can be newer than the inventory watermark; it must
 not move that watermark forward and skip unrelated updates. Resume implementation from
 this branch; compare future #1446 changes against ac70e0ed and read checkpoints before taking new candidates.

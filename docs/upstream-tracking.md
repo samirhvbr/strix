@@ -12,7 +12,7 @@ be covered, and reviewed code is not necessarily integrated or released.
 | --- | --- | --- |
 | Delivered fork | `master` / `shvia-v1.2.43` at `8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5` | Existing release; no master, mirror, tag or release update in this round |
 | Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Integrated on `feat/upstream-sync-contributions-20261029`; local functional validation and explicit quality limits below |
-| Contribution review | 2026-10-29 inventory at 20:18:34 UTC: all 320 open PRs and 203 open issues triaged | Selected contributions deeply reviewed; historical known-item recheck is separate from open inventory |
+| Contribution review | 2026-10-29 inventory at 20:58:03 UTC (second pass): all 320 open PRs and 203 open issues triaged; 574 ledger records | Selected contributions deeply reviewed; historical known-item recheck is separate from open inventory |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -52,9 +52,11 @@ failed type-check or blocked remote workflow green.
 7. Update item records beside their changes, add history events rather than erasing earlier
    decisions, and run the relevant gates. Update the round and both checkpoints separately.
    If interrupted, retain the last completed checkpoint and record partial work/next action.
-8. Before delivery, recheck selected heads and base refs; inspect any changes. Follow
-   `version.md` only when a master delivery/release is authorized. Review branches do not
-   bump `.fork-version`, publish tags or create releases.
+8. Before delivery, recheck selected heads and base refs; inspect any changes. Check that
+   the sandbox image tag the source defaults to is published in the registry (see
+   `release-audit.json`, `sandbox_image_audit`). Follow `version.md` only when a master
+   delivery/release is authorized. Review branches do not bump `.fork-version`, publish
+   tags or create releases.
 
 Useful read-only queries (use pagination and save results before changing the ledger):
 
@@ -99,6 +101,11 @@ See the latest round for priorities: manual-price accounting on model-switch res
 deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Caido deadline
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
+
+**Delivery blocker (found in the second pass):** the synchronized source defaults to the sandbox image
+`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; `master` pins the published 1.3.0). Decide
+between waiting for upstream's image, pinning 1.3.0 meanwhile, or publishing an image under the fork's control
+before any master delivery. See the latest round.
 
 Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
 The release is still 1.2.43, with upstream package version 1.7.0 by policy. Existing published

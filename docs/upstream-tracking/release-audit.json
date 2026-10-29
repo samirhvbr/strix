@@ -2038,5 +2038,44 @@
     "Only current release assets received detailed metadata/manifest audit; historical releases and upstream releases received metadata/catalog checks, not binary or full release-note validation.",
     "No binary rebuilt/downloaded/executed, no real scan/LLM/cloud operation, no installed Desktop acceptance, no signature verification, and no new test-suite result claimed by this audit.",
     "Remote observations are a2026-10-29 snapshot. Parent agent owns permanent repository records and subsequent changes; this audit remains a prepared local artifact until copied/committed there."
-  ]
+  ],
+  "rechecks": [
+    {
+      "at": "2026-10-29T21:04:34.141249+00:00",
+      "scope": "Read-only. No tag, release, ref or binary was changed, downloaded or executed.",
+      "unchanged": {
+        "fork_version": "1.2.43 (.fork-version on master and the review branch)",
+        "fork_tag_and_release": "shvia-v1.2.43 and its Release (Latest) resolve to 8aa0791e, equal to remote master",
+        "upstream_latest_release": "v1.7.0",
+        "package_version": "1.7.0 on both sides",
+        "missing_or_lightweight_tags": "1.2.41 and 1.2.42 still have no tag or release; 1.2.37 and 1.2.43 are lightweight"
+      },
+      "mirror": "origin/main is 50 commits behind upstream/main (0 ahead); it only advances with a master delivery"
+    }
+  ],
+  "sandbox_image_audit": {
+    "audited_at_utc": "2026-10-29T21:04:34.141249+00:00",
+    "registry_image": "ghcr.io/usestrix/strix-sandbox",
+    "method": "Anonymous pull token, then manifest and tags/list requests. 1.3.0 answering 200 is the positive control for the token.",
+    "master_default_tag": "1.3.0",
+    "review_branch_default_tag": "1.3.1",
+    "review_branch_default_tag_published": false,
+    "manifest_http_status": {
+      "1.3.0": 200,
+      "1.3.1": 404
+    },
+    "published_semver_tags_latest": "1.3.0",
+    "other_tags": [
+      "0.1",
+      "latest"
+    ],
+    "tags_total": 13,
+    "source_references_to_1_3_1": [
+      "strix/config/settings.py (default)",
+      "scripts/install.sh"
+    ],
+    "implication": "A scan or an engine binary built from the review branch cannot pull its default sandbox image until 1.3.1 exists in the registry; STRIX_IMAGE can override it. Delivering the synchronization to master without resolving this would break the default runtime.",
+    "tradeoff": "Pinning 1.3.0 keeps the runtime working but leaves libbrotli 1.2.0-4 (CVE-2026-111497) in the image used against hostile targets.",
+    "decision": "Not taken in this round; recorded in checkpoints.json decisions_required."
+  }
 }

@@ -9,6 +9,8 @@ and arrived through carried PR #1510. Published historical notes are preserved.
 `feat/upstream-sync-contributions-20261029` (unreleased; see
 [the continuity record](docs/upstream-tracking.md)). The version bump
 and release procedure apply only after review and delivery on `master`.
+**Before that delivery:** the branch's default sandbox image tag (`strix-sandbox:1.3.1`) is not published in the
+registry; `master` pins the published `1.3.0`. Resolve it first (see the continuity record).
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
 > line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you
