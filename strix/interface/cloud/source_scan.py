@@ -41,7 +41,7 @@ class _UploadStillProcessing(http.CloudError):
 
     def __init__(self, upload_id: str) -> None:
         super().__init__(
-            f"the platform is still processing source upload {upload_id} after "
+            f"the platform may still be processing source upload {upload_id} after "
             f"{_UPLOAD_PROCESSING_TIMEOUT_S:g} seconds; the upload was kept. "
             f"Start the scan with `strix cloud scans start --upload-ids {upload_id}` "
             "once processing finishes."
@@ -299,14 +299,25 @@ def _complete_upload(upload_id: str, *, token: str | None) -> None:
     """
     deadline = time.monotonic() + _UPLOAD_PROCESSING_TIMEOUT_S
     while True:
-        completed = http.check(
-            http.request(
-                "POST",
-                "/uploads/complete",
-                token=token,
-                body={"upload_id": upload_id},
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise _UploadStillProcessing(upload_id)
+        try:
+            completed = http.check(
+                http.request(
+                    "POST",
+                    "/uploads/complete",
+                    token=token,
+                    body={"upload_id": upload_id},
+                    timeout=remaining,
+                )
             )
-        )
+        except http.CloudTransportError as exc:
+            if time.monotonic() >= deadline:
+                raise _UploadStillProcessing(upload_id) from exc
+            raise
+        if time.monotonic() > deadline:
+            raise _UploadStillProcessing(upload_id)
         fields = cast("dict[str, Any]", completed) if isinstance(completed, dict) else {}
         if str(fields.get("status", "")).lower() != "processing":
             _validate_completed_upload(completed, expected_id=upload_id)
