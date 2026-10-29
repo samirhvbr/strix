@@ -718,14 +718,12 @@ async def run_strix_scan(
                 scan_id,
             )
             _note_exit_reason("rate_limited")
-            if root_id is not None:
-                with contextlib.suppress(Exception):
-                    await coordinator.set_status(root_id, "stopped")
+            with contextlib.suppress(Exception):
+                await coordinator.set_status(root_id, "stopped")
             return None
         logger.exception("Strix scan %s failed", scan_id)
-        if root_id is not None:
-            with contextlib.suppress(Exception):
-                await coordinator.set_status(root_id, "failed")
+        with contextlib.suppress(Exception):
+            await coordinator.set_status(root_id, "failed")
         raise
     except BaseException:
         logger.exception("Strix scan %s failed", scan_id)
