@@ -14,7 +14,7 @@ per-item record is [items.json](upstream-tracking/items.json); the review branch
 | --- | --- |
 | `upstream/main` | `6b7ae2eb`, unchanged since the synchronization; latest upstream release still v1.7.0. Nothing new to synchronize. |
 | `origin/master`, tag `shvia-v1.2.43`, Release (Latest) | `8aa0791e`, all equal |
-| `origin/main` (mirror) | `62b49643`, 50 commits behind `upstream/main`, 0 ahead (a fast-forward) |
+| `origin/main` (mirror) | `62b49643`, 50 commits behind `upstream/main`, 0 ahead; **fast-forwarded to `6b7ae2eb` at the end of this pass** (no content of its own) |
 | Delivery branch before the merge | `68564bbd`: the 2026-10-29 synchronization, the sandbox pin (`4d526eb5`) and #1627, #1634, #1631 |
 | Review branch on `origin` | `4936c89b`: six commits pushed on 2026-10-30 (12:24–13:32 BRT) by the other session |
 
@@ -87,7 +87,7 @@ itself a fast-forward of `origin/master` (0 commits behind). So they are not mer
 
 ## Exact next step
 
-1. Push `feat/upstream-sync-delivery-20261029` to `origin` and open the delivery PR to `master` on the fork (not the upstream).
-2. The owner confirms #1635 and the pinned sandbox image, then merges that PR with `--no-ff`, creates the annotated tag
-   `shvia-v1.2.44` and the Release `SHVIA 1.2.44 (Strix 1.7.0)`, and fast-forwards the `main` mirror to `upstream/main`.
+1. Done in this pass: `feat/upstream-sync-delivery-20261029` is on `origin` and the delivery PR is [#45](https://github.com/samirhvbr/strix/pull/45) to `master` on the fork (not the upstream). Its checks cannot run (Actions billing lock).
+2. The owner confirms #1635 and the pinned sandbox image, then merges that PR with `--no-ff` and creates the annotated tag
+   `shvia-v1.2.44` and the Release `SHVIA 1.2.44 (Strix 1.7.0)`. The `main` mirror is already at `upstream/main`.
 3. When upstream publishes `strix-sandbox:1.3.1`, move both pins. Next discovery window: `2026-10-28T19:03:26Z`.

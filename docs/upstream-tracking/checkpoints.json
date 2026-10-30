@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-30T19:09:33.904111+00:00",
+  "updated_at": "2026-10-30T19:21:40.398366+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -316,14 +316,21 @@
       },
       "live_cost_map_note": "tests/test_pricing.py::test_resolves_common_bare_model_names fails on 2026-10-30 when LiteLLM downloads its live price map (kyma/grok-4.5 is priced differently from xai/, perplexity/xai/ and github_copilot/), and passes with LITELLM_LOCAL_MODEL_COST_MAP=True. Data drift, not a code regression; run the suite with the bundled map for a deterministic result.",
       "validation": "Full suite on the merged tree d3d221b9: 3612 passed, 12 skipped, 3 xfailed, 0 failed (LITELLM_LOCAL_MODEL_COST_MAP=True); Ruff, Mypy and Bandit pass; Pyright is not comparable in this environment (5941 vs 1259 recorded on macOS).",
-      "merged_tree_sha": "d3d221b98862b66aeae7617cbdd7a26db7c37961"
+      "merged_tree_sha": "d3d221b98862b66aeae7617cbdd7a26db7c37961",
+      "published": {
+        "delivery_branch_on_origin": "cd3a7184 at the time of publication",
+        "fork_pr": "https://github.com/samirhvbr/strix/pull/45",
+        "main_mirror": "fast-forwarded to 6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "master_changed": false,
+        "tags_or_releases_changed": false
+      }
     }
   },
   "version_release_audit": "release-audit.json",
   "publication_scope": {
     "review_branch": "feat/upstream-sync-contributions-20261029",
     "master_changed": false,
-    "mirror_changed": false,
+    "mirror_changed": true,
     "tags_changed": false,
     "releases_changed": false,
     "upstream_messages_created": true,
