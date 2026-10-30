@@ -121,6 +121,11 @@ and its tag resolve to delivered `master` at `8aa0791e`. The audit below was tak
 1.2.44 delivery branch existed; `pyproject.toml` intentionally stays upstream 1.7.0.
 See [the full audit](docs/upstream-tracking/release-audit.json).
 
+Rechecked on **2026-10-30**: release, tag, master and mirror refs are unchanged.
+The new [upstream review](docs/UPSTREAM_REVIEW_2026-10-30.md) adds two unreleased fixes
+on the integration branch and reports the missing sandbox image as upstream #1628.
+No version, tag, published release or installed binary was changed by that round.
+
 - Deliveries 1.2.41 and 1.2.42 have no corresponding tags/releases. All 61 existing fork
   version tags do have matching releases. No historical release was created by this audit.
 - Tags 1.2.37 and 1.2.43 are lightweight, contrary to the annotated-tag rule above. Preserve
