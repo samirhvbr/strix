@@ -1,6 +1,6 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.44`
+**Current version:** `1.2.45`
 **Released upstream base:** Strix `1.7.0` + 64 commits (`6b7ae2eb`, verified ancestry).
 The previous release, 1.2.43, sat on `1.7.0` + 15 commits (`f7a32ae6`); its published notes
 name `62b4964` (+14), one README-only commit earlier, and are preserved.
