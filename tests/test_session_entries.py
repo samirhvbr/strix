@@ -321,6 +321,7 @@ def test_a_large_bundle_stays_one_archive() -> None:
 @dataclass
 class _RuntimeSettings:
     backend: str
+    caido_boot_wait_s: int = 300
 
 
 @dataclass
@@ -573,3 +574,36 @@ def test_sandbox_environment_exports_proxy_and_ca_aliases() -> None:
     assert env["no_proxy"] == EXPECTED_NO_PROXY
     assert env["REQUESTS_CA_BUNDLE"] == EXPECTED_CA_BUNDLE
     assert env["SSL_CERT_FILE"] == EXPECTED_CA_BUNDLE
+
+
+@pytest.mark.asyncio
+async def test_caido_wait_budget_comes_from_the_runtime_settings(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    """``STRIX_CAIDO_BOOT_WAIT_S`` has to reach the readiness probe, not stop at the settings."""
+    seen: list[dict[str, Any]] = []
+
+    async def _record(*_args: Any, **kwargs: Any) -> None:
+        seen.append(kwargs)
+
+    async def _backend(**_kwargs: Any) -> tuple[Any, Any]:
+        return _Client(), _Session()
+
+    scan_id = "caido-wait-budget"
+    backend_name = f"test-{scan_id}"
+    _use_backend(monkeypatch, backend_name, _backend, supports_bind_mounts=True)
+    monkeypatch.setattr(session_manager, "bootstrap_caido", _record)
+    settings = _Settings(runtime=_RuntimeSettings(backend=backend_name, caido_boot_wait_s=42))
+    monkeypatch.setattr(session_manager, "load_settings", lambda: settings)
+    try:
+        bundle = await session_manager.create_or_reuse(
+            scan_id, image="img", local_sources=[_source("repo", str(tmp_path))]
+        )
+        # The bootstrap is a background task: let it run before the handle is closed.
+        await bundle["caido_client"].get()
+        await bundle["caido_client"].aclose()
+    finally:
+        await session_manager.cleanup(scan_id)
+        _forget_backend(backend_name)
+
+    assert [call["wait_timeout_s"] for call in seen] == [42]
