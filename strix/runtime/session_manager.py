@@ -355,7 +355,8 @@ async def create_or_reuse(  # noqa: PLR0915 - eager/deferred lifecycle and netwo
         logger.info("Reusing existing sandbox session for scan %s", scan_id)
         return cached
 
-    backend_name = load_settings().runtime.backend
+    runtime_settings = load_settings().runtime
+    backend_name = runtime_settings.backend
     if policy is not None and backend_name != "docker":
         raise ValueError("Network policy enforcement requires the Docker backend")
     backend = get_backend(backend_name)
@@ -423,6 +424,7 @@ async def create_or_reuse(  # noqa: PLR0915 - eager/deferred lifecycle and netwo
             container_url=container_caido_url,
             scan_id=scan_id,
             authorized_targets=authorized_targets,
+            wait_timeout_s=runtime_settings.caido_boot_wait_s,
         )
 
     # Guarded scans inspect the live firewall before starting agents, so their

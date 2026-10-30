@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
+from strix.runtime import caido_bootstrap
 from strix.runtime.caido_bootstrap import _scope_allowlist, bootstrap_caido
 
 
@@ -518,3 +519,112 @@ async def test_scope_creation_failure_does_not_fail_the_bootstrap(
 
     assert result is returned_client
     assert all(client.closed for client in setup_clients)
+
+
+# --- the login readiness probe is bounded by time, not by an attempt count ------------
+
+
+@dataclass
+class _ProbeResult:
+    success: bool
+    stdout: str = ""
+    stderr: bytes = b"connection refused"
+    exit_code: int = 7
+
+    def ok(self) -> bool:
+        return self.success
+
+
+class _ProbeSession:
+    def __init__(self, results: list[_ProbeResult]) -> None:
+        self._results = iter(results)
+        self.timeouts: list[float] = []
+
+    async def exec(self, *_args: str, **kwargs: Any) -> _ProbeResult:
+        self.timeouts.append(kwargs["timeout"])
+        return next(self._results)
+
+
+class _Clock:
+    """Virtual time: ``sleep`` advances ``monotonic``, so a deadline test takes no real time."""
+
+    def __init__(self) -> None:
+        self.now = 0.0
+        self.sleeps: list[float] = []
+
+    def monotonic(self) -> float:
+        return self.now
+
+    async def sleep(self, delay: float) -> None:
+        self.sleeps.append(delay)
+        self.now += delay
+
+
+def _install_clock(monkeypatch: pytest.MonkeyPatch) -> _Clock:
+    clock = _Clock()
+    monkeypatch.setattr("strix.runtime.caido_bootstrap.time.monotonic", clock.monotonic)
+    monkeypatch.setattr("strix.runtime.caido_bootstrap.asyncio.sleep", clock.sleep)
+    return clock
+
+
+@pytest.mark.asyncio
+async def test_login_retries_past_the_old_ten_attempt_limit(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A cold start that answers on the 14th try (about 100 s) used to be a permanent failure."""
+    clock = _install_clock(monkeypatch)
+    ready = '{"data":{"loginAsGuest":{"token":{"accessToken":"tok"}}}}'
+    session = _ProbeSession(
+        [*[_ProbeResult(success=False)] * 13, _ProbeResult(success=True, stdout=ready)]
+    )
+
+    token = await caido_bootstrap._login_as_guest(  # type: ignore[reportPrivateUsage]
+        session,  # type: ignore[arg-type]
+        container_url="http://container",
+        wait_timeout_s=300,
+    )
+
+    assert token == "tok"  # noqa: S105 - synthetic token fixture
+    assert len(session.timeouts) == 14
+    assert clock.now > 70  # the old loop would already have given up
+
+
+@pytest.mark.asyncio
+async def test_login_stops_at_the_deadline_and_names_the_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    clock = _install_clock(monkeypatch)
+    session = _ProbeSession([_ProbeResult(success=False), _ProbeResult(success=False)])
+
+    with pytest.raises(
+        RuntimeError, match=r"loginAsGuest not ready after 5 seconds \(2 attempts\)"
+    ):
+        await caido_bootstrap._login_as_guest(  # type: ignore[reportPrivateUsage]
+            session,  # type: ignore[arg-type]
+            container_url="http://container",
+            wait_timeout_s=5,
+        )
+
+    # Second delay is capped to what is left of the budget, never past it.
+    assert clock.sleeps == [2.0, 3.0]
+    assert clock.now == 5.0
+    # A late attempt gets only the time that remains, up to the usual 15 s.
+    assert session.timeouts == [5, 3]
+
+
+@pytest.mark.asyncio
+async def test_login_always_makes_one_attempt_even_with_a_tiny_budget(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _install_clock(monkeypatch)
+    ready = '{"data":{"loginAsGuest":{"token":{"accessToken":"tok"}}}}'
+    session = _ProbeSession([_ProbeResult(success=True, stdout=ready)])
+
+    token = await caido_bootstrap._login_as_guest(  # type: ignore[reportPrivateUsage]
+        session,  # type: ignore[arg-type]
+        container_url="http://container",
+        wait_timeout_s=0.2,
+    )
+
+    assert token == "tok"  # noqa: S105 - synthetic token fixture
+    assert session.timeouts == [0.2]
