@@ -8,15 +8,25 @@ approves. A version-1 policy carries no context: it authorizes a network destina
 against it exactly as it does without any WEB authorization at all, confined by that network
 grant. The two never mix: a version-1 authorization with a context, or a version-2 one
 without, is rejected before anything starts.
+
+The engine asks the WEB again before every model call and every controlled tool call. A
+refusal (expired, revoked, defunded, a different grant) ends the run at once. A WEB that
+simply does not answer (a deploy, a network blip, a 5xx, a laptop waking from sleep) is
+different: it is :class:`WebAuthorizationUnavailableError`, and :func:`verify_patiently` repeats
+that one for a bounded window before treating it as a refusal. Until 1.2.45 both ended the
+run the same way, so thirty seconds of maintenance on the WEB could end a run of hours.
 """
 
 from __future__ import annotations
 
+import asyncio
 import json
+import logging
 import math
 import os
 import re
 import stat
+import time
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, cast
 
@@ -28,11 +38,38 @@ from strix.core.inference_source import InferenceChoice, parse_inference
 
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
     from pathlib import Path
+
+
+logger = logging.getLogger(__name__)
+
+_UNAVAILABLE = "WEB authorization expired, revoked or unavailable"
+
+#: How long :func:`verify_patiently` keeps repeating a verification the WEB did not answer,
+#: counted from the first attempt. The owner chose five minutes (PT-37, 30/10/2026): it covers
+#: a deploy and a short outage, and it is also how long the engine goes without being able to
+#: honor a revocation. It is a constant on purpose, not an environment variable: it is the
+#: bound of a safety check, and a value nobody can raise by accident is the safer default.
+RETRY_WINDOW_SECONDS = 300.0
+
+#: Waits between repeated attempts; the last one repeats until the window is used up.
+RETRY_BACKOFF_SECONDS = (1.0, 2.0, 4.0, 8.0, 15.0, 30.0)
+
+#: HTTP statuses that mean "try again", besides every 5xx. Everything else in 4xx is an answer.
+_RETRYABLE_STATUS = frozenset({408, 429})
 
 
 class WebAuthorizationError(ValueError):
     """A safe error that never contains a grant token or a remote response."""
+
+
+class WebAuthorizationUnavailableError(WebAuthorizationError):
+    """The WEB did not answer (transport error, timeout, 5xx, 408 or 429): not a refusal.
+
+    Still a :class:`WebAuthorizationError`, so every caller that treats the check as failed
+    keeps doing so. Only :func:`verify_patiently` tells the two apart.
+    """
 
 
 class WebAuthorization:
@@ -115,10 +152,15 @@ class WebAuthorization:
                 or budget > 10000
             ):
                 raise ValueError("Expired or invalid authorization")
-        except (OSError, ValueError, TypeError, KeyError, httpx.HTTPError):
-            raise WebAuthorizationError(
-                "WEB authorization expired, revoked or unavailable"
-            ) from None
+        except httpx.HTTPStatusError as exc:
+            status = exc.response.status_code
+            if status >= 500 or status in _RETRYABLE_STATUS:
+                raise WebAuthorizationUnavailableError(_UNAVAILABLE) from None
+            raise WebAuthorizationError(_UNAVAILABLE) from None
+        except (httpx.TransportError, OSError):
+            raise WebAuthorizationUnavailableError(_UNAVAILABLE) from None
+        except (ValueError, TypeError, KeyError, httpx.HTTPError):
+            raise WebAuthorizationError(_UNAVAILABLE) from None
 
         self.inference = inference
         return policy, context, budget
@@ -154,3 +196,64 @@ class WebAuthorization:
             or budget > approved_budget
         ):
             raise WebAuthorizationError("Execution differs from the WEB authorization")
+
+
+async def verify_patiently(
+    check: Callable[[], None],
+    *,
+    window: float | None = None,
+    backoff: tuple[float, ...] | None = None,
+    sleep: Callable[[float], Awaitable[None]] | None = None,
+    clock: Callable[[], float] | None = None,
+) -> None:
+    """Run a blocking authorization check, repeating it while the WEB does not answer.
+
+    Only :class:`WebAuthorizationUnavailableError` is repeated, with growing waits, until ``window``
+    seconds have passed since the first attempt; then it is raised as it is, so the run still
+    ends closed. A refusal (any other :class:`WebAuthorizationError`) is raised at once.
+
+    The waits are ``asyncio.sleep``, not a sleeping worker thread: stopping the run cancels the
+    task and the wait ends in the same instant. A sleeping thread would be joined when the
+    interpreter exits and would hold the stop for up to the whole window. At most one attempt
+    is in flight, and it is bounded by the client timeout.
+
+    ``window``, ``backoff``, ``sleep`` and ``clock`` default to the module constants, the event
+    loop's ``asyncio.sleep`` and ``time.monotonic``, read at call time; they are parameters so a
+    test can run a five-minute window in no time.
+
+    The log lines say that the check was repeated, how many times and how long it has been,
+    never the token, the address or anything the WEB answered.
+    """
+    window = RETRY_WINDOW_SECONDS if window is None else window
+    backoff = RETRY_BACKOFF_SECONDS if backoff is None else backoff
+    sleep = sleep or asyncio.sleep
+    clock = clock or time.monotonic
+    started = clock()
+    retries = 0
+    while True:
+        try:
+            await asyncio.to_thread(check)
+        except WebAuthorizationUnavailableError:
+            used = clock() - started
+            if used >= window:
+                logger.warning(
+                    "WEB authorization still unreachable after %d repeated checks over %.0fs; "
+                    "treating it as refused",
+                    retries,
+                    used,
+                )
+                raise
+            delay = min(backoff[min(retries, len(backoff) - 1)], window - used)
+            retries += 1
+            logger.warning(
+                "WEB authorization unreachable; checking again in %.0fs (repeat %d, %.0f of %.0fs)",
+                delay,
+                retries,
+                used,
+                window,
+            )
+            await sleep(delay)
+        else:
+            if retries:
+                logger.info("WEB authorization verified again after %d repeated checks", retries)
+            return
