@@ -1,0 +1,1318 @@
+{
+  "schema_version": 1,
+  "round": "2026-10-30",
+  "recorded_at": "2026-10-30T15:40:12.299146+00:00",
+  "upstream_base": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+  "previous_review_branch_commit": "783d738a3f00d168e6bee968004f661e7e622254",
+  "validated_contribution_sources": {
+    "cloud": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+    "dedupe": "beb55e88d5b36cfdf27e7490b434b09e3f376638"
+  },
+  "fork_imports": {
+    "cloud": "8890f1b58f1b0c3443c765f1e34ad6b9a864178f",
+    "dedupe": "3154805db216d40f35852b8fb608126a9dabcfcd"
+  },
+  "adaptations": [],
+  "known_item_recheck": {
+    "known": 574,
+    "fetched": 574,
+    "missing": 0,
+    "actual_changed_items": [
+      "usestrix/strix#pr:1370"
+    ],
+    "metadata_enrichment_only": 44,
+    "own_pr_feedback": "All14 previously tracked contributions checked; no new maintainer request after prior checkpoint; all14 current-head CI action_required.",
+    "prior_imports_preserved": true
+  },
+  "initial_inventory": {
+    "all_prs": 1154,
+    "all_issues": 414,
+    "open_prs": 322,
+    "open_issues": 203
+  },
+  "final_inventory": {
+    "all_prs": 1156,
+    "all_issues": 419,
+    "open_prs": 324,
+    "open_issues": 208,
+    "new_prs": [
+      1631,
+      1634
+    ],
+    "new_issues": [
+      1628,
+      1629,
+      1630,
+      1632,
+      1633
+    ],
+    "external_changes_during_round": []
+  },
+  "upstream_baseline_validation": {
+    "pytest": {
+      "passed": 2480,
+      "failed": 19,
+      "xfailed": 3,
+      "seconds": 363.55,
+      "failed_ids": [
+        "tests/test_budget_pause_policy.py::test_pause_policy_parks_every_agent_at_the_limit_and_resumes_in_place",
+        "tests/test_budget_pause_policy.py::test_pause_policy_operator_pause_and_resume_without_a_limit",
+        "tests/test_budget_pause_policy.py::test_pause_policy_keeps_in_flight_overshoot",
+        "tests/test_budget_pause_policy.py::test_operator_pause_holds_under_the_stop_policy",
+        "tests/test_budget_pause_policy.py::test_a_resume_that_lands_before_the_park_still_continues",
+        "tests/test_e2e_budget_lifecycle.py::test_full_budget_lifecycle_reserve_then_cap",
+        "tests/test_e2e_budget_lifecycle.py::test_respawned_children_after_reserve_never_spend",
+        "tests/test_runner_interrupt.py::test_user_interrupt_leaves_the_root_running_for_resume[KeyboardInterrupt]",
+        "tests/test_runner_interrupt.py::test_user_interrupt_leaves_the_root_running_for_resume[CancelledError]",
+        "tests/test_runner_interrupt.py::test_a_real_crash_still_marks_root_failed",
+        "tests/test_runner_mcp.py::test_none_default_attaches_from_the_user_config_file",
+        "tests/test_runner_mcp.py::test_supplied_requests_are_attached_and_the_user_file_is_not_read",
+        "tests/test_runner_mcp.py::test_roster_is_persisted_even_without_a_status_sink",
+        "tests/test_runner_mcp.py::test_warmup_listing_failure_does_not_interrupt_scan",
+        "tests/test_runner_mcp.py::test_warmed_tool_counts_reach_root_and_child_agent_builds",
+        "tests/test_runner_rate_limit.py::test_persistent_rate_limit_stops_gracefully",
+        "tests/test_runner_teardown.py::test_a_live_child_is_settled_before_sessions_close",
+        "tests/test_runner_teardown.py::test_missing_finish_is_logged_only_when_root_did_not_complete[completed-False]",
+        "tests/test_runner_teardown.py::test_missing_finish_is_logged_only_when_root_did_not_complete[stopped-True]"
+      ]
+    },
+    "pyright": {
+      "errors": 941,
+      "warnings": 0
+    },
+    "limitations": "Existing runner test drift and type-check backlog; not green upstream CI."
+  },
+  "image_availability": {
+    "checked_at": "2026-10-30T15:14:59.668732+00:00",
+    "image": "ghcr.io/usestrix/strix-sandbox",
+    "manifests": {
+      "1.3.0": {
+        "status": 200,
+        "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+      },
+      "1.3.1": {
+        "status": 404,
+        "body": "{\"errors\":[{\"code\":\"MANIFEST_UNKNOWN\",\"message\":\"manifest unknown\"}]}\n"
+      }
+    }
+  },
+  "cloud": {
+    "upstream_base": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "fork_tracking_source": "783d738a",
+    "worktree": "/Users/samir/x/shvia/strix-cloud-audit-20261030",
+    "scope": "Cloud HTTP/CLI/source packaging reliability; no live cloud, LLM, Docker or target scan",
+    "candidate": {
+      "title": "Git merge stages duplicate local source manifest and ZIP entries",
+      "status": "published_upstream_pr1631_and_integrated_review_branch;validated_with_documented_limits",
+      "source": "strix/interface/cloud/source_upload.py:_git_candidate_paths",
+      "regression_target": "tests/test_cloud_source_upload.py",
+      "evidence": {
+        "fixture": "Real disposable Git index with app.py at stages 1/2/3, one working-tree file",
+        "actual_working_tree_bytes": 66,
+        "actual_manifest_files": 3,
+        "actual_manifest_bytes": 198,
+        "actual_zip_members": [
+          "app.py",
+          "app.py",
+          "app.py"
+        ],
+        "warnings": [
+          "Duplicate name: 'app.py'",
+          "Duplicate name: 'app.py'"
+        ],
+        "production_edits": true,
+        "changed_files": {
+          "strix/interface/cloud/source_upload.py": 6,
+          "tests/test_cloud_source_upload.py": 87
+        }
+      },
+      "impact": "Duplicate ZIP members and inflated selected-file and expanded-size accounting for unresolved Git merges",
+      "effort": "Small enumerator change and real Git/ZIP regression coverage",
+      "risk": "Preserve raw candidate guard, tracked/untracked selection, source subdirectory filtering and deterministic output",
+      "proposal": "Deduplicate relative paths in Python while streaming Git output; no newly required Git CLI option",
+      "limitations": [
+        "Managed service behavior with duplicate ZIP members not verified",
+        "Executed on macOS ARM64; Windows execution not performed",
+        "Full repository test suite not run on this branch",
+        "Repository make check-all remains blocked by the same 941 baseline Pyright diagnostics"
+      ]
+    },
+    "duplicate_search": {
+      "catalog_counts": {
+        "pull_requests_all_states": 1154,
+        "issues_all_states": 414
+      },
+      "terms": [
+        "ls-files",
+        "unmerged",
+        "duplicate archive",
+        "duplicate source",
+        "source merge conflict",
+        "ZIP conflict"
+      ],
+      "result": "No matching existing issue or PR found",
+      "neighboring_proposals": [
+        {
+          "number": 1298,
+          "head": "509a52eb3b57b23288af5d88a7d28df8c7648e0a",
+          "url": "https://github.com/usestrix/strix/pull/1298",
+          "distinction": "Windows stat consistency; sole discussion is Greptile review of that behavior",
+          "diff_reviewed": true
+        },
+        {
+          "number": 1300,
+          "head": "721cf756261a2ff62e33d4d71cda40bebe215eec",
+          "url": "https://github.com/usestrix/strix/pull/1300",
+          "distinction": "Windows path-stat versus handle-stat identity; sole discussion is Greptile review of that behavior",
+          "diff_reviewed": true
+        },
+        {
+          "number": 1177,
+          "head": "32f1973b6fa764bbd08ed17ed79693ecb9f47fee",
+          "url": "https://github.com/usestrix/strix/pull/1177",
+          "distinction": "Merged cloud CLI origin; 37 discussion/review entries checked, no Git archive duplicate-stage discussion"
+        }
+      ],
+      "known_work_excluded": [
+        1580,
+        1571,
+        1563,
+        1614,
+        1624
+      ]
+    },
+    "validation": {
+      "python": "3.12.14",
+      "dependencies": "uv sync --frozen",
+      "environment": "env -i, isolated HOME, LITELLM_MODE=PRODUCTION, telemetry and update check disabled",
+      "git": "2.54.0 (Apple Git-157)",
+      "fail_before": {
+        "failed": 4,
+        "passed": 1,
+        "log": "cloud-fail-before.log"
+      },
+      "focused_after": {
+        "passed": 5,
+        "log": "cloud-pass-after-focused.log"
+      },
+      "cloud_and_local_sources": {
+        "passed": 353,
+        "command": "pytest -q tests/test_cloud*.py tests/test_local_sources.py",
+        "log": "cloud-tests-after.log"
+      },
+      "ruff_format": {
+        "passed": true,
+        "files": 252
+      },
+      "ruff_lint": {
+        "passed": true
+      },
+      "mypy": {
+        "passed": true,
+        "source_files": 136
+      },
+      "bandit": {
+        "passed": true,
+        "issues": 0,
+        "log": "cloud-bandit.log"
+      },
+      "make_check_all": {
+        "passed": false,
+        "blocking_check": "Pyright",
+        "log": "cloud-check-all.log"
+      },
+      "pyright": {
+        "baseline_errors": 941,
+        "after_errors": 941,
+        "warnings": 0,
+        "new_diagnostics": 0,
+        "removed_diagnostics": 0,
+        "comparison": "file, rule, message and severity; shifted lines ignored",
+        "evidence": "cloud-pyright-comparison.json"
+      },
+      "diff_check": true,
+      "worktree_clean": true
+    },
+    "checked_at": "2026-10-30T15:23:34.424056+00:00",
+    "issue": "https://github.com/usestrix/strix/issues/1629",
+    "branch": "fix/cloud-source-git-deduplication",
+    "commit": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+    "artifacts": {
+      "issue_body": "cloud-issue.md",
+      "pr_body": "cloud-pr.md"
+    },
+    "publication": {
+      "issue": 1629,
+      "pr": 1631,
+      "url": "https://github.com/usestrix/strix/pull/1631"
+    }
+  },
+  "persistence": {
+    "round": "2026-10-30",
+    "status": "published_upstream_pr1634_and_integrated_review_branch;validated_with_documented_limits",
+    "repository": "usestrix/strix",
+    "upstream_base": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "fork_reference": "783d738a",
+    "worktree": "/Users/samir/x/shvia/strix-persistence-review-20261030",
+    "branch": "fix/validate-dedupe-decisions-20261030",
+    "scope": "New bounded operational reporting/persistence defects; no scan, cloud, LLM or credentials",
+    "candidate": {
+      "title": "Validate dedupe model decisions before suppressing findings",
+      "issue": "https://github.com/usestrix/strix/issues/1630",
+      "impact": "Malformed JSON boolean or unknown/empty duplicate IDs suppress an otherwise accepted new finding and tell the agent not to resubmit; no matching stored report exists in the invalid-ID cases.",
+      "evidence": "Synthetic model response through real check_duplicate and _do_create, ReportState and temporary disk writes; first three malformed cases lose the new finding; valid false/true controls behave as intended.",
+      "effort": "Small: one production module plus focused regression test file.",
+      "maintenance": "Enforces the existing prompt contract and retains existing logged fail-open path; no new model calls or dedupe identity policy.",
+      "files": [
+        "strix/report/dedupe.py",
+        "tests/test_dedupe_decisions.py"
+      ],
+      "limitations": [
+        "No real provider-frequency estimate or live scan.",
+        "Removing parser ID truncation intentionally differs from the old tests-only #597 long-ID assertion; exact raw IDs must be checked against candidate IDs."
+      ]
+    },
+    "validation": {
+      "before": {
+        "failed": 16,
+        "passed": 2,
+        "log": "persistence-tests-before.log"
+      },
+      "focused_after": {
+        "passed": 210,
+        "log": "persistence-tests-after.log",
+        "note": "210 focused passes preceded mechanical lint cleanup; full2498-pass suite and fork3590-pass suite exercise the final committed source."
+      },
+      "full_after": {
+        "failed": 19,
+        "passed": 2498,
+        "xfailed": 3,
+        "seconds": 370.41,
+        "baseline_failed": 19,
+        "baseline_passed": 2480,
+        "baseline_xfailed": 3,
+        "added_failures": [],
+        "removed_failures": [],
+        "comparison_log": "persistence-pytest-comparison.json",
+        "log": "persistence-full-pytest.log",
+        "limitation": "19 pre-existing failures around required skills arguments and mocked settings without telemetry; repository-wide gate is not green."
+      },
+      "static": {
+        "check_all": "Ruff format/check and Mypy pass; make stops at existing Pyright backlog.",
+        "pyright": {
+          "baseline_errors": 941,
+          "patched_errors": 941,
+          "added_diagnostics": 0,
+          "removed_diagnostics": 0,
+          "log": "persistence-pyright-comparison.json"
+        },
+        "bandit": "pass; zero issues"
+      },
+      "environment": {
+        "python": "3.12.14",
+        "platform": "macOS Apple Silicon",
+        "dependency_install": "uv sync --frozen --python 3.12",
+        "run_environment": "env -i HOME=<new temporary directory> PATH=<tool path> LITELLM_MODE=PRODUCTION LITELLM_LOCAL_MODEL_COST_MAP=True STRIX_TELEMETRY=0 STRIX_NO_UPDATE_CHECK=1",
+        "no_live_model": true,
+        "no_credentials": true
+      },
+      "commands": [
+        "uv run --frozen pytest -q tests/test_dedupe_decisions.py",
+        "uv run --frozen pytest -q tests/test_dedupe_decisions.py tests/test_dedupe_model.py tests/test_reporting_fields.py tests/test_reporting_tool.py tests/test_list_reports.py tests/test_report_writer.py tests/test_cost_tracking.py",
+        "uv run --frozen pytest -q",
+        "UV_FROZEN=1 make check-all",
+        "uv run --frozen pyright strix/ --outputjson",
+        "uv run --frozen bandit -r strix/ -c pyproject.toml",
+        "git diff --check"
+      ]
+    },
+    "overlap_review": [
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1469,
+        "url": "https://github.com/usestrix/strix/pull/1469",
+        "analyzed_sha": "b6cdb58ae7134321d304e93f6e5b28ba6f82f297",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Serializes concurrent filings; does not validate judge response types or duplicate ID membership."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1209,
+        "url": "https://github.com/usestrix/strix/pull/1209",
+        "analyzed_sha": "fb90d59def3a6e5c64b847f24ac9ed9b79555036",
+        "upstream_state": "closed",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": true,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Closed unmerged automatic stronger-duplicate update proposal. Its parser preserves the same bool coercion and unvalidated ID; no proposal from this closed PR is revived."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1187,
+        "url": "https://github.com/usestrix/strix/pull/1187",
+        "analyzed_sha": "1ef02e163b0710e94afcd29f0a682401a94eb4ba",
+        "upstream_state": "merged",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Merged dedicated dedupe credential routing; leaves response parsing/ID membership unchanged."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1100,
+        "url": "https://github.com/usestrix/strix/pull/1100",
+        "analyzed_sha": "62840537e5fcd1de9351c736390905aac8f67f69",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": true,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open dedicated credential routing patch; comments and patch do not address malformed decisions."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1000,
+        "url": "https://github.com/usestrix/strix/pull/1000",
+        "analyzed_sha": "1bc722fe77bc18e9f48d635e7ae2cbe80646841b",
+        "upstream_state": "closed",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Closed dependency reachability evidence, documentation and Trivy patch; no response validation changes."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 823,
+        "url": "https://github.com/usestrix/strix/pull/823",
+        "analyzed_sha": "6f8cf1914b5543961e95b37fd49a3581c90fee67",
+        "upstream_state": "merged",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Merged dedicated-model support; unchanged response validation."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 795,
+        "url": "https://github.com/usestrix/strix/pull/795",
+        "analyzed_sha": "56f370ea0c8c08aecafec11d81025d345b71cdac",
+        "upstream_state": "closed",
+        "draft": true,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Closed broad model control/verification proposal; inspected dedupe hunks only. No malformed-decision guard."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 633,
+        "url": "https://github.com/usestrix/strix/pull/633",
+        "analyzed_sha": "acf77ac711c16b74c9b1c3225c18f21484a82772",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": true,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open concurrent-filing race patch; inspected final two-phase title-match implementation and discussions. Separate objective."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 235,
+        "url": "https://github.com/usestrix/strix/pull/235",
+        "analyzed_sha": "c4bcb2d38770966a63a83389c217574c17c324d9",
+        "upstream_state": "merged",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Original merged dedupe implementation; XML decisions then used literal true matching. Does not solve the current JSON parser and reference validation."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 597,
+        "url": "https://github.com/usestrix/strix/pull/597",
+        "analyzed_sha": "c1f431924320fe6bbe75005587b0327d1df2588c",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": true,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open tests-only parser/usage coverage. No production logic changes; existing truncation assertion intentionally conflicts with preserving an exact raw ID for membership."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 999,
+        "url": "https://github.com/usestrix/strix/pull/999",
+        "analyzed_sha": "f206b4fffb0c86fcdea21db16d310f463cd1e5c3",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open verification-before-emit feature; reporting changes start after duplicate rejection and do not validate the duplicate decision."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1182,
+        "url": "https://github.com/usestrix/strix/pull/1182",
+        "analyzed_sha": "4f9af5761ca1135350e177fdfb725332ec683d48",
+        "upstream_state": "open",
+        "draft": true,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open independent verification feature; response validation unchanged. Only dedupe/reporting portions assessed, not whole feature."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 904,
+        "url": "https://github.com/usestrix/strix/pull/904",
+        "analyzed_sha": "81813318bd3feb313b6f787bab43cd39e04ae2b1",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open baseline-run suppression; reports are supplied as explicit dedupe candidates. No response-validation fix."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1210,
+        "url": "https://github.com/usestrix/strix/pull/1210",
+        "analyzed_sha": "1be6474226feffaf37c30d7f6eb40a051f7416ba",
+        "upstream_state": "merged",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Merged explicit report revisions replaced automatic stronger-duplicate editing. Duplicate rejection still trusts unchecked decision."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 982,
+        "url": "https://github.com/usestrix/strix/pull/982",
+        "analyzed_sha": "0dcd9262f1874645d27f52a814294f2ec00f4953",
+        "upstream_state": "merged",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Merged deterministic manifest path identity; no model response validation changes."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1446,
+        "url": "https://github.com/usestrix/strix/pull/1446",
+        "analyzed_sha": "ac70e0ed1034ca5bdf38f6d6f5a4b7b06e28026f",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open CSPT classification/prompt patch; dedupe changes are prompt/comparison fields only."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 700,
+        "url": "https://github.com/usestrix/strix/pull/700",
+        "analyzed_sha": "9c3a0ccee8b3cdf7aa065601887cce1d60c1c82c",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open MCP runtime chooses deterministic matching when model dedupe is disabled; model path unchanged."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1200,
+        "url": "https://github.com/usestrix/strix/pull/1200",
+        "analyzed_sha": "62bb8d2fe70f92a2a33ee5f5209c578b5b6fd385",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open subscription backend; changed-file inventory and relevant diff inspection show no dedupe parser/checker changes. Broader feature not reviewed."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 824,
+        "url": "https://github.com/usestrix/strix/pull/824",
+        "analyzed_sha": "d5bf5d664fb4ddd557468cb78c03d9421bfc3b6d",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open per-agent routing; changed-file inventory and relevant diff inspection show no dedupe parser/checker changes. Broader feature not reviewed."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1304,
+        "url": "https://github.com/usestrix/strix/pull/1304",
+        "analyzed_sha": "4781ce896487238636e6a719cd1d5c27035e2b49",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Open seven-feature proposal; changed-file inventory and relevant diff inspection show no dedupe parser/checker changes. Broader feature not reviewed."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1352,
+        "url": "https://github.com/usestrix/strix/pull/1352",
+        "analyzed_sha": "83ba5345b1bfebfdf0fba60d718643088ef97870",
+        "upstream_state": "closed",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "no_duplicate_for_selected_fix",
+        "reason": "Closed multi-scaffold feature; changed-file inventory and relevant diff inspection show no dedupe parser/checker changes. Broader feature not reviewed."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1307,
+        "url": "https://github.com/usestrix/strix/pull/1307",
+        "analyzed_sha": "80b8336073ceddb2f04fad6b0bae080f08b47faa",
+        "upstream_state": "open",
+        "draft": false,
+        "review_depth": "scoped_diff",
+        "scope": "state.py and reporting tests, author discussion",
+        "comments_read": true,
+        "decision": "duplicate_already_proposed",
+        "reason": "Candidate discarded as duplicate: current patch already preserves equal-valued explicitly supplied rationale/conditions, verified in state.py diff plus author follow-up."
+      },
+      {
+        "repository": "usestrix/strix",
+        "kind": "pr",
+        "number": 1311,
+        "url": "https://github.com/usestrix/strix/pull/1311",
+        "analyzed_sha": "dbd078b3ec47b48bfe1087e9017a6cc511ff2c47",
+        "upstream_state": "open",
+        "draft": true,
+        "review_depth": "body_and_prior_context",
+        "scope": "deduplication parser/checker and caller overlap; not a full PR review",
+        "comments_read": false,
+        "decision": "deferred_overlap",
+        "reason": "Session atomic rewrite suspicion deferred as overlap from current PR body and prior-round record; current diff not re-reviewed in this round."
+      }
+    ],
+    "inspection_only_candidates": [
+      {
+        "area": "report writes",
+        "decision": "excluded_known_work",
+        "refs": [
+          1117,
+          1108,
+          1506
+        ],
+        "note": "Broad artifact transactions and executive atomic writes are existing work; no new patch."
+      },
+      {
+        "area": "sessions",
+        "decision": "deferred_overlap",
+        "refs": [
+          1311
+        ],
+        "note": "No independent cancellation fix claimed or implemented."
+      },
+      {
+        "area": "equal-valued dependent report fields",
+        "decision": "duplicate_already_proposed",
+        "refs": [
+          1307,
+          1299
+        ],
+        "comment": "https://github.com/usestrix/strix/pull/1307#issuecomment-5654840900"
+      }
+    ],
+    "publication": {
+      "issue": 1630,
+      "pr": 1634,
+      "url": "https://github.com/usestrix/strix/pull/1634"
+    },
+    "integration_ledger_modified": false,
+    "implementation_commit": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+    "independent_review": {
+      "reviewer": "root/cloud",
+      "commit": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+      "result": "no blocking findings",
+      "additional_checks": "4 synthetic model-backed dependency-report probes passed: string false, unknown ID and whitespace-padded ID preserve JSON/Markdown; true exact ID rejects duplicate.",
+      "evidence_origin": "Reviewer root/cloud directly reported its own four successful probes and clean worktree. This agent did not retain their script or log path."
+    }
+  },
+  "runtime": {
+    "schema_version": 1,
+    "generated_at": "2026-10-30T15:27:14.469711+00:00",
+    "worktree": "/Users/samir/x/shvia/strix-runtime-audit-20261030",
+    "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "source_changes": false,
+    "known_recheck": "known-recheck.json",
+    "known_recheck_summary": "known-recheck-summary.md",
+    "inventory_totals": {
+      "prs": 1154,
+      "issues": 414,
+      "known_records": 574
+    },
+    "reviewed_source_files": [
+      "strix/runtime/session_manager.py",
+      "strix/runtime/deferred_session.py",
+      "strix/runtime/docker_client.py",
+      "strix/runtime/backends.py",
+      "strix/runtime/caido_handle.py",
+      "strix/runtime/caido_bootstrap.py",
+      "strix/interface/scan_setup.py",
+      "strix/interface/utils.py (target detection, workspace names, source staging, clone, workspace-file)",
+      "strix/interface/cli_args.py (resume)",
+      "strix/core/paths.py",
+      "strix/core/inputs.py (API-spec prompt/scope)",
+      "strix/utils/api_spec.py",
+      "tests/test_api_spec_targets.py",
+      "tests/test_api_spec.py",
+      "strix/skills/custom/api_spec_testing.md",
+      "docs/usage/cli.mdx (API-spec contract)"
+    ],
+    "records": [
+      {
+        "kind": "pr",
+        "number": 866,
+        "title": "feat: support API specs and Postman collections as targets",
+        "url": "https://github.com/usestrix/strix/pull/866",
+        "upstream_state": "MERGED",
+        "observed_head_sha": "259e82f111af1f600ab70576c69eb44475721e50",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "deep_discussion",
+        "decision": "context_reviewed",
+        "reason": "Merged API-spec design leaves full contract interpretation to the agent. Old internal-ref normalization comment is superseded; external-file staging and environment handoff were not rejected in the inspected discussion. Do not reopen the explicitly settled additive-scope policy.",
+        "evidence": [
+          "spec-pr-866-comments.json",
+          "https://github.com/usestrix/strix/pull/866#discussion_r3709363586",
+          "Current main scan_setup.py/utils.py/api_spec.py/inputs.py and docs inspected."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "issue",
+        "number": 844,
+        "title": "[Feature] Ingest API specs (OpenAPI / Postman collections) as a first-class target type",
+        "url": "https://github.com/usestrix/strix/issues/844",
+        "upstream_state": "CLOSED",
+        "observed_head_sha": null,
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "inventory",
+        "decision": "context_reviewed",
+        "reason": "Original feature request is closed by merged #866; desired contract/auth/parameter visibility aligns with the two staging gaps, but is not an available unimplemented task.",
+        "evidence": [
+          "Full issue body from issues-all.json read."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "pr",
+        "number": 1158,
+        "title": "fix(security): validate Postman collection/environment ids, block path transversal",
+        "url": "https://github.com/usestrix/strix/pull/1158",
+        "upstream_state": "OPEN",
+        "observed_head_sha": "0134b3bcce112d584d89e975665e471549b49054",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "deep_discussion",
+        "decision": "avoid_overlap",
+        "reason": "Active UID validation/file-protection work is distinct from missing environment handoff. Any future handoff implementation should coordinate file protection; no replacement patch proposed.",
+        "evidence": [
+          "spec-pr-1158-comments.json",
+          "Body and comments read; no source-branch implementation correctness claim."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "pr",
+        "number": 831,
+        "title": "fix(runtime): reap the sandbox container when Caido bootstrap fails",
+        "url": "https://github.com/usestrix/strix/pull/831",
+        "upstream_state": "OPEN",
+        "observed_head_sha": "0893e657c818177b220ba5d64e1fefb98bea5932",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Existing open PR directly covers sandbox cleanup when port resolution/Caido bootstrap fails before caching; no duplicate contribution.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "issue",
+        "number": 830,
+        "title": "[BUG] Sandbox container leaks when Caido bootstrap or port resolution fails before the session is cached",
+        "url": "https://github.com/usestrix/strix/issues/830",
+        "upstream_state": "OPEN",
+        "observed_head_sha": null,
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Existing issue exactly describes observed source-level cleanup gap before session cache admission.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "pr",
+        "number": 592,
+        "title": "fix(interface): correct copy-diff classification and workspace-subdir collision",
+        "url": "https://github.com/usestrix/strix/pull/592",
+        "upstream_state": "OPEN",
+        "observed_head_sha": "dfecf0343d739b1bd1c6192f8d0fa76094223cdf",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Existing active PR explicitly covers workspace-subdir suffix collision along with copy-diff classification; no duplicate contribution.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "pr",
+        "number": 1285,
+        "title": "fix(interface): handle Windows drive-letter paths in --workspace-file",
+        "url": "https://github.com/usestrix/strix/pull/1285",
+        "upstream_state": "OPEN",
+        "observed_head_sha": "bdb92ad1617eb64b124180af825b3ccc5abe564c",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Existing active PR covers Windows drive-letter handling in --workspace-file; no duplicate contribution.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "issue",
+        "number": 1257,
+        "title": "[BUG] Handle Windows drive-letter paths in `--workspace-file`",
+        "url": "https://github.com/usestrix/strix/issues/1257",
+        "upstream_state": "OPEN",
+        "observed_head_sha": null,
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Existing issue pairs with #1285; no duplicate contribution.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "issue",
+        "number": 1623,
+        "title": "[BUG] Deferred sandbox startup loses initial PTY capability and times out shell commands",
+        "url": "https://github.com/usestrix/strix/issues/1623",
+        "upstream_state": "OPEN",
+        "observed_head_sha": null,
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Previously published deferred PTY capability issue remains open; excluded from new contributions.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "issue",
+        "number": 1619,
+        "title": "[BUG] Resuming API-spec scans drops the specification sandbox mount",
+        "url": "https://github.com/usestrix/strix/issues/1619",
+        "upstream_state": "OPEN",
+        "observed_head_sha": null,
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Previously published API-spec resume staging issue remains open; current new candidates affect initial staging and differ.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      },
+      {
+        "kind": "pr",
+        "number": 1621,
+        "title": "fix(cli): restore staged API specifications on resume",
+        "url": "https://github.com/usestrix/strix/pull/1621",
+        "upstream_state": "OPEN",
+        "observed_head_sha": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+        "analyzed_sha": null,
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "current_source_and_record_body",
+        "decision": "duplicate_or_already_tracked",
+        "reason": "Own active PR restores staged specifications on resume; head unchanged in known recheck. Initial staging reference/environment gaps are distinct.",
+        "evidence": [
+          "Current upstream runtime/session_manager.py/deferred_session.py/backends.py or interface/scan_setup.py/utils.py inspected as relevant.",
+          "Current inventory record body/head checked; no redundant new test or patch."
+        ],
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "validation": [],
+        "publication": null,
+        "analyzed_sha_note": "Current upstream source and record body/discussion were reviewed; the candidate PR branch diff was not fully re-reviewed in this runtime audit. observed_head_sha is independently verified metadata."
+      }
+    ],
+    "candidates": [
+      {
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "offline_reproduced_current_source",
+        "decision": "published_issue_awaiting_maintainer_contract",
+        "publication": {
+          "kind": "issue",
+          "number": 1632,
+          "url": "https://github.com/usestrix/strix/issues/1632",
+          "published_by": "parent agent after body/evidence review"
+        },
+        "patch_commit": null,
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "limitations": [
+          "No live Docker or other sandbox backend exercised.",
+          "No LLM, target scan or live Postman service request.",
+          "No production patch chosen; no after-fix validation claimed."
+        ],
+        "id": "api-spec-local-external-ref-staging",
+        "title": "[BUG] Staging API specifications drops local external $ref files",
+        "reason": "Valid split OpenAPI is accepted but only the main file is staged; agent cannot read referenced schema. Bounded local-reference support versus bundled-only validation needs a maintainer contract, including limits for outside-directory/symlink/remote refs.",
+        "benefit": "Avoid incomplete API contract context and missing required body schema during spec-driven testing.",
+        "risk": "Implementation requires an explicit file-selection boundary; no recursive arbitrary-directory copy proposed.",
+        "effort": "Issue ready; implementation scope depends on accepted contract.",
+        "evidence": [
+          "repro-openapi-relative-ref.py",
+          "issue-openapi-relative-refs.md",
+          "Source reference exists True, staged reference exists False, staged files only openapi.json.",
+          "No matching active/closed proposal found in complete 1154 PR/414 issue body inventory; original #866 discussion reviewed."
+        ],
+        "validation": [
+          "Offline reproduction executed successfully on Python3.12.14 with frozen dependencies and isolated HOME.",
+          "Existing API-spec tests: 39 passed."
+        ]
+      },
+      {
+        "current_code_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "review_depth": "offline_reproduced_current_source",
+        "decision": "published_issue_awaiting_maintainer_contract",
+        "publication": {
+          "kind": "issue",
+          "number": 1633,
+          "url": "https://github.com/usestrix/strix/issues/1633",
+          "published_by": "parent agent after body/evidence review"
+        },
+        "patch_commit": null,
+        "last_checked_at": "2026-10-30T15:27:14.469711+00:00",
+        "limitations": [
+          "No live Docker or other sandbox backend exercised.",
+          "No LLM, target scan or live Postman service request.",
+          "No production patch chosen; no after-fix validation claimed."
+        ],
+        "id": "postman-selected-environment-handoff",
+        "title": "[BUG] Postman environment values are discarded after base-URL extraction",
+        "reason": "Fetched enabled environment values resolve authorization base URLs, then are discarded; tenant/token placeholders persist in the staged collection and values are absent from targets/root task. Docs promise variable resolution. Effective collection variables versus separate environment versus substitution needs maintainer choice.",
+        "benefit": "Preserve the selected environment data necessary to construct authenticated/tenant-specific requests.",
+        "risk": "Delivery should keep the API key host-only and exclude disabled/unneeded variables; coordinate with active #1158 file-protection work.",
+        "effort": "Issue ready; no implementation until delivery contract chosen.",
+        "evidence": [
+          "repro-postman-environment.py",
+          "issue-postman-environment.md",
+          "Real environment parser with mocked HTTP: disabled excluded, selected base URL overrides collection default, tenant/token values absent from staged files/targets/root task.",
+          "Global source search found no other consumer of fetched environment values.",
+          "No matching active/closed proposal found in complete 1154 PR/414 issue inventory; #866 and #1158 comments reviewed."
+        ],
+        "validation": [
+          "Offline reproduction executed successfully on Python3.12.14 with frozen dependencies and isolated HOME.",
+          "Existing API-spec tests: 39 passed.",
+          "Precedence explicitly verified by fixture; existing tests cover disabled filtering, but lack end-to-end environment handoff."
+        ]
+      }
+    ],
+    "validation": {
+      "python": "3.12.14",
+      "dependency_mode": "uv run --frozen",
+      "environment": "allowlisted env, temporary HOME, LITELLM_MODE=PRODUCTION, local cost map, telemetry disabled",
+      "existing_tests_command": "python3 /tmp/strix-community-review-20261030/run-isolated-runtime.py pytest -q tests/test_api_spec.py tests/test_api_spec_targets.py",
+      "existing_tests_result": "39 passed in 15.43s",
+      "gates": "No full lint/type/full-suite rerun: no source patch. Focused existing suites and both offline reproductions only.",
+      "repository_status": "git status --short empty after review; venv ignored."
+    },
+    "limitations": [
+      "Inventory body matches are not a complete review of every unrelated PR diff.",
+      "Review of #1158 is public existing work context, not a new vulnerability report.",
+      "No upstream publication performed by this agent."
+    ]
+  },
+  "fork_integrated_validation": {
+    "status": "locally_validated_with_documented_limits",
+    "code_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+    "pytest": {
+      "passed": 3590,
+      "skipped": 12,
+      "xfailed": 3,
+      "failed": 0,
+      "seconds": 519.13,
+      "command": "uv run --frozen pytest -q",
+      "limits": "Existing skipped Docker-dependent cases were not separately exercised in this round."
+    },
+    "ruff_format": "346 files passed",
+    "ruff_lint": "passed",
+    "mypy": "176 source files passed",
+    "bandit": "passed; zero issues",
+    "pyright": {
+      "previous_code_sha": "b4fb64c04d3bf3a6c8193651049941d84b5c8424",
+      "current_code_sha": "3154805d",
+      "baseline_errors": 1259,
+      "current_errors": 1259,
+      "added": 0,
+      "removed": 0,
+      "comparison": "file/rule/severity/message; line shifts ignored"
+    },
+    "completed_at": "2026-10-30T15:38:00.832119+00:00",
+    "full_quality_gate": "blocked_by_existing_pyright_diagnostics"
+  },
+  "publication": {
+    "upstream_prs": [
+      "https://github.com/usestrix/strix/pull/1631",
+      "https://github.com/usestrix/strix/pull/1634"
+    ],
+    "upstream_issues": [
+      "https://github.com/usestrix/strix/issues/1628",
+      "https://github.com/usestrix/strix/issues/1629",
+      "https://github.com/usestrix/strix/issues/1630",
+      "https://github.com/usestrix/strix/issues/1632",
+      "https://github.com/usestrix/strix/issues/1633"
+    ],
+    "new_pr_ci": {
+      "1631": [
+        {
+          "name": "CI",
+          "head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+          "status": "completed",
+          "conclusion": "action_required",
+          "url": "https://github.com/usestrix/strix/actions/runs/41080426313"
+        }
+      ],
+      "1634": [
+        {
+          "name": "CI",
+          "head_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+          "status": "completed",
+          "conclusion": "action_required",
+          "url": "https://github.com/usestrix/strix/actions/runs/41081460830"
+        }
+      ]
+    },
+    "feedback": [
+      {
+        "pr": 1631,
+        "url": "https://github.com/usestrix/strix/pull/1631#issuecomment-6526478811",
+        "author": "greptile-apps[bot]",
+        "head": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "result": "No actionable request; automated5/5 review is not human approval or CI."
+      },
+      {
+        "pr": 1634,
+        "url": "https://github.com/usestrix/strix/pull/1634#issuecomment-6526669229",
+        "author": "greptile-apps[bot]",
+        "head": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "result": "No actionable request; automated5/5 review is not human approval or CI."
+      }
+    ]
+  },
+  "limits": [
+    "No real LLM calls, managed cloud uploads, Postman requests or target scans.",
+    "No sandbox image build/download, Windows execution or installed-binary acceptance.",
+    "Full upstream suite was run on baseline and dedupe branch; cloud branch has353 focused tests, plus later fork integration suite.",
+    "GitHub review/merge/release/build/installed behavior remain separate.",
+    "Local raw log paths in agent records are supplemental; result summaries and decisions are retained here and in items.json."
+  ],
+  "completed_at": "2026-10-30T15:38:00.832119+00:00",
+  "ledger_summary": {
+    "recorded_at": "2026-10-30T15:39:20.935867+00:00",
+    "target": "/Users/samir/x/shvia/strix-integration-20261029/docs/upstream-tracking/items.json",
+    "new_ids": [
+      "usestrix/strix#issue:1628",
+      "usestrix/strix#issue:1629",
+      "usestrix/strix#issue:1630",
+      "usestrix/strix#issue:1632",
+      "usestrix/strix#issue:1633",
+      "usestrix/strix#issue:844",
+      "usestrix/strix#pr:1000",
+      "usestrix/strix#pr:1177",
+      "usestrix/strix#pr:1187",
+      "usestrix/strix#pr:1209",
+      "usestrix/strix#pr:1210",
+      "usestrix/strix#pr:1352",
+      "usestrix/strix#pr:1625",
+      "usestrix/strix#pr:1626",
+      "usestrix/strix#pr:1627",
+      "usestrix/strix#pr:1631",
+      "usestrix/strix#pr:1634",
+      "usestrix/strix#pr:235",
+      "usestrix/strix#pr:795",
+      "usestrix/strix#pr:823",
+      "usestrix/strix#pr:866",
+      "usestrix/strix#pr:982"
+    ],
+    "targeted_review_ids": [
+      "usestrix/strix#issue:1108",
+      "usestrix/strix#issue:1257",
+      "usestrix/strix#issue:1299",
+      "usestrix/strix#issue:1619",
+      "usestrix/strix#issue:1623",
+      "usestrix/strix#issue:830",
+      "usestrix/strix#issue:844",
+      "usestrix/strix#pr:1000",
+      "usestrix/strix#pr:1100",
+      "usestrix/strix#pr:1117",
+      "usestrix/strix#pr:1158",
+      "usestrix/strix#pr:1177",
+      "usestrix/strix#pr:1182",
+      "usestrix/strix#pr:1187",
+      "usestrix/strix#pr:1200",
+      "usestrix/strix#pr:1209",
+      "usestrix/strix#pr:1210",
+      "usestrix/strix#pr:1285",
+      "usestrix/strix#pr:1298",
+      "usestrix/strix#pr:1300",
+      "usestrix/strix#pr:1304",
+      "usestrix/strix#pr:1307",
+      "usestrix/strix#pr:1311",
+      "usestrix/strix#pr:1352",
+      "usestrix/strix#pr:1446",
+      "usestrix/strix#pr:1469",
+      "usestrix/strix#pr:1506",
+      "usestrix/strix#pr:1563",
+      "usestrix/strix#pr:1571",
+      "usestrix/strix#pr:1580",
+      "usestrix/strix#pr:1614",
+      "usestrix/strix#pr:1621",
+      "usestrix/strix#pr:1624",
+      "usestrix/strix#pr:235",
+      "usestrix/strix#pr:592",
+      "usestrix/strix#pr:597",
+      "usestrix/strix#pr:633",
+      "usestrix/strix#pr:700",
+      "usestrix/strix#pr:795",
+      "usestrix/strix#pr:823",
+      "usestrix/strix#pr:824",
+      "usestrix/strix#pr:831",
+      "usestrix/strix#pr:866",
+      "usestrix/strix#pr:904",
+      "usestrix/strix#pr:982",
+      "usestrix/strix#pr:999"
+    ],
+    "counts": {
+      "total_records": 596,
+      "upstream_open_inventory": {
+        "issue": 208,
+        "pr": 324
+      },
+      "known_additional": 20,
+      "fork_catalog": 44,
+      "review_depth": {
+        "deep": 38,
+        "identified": 36,
+        "triage": 522
+      },
+      "review_depth_upstream": {
+        "deep": 31,
+        "triage": 521
+      },
+      "review_depth_fork": {
+        "deep": 7,
+        "identified": 36,
+        "triage": 1
+      },
+      "fork_decisions": {
+        "adapted": 13,
+        "already_covered": 90,
+        "deferred": 241,
+        "discarded": 26,
+        "incorporated_fully": 50,
+        "incorporated_partially": 1,
+        "pending": 175
+      },
+      "implementation_phases": {
+        "decision_required": 115,
+        "deferred": 241,
+        "integrated_review_branch": 43,
+        "not_planned": 26,
+        "pending": 12,
+        "present_before_round": 41,
+        "unknown": 118
+      }
+    },
+    "coverage": {
+      "open_ids": 532,
+      "triaged_open": 532,
+      "missing": []
+    },
+    "preservation": {
+      "prior_records": 574,
+      "decisions_and_imported_sha_unchanged": true,
+      "decision_history_prefixes_unchanged": true,
+      "known_recheck_preserved": true,
+      "code_validation_checkpoint_unchanged": true
+    },
+    "source_provenance": [
+      {
+        "source_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "source_parent": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "fork_commit": "8890f1b58f1b0c3443c765f1e34ad6b9a864178f",
+        "fork_parent": "783d738a3f00d168e6bee968004f661e7e622254",
+        "source_patch_id": "1179e1a50025cb0f85ab4baa3f67badb60006f78",
+        "fork_patch_id": "1179e1a50025cb0f85ab4baa3f67badb60006f78",
+        "patch_ids_match": true,
+        "fork_commit_ancestor_of_HEAD": true,
+        "source_branch_refs": [
+          "+ fix/cloud-source-git-deduplication",
+          "  remotes/origin/fix/cloud-source-git-deduplication"
+        ]
+      },
+      {
+        "source_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "source_parent": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "fork_commit": "3154805db216d40f35852b8fb608126a9dabcfcd",
+        "fork_parent": "8890f1b58f1b0c3443c765f1e34ad6b9a864178f",
+        "source_patch_id": "c0dd1805a3f41edfdf6d2c999e64a7d8ccc076fc",
+        "fork_patch_id": "c0dd1805a3f41edfdf6d2c999e64a7d8ccc076fc",
+        "patch_ids_match": true,
+        "fork_commit_ancestor_of_HEAD": true,
+        "source_branch_refs": [
+          "+ fix/validate-dedupe-decisions-20261030"
+        ]
+      }
+    ],
+    "fork_validation": {
+      "code_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+      "passed": 3590,
+      "skipped": 12,
+      "xfailed": 3,
+      "seconds": 519.13,
+      "ruff_format_files": 346,
+      "ruff_lint": "passed",
+      "mypy_source_files": 176,
+      "bandit_issues": 0,
+      "pyright_errors": 1259,
+      "pyright_added": 0,
+      "pyright_removed": 0
+    },
+    "validation_pending": "Remote CI/human approval and live service/device behavior are not established. Pyright remains nonzero; no master/release update.",
+    "written": true,
+    "validation_checks": {
+      "json_parse": true,
+      "ids_unique": true,
+      "old_record_order_preserved": true,
+      "only_append_history_links_and_targeted_review_on_old_records": true,
+      "old_imported_sha_and_decisions_preserved": true,
+      "current_open_coverage_complete": true,
+      "open_pr_test_merge_not_recorded_as_merge": true,
+      "fork_final_results_recorded_on_four_deliveries": true
+    },
+    "code_validation_checkpoint_advanced_by_root_after_tests": true
+  }
+}

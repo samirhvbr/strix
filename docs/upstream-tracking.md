@@ -1,6 +1,6 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest round](UPSTREAM_INTEGRATION_2026-10-29.md)
+Start every review here, then read the [latest round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.
 A GitHub state is not a fork decision: a closed PR may still be carried, an open PR may already
@@ -11,8 +11,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
 | Delivered fork | `master` / `shvia-v1.2.43` at `8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5` | Existing release; no master, mirror, tag or release update in this round |
-| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Integrated on `feat/upstream-sync-contributions-20261029`; local functional validation and explicit quality limits below |
-| Contribution review | 2026-10-29 inventory at 20:58:03 UTC (second pass): all 320 open PRs and 203 open issues triaged; 574 ledger records | Selected contributions deeply reviewed; historical known-item recheck is separate from open inventory |
+| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Validated fork code `3154805db216d40f35852b8fb608126a9dabcfcd` on `feat/upstream-sync-contributions-20261029`, including the two new fixes; 3590 passed, 12 skipped, 3 xfailed, with existing Pyright limits |
+| Contribution review | 2026-10-30: all 574 previous records rechecked; final upstream catalog has 324 open PRs and 208 open issues | Two focused PRs and five supporting/design issues published; targeted code review and historical metadata coverage remain separate |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -102,10 +102,17 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Delivery blocker (found in the second pass):** the synchronized source defaults to the sandbox image
-`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; `master` pins the published 1.3.0). Decide
-between waiting for upstream's image, pinning 1.3.0 meanwhile, or publishing an image under the fork's control
-before any master delivery. See the latest round.
+**Delivery blocker (reproduced 2026-10-30):** the synchronized source defaults to the sandbox image
+`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; the published 1.3.0 is the access control).
+[Upstream issue #1628](https://github.com/usestrix/strix/issues/1628) requests publication and distinguishes
+the current installer from the released runtime. Resolve image availability before master delivery;
+rolling back to 1.3.0 would omit #1617's patch.
+
+The new fixes are [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
+[#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
+branch. API-spec issues [#1632](https://github.com/usestrix/strix/issues/1632) and
+[#1633](https://github.com/usestrix/strix/issues/1633) await maintainer contracts. Their evidence, exact source
+versions, local commits and validation limits are in the latest round and ledger.
 
 Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
 The release is still 1.2.43, with upstream package version 1.7.0 by policy. Existing published
