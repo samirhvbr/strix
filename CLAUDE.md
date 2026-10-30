@@ -2,6 +2,14 @@
 
 Guia para agentes/sessões futuras trabalhando neste repositório. **Leia antes de mexer.**
 
+## Continuidade das revisões
+
+Comece por [docs/upstream-tracking.md](docs/upstream-tracking.md), pelo ledger e pela última rodada.
+Confira todos os itens conhecidos antes de novas incorporações, inclusive fechados, adiados
+e já carregados. Atualize os marcos de sincronização e de revisão separadamente; preserve
+o último estado validado se houver trabalho parcial. O histórico da conversa não substitui
+esse registro. Uma branch de revisão não é uma entrega em `master` nem autoriza release.
+
 ## O que é
 
 Fork de [`usestrix/strix`](https://github.com/usestrix/strix) (ferramenta de
@@ -37,7 +45,7 @@ uv run pytest -q               # suíte (~1139 testes, ~2min)
   `uv tool install .` também exige Go (build-hook `scripts/tui_sidecar_hook.py`).
 - Rodar precisa de **Docker** (puxa imagem sandbox no 1º run).
 - The suite no longer writes your real `~/.strix` or leaves `strix_runs/run-*` in the repo root: `tests/conftest.py` redirects the config and identity paths and three tests were fixed (upstream PR #1471, carried here). Before that, every run replaced `~/.strix/cli-config.json` (the stored model, API key and API base), regenerated `cli-identity.json` and created `wallet-npm-cache/`. Real runs live in `$STRIX_WORKDIR/strix_runs`. If a new test starts leaking again, find it by running the suite with `HOME=$(mktemp -d)` and listing what appears under `$HOME/.strix` afterwards.
-- **`import litellm` loads the `.env` of the current directory into the process by default**, so any Python probe or test run from this repo's root gets the real provider keys and can make real calls. Set `LITELLM_MODE=PRODUCTION` for probes and throwaway test runs (measured: the key is visible after the import by default and not with that variable). Never print the environment or request headers in a probe.
+- **`import litellm` loads the `.env` of the current directory into the process by default**, so any Python probe or test run from this repo's root gets the real provider keys and can make real calls. Set `LITELLM_MODE=PRODUCTION` for probes and throwaway test runs (measured: the key is visible after the import by default and not with that variable). Never print the environment or request headers in a probe. For the full suite also set `LITELLM_LOCAL_MODEL_COST_MAP=True`: LiteLLM otherwise downloads its live price map, and when that data changes (on 2026-10-30 `kyma/grok-4.5` made bare `grok-4.5` ambiguous) `tests/test_pricing.py::test_resolves_common_bare_model_names` fails with no code change.
 
 ## Configuração de execução (nosso launcher)
 
@@ -85,10 +93,11 @@ Runs saem em `$STRIX_WORKDIR/strix_runs/<run>/`. Ver o cabeçalho do script para
   `strix/config/models.py`, `strix/core/runner.py`): `is_usage_limit_error()` → `usage_limit_reached`
   é terminal (fail-fast) e resumível em qualquer provedor. Testes: `test_execution_transient_retry.py`,
   `test_model_retry.py`, `test_runner_rate_limit.py`. Enviado ao upstream como PR #1174.
-- **Third-party upstream PRs carried in `master`** (thirty-five, listed in FORK.md with their upstream status; merged with `--no-ff`, never rebased). On a sync, if upstream already has one of them, keep upstream's and drop ours. PR #1311 changes the same failure path of `_run_cycle` in `strix/core/execution.py` as our F3: after any merge that touches that file, re-run `test_execution_transient_retry.py`, `test_model_retry.py` and `test_runner_rate_limit.py`, and check that a usage-limit stop leaves the agent's stored session as it was (on plain master it doubled: 201 items became 402). The todo tests from #663 live in `tests/test_todo_ids.py` because `tests/test_todo.py` already existed.
+- **Third-party upstream PRs carried in `master`** (forty-three, listed in FORK.md with their upstream status; merged with `--no-ff`, never rebased). On a sync, if upstream already has one of them, keep upstream's and drop ours. PR #1311 changes the same failure path of `_run_cycle` in `strix/core/execution.py` as our F3: after any merge that touches that file, re-run `test_execution_transient_retry.py`, `test_model_retry.py` and `test_runner_rate_limit.py`, and check that a usage-limit stop leaves the agent's stored session as it was (on plain master it doubled: 201 items became 402). The todo tests from #663 live in `tests/test_todo_ids.py` because `tests/test_todo.py` already existed.
 
 - **Third-party PRs carried with changes** (FORK.md `1.2.33`): #1161 keeps master's no-session branch in `AgentCoordinator.consume_pending` (it warns and still delivers; the PR returned `(0, [])` and dropped the messages); #1505 keeps #681's query-parameter handling in `apply_modifications`; #1362's tests call `warm_up_llm()` without `show_model_warning`. If upstream merges these PRs as they are, re-run `tests/test_wait_dedupe.py`, `tests/test_execution.py` and `tests/test_proxy_modifications.py` before taking upstream's version.
 - **cryptography without upstream's `<49` cap** (`pyproject.toml`, `uv.lock`; carried from upstream PR #1067, lock at 50.0.2): upstream keeps the cap for its Intel macOS universal2 wheel; the fork is Linux-only and needs 50.x for CVE-2026-69247. On a sync conflict in that line keep `cryptography>=50.0.0` and run `uv lock`; drop this note once upstream's floor reaches 50.
+- **Sandbox image pinned to a published tag** (`RuntimeSettings.image` in `strix/config/settings.py` and `STRIX_IMAGE` in `scripts/install.sh`; fork 1.2.44): upstream moved its default to `strix-sandbox:1.3.1` (#1617) before publishing that tag, so the fork keeps `1.3.0`. A test keeps the two lines equal. On a sync conflict in them, keep the newest tag that `docker manifest inspect` finds in the registry, and recheck before every delivery (`release-audit.json`, `sandbox_image_audit`). Upstream's CVE-2026-111497 brotli patch is in the image only from 1.3.1 on.
 
 ## Regras
 

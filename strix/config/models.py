@@ -41,6 +41,7 @@ from openai.types.shared import Reasoning
 from strix.agents.prompt import CACHE_POINT
 from strix.config import codex
 from strix.config.loader import load_settings
+from strix.config.tool_call_arguments import repair_input
 from strix.config.tool_call_ids import TurnCallIdRewriter, dedupe_input
 from strix.config.tool_call_limits import TurnToolCallLimiter
 from strix.llm import chat_content_compat, request_log
@@ -255,6 +256,12 @@ class _TurnGuardModel(Model):
     Ids that collide with the history are rewritten before the turn is
     recorded, and already-corrupted histories are repaired on the way out.
 
+    Tool-call arguments: a turn whose ``arguments`` are not valid JSON fails
+    that one call with a parse error, but the raw string is recorded and
+    strict providers then reject every request that replays it. Such
+    arguments are rewritten to a valid JSON object on the way out (see
+    :mod:`strix.config.tool_call_arguments`).
+
     Tool-call volume: a degenerate response can queue hundreds of calls that
     the run loop then honours one by one. Only the first
     ``LLM_MAX_TOOL_CALLS_PER_TURN`` calls of a response are kept.
@@ -313,7 +320,7 @@ class _TurnGuardModel(Model):
         conversation_id: str | None,
         prompt: ResponsePromptParam | None,
     ) -> ModelResponse:
-        sanitized = dedupe_input(input)
+        sanitized = _sanitize_input(input)
         rewriter = TurnCallIdRewriter(sanitized)
         system_instructions, sanitized = _split_cached_prefix(
             system_instructions, sanitized, model_settings
@@ -349,7 +356,7 @@ class _TurnGuardModel(Model):
         conversation_id: str | None,
         prompt: ResponsePromptParam | None,
     ) -> AsyncIterator[TResponseStreamEvent]:
-        sanitized = dedupe_input(input)
+        sanitized = _sanitize_input(input)
         rewriter = TurnCallIdRewriter(sanitized)
         system_instructions, sanitized = _split_cached_prefix(
             system_instructions, sanitized, model_settings
@@ -377,6 +384,10 @@ class _TurnGuardModel(Model):
             if guarded is not None:
                 yield guarded
         self._log_dropped(limiter)
+
+
+def _sanitize_input(model_input: str | list[TResponseInputItem]) -> str | list[Any]:
+    return repair_input(dedupe_input(model_input))
 
 
 def _split_cached_prefix(
@@ -706,12 +717,16 @@ def configure_sdk_model_defaults(settings: Settings) -> None:
     """Apply Strix config to SDK-native defaults."""
     llm = settings.llm
     set_tracing_disabled(True)
+    from strix.report.state import record_llm_request
+
     request_log.install()
     chat_content_compat.install()
+    if settings.telemetry.run_record_timings:
+        request_log.register_sink(record_llm_request)
     if codex.subscription_model(llm.model):
         return
     _configure_litellm_compatibility()
-    _configure_openrouter_attribution(llm.model)
+    _configure_attribution(llm.model)
     if llm.api_key:
         set_default_openai_key(llm.api_key, use_for_tracing=False)
         # Do NOT set litellm.api_key as a module-level global when a custom
@@ -805,6 +820,7 @@ def _configure_litellm_compatibility() -> None:
 
     _register_litellm_cost_callback()
     _install_openrouter_stream_cost_capture()
+    _install_ollama_tool_call_indexing()
 
 
 # Agent ids are 8 hex characters and can repeat across runs; the session id
@@ -893,6 +909,52 @@ def _install_openrouter_stream_cost_capture() -> None:
     litellm.OpenrouterConfig = _StrixOpenrouterConfig  # type: ignore[misc]
 
 
+def _install_ollama_tool_call_indexing() -> None:
+    """Give each tool call in an Ollama chat stream its own index.
+
+    Ollama streams parallel tool calls one per chunk, and LiteLLM's Ollama
+    stream parser numbers calls only within a chunk, so every call reaches the
+    stream accumulator at index 0. They are then merged into one: the last
+    call's name over every call's arguments, concatenated
+    (``{"target": ...}{"cmd": ...}``), which no tool can parse and which
+    LiteLLM itself rejects when it sends that history back on the next turn.
+    Ollama sends each call whole, so each one gets the next index in the stream.
+    """
+    import litellm
+    from litellm.llms.ollama.chat.transformation import (
+        OllamaChatCompletionResponseIterator,
+        OllamaChatConfig,
+    )
+
+    class _StrixOllamaChatStreamIterator(OllamaChatCompletionResponseIterator):
+        def __init__(self, *args: Any, **kwargs: Any) -> None:
+            super().__init__(*args, **kwargs)
+            self._tool_call_count = 0
+
+        def chunk_parser(self, chunk: dict[str, Any]) -> Any:
+            message = chunk.get("message")
+            tool_calls = message.get("tool_calls") if isinstance(message, dict) else None
+            if isinstance(tool_calls, list):
+                for tool_call in tool_calls:
+                    if isinstance(tool_call, dict):
+                        tool_call["index"] = self._tool_call_count
+                        self._tool_call_count += 1
+            return super().chunk_parser(chunk)
+
+    class _StrixOllamaChatConfig(OllamaChatConfig):
+        def get_model_response_iterator(
+            self, streaming_response: Any, sync_stream: bool, json_mode: bool | None = False
+        ) -> Any:
+            return _StrixOllamaChatStreamIterator(
+                streaming_response=streaming_response,
+                sync_stream=sync_stream,
+                json_mode=json_mode,
+            )
+
+    # Read at call time by LiteLLM's provider-config factory, as with OpenRouter.
+    litellm.OllamaChatConfig = _StrixOllamaChatConfig  # type: ignore[misc]
+
+
 def _openrouter_error_type(error: object) -> object:
     if isinstance(error, dict):
         metadata = error.get("metadata")
@@ -901,9 +963,13 @@ def _openrouter_error_type(error: object) -> object:
     return None
 
 
-OPENROUTER_ATTRIBUTION_HEADERS = {
+APP_ATTRIBUTION_HEADERS = {
     "HTTP-Referer": "https://strix.ai",
     "X-Title": "Strix",
+}
+
+OPENROUTER_ATTRIBUTION_HEADERS = {
+    **APP_ATTRIBUTION_HEADERS,
     "X-OpenRouter-Categories": "cli-agent",
 }
 
@@ -912,20 +978,25 @@ def is_openrouter_model(model_name: str | None) -> bool:
     return bool(model_name) and "openrouter/" in (model_name or "").strip().lower()
 
 
-def _configure_openrouter_attribution(model_name: str | None) -> None:
+def is_vercel_ai_gateway_model(model_name: str | None) -> bool:
+    return (model_name or "").strip().lower().startswith("vercel_ai_gateway/")
+
+
+def attribution_headers(model_name: str | None) -> dict[str, str]:
+    if is_openrouter_model(model_name):
+        return OPENROUTER_ATTRIBUTION_HEADERS
+    if is_vercel_ai_gateway_model(model_name):
+        return APP_ATTRIBUTION_HEADERS
+    return {}
+
+
+def _configure_attribution(model_name: str | None) -> None:
     import litellm
 
     current: object = litellm.headers
     existing: dict[str, str] = current if isinstance(current, dict) else {}
-    if not is_openrouter_model(model_name):
-        if any(key in existing for key in OPENROUTER_ATTRIBUTION_HEADERS):
-            remaining = {
-                k: v for k, v in existing.items() if k not in OPENROUTER_ATTRIBUTION_HEADERS
-            }
-            litellm.headers = remaining or None  # type: ignore[assignment]
-        return
-
-    litellm.headers = {**existing, **OPENROUTER_ATTRIBUTION_HEADERS}  # type: ignore[assignment]
+    remaining = {k: v for k, v in existing.items() if k not in OPENROUTER_ATTRIBUTION_HEADERS}
+    litellm.headers = {**remaining, **attribution_headers(model_name)} or None  # type: ignore[assignment]
 
 
 def _configure_extra_headers(llm: LlmSettings) -> None:
@@ -1024,22 +1095,30 @@ def model_supports_images(model_name: str) -> bool:
 
 
 def _bare_openai_name(model_name: str) -> str:
-    name = model_name.strip().lower()
+    name = model_name.strip()
+    normalized = name.lower()
     for prefix in ("litellm/", "any-llm/", "openai/"):
-        if name.startswith(prefix):
+        if normalized.startswith(prefix):
             return name[len(prefix) :]
     return name
 
 
 def _catalog_entry(model_name: str) -> dict[str, Any] | None:
-    """LiteLLM's cost-map entry for the model, looked up as it would route it."""
+    """LiteLLM's case-sensitive cost-map entry for the model and its aliases."""
     import litellm
 
-    name = _bare_openai_name(model_name)
-    entry = litellm.model_cost.get(name)
-    if entry is None and "/" in name:
-        entry = litellm.model_cost.get(name.rsplit("/", 1)[1])
-    return entry if isinstance(entry, dict) else None
+    supplied_name = model_name.strip()
+    routed_name = _bare_openai_name(supplied_name)
+    candidates = [supplied_name, routed_name, routed_name.lower()]
+    if "/" in routed_name:
+        bare_name = routed_name.rsplit("/", 1)[1]
+        candidates.extend((bare_name, bare_name.lower()))
+
+    for candidate in dict.fromkeys(candidates):
+        entry = litellm.model_cost.get(candidate)
+        if entry is not None:
+            return entry if isinstance(entry, dict) else None
+    return None
 
 
 def is_known_openai_bare_model(model_name: str) -> bool:

@@ -248,8 +248,8 @@ def test_updated_browser_row_keeps_its_carrier_authorship() -> None:
     doc = _document(
         entries=[
             _entry(
-                risk_area="client-side path traversal",
-                surface="fetch from route param",
+                risk_area="postMessage origin validation",
+                surface="window listener",
                 agent_id="agent-2",  # current author after an unrelated update
                 agent_name="redirect-tester",
                 history=[
@@ -272,12 +272,67 @@ def test_updated_browser_row_keeps_its_carrier_authorship() -> None:
     )
 
     sub = {g["risk_area"] for g in doc["gaps"] if g["kind"] == "unrecorded_sub_topic"}
-    assert "client-side path traversal" not in sub  # preserved carrier authorship counts
+    assert "postMessage" not in sub  # preserved carrier authorship counts
+    assert "XS-Leaks" in sub  # still a partial record, not a wholesale gap
+
+
+def test_dedicated_cspt_agent_covers_the_browser_cspt_surface() -> None:
+    """The scan sends CSPT to its own agent. That agent's CSPT row must clear
+    browser_security's CSPT surface instead of leaving it 'unexamined' next to
+    the finding it filed, while the untested browser surfaces stay flagged."""
+    doc = _document(
+        entries=[
+            _entry(
+                risk_area="postMessage origin validation",
+                surface="window listener",
+                agent_id="agent-1",
+                agent_name="browser-tester",
+            ),
+            _entry(
+                risk_area="Client-Side Path Traversal (CSPT)",
+                surface="GET /invoice?doc=",
+                outcome="reported",
+                agent_id="agent-2",
+                agent_name="cspt-tester",
+            ),
+        ],
+        agent_graph=_graph(
+            statuses={"agent-1": "completed", "agent-2": "completed"},
+            names={"agent-1": "browser-tester", "agent-2": "cspt-tester"},
+            metadata={
+                "agent-1": {"skills": ["browser_security"]},
+                "agent-2": {"skills": ["client_side_path_traversal"]},
+            },
+        ),
+    )
+
+    sub = {g["risk_area"] for g in doc["gaps"] if g["kind"] == "unrecorded_sub_topic"}
+    assert "client-side path traversal" not in sub
+    assert "XS-Leaks" in sub
+
+
+def test_client_side_words_alone_do_not_count_as_cspt_coverage() -> None:
+    """A client-side redirect row on a path parameter shares the words 'client',
+    'side' and 'path' with CSPT but is not CSPT coverage."""
+    doc = _document(
+        entries=[_entry(risk_area="Client-side redirect", surface="path parameter /go/{path}")],
+        agent_graph=_graph(metadata={"agent-1": {"skills": ["client_side_path_traversal"]}}),
+    )
+
+    assert [
+        g
+        for g in doc["gaps"]
+        if g["kind"] == "unrecorded_risk_class" and g["risk_area"] == "client side path traversal"
+    ]
 
 
 def test_registry_backs_skill_phrasings_and_cwe() -> None:
     """_SKILL_PHRASINGS is derived from the registry, so they cannot drift."""
     assert {name: v.aliases for name, v in VULN_CLASSES.items()} == _SKILL_PHRASINGS
+    owners = {
+        st.owner_class for v in VULN_CLASSES.values() for st in v.sub_topics if st.owner_class
+    }
+    assert owners <= set(VULN_CLASSES)
     assert cwe_for_skill("sql_injection") == ("CWE-89",)
     assert cwe_for_skill("vulnerabilities/ssrf") == ("CWE-918",)
     assert cwe_for_skill("subdomain_takeover") == ()
@@ -487,3 +542,51 @@ def test_a_root_that_worked_alone_is_held_to_the_rule() -> None:
 
     silent = [gap for gap in doc["gaps"] if gap["kind"] == "agent_recorded_no_coverage"]
     assert [gap["agent_name"] for gap in silent] == ["Root Agent"]
+
+
+def test_inflected_class_names_still_count_as_coverage() -> None:
+    """Agents write "Open redirection", "NoSQLi" and "Information leakage"; a
+    phrasing term of four or more letters matches the start of such a word."""
+    for skill, risk_area in (
+        ("open_redirect", "Open redirection"),
+        ("nosql_injection", "NoSQLi"),
+        ("information_disclosure", "Information leakage"),
+    ):
+        doc = _document(
+            entries=[_entry(risk_area=risk_area, surface="GET /")],
+            agent_graph=_graph(metadata={"agent-1": {"skills": [skill]}}),
+        )
+        assert not [g for g in doc["gaps"] if g["kind"] == "unrecorded_risk_class"], skill
+
+
+def test_browser_surfaces_match_their_skill_headings() -> None:
+    """Rows named after browser_security's own section headings cover them."""
+    doc = _document(
+        entries=[
+            _entry(risk_area="Navigation and Redirect Control", surface="/app"),
+            _entry(risk_area="CSP and Browser Parsing", surface="/app"),
+        ],
+        agent_graph=_graph(metadata={"agent-1": {"skills": ["browser_security"]}}),
+    )
+
+    sub = {g["risk_area"] for g in doc["gaps"] if g["kind"] == "unrecorded_sub_topic"}
+    assert "navigation and redirect control" not in sub
+    assert "CSP and browser parsing" not in sub
+    assert "postMessage" in sub
+
+
+def test_generic_browser_row_names_untested_surfaces_not_nothing_recorded() -> None:
+    """A carrier's generic "Browser security" row is recorded work: the gap is
+    each unnamed surface, not "no coverage entry records this class"."""
+    doc = _document(
+        entries=[_entry(risk_area="Browser security", surface="SPA shell /app")],
+        agent_graph=_graph(metadata={"agent-1": {"skills": ["browser_security"]}}),
+    )
+
+    assert not [
+        g
+        for g in doc["gaps"]
+        if g["kind"] == "unrecorded_risk_class" and g["risk_area"] == "browser security"
+    ]
+    sub = {g["risk_area"] for g in doc["gaps"] if g["kind"] == "unrecorded_sub_topic"}
+    assert "client-side path traversal" in sub

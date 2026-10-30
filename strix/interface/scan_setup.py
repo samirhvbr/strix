@@ -40,6 +40,7 @@ from strix.utils.api_spec import (
     load_spec,
     spec_base_urls,
     spec_title,
+    with_postman_environment,
 )
 
 
@@ -116,6 +117,7 @@ async def preflight_model_connection(
         model,
         model_name=model_name,
         extra_headers=resolved_settings.llm.extra_headers,
+        extra_body=resolved_settings.llm.extra_body,
         timeout=resolved_settings.llm.preflight_timeout,
         api_base_setting="LLM_API_BASE",
     )
@@ -126,6 +128,7 @@ async def preflight_request(
     *,
     model_name: str,
     extra_headers: dict[str, str] | None,
+    extra_body: dict[str, Any] | None,
     timeout: int,
     api_base_setting: str,
 ) -> None:
@@ -144,6 +147,7 @@ async def preflight_request(
         request_timeout=timeout,
         prompt_cache=False,
         extra_headers=extra_headers,
+        extra_body=extra_body,
         has_tools=False,
     )
     try:
@@ -227,6 +231,8 @@ def _resolve_api_spec(target: str, details: dict[str, Any]) -> None:
             extra_variables = (
                 fetch_postman_environment(environment_uid, api_key) if environment_uid else None
             )
+            if extra_variables:
+                raw = with_postman_environment(raw, extra_variables)
             details["target_spec"] = write_fetched_collection(raw, collection_uid)
         else:
             raw = load_spec(str(details["target_spec"]))

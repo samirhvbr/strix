@@ -21,6 +21,7 @@ from rich.text import Text
 from strix.config import load_settings
 from strix.telemetry import report_error
 from strix.utils.api_spec import detect_spec_format
+from strix.utils.secret_files import write_secret_text
 
 
 logger = logging.getLogger(__name__)
@@ -675,7 +676,7 @@ def _extract_branch_name(ref: str | None) -> str | None:
     value = ref.strip()
     if not value:
         return None
-    return value.split("/")[-1]
+    return value.removeprefix("refs/remotes/origin/")
 
 
 def _extract_github_base_sha(env: dict[str, str]) -> str | None:
@@ -1528,6 +1529,10 @@ def rewrite_localhost_targets(targets_info: list[dict[str, Any]], host_gateway: 
 #: from wherever they happen to live on the host.
 API_SPEC_WORKSPACE_SUBDIR = "api-specs"
 
+# Keep ownership of downloads until staging succeeds. TemporaryDirectory also
+# removes pending downloads at normal process exit if setup is abandoned.
+_fetched_collections: dict[str, tempfile.TemporaryDirectory[str]] = {}
+
 
 def write_fetched_collection(collection: dict[str, Any], collection_uid: str) -> str:
     """Write a collection fetched from the Postman API to a local file.
@@ -1537,25 +1542,37 @@ def write_fetched_collection(collection: dict[str, Any], collection_uid: str) ->
     """
     staging = Path(tempfile.gettempdir()) / "strix_api_specs" / "fetched"
     staging.mkdir(parents=True, exist_ok=True)
-    path = staging / f"{sanitize_name(collection_uid)}.postman_collection.json"
-    path.write_text(json.dumps(collection, indent=2), encoding="utf-8")
+    # One collection can be targeted with multiple environments in the same run.
+    # Keep each resolved snapshot independent, including across concurrent runs.
+    snapshot = tempfile.TemporaryDirectory(prefix="collection-", dir=staging)
+    path = Path(snapshot.name) / f"{sanitize_name(collection_uid)}.postman_collection.json"
+    try:
+        write_secret_text(path, json.dumps(collection, indent=2))
+    except BaseException:
+        snapshot.cleanup()
+        raise
+    _fetched_collections[str(path)] = snapshot
     return str(path)
 
 
-def stage_api_specs(targets_info: list[dict[str, Any]], run_name: str) -> list[dict[str, Any]]:
+def stage_api_specs(
+    targets_info: list[dict[str, Any]], run_name: str, *, resume: bool = False
+) -> list[dict[str, Any]]:
     """Copy every ``api_spec`` target into one directory for the sandbox.
 
     A spec is a single file the agent reads, not a tree it works in, so it is
     copied to a per-run staging directory that is exposed at
     ``/workspace/api-specs`` instead of mounting its host location. Each target's
-    ``workspace_path`` records where the agent will find it.
+    ``workspace_path`` records where the agent will find it. On resume, reuse
+    the staged files without replacing them with potentially changed inputs.
     """
     specs = [t for t in targets_info if t.get("type") == "api_spec"]
     if not specs:
         return []
 
     staging = Path(tempfile.gettempdir()) / "strix_api_specs" / run_name
-    staging.mkdir(parents=True, exist_ok=True)
+    if not resume:
+        staging.mkdir(parents=True, exist_ok=True)
 
     used: set[str] = set()
     for target in specs:
@@ -1568,8 +1585,28 @@ def stage_api_specs(targets_info: list[dict[str, Any]], run_name: str) -> list[d
             count += 1
             name = f"{stem}-{count}{suffix}"
         used.add(name)
-        shutil.copy2(source, staging / name)
+        staged = staging / name
+        if resume:
+            if not staged.is_file():
+                raise ValueError(
+                    f"staged API specification at {staged} is missing. "
+                    "Restore the staged file before resuming, or start a fresh scan "
+                    "with the original specification target."
+                )
+        elif source.resolve() != staged.resolve():
+            shutil.copy2(source, staged)
         details["workspace_path"] = f"/workspace/{API_SPEC_WORKSPACE_SUBDIR}/{name}"
+
+    # Release only downloads this process created, after every copy succeeds.
+    # Retain the per-run staged files: resume still needs those snapshots.
+    for target in specs:
+        details = target["details"]
+        downloaded = str(details["target_spec"])
+        snapshot = _fetched_collections.get(downloaded)
+        if snapshot is not None:
+            details["target_spec"] = str(staging / Path(details["workspace_path"]).name)
+            snapshot.cleanup()
+            del _fetched_collections[downloaded]
 
     return [
         {

@@ -1,0 +1,805 @@
+{
+  "recorded_at": "2026-10-30T16:32:16.736137+00:00",
+  "scope": "Known-issue implementation plus review of responses on all existing open authored PRs.",
+  "previous_record_commit": "e6752b5c7f5a9fd903960d0aa7b87d6dd4270b73",
+  "known_recheck": {
+    "at": "2026-10-30T16:07:27.793500+00:00",
+    "known": 596,
+    "fetched": 596,
+    "missing": 0,
+    "changed_any_field": 0,
+    "changed_content_or_state": 0,
+    "changed_ids": []
+  },
+  "discovery": {
+    "overlap_start": "2026-10-28T15:32:08Z",
+    "catalog_pr_total": 1157,
+    "catalog_issue_total": 419,
+    "open_prs": 325,
+    "open_issues": 208,
+    "only_new_item": "usestrix/strix#pr:1635",
+    "untracked_updated_items_before_publication": []
+  },
+  "authored_pr_feedback": [
+    {
+      "number": 1634,
+      "url": "https://github.com/usestrix/strix/pull/1634",
+      "head_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1634#issuecomment-6526669229"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41081460830",
+          "created_at": "2026-10-30T15:31:15Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1631,
+      "url": "https://github.com/usestrix/strix/pull/1631",
+      "head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1631#issuecomment-6526478811"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41080426313",
+          "created_at": "2026-10-30T15:24:29Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1624,
+      "url": "https://github.com/usestrix/strix/pull/1624",
+      "head_sha": "340bc40daf168e3cc72d7927edd61906529f66b7",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1624#issuecomment-6505686163"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "340bc40daf168e3cc72d7927edd61906529f66b7",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40935327596",
+          "created_at": "2026-10-29T18:55:25Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1621,
+      "url": "https://github.com/usestrix/strix/pull/1621",
+      "head_sha": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1621#issuecomment-6505640557"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40934993650",
+          "created_at": "2026-10-29T18:53:14Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1615,
+      "url": "https://github.com/usestrix/strix/pull/1615",
+      "head_sha": "79c82d5f1f1593bad3ea76ead2ae954dfaec4b6e",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1615#issuecomment-6482645122"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "79c82d5f1f1593bad3ea76ead2ae954dfaec4b6e",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40782173149",
+          "created_at": "2026-10-28T22:43:48Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1614,
+      "url": "https://github.com/usestrix/strix/pull/1614",
+      "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1614#issuecomment-6482523382",
+        "https://github.com/usestrix/strix/pull/1614#discussion_r4406842870",
+        "https://github.com/usestrix/strix/pull/1614#pullrequestreview-5690642268"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6xWTTU",
+          "resolved": false,
+          "outdated": true,
+          "path": "strix/interface/cloud/session.py",
+          "comment_urls": [
+            "https://github.com/usestrix/strix/pull/1614#discussion_r4406842870"
+          ]
+        }
+      ],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40782377235",
+          "created_at": "2026-10-28T22:45:25Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "The recovery hint now uses strix cloud session scopes, as requested.",
+      "validation": {
+        "passed": 10,
+        "command": "uv run --frozen pytest -q tests/test_cloud_session.py"
+      }
+    },
+    {
+      "number": 1613,
+      "url": "https://github.com/usestrix/strix/pull/1613",
+      "head_sha": "e0d1a87ee0a996a6527b833b288f585e5c3c56ce",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1613#issuecomment-6482519951"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "e0d1a87ee0a996a6527b833b288f585e5c3c56ce",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40781385726",
+          "created_at": "2026-10-28T22:37:25Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1612,
+      "url": "https://github.com/usestrix/strix/pull/1612",
+      "head_sha": "9a73ba0f7645e60a2548406c746b28f1c63a25f4",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1612#issuecomment-6482474686",
+        "https://github.com/usestrix/strix/pull/1612#issuecomment-6482518016"
+      ],
+      "authors": [
+        "greptile-apps[bot]",
+        "mintlify[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "9a73ba0f7645e60a2548406c746b28f1c63a25f4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40781371343",
+          "created_at": "2026-10-28T22:37:18Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1563,
+      "url": "https://github.com/usestrix/strix/pull/1563",
+      "head_sha": "8c9ae6abbf33ec6975ebb622021cf69a8e00e5d2",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1563#issuecomment-6346117364"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "8c9ae6abbf33ec6975ebb622021cf69a8e00e5d2",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/39815926277",
+          "created_at": "2026-10-22T16:40:39Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1562,
+      "url": "https://github.com/usestrix/strix/pull/1562",
+      "head_sha": "1cca4b6b1c5aa5e39f69670910bf8d0ca9880cf3",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1562#issuecomment-6346039664"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "1cca4b6b1c5aa5e39f69670910bf8d0ca9880cf3",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/39815502444",
+          "created_at": "2026-10-22T16:37:13Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1472,
+      "url": "https://github.com/usestrix/strix/pull/1472",
+      "head_sha": "768b101615bd59a18acf8d1629ee5eb0f350dc65",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1472#issuecomment-6026859404"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "768b101615bd59a18acf8d1629ee5eb0f350dc65",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/37542597829",
+          "created_at": "2026-10-06T22:45:36Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1471,
+      "url": "https://github.com/usestrix/strix/pull/1471",
+      "head_sha": "d8e6369301b15493061f1b2a282d82dbed757659",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1471#issuecomment-6026865596"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "d8e6369301b15493061f1b2a282d82dbed757659",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/37542593272",
+          "created_at": "2026-10-06T22:45:33Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "No actionable code request in current discussions. Favorable bot feedback is not human approval or CI.",
+      "validation": {
+        "scope": "Feedback/current-head/CI inspection only; no new test run for this unchanged PR."
+      }
+    },
+    {
+      "number": 1470,
+      "url": "https://github.com/usestrix/strix/pull/1470",
+      "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1470#issuecomment-6026614157",
+        "https://github.com/usestrix/strix/pull/1470#discussion_r4201040776",
+        "https://github.com/usestrix/strix/pull/1470#pullrequestreview-5435242042"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6prlV-",
+          "resolved": false,
+          "outdated": false,
+          "path": "tests/test_scan_targets.py",
+          "comment_urls": [
+            "https://github.com/usestrix/strix/pull/1470#discussion_r4201040776"
+          ]
+        }
+      ],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/38966150260",
+          "created_at": "2026-10-16T20:59:08Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "The cloned-repository telemetry label test exercises both posthog and scarf sinks.",
+      "validation": {
+        "passed": 12,
+        "command": "uv run --frozen pytest -q tests/test_scan_targets.py"
+      }
+    },
+    {
+      "number": 1469,
+      "url": "https://github.com/usestrix/strix/pull/1469",
+      "head_sha": "b6cdb58ae7134321d304e93f6e5b28ba6f82f297",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1469#issuecomment-6026628164",
+        "https://github.com/usestrix/strix/pull/1469#discussion_r4201048184",
+        "https://github.com/usestrix/strix/pull/1469#pullrequestreview-5435249993"
+      ],
+      "authors": [
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6prmea",
+          "resolved": false,
+          "outdated": true,
+          "path": "tests/test_reporting_dedupe_race.py",
+          "comment_urls": [
+            "https://github.com/usestrix/strix/pull/1469#discussion_r4201048184"
+          ]
+        }
+      ],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "b6cdb58ae7134321d304e93f6e5b28ba6f82f297",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40854507652",
+          "created_at": "2026-10-29T10:03:37Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "Race tests seed unrelated findings and drive real dedupe with a waiting model, including dependency fallback.",
+      "validation": {
+        "passed": 5,
+        "command": "uv run --frozen pytest -q tests/test_reporting_dedupe_race.py"
+      }
+    },
+    {
+      "number": 1279,
+      "url": "https://github.com/usestrix/strix/pull/1279",
+      "head_sha": "ad33c2c2200d620096092540574f814180740b8e",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1279#pullrequestreview-5125726452",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-5560072587",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-5643185500",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-6224594976"
+      ],
+      "authors": [
+        "copilot-pull-request-reviewer[bot]",
+        "greptile-apps[bot]",
+        "itzzdev09",
+        "samirhvbr"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "ad33c2c2200d620096092540574f814180740b8e",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40854505714",
+          "created_at": "2026-10-29T10:03:36Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "Native preference is inside the accepted same-price branch, guard fixtures include provider metadata; human review already answered.",
+      "validation": {
+        "passed": 21,
+        "command": "uv run --frozen pytest -q tests/test_pricing.py"
+      }
+    },
+    {
+      "number": 1174,
+      "url": "https://github.com/usestrix/strix/pull/1174",
+      "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+      "checked_at": "2026-10-30T16:24:29.943927+00:00",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1174#issuecomment-5425384383",
+        "https://github.com/usestrix/strix/pull/1174#discussion_r3862755062",
+        "https://github.com/usestrix/strix/pull/1174#pullrequestreview-5030424397",
+        "https://github.com/usestrix/strix/pull/1174#pullrequestreview-5030429338"
+      ],
+      "authors": [
+        "copilot-pull-request-reviewer[bot]",
+        "greptile-apps[bot]"
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6cdUhq",
+          "resolved": false,
+          "outdated": true,
+          "path": "strix/core/execution.py",
+          "comment_urls": [
+            "https://github.com/usestrix/strix/pull/1174#discussion_r3862755062"
+          ]
+        }
+      ],
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40855021444",
+          "created_at": "2026-10-29T10:07:26Z"
+        }
+      ],
+      "code_change_required": false,
+      "conclusion": "Provider-agnostic usage-limit handling has a resumable-stop path and regression coverage.",
+      "validation": {
+        "passed": 33,
+        "command": "uv run --frozen pytest -q tests/test_runner_rate_limit.py tests/test_model_retry.py tests/test_execution_transient_retry.py"
+      }
+    }
+  ],
+  "new_contribution": {
+    "pr": "https://github.com/usestrix/strix/pull/1635",
+    "issue": "https://github.com/usestrix/strix/issues/1633",
+    "implementation": {
+      "phase": "integrated_review_branch",
+      "source_reviewed_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "reviewed_repository": "usestrix/strix",
+      "source_imported_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "source_repository": "samirhvbr/strix",
+      "source_pr": 1635,
+      "source_branch": "fix/postman-environment-handoff",
+      "upstream_pull_request": "https://github.com/usestrix/strix/pull/1635",
+      "fork_commits": [
+        "e219e11aeec4d68ec48614ad693afce75f923b5f",
+        "41be416c96a1cc9dd9518907c7daaf0737a0420c"
+      ],
+      "adaptations": [
+        "Cleanup follow-up reconciled with existing stage_api_specs(resume=True): preserve missing staged-file validation, skip same-file copies only on fresh staging.",
+        "Fork regression additionally verifies resume=True after removing the downloaded snapshot."
+      ],
+      "provenance_unknown_reason": null,
+      "source_parent_sha": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+      "source_patch_id": "ebec0d7b5199900f6c6d085f18c4889bf3728b91",
+      "fork_patch_id": "7b39c7c997994ca9e7949bff8db7e3be40c122a3",
+      "provenance_note": "Initial source/import patch IDs match. Follow-up cherry-pick -x has documented resume/test adaptation; its differing patch IDs are intentional.",
+      "source_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "source_commits": [
+        "34e67e55786a55a412cbc6579f3baec2fecd9196",
+        "5f65feb9c501daf8eb7cead1f68372e8fe392b06"
+      ]
+    },
+    "validation": {
+      "summary": "5 initial failing-before regressions/1 control;2 additional cleanup regressions fail on34e67e55. Final source114focused tests pass. Actual subprocess confirms normal-exit cleanup before staging. Ruff/Mypy/Bandit pass; Pyright941 unchanged,0added/0removed.",
+      "fork_integration": "Final fork120focused tests pass at41be416c96a1cc9dd9518907c7daaf0737a0420c; includes resume=True after download cleanup. Ruff/Mypy/Bandit pass. Pyright1259 unchanged,0added/0removed. Full suite not rerun;3590passed/12skipped/3xfailed remains pinned to3154805d.",
+      "limits": [
+        "Mocked Postman responses and dummy values only; no live Postman account, LLM or Docker scan.",
+        "Script-only variable access is not inferred; template references and their dependencies are the implemented contract.",
+        "Upstream CI action_required and Mintlify preview approval pending; no merge/release.",
+        "No new full-suite run for this focused patch."
+      ],
+      "cleanup_probe": {
+        "checked_at": "2026-10-30T16:27:56.797491+00:00",
+        "probe": "Actual Python subprocess writes a fetched collection, exits normally before staging; parent verifies file and private snapshot directory removed.",
+        "passed": true,
+        "live_api_calls": false
+      }
+    },
+    "ci": [
+      {
+        "conclusion": "action_required",
+        "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/41090222957",
+        "name": "CI",
+        "status": "completed"
+      }
+    ],
+    "latest_feedback": {
+      "checked_at": "2026-10-30T16:32:16.736137+00:00",
+      "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "url": "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
+      "reviewed_comment_head": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+      "author": "greptile-apps[bot]",
+      "summary": "Valid non-blocking snapshot-accumulation finding reproduced and corrected in the same PR. Download cleanup follows successful staging; retry/run-resume snapshots preserved; normal process exit cleanup confirmed.",
+      "fix_commit": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "ci": [
+        {
+          "conclusion": "action_required",
+          "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41090222957",
+          "name": "CI",
+          "status": "completed"
+        }
+      ],
+      "limits": "Comment reviewed the initial head. No new bot approval is assumed for the updated head; current-head CI action_required."
+    }
+  },
+  "quality_comparisons": {
+    "source": {
+      "baseline_errors": 941,
+      "patched_errors": 941,
+      "added": [],
+      "removed": []
+    },
+    "fork": {
+      "baseline_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+      "patched_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
+      "baseline_errors": 1259,
+      "patched_errors": 1259,
+      "added": [],
+      "removed": []
+    }
+  },
+  "sandbox_manifest": {
+    "checked_at": "2026-10-30T16:08:37.194685+00:00",
+    "image": "ghcr.io/usestrix/strix-sandbox",
+    "manifests": {
+      "1.3.0": {
+        "status": 200,
+        "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+      },
+      "1.3.1": {
+        "status": 404,
+        "body": "{\"errors\":[{\"code\":\"MANIFEST_UNKNOWN\",\"message\":\"manifest unknown\"}]}\n"
+      }
+    }
+  },
+  "validation_commands": {
+    "source_and_fork": [
+      "uv run --frozen pytest -q tests/test_postman_environment_handoff.py tests/test_api_spec.py tests/test_api_spec_targets.py tests/test_secret_files.py tests/test_inputs.py tests/test_cli_target_list.py",
+      "make check-all",
+      "uv run --frozen bandit -r strix/ -c pyproject.toml",
+      "uv run --frozen pyright strix/ --outputjson"
+    ],
+    "environment": "Python3.12.14, frozenuv.lock, temporary HOME, LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True, STRIX_TELEMETRY=0, STRIX_NO_UPDATE_CHECK=1"
+  },
+  "limitations": [
+    "Full suite not rerun for the new focused patch; prior full result remains pinned separately.",
+    "No live Postman/LLM/Docker scan; no maintainer acceptance, merge, master delivery or release.",
+    "Four old review threads remain unresolved in GitHub; code requests are satisfied at the recorded heads.",
+    "Deeper backlog and policy-dependent issues remain pending."
+  ],
+  "evidence_hashes": {
+    "postman-focused.log": "27f0208762baa24f71de0a3d3e59b853286e1ec2c4ecba5c371e3a651fbd0fa3",
+    "pr1279-tests.log": "f3dd2ea407961820728b17db54081aa93a5712459898932a8567858d19957a44",
+    "postman-after.log": "084e6d25b2fcb540d801854b903c743a0abc0d213c538827c9e9c226896baa44",
+    "pr1174-tests.log": "30e73c9aba0b0086ff757a1f05e5850c808d8e74260c87a7cce5f412026a707e",
+    "fork-check-all.log": "baa8d9547dcd15c2bd8a937ebfebc1d3647ae5439c4aeb610763b681b20681fe",
+    "postman-before.log": "5c982bca941b8bfeddfdb653090cefc9130a30174b3b850b41b17e744c06ccca",
+    "fork-bandit.log": "6257ad70afe7863f1e1dde14defe9c369b6c4e085aba777c83b4286ecfd22869",
+    "pr1614-tests.log": "b220c9eee751387028ae617abc12f3cc285ab465873a3ef02e4fb2e5e65c0dd2",
+    "postman-check-all.log": "e6a989bf140c59ab22669e358a6c257c1eb643dc227ca2246b4d6016f89f786a",
+    "postman-bandit.log": "3e34b88ca7676d97750edc8dd10cd3616d626e9483d9373882f7f830cf7e5065",
+    "pr1470-tests.log": "cce5f7ae517c87d398f4f08a4afa760295509221ab0510bd0958d9589474e324",
+    "pr1469-tests.log": "18a23b6a4949b723e07a23ce36be4489fad94c4119d37fe689ee597f9b46629d",
+    "fork-focused.log": "8e1df48ae49d627e8dd8d313533efb0f2c4d94138ceb1ae21f7ce8dcf9113fe7"
+  },
+  "initial_new_contribution": {
+    "pr": "https://github.com/usestrix/strix/pull/1635",
+    "issue": "https://github.com/usestrix/strix/issues/1633",
+    "implementation": {
+      "phase": "integrated_review_branch",
+      "source_reviewed_sha": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+      "reviewed_repository": "usestrix/strix",
+      "source_imported_sha": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+      "source_repository": "samirhvbr/strix",
+      "source_pr": 1635,
+      "source_branch": "fix/postman-environment-handoff",
+      "upstream_pull_request": "https://github.com/usestrix/strix/pull/1635",
+      "fork_commits": [
+        "e219e11aeec4d68ec48614ad693afce75f923b5f"
+      ],
+      "adaptations": [],
+      "provenance_unknown_reason": null,
+      "source_parent_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "source_patch_id": "e3af9e4dce5955636e479e778058c5f7b1594227",
+      "fork_patch_id": "e3af9e4dce5955636e479e778058c5f7b1594227",
+      "provenance_note": "Direct cherry-pick -x from the published contribution branch; identical stable patch ID. Review branch only, no master/release delivery."
+    },
+    "validation": {
+      "summary": "5 failing-before regressions and1 passing control;112 focused source tests pass. Ruff format/lint, Mypy and Bandit pass. Source Pyright941 matches unchanged base with0added/0removed diagnostics; make check-all is not green.",
+      "fork_integration": "118 focused tests pass at e219e11aeec4d68ec48614ad693afce75f923b5f; Ruff/Mypy/Bandit pass. Pyright1259 unchanged versus3154805d,0added/0removed. Full suite not rerun for this patch; prior3590passed/12skipped/3xfailed belongs to3154805d only.",
+      "limits": [
+        "Mocked Postman responses and dummy values only; no live Postman account, LLM or Docker scan.",
+        "Script-only variable access is not inferred; template references and their dependencies are the implemented contract.",
+        "Upstream CI action_required and Mintlify preview approval pending; no merge/release.",
+        "No new full-suite run for this focused patch."
+      ]
+    },
+    "ci": [
+      {
+        "name": "CI",
+        "status": "completed",
+        "conclusion": "action_required",
+        "head_sha": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/41088864562"
+      }
+    ]
+  },
+  "cleanup_followup": {
+    "recorded_at": "2026-10-30T16:32:16.736137+00:00",
+    "source_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+    "fork_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
+    "regressions_failed_before": 2,
+    "final_source_focused_passed": 114,
+    "final_fork_focused_passed": 120,
+    "normal_exit_probe": {
+      "checked_at": "2026-10-30T16:27:56.797491+00:00",
+      "probe": "Actual Python subprocess writes a fetched collection, exits normally before staging; parent verifies file and private snapshot directory removed.",
+      "passed": true,
+      "live_api_calls": false
+    },
+    "feedback": {
+      "checked_at": "2026-10-30T16:32:16.736137+00:00",
+      "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "url": "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
+      "reviewed_comment_head": "34e67e55786a55a412cbc6579f3baec2fecd9196",
+      "author": "greptile-apps[bot]",
+      "summary": "Valid non-blocking snapshot-accumulation finding reproduced and corrected in the same PR. Download cleanup follows successful staging; retry/run-resume snapshots preserved; normal process exit cleanup confirmed.",
+      "fix_commit": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "ci": [
+        {
+          "conclusion": "action_required",
+          "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41090222957",
+          "name": "CI",
+          "status": "completed"
+        }
+      ],
+      "limits": "Comment reviewed the initial head. No new bot approval is assumed for the updated head; current-head CI action_required."
+    }
+  },
+  "version_release_recheck": {
+    "checked_at": "2026-10-30T16:32:16.736137+00:00",
+    "fork_latest_release": "shvia-v1.2.43",
+    "fork_release_published_at": "2026-10-28T14:04:47Z",
+    "fork_master_and_tag_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+    "fork_main_mirror_sha": "62b496430da5df5e9e79a190e7af6f92529883a3",
+    "upstream_latest_release": "v1.7.0",
+    "upstream_release_published_at": "2026-10-05T02:39:14Z",
+    "changes_made": false
+  }
+}

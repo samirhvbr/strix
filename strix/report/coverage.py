@@ -67,6 +67,9 @@ _INCOMPLETE_AGENT_STATUSES = frozenset(
 #: Run statuses that mean the scan itself did not run to completion.
 _INCOMPLETE_RUN_STATUSES = frozenset({"failed", "interrupted", "stopped", "running"})
 
+#: Shortest phrasing term that may match the start of a longer ledger word.
+_MIN_PREFIX_TERM = 4
+
 #: Only this skill category names a vulnerability class. ``tooling`` and
 #: ``reconnaissance`` skills describe how an agent works, not what it hunts,
 #: so holding one implies no coverage obligation.
@@ -79,11 +82,15 @@ class SubTopic:
 
     ``label`` is how the surface is named back to a reader; ``phrasings`` are
     the ledger-row wordings that count as covering it (a row matches when it
-    contains every word of any one phrasing).
+    contains every word of any one phrasing). ``owner_class`` names a dedicated
+    class that also owns the surface: such a surface is matched the way that
+    class is, by any row naming it, since the scan routes it to an agent
+    carrying the dedicated skill rather than the bundled one.
     """
 
     label: str
     phrasings: tuple[str, ...]
+    owner_class: str | None = None
 
 
 @dataclass(frozen=True)
@@ -140,7 +147,8 @@ VULN_CLASSES: dict[str, VulnClass] = {
             SubTopic("postMessage", ("postmessage", "message listener", "window messaging")),
             SubTopic(
                 "client-side path traversal",
-                ("client side path traversal", "cspt", "client side path"),
+                ("client side path traversal", "cspt"),
+                owner_class="client_side_path_traversal",
             ),
             SubTopic("XS-Leaks", ("xs leak", "xs-leaks", "cross origin oracle", "cross site leak")),
             SubTopic(
@@ -150,11 +158,17 @@ VULN_CLASSES: dict[str, VulnClass] = {
             SubTopic("web workers", ("web worker", "worker script")),
             SubTopic(
                 "navigation and redirect control",
-                ("client side redirect", "spa navigation", "history manipulation", "meta refresh"),
+                (
+                    "client side redirect",
+                    "spa navigation",
+                    "history manipulation",
+                    "meta refresh",
+                    "navigation redirect",
+                ),
             ),
             SubTopic(
                 "CSP and browser parsing",
-                ("content security policy", "csp bypass", "trusted types"),
+                ("content security policy", "csp", "trusted types"),
             ),
             SubTopic("local network access", ("local network", "loopback", "dns rebinding")),
             SubTopic("JavaScript gadgets", ("javascript gadget", "gadget chain", "dom gadget")),
@@ -162,7 +176,7 @@ VULN_CLASSES: dict[str, VulnClass] = {
     ),
     "business_logic": VulnClass(("business logic", "logic flaw"), cwe=("CWE-840",)),
     "client_side_path_traversal": VulnClass(
-        ("client side path traversal", "cspt", "client side path"),
+        ("client side path traversal", "cspt"),
         cwe=("CWE-22",),
         selectable_finding_class=True,
     ),
@@ -331,8 +345,16 @@ def _term_in_words(term: str, words: set[str]) -> bool:
     unrelated XS-Leaks row would falsely mark XSS covered. A phrasing that
     needs to match a singular row carries the singular spelling as its own
     alias instead.
+
+    A term of four or more letters also matches a row word it starts, so the
+    inflections and suffixed names agents write ("Open redirection",
+    "NoSQLi", "Information leakage") still count. The match is anchored at
+    the start of the word, and short tokens such as ``rce`` and ``xs`` are
+    excluded, so ``rce`` never matches inside ``force``.
     """
-    return term in words or f"{term}s" in words
+    if term in words or f"{term}s" in words:
+        return True
+    return len(term) >= _MIN_PREFIX_TERM and any(word.startswith(term) for word in words)
 
 
 def _entry_is_about(entry: dict[str, Any], phrasings: list[list[str]]) -> bool:
@@ -375,22 +397,27 @@ def _entry_authored_by(entry: dict[str, Any], owner_ids: set[str]) -> bool:
     return False
 
 
-def _topics_for(skill: str) -> list[tuple[str | None, list[list[str]]]]:
+def _topics_for(skill: str) -> list[tuple[str | None, list[list[str]], bool]]:
     """The independently-accountable topics a carried skill must cover.
 
     A *bundled* skill (one with declared ``sub_topics``) is accountable per
     surface: proving one does not imply the rest, so each sub-topic is a topic
     of its own. Every other skill has a single implicit topic — the class
     itself, matched by its aliases — which reproduces the original skill-level
-    behaviour exactly. Each topic is ``(label, wordlists)``; the label is
-    ``None`` for the single-topic case.
+    behaviour exactly. Each topic is ``(label, wordlists, carrier_scoped)``;
+    the label is ``None`` for the single-topic case, and ``carrier_scoped``
+    says only rows by the skill's carriers count (a bundled skill's surface
+    that no dedicated class owns).
     """
     vclass = VULN_CLASSES.get(skill)
     if vclass is None:
-        return [(None, _phrasing_wordlists((skill,)))]
+        return [(None, _phrasing_wordlists((skill,)), False)]
     if vclass.sub_topics:
-        return [(st.label, _phrasing_wordlists(st.phrasings)) for st in vclass.sub_topics]
-    return [(None, _phrasing_wordlists(vclass.aliases))]
+        return [
+            (st.label, _phrasing_wordlists(st.phrasings), st.owner_class is None)
+            for st in vclass.sub_topics
+        ]
+    return [(None, _phrasing_wordlists(vclass.aliases), False)]
 
 
 def skill_coverage_gaps(
@@ -432,22 +459,35 @@ def skill_coverage_gaps(
         # A bundled skill's surfaces are only covered by rows from an agent that
         # actually carried that skill. Otherwise an unrelated row that merely
         # shares a word — an open_redirect row mentioning "meta refresh" — would
-        # mask an untested browser surface. Single-topic skills keep the shared
-        # ledger semantics: any row naming the class counts, whoever wrote it.
-        vclass = VULN_CLASSES.get(skill)
-        if vclass is not None and vclass.sub_topics:
-            owner_ids = carrier_ids.get(skill, set())
-            relevant = [e for e in entries if _entry_authored_by(e, owner_ids)]
-        else:
-            relevant = entries
+        # mask an untested browser surface. Single-topic skills, and a surface a
+        # dedicated class owns (client-side path traversal, which the scan sends
+        # to its own agent), keep the shared ledger semantics: any row naming
+        # the class counts, whoever wrote it.
+        owner_ids = carrier_ids.get(skill, set())
+        carrier_rows = [e for e in entries if _entry_authored_by(e, owner_ids)]
         uncovered = [
             (label, wordlists)
-            for label, wordlists in topics
-            if not any(_entry_is_about(entry, wordlists) for entry in relevant)
+            for label, wordlists, carrier_scoped in topics
+            if not any(
+                _entry_is_about(entry, wordlists)
+                for entry in (carrier_rows if carrier_scoped else entries)
+            )
         ]
         if not uncovered:
             continue
-        if len(uncovered) == len(topics):
+        # A carrier row that names a bundled skill only generically ("Browser
+        # security") is a record of work, so the gap is its unnamed surfaces,
+        # not "nothing recorded".
+        vclass = VULN_CLASSES.get(skill)
+        named_generically = (
+            vclass is not None
+            and bool(vclass.sub_topics)
+            and any(
+                _entry_is_about(entry, _phrasing_wordlists(vclass.aliases))
+                for entry in carrier_rows
+            )
+        )
+        if len(uncovered) == len(topics) and not named_generically:
             # Nothing about this class was recorded at all — one class-level gap.
             detail = (
                 f"Agent(s) {names} were assigned the '{skill}' skill, but no coverage "
@@ -455,7 +495,7 @@ def skill_coverage_gaps(
                 "as clean."
             )
             if len(topics) > 1:
-                surfaces = ", ".join(str(label) for label, _ in topics)
+                surfaces = ", ".join(str(label) for label, _, _ in topics)
                 detail += f" Its surfaces ({surfaces}) are each separately accountable."
             gaps.append(
                 {
@@ -474,8 +514,8 @@ def skill_coverage_gaps(
                     "skill": skill,
                     "risk_area": str(label),
                     "detail": (
-                        f"Agent(s) {names} carried '{skill}' and recorded coverage for some "
-                        f"of its surfaces, but nothing records '{label}'. Testing one surface "
+                        f"Agent(s) {names} carried '{skill}' and recorded coverage under it, "
+                        f"but nothing records '{label}'. Testing one surface "
                         "of a multi-surface skill does not cover the others — treat "
                         f"'{label}' as unexamined."
                     ),

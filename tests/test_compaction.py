@@ -149,7 +149,9 @@ def _patch_budget(monkeypatch: pytest.MonkeyPatch, *, keep_tokens: int, window: 
     context.auto_compact = True
     settings = SimpleNamespace(
         context=context,
-        llm=SimpleNamespace(api_key=None, api_base=None, timeout=1, extra_headers=None),
+        llm=SimpleNamespace(
+            api_key=None, api_base=None, timeout=1, extra_headers=None, extra_body=None
+        ),
     )
     monkeypatch.setattr(compaction, "load_settings", lambda: settings)
 
@@ -230,7 +232,11 @@ async def test_summarize_routes_through_provider_with_settings(
         "load_settings",
         lambda: SimpleNamespace(
             llm=SimpleNamespace(
-                api_key=None, api_base=None, timeout=1, extra_headers={"X-Feature-Key": "svc"}
+                api_key=None,
+                api_base=None,
+                timeout=1,
+                extra_headers={"X-Feature-Key": "svc"},
+                extra_body={"service_tier": "flex"},
             )
         ),
     )
@@ -241,6 +247,7 @@ async def test_summarize_routes_through_provider_with_settings(
     assert captured["model"] == "litellm/openai/some-model"
     settings = captured["model_settings"]
     assert settings.extra_headers == {"X-Feature-Key": "svc"}
+    assert settings.extra_body == {"service_tier": "flex"}
     assert settings.max_tokens == 64
 
 

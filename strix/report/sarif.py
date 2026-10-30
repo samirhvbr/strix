@@ -56,6 +56,8 @@ import re
 from pathlib import Path, PurePosixPath
 from typing import Any, cast
 
+from strix.report.coverage import selectable_finding_classes
+
 
 logger = logging.getLogger(__name__)
 
@@ -1039,8 +1041,10 @@ def _primary_fingerprint(
         # keying on the title alone would collapse them onto one primary
         # fingerprint. _class_token resolves to the discriminating
         # structured field when present.
+        # A titled finding always carried this segment, even with an empty
+        # keyword, so keep it there to leave existing fingerprints unchanged.
         token = _class_token(report)
-        if token:
+        if token or _string_value(report.get("title")):
             parts.append(f"synth_class:{token}")
 
     composite = "|".join(parts)
@@ -1079,10 +1083,13 @@ def _class_fingerprint(rule_id: str, report: dict[str, Any]) -> str | None:
 def _class_token(report: dict[str, Any]) -> str:
     """Resolve a finding's vulnerability-class token for fingerprinting.
 
-    Prefers the structured ``finding_class`` when it carries signal (present
-    and not the default ``dynamic``); otherwise falls back to a keyword from
-    the (LLM-authored) title. Returns an empty string when neither yields a
-    token.
+    Prefers the structured ``finding_class`` when it names a registry
+    sub-class (e.g. ``client_side_path_traversal``); otherwise falls back to
+    a keyword from the (LLM-authored) title. The report-type markers
+    ``dynamic`` and ``dependency_cve`` carry no class signal: every dependency
+    finding shares ``dependency_cve``, so using it would collapse unrelated
+    CVEs under one CWE onto one alert, while its title names the package and
+    CVE. Returns an empty string when neither yields a token.
 
     Shared by ``_class_fingerprint`` (file-rename dismissal carryover) and the
     synthetic branch of ``_primary_fingerprint`` (locationless distinguisher)
@@ -1093,7 +1100,7 @@ def _class_token(report: dict[str, Any]) -> str:
     consume it.
     """
     finding_class = _string_value(report.get("finding_class"))
-    if finding_class and finding_class != "dynamic":
+    if finding_class and finding_class in selectable_finding_classes():
         return finding_class
     title = _string_value(report.get("title")) or ""
     return _class_keyword(title) if title else ""

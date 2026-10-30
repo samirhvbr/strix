@@ -1,0 +1,2148 @@
+{
+  "schema_version": 1,
+  "audited_at_utc": "2026-10-29T20:14:45.309249+00:00",
+  "scope": "Read-only version/release audit. No repository edits, bump, tag/ref update, workflow dispatch, release publication/edit, binary download/execution or memory change.",
+  "source_checkout_head": "e552b4595400cb7c7d1901a9f19dd49bfdf85dfd",
+  "versions": {
+    "fork_product": "1.2.43",
+    "package_upstream": "1.7.0",
+    "fork_version_source": "version.md",
+    "fork_version_mirror": ".fork-version",
+    "changelog": "FORK.md",
+    "pyproject_version_policy": "Keep upstream version; do not replace with fork product version.",
+    "cli_contract": "--fork-version reads the packaged/source .fork-version; --version prints strix 1.7.0 from the upstream package identity.",
+    "checked_version_values_at": [
+      "047cc8cb558dbf393b9b037dc9384a9c7d747294",
+      "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+      "e552b4595400cb7c7d1901a9f19dd49bfdf85dfd"
+    ],
+    "current_integration_is_unreleased": true
+  },
+  "refs": {
+    "remote_fork_master": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+    "remote_fork_main": "62b496430da5df5e9e79a190e7af6f92529883a3",
+    "remote_upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "latest_fork_tag": {
+      "ref": "refs/tags/shvia-v1.2.43",
+      "node_id": "REF_kwDOUE2wJrdyZWZzL3RhZ3Mvc2h2aWEtdjEuMi40Mw",
+      "url": "https://api.github.com/repos/samirhvbr/strix/git/refs/tags/shvia-v1.2.43",
+      "object": {
+        "sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "type": "commit",
+        "url": "https://api.github.com/repos/samirhvbr/strix/git/commits/8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5"
+      }
+    },
+    "latest_fork_tag_resolved_commit": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+    "latest_tag_matches_master": true,
+    "latest_upstream_tag_object": "24f228a13bbcddbb66c802db55b4802c25bdb247",
+    "latest_upstream_tag_resolved_commit": "55bc07991aacb1c26a81b43e7ca53148730d2019",
+    "release_target_commitish_is_not_used_as_tag_resolution": true
+  },
+  "ancestry": {
+    "declared_released_upstream_base": "62b496430da5df5e9e79a190e7af6f92529883a3",
+    "declared_commits_since_v1_7_0": 14,
+    "actual_common_ancestor_master_upstream": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
+    "actual_common_ancestor_commits_since_v1_7_0": 15,
+    "difference_from_documented_base": [
+      {
+        "sha": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
+        "subject": "docs(readme): add update instructions (#1501)",
+        "files": [
+          {
+            "path": "README.md",
+            "insertions": 12,
+            "deletions": 0
+          }
+        ]
+      }
+    ],
+    "how_extra_commit_entered_fork": "PR #1510 head96069a27 has parent f7a32ae6; merged by5ffa0721, then fork PR#27/8801f549 as version1.2.34.",
+    "new_upstream_commits_not_reachable_from_master": 49,
+    "upstream_main_commits_since_declared_base": 50,
+    "upstream_main_commits_since_v1_7_0": 64,
+    "meaning": "Recorded base names the earlier upstream sync. Actual ancestry is one README-only commit later; this is provenance drift, not a missing engine change. Remote fork main still equals62b4964; current branch integrated6b7 without advancing master or main."
+  },
+  "fork_latest_release": {
+    "id": 426747181,
+    "name": "SHVIA 1.2.43 (Strix 1.7.0)",
+    "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.43",
+    "tag_name": "shvia-v1.2.43",
+    "target_commitish": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+    "draft": false,
+    "prerelease": false,
+    "immutable": false,
+    "created_at": "2026-10-28T14:04:26Z",
+    "updated_at": "2026-10-28T14:04:47Z",
+    "published_at": "2026-10-28T14:04:47Z",
+    "body": "**Fork version** `1.2.43` · based on upstream `1.7.0` + 14 commits (`62b4964`) · pull request #37\n\nThe engine ships as **Pentest**: four standalone binaries on this Release, named `pentest-<rust-target-triple>`, with their `SHA256SUMS`, so the ShvIA Desktop can bundle them in its installer (Desktop 1.32.0 pins them by SHA-256). The report PDF prints `SHVIA / PENTEST` on its cover and `SHVIA Pentest` as its author.\n\n**Where the binaries come from.** GitHub Actions is locked for this account since 26/10/2026, so `pentest-binaries.yml` could not build and attach them for this tag. They were attached by hand from that workflow's run [39984194123](https://github.com/samirhvbr/strix/actions/runs/39984194123) of 23/10/2026, built from `047cc8cb` on the branch of #37, where each binary answered `--fork-version` with `1.2.43` on its own platform. The two commits after it change the workflow, the docs, a test and `strix/report/package_pdf.py`, the server-side PDF renderer the engine binary does not run. The Linux x86_64 binary was run again on 27/10/2026 and answers `1.2.43`. Not exercised: a real scan, and a macOS binary inside the Desktop's signed app.\n\n| File | SHA-256 |\n|---|---|\n| `pentest-aarch64-apple-darwin` | `c07aff3841e7b6a070fffd6a6d8e1cbcde489a541f033d46e9bd0c68e15e124d` |\n| `pentest-x86_64-apple-darwin` | `a7987552bdcb75e83ae6098f27e463b0d2a8d1d5df55580814e4e752bab3e09b` |\n| `pentest-aarch64-unknown-linux-gnu` | `73aa556f81807951720d9ac19b6af0232aa96804f1111d4fd2403d953d073a07` |\n| `pentest-x86_64-unknown-linux-gnu` | `8dd0bcdbb91982ea4a818db8ca84eb3e5577218f948477c5287787760a030b00` |\n\nThe WEB server's copy of `package_pdf.py` has to be copied again to print the new cover (`docs/PENTEST/report-pdf.md`).\n",
+    "assets": [
+      {
+        "id": 685188971,
+        "name": "pentest-aarch64-apple-darwin",
+        "state": "uploaded",
+        "content_type": "application/octet-stream",
+        "size": 94677008,
+        "digest": "sha256:c07aff3841e7b6a070fffd6a6d8e1cbcde489a541f033d46e9bd0c68e15e124d",
+        "created_at": "2026-10-28T14:04:30Z",
+        "updated_at": "2026-10-28T14:04:42Z",
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.43/pentest-aarch64-apple-darwin",
+        "manifest_sha256": "c07aff3841e7b6a070fffd6a6d8e1cbcde489a541f033d46e9bd0c68e15e124d",
+        "api_digest_matches_manifest": true,
+        "api_digest_matches_release_notes": true,
+        "binary_bytes_downloaded_or_executed": false
+      },
+      {
+        "id": 685188969,
+        "name": "pentest-aarch64-unknown-linux-gnu",
+        "state": "uploaded",
+        "content_type": "application/octet-stream",
+        "size": 115594344,
+        "digest": "sha256:73aa556f81807951720d9ac19b6af0232aa96804f1111d4fd2403d953d073a07",
+        "created_at": "2026-10-28T14:04:30Z",
+        "updated_at": "2026-10-28T14:04:46Z",
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.43/pentest-aarch64-unknown-linux-gnu",
+        "manifest_sha256": "73aa556f81807951720d9ac19b6af0232aa96804f1111d4fd2403d953d073a07",
+        "api_digest_matches_manifest": true,
+        "api_digest_matches_release_notes": true,
+        "binary_bytes_downloaded_or_executed": false
+      },
+      {
+        "id": 685188970,
+        "name": "pentest-x86_64-apple-darwin",
+        "state": "uploaded",
+        "content_type": "application/octet-stream",
+        "size": 96202752,
+        "digest": "sha256:a7987552bdcb75e83ae6098f27e463b0d2a8d1d5df55580814e4e752bab3e09b",
+        "created_at": "2026-10-28T14:04:30Z",
+        "updated_at": "2026-10-28T14:04:42Z",
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.43/pentest-x86_64-apple-darwin",
+        "manifest_sha256": "a7987552bdcb75e83ae6098f27e463b0d2a8d1d5df55580814e4e752bab3e09b",
+        "api_digest_matches_manifest": true,
+        "api_digest_matches_release_notes": true,
+        "binary_bytes_downloaded_or_executed": false
+      },
+      {
+        "id": 685188966,
+        "name": "pentest-x86_64-unknown-linux-gnu",
+        "state": "uploaded",
+        "content_type": "application/octet-stream",
+        "size": 118632472,
+        "digest": "sha256:8dd0bcdbb91982ea4a818db8ca84eb3e5577218f948477c5287787760a030b00",
+        "created_at": "2026-10-28T14:04:30Z",
+        "updated_at": "2026-10-28T14:04:44Z",
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.43/pentest-x86_64-unknown-linux-gnu",
+        "manifest_sha256": "8dd0bcdbb91982ea4a818db8ca84eb3e5577218f948477c5287787760a030b00",
+        "api_digest_matches_manifest": true,
+        "api_digest_matches_release_notes": true,
+        "binary_bytes_downloaded_or_executed": false
+      },
+      {
+        "id": 685188967,
+        "name": "SHA256SUMS",
+        "state": "uploaded",
+        "content_type": "application/octet-stream",
+        "size": 388,
+        "digest": "sha256:213d86dda8c0ba56d1035e962027bd0befb113ffb4fb49d01922d00876d6e434",
+        "created_at": "2026-10-28T14:04:30Z",
+        "updated_at": "2026-10-28T14:04:30Z",
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.43/SHA256SUMS",
+        "downloaded_text_sha256": "213d86dda8c0ba56d1035e962027bd0befb113ffb4fb49d01922d00876d6e434",
+        "api_digest_matches_downloaded_manifest": true
+      }
+    ],
+    "binary_provenance": {
+      "source_commit": "047cc8cb558dbf393b9b037dc9384a9c7d747294",
+      "source_commit_fork_version": "1.2.43",
+      "source_run": {
+        "id": 39984194123,
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123",
+        "head_branch": "feat/engine-binaries-release",
+        "head_sha": "047cc8cb558dbf393b9b037dc9384a9c7d747294",
+        "status": "completed",
+        "conclusion": "success",
+        "event": "workflow_dispatch",
+        "run_attempt": 3,
+        "created_at": "2026-10-23T16:07:56Z",
+        "updated_at": "2026-10-23T16:52:48Z"
+      },
+      "four_native_build_jobs": [
+        {
+          "id": 120538818263,
+          "name": "build (macos-latest, aarch64-apple-darwin)",
+          "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123/job/120538818263",
+          "conclusion": "success",
+          "started_at": "2026-10-23T16:49:35Z",
+          "completed_at": "2026-10-23T16:52:48Z"
+        },
+        {
+          "id": 120538820472,
+          "name": "build (macos-15-intel, x86_64-apple-darwin)",
+          "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123/job/120538820472",
+          "conclusion": "success",
+          "started_at": "2026-10-23T16:08:10Z",
+          "completed_at": "2026-10-23T16:18:31Z"
+        },
+        {
+          "id": 120538820973,
+          "name": "build (ubuntu-22.04-arm, aarch64-unknown-linux-gnu)",
+          "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123/job/120538820973",
+          "conclusion": "success",
+          "started_at": "2026-10-23T16:08:11Z",
+          "completed_at": "2026-10-23T16:10:30Z"
+        },
+        {
+          "id": 120538880045,
+          "name": "build (ubuntu-22.04, x86_64-unknown-linux-gnu)",
+          "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123/job/120538880045",
+          "conclusion": "success",
+          "started_at": "2026-10-23T16:08:08Z",
+          "completed_at": "2026-10-23T16:10:57Z"
+        }
+      ],
+      "publish_job": {
+        "name": "Attach the binaries to the Release",
+        "conclusion": "skipped",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/39984194123/job/120540453827"
+      },
+      "source_differs_from_tag": true,
+      "difference_files": [
+        ".github/workflows/pentest-binaries.yml",
+        "FORK.md",
+        "docs/PENTEST/report-pdf.md",
+        "strix/report/package_pdf.py",
+        "tests/test_report_package_pdf.py"
+      ],
+      "difference_summary": "Two commits plus merge after the build source: workflow binary-count correction; documentation/test changes; PDF cover/author branding in package_pdf.py. The release explicitly documents manual attachment from this earlier build; current metadata does not prove byte identity to a fresh build of the tagged source.",
+      "local_reverification": "Only SHA256SUMS text downloaded and hashed; no binary downloaded, rehashed or run. API digests for all four binary assets match both manifest and release notes. Successful historical native smoke steps independently verified from job metadata; not replayed today.",
+      "attribution_limit": "Release notes attribute published assets to this run. Run metadata independently confirms source commit and successful native build/smoke jobs; no binary bytes or build artifact contents were downloaded, so byte-to-build provenance is not independently established."
+    }
+  },
+  "upstream_latest_release": {
+    "id": 403320960,
+    "name": "v1.7.0",
+    "html_url": "https://github.com/usestrix/strix/releases/tag/v1.7.0",
+    "tag_name": "v1.7.0",
+    "target_commitish": "main",
+    "draft": false,
+    "prerelease": false,
+    "immutable": false,
+    "published_at": "2026-10-05T02:39:14Z",
+    "resolved_commit": "55bc07991aacb1c26a81b43e7ca53148730d2019",
+    "asset_count": 10,
+    "assets": [
+      {
+        "name": "strix-1.7.0-linux-arm64.tar.gz",
+        "size": 112316665,
+        "digest": "sha256:9f4a826c5d1e76b5c503e3299807af8549acca2e03734b6603611be275917ede",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-linux-arm64.tar.gz"
+      },
+      {
+        "name": "strix-1.7.0-linux-x86_64.tar.gz",
+        "size": 114834365,
+        "digest": "sha256:b8cd7e84d63cbeff6726301a9e08fddedf40fc6a4edcdb4edda8a853b3312de6",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-linux-x86_64.tar.gz"
+      },
+      {
+        "name": "strix-1.7.0-macos-arm64.tar.gz",
+        "size": 92375428,
+        "digest": "sha256:26607010b1822a7a7b0353d372cc00be149f91d1382e8a99df96ab4335afc6a0",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-macos-arm64.tar.gz"
+      },
+      {
+        "name": "strix-1.7.0-macos-x86_64.tar.gz",
+        "size": 95738233,
+        "digest": "sha256:e425f000044741a9bebbedb265ef66efeabba48e45ac15374b1df9c092b5df3e",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-macos-x86_64.tar.gz"
+      },
+      {
+        "name": "strix-1.7.0-windows-x86_64.zip",
+        "size": 95969383,
+        "digest": "sha256:04e3290f4c495b952c10da2f3627764be3e9ac598dd5a0a79bf65c112d1200f7",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix-1.7.0-windows-x86_64.zip"
+      },
+      {
+        "name": "strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl",
+        "size": 4192662,
+        "digest": "sha256:be392fcf18a91bda46b9b51bb2cef211f523260821aef80a230f7a4bb07c4908",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl"
+      },
+      {
+        "name": "strix_agent-1.7.0-py3-none-macosx_11_0_x86_64.whl",
+        "size": 4346200,
+        "digest": "sha256:fbaf46973284a6696dc454552a3f4d67995df9d2037ae901cb72d2eeab2ead2b",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix_agent-1.7.0-py3-none-macosx_11_0_x86_64.whl"
+      },
+      {
+        "name": "strix_agent-1.7.0-py3-none-manylinux_2_17_aarch64.whl",
+        "size": 4077442,
+        "digest": "sha256:03f478a7285995edbe6a3f8a836e62c003db38443f1435f4c9bd7906eb6c9a6a",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix_agent-1.7.0-py3-none-manylinux_2_17_aarch64.whl"
+      },
+      {
+        "name": "strix_agent-1.7.0-py3-none-manylinux_2_17_x86_64.whl",
+        "size": 4304779,
+        "digest": "sha256:854f2aea63768a3e6280ef17e609542fdb85917bbcfccf0ed89238a1411ebf82",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix_agent-1.7.0-py3-none-manylinux_2_17_x86_64.whl"
+      },
+      {
+        "name": "strix_agent-1.7.0-py3-none-win_amd64.whl",
+        "size": 4340958,
+        "digest": "sha256:d9086c3266b46f5cdfa502f0843f162ffc58393130143bd3634ee53873c40999",
+        "browser_download_url": "https://github.com/usestrix/strix/releases/download/v1.7.0/strix_agent-1.7.0-py3-none-win_amd64.whl"
+      }
+    ],
+    "no_new_upstream_release_after_v1_7_0": true
+  },
+  "catalog_audit": {
+    "fork_release_count": 61,
+    "fork_tag_count": 61,
+    "upstream_release_count": 30,
+    "upstream_v_tag_count": 30,
+    "fork_tag_type_counts": {
+      "tag": 59,
+      "commit": 2
+    },
+    "fork_missing_version_tags": [
+      "shvia-v1.2.41",
+      "shvia-v1.2.42"
+    ],
+    "fork_missing_version_releases": [
+      "shvia-v1.2.41",
+      "shvia-v1.2.42"
+    ],
+    "fork_release_without_tag": [],
+    "fork_tag_without_release": [],
+    "fork": [
+      {
+        "tag": "shvia-v1.0.0",
+        "object_type": "tag",
+        "object_sha": "c21bc250d2ec6b60193be9f88f032a07f0615b92",
+        "resolved_commit": "df90e1f3ede0dda969fe2e1ec74114ef6262d9ef",
+        "release": {
+          "id": 400127244,
+          "name": "SHVIA 1.0.0 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.0",
+          "tag_name": "shvia-v1.0.0",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:35Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.1",
+        "object_type": "tag",
+        "object_sha": "4f9768fd1308634e6175184ec75804fbcbeed325",
+        "resolved_commit": "3e8f65f70a839dfb49238c7f336db913fb47a7d9",
+        "release": {
+          "id": 400127264,
+          "name": "SHVIA 1.0.1 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.1",
+          "tag_name": "shvia-v1.0.1",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:37Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.10",
+        "object_type": "tag",
+        "object_sha": "bb80c647213ec194edf35877c93e66a0ccdb474f",
+        "resolved_commit": "3e1d483f55e451739096c5ebf5a4184495dbca52",
+        "release": {
+          "id": 400127476,
+          "name": "SHVIA 1.0.10 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.10",
+          "tag_name": "shvia-v1.0.10",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:49Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.11",
+        "object_type": "tag",
+        "object_sha": "7eb71ef95a7061c949c8920d3b0b2d12acb8a6c2",
+        "resolved_commit": "72d6859759c11f444beec9fc86b8da2fb95d2363",
+        "release": {
+          "id": 400127505,
+          "name": "SHVIA 1.0.11 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.11",
+          "tag_name": "shvia-v1.0.11",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:50Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.12",
+        "object_type": "tag",
+        "object_sha": "d0fde006e62f8b2eb6199cdf7ae9baf7e8eef7d4",
+        "resolved_commit": "33dced6b3fb2f3df3bde7723168d5e1090b300da",
+        "release": {
+          "id": 400127531,
+          "name": "SHVIA 1.0.12 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.12",
+          "tag_name": "shvia-v1.0.12",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:52Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.13",
+        "object_type": "tag",
+        "object_sha": "5b255b12003e8ea311884e177a59da24906384e1",
+        "resolved_commit": "1e87c40da29af6881553ff78542e72a056358afa",
+        "release": {
+          "id": 400127564,
+          "name": "SHVIA 1.0.13 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.13",
+          "tag_name": "shvia-v1.0.13",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:54Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.2",
+        "object_type": "tag",
+        "object_sha": "c82984229941efc4d0d86f07643112f68e890165",
+        "resolved_commit": "28994568af0e470bbbaba6de53cc2b8403bd3a64",
+        "release": {
+          "id": 400127285,
+          "name": "SHVIA 1.0.2 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.2",
+          "tag_name": "shvia-v1.0.2",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:38Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.3",
+        "object_type": "tag",
+        "object_sha": "06af0c3af1a188d6aa19dcb1776385617f433ecd",
+        "resolved_commit": "7fe29bbb4967d6220709f57de89898df821a9027",
+        "release": {
+          "id": 400127305,
+          "name": "SHVIA 1.0.3 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.3",
+          "tag_name": "shvia-v1.0.3",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:39Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.4",
+        "object_type": "tag",
+        "object_sha": "24074a4ac6618720fdb7bf8c6f6f77e490a1ebd8",
+        "resolved_commit": "103d23e7020eede21ab61ede7f7ed812c3dc6ccc",
+        "release": {
+          "id": 400127344,
+          "name": "SHVIA 1.0.4 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.4",
+          "tag_name": "shvia-v1.0.4",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:41Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.5",
+        "object_type": "tag",
+        "object_sha": "87119d300f345538cb3a955bf5c5f2640724d565",
+        "resolved_commit": "e08ee5c9b647d69da35354b8d1d67f8fbd6b77c1",
+        "release": {
+          "id": 400127363,
+          "name": "SHVIA 1.0.5 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.5",
+          "tag_name": "shvia-v1.0.5",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:42Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.6",
+        "object_type": "tag",
+        "object_sha": "593a0326bbbdcafb6854bd3f1c63aa33c13462cb",
+        "resolved_commit": "986ae53e0a8807343ea36e5d9e7d9cfa6dd1d0f3",
+        "release": {
+          "id": 400127385,
+          "name": "SHVIA 1.0.6 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.6",
+          "tag_name": "shvia-v1.0.6",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:44Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.7",
+        "object_type": "tag",
+        "object_sha": "768674291198fbfe3052c19edf23c670f15ae07b",
+        "resolved_commit": "1358db6f1226774e12088caaa994cd650f4938ce",
+        "release": {
+          "id": 400127407,
+          "name": "SHVIA 1.0.7 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.7",
+          "tag_name": "shvia-v1.0.7",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:45Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.8",
+        "object_type": "tag",
+        "object_sha": "f9243aa8b0c84d712996a13ee074e094f5ff1ce6",
+        "resolved_commit": "613b2c7d4d843e401c4274703388ea750a2196d8",
+        "release": {
+          "id": 400127436,
+          "name": "SHVIA 1.0.8 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.8",
+          "tag_name": "shvia-v1.0.8",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:46Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.0.9",
+        "object_type": "tag",
+        "object_sha": "e8a5bf14409653c4899f39af7189f10ba754159f",
+        "resolved_commit": "9410018c7f17c99c3ae8c8c4def858e572b086e0",
+        "release": {
+          "id": 400127452,
+          "name": "SHVIA 1.0.9 (Strix 1.5.3)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.0.9",
+          "tag_name": "shvia-v1.0.9",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:47Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.1.0",
+        "object_type": "tag",
+        "object_sha": "a0ed72504f390c21e292a647bcd0eece797e7b6a",
+        "resolved_commit": "3549436fedca9ab0853be41189d711f58511f205",
+        "release": {
+          "id": 400127581,
+          "name": "SHVIA 1.1.0 (Strix 1.6.2)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.1.0",
+          "tag_name": "shvia-v1.1.0",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:55Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.1.1",
+        "object_type": "tag",
+        "object_sha": "b61c5a6ad3bc5138ac5e1006c6c01f82a9e2d84f",
+        "resolved_commit": "72c9d26f82aa92b730474516bc9264e8e610823f",
+        "release": {
+          "id": 400127613,
+          "name": "SHVIA 1.1.1 (Strix 1.6.2)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.1.1",
+          "tag_name": "shvia-v1.1.1",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:56Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.1.2",
+        "object_type": "tag",
+        "object_sha": "6ca32858920d52fe106774ab6fc4fbdebc7a4360",
+        "resolved_commit": "80fefaa41fbff5aed7b695d542b287f3fca2264e",
+        "release": {
+          "id": 400127634,
+          "name": "SHVIA 1.1.2 (Strix 1.6.2)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.1.2",
+          "tag_name": "shvia-v1.1.2",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-30T14:26:57Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.1.3",
+        "object_type": "tag",
+        "object_sha": "7a977a2954ce842e0218e5b21e6b46a096606c95",
+        "resolved_commit": "44a7aacb59a8592be72998b592d5d1e8b832f288",
+        "release": {
+          "id": 402591283,
+          "name": "SHVIA 1.1.3 (Strix 1.6.2)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.1.3",
+          "tag_name": "shvia-v1.1.3",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-03T16:20:09Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.1.4",
+        "object_type": "tag",
+        "object_sha": "38bdb4f9bdce8a9ccc9ef71d5e16ab7891ee0a0e",
+        "resolved_commit": "fb71eeb57c82f8dac5cd7f0914973e374252b68e",
+        "release": {
+          "id": 402662047,
+          "name": "SHVIA 1.1.4 (Strix 1.6.2)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.1.4",
+          "tag_name": "shvia-v1.1.4",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-03T19:36:43Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.0",
+        "object_type": "tag",
+        "object_sha": "206c270f1518130807cdef380a1022098ff1a7a8",
+        "resolved_commit": "0376a0e08d623dad358f021c4444184782222ce4",
+        "release": {
+          "id": 403833505,
+          "name": "SHVIA 1.2.0 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.0",
+          "tag_name": "shvia-v1.2.0",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-05T14:52:20Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.1",
+        "object_type": "tag",
+        "object_sha": "bc233cf1a68121c46d91000099a1cb4ccce23ca8",
+        "resolved_commit": "f698f1898fea3d3ff2bab0860101996a99a834cf",
+        "release": {
+          "id": 404817362,
+          "name": "SHVIA 1.2.1 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.1",
+          "tag_name": "shvia-v1.2.1",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-06T14:23:32Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.10",
+        "object_type": "tag",
+        "object_sha": "0b296e33d7faab8eee6187774d5b5cb9229d0f87",
+        "resolved_commit": "9d3cb63043669c3845d31f29e19edd0c44a59929",
+        "release": {
+          "id": 407180802,
+          "name": "SHVIA 1.2.10 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.10",
+          "tag_name": "shvia-v1.2.10",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T19:17:26Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.11",
+        "object_type": "tag",
+        "object_sha": "dfe7d2592e633e9ac3b1fe0192e492c0749e5f34",
+        "resolved_commit": "51a7f0b724f665be07e3db8d3b69b6428512ca9c",
+        "release": {
+          "id": 407215740,
+          "name": "SHVIA 1.2.11 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.11",
+          "tag_name": "shvia-v1.2.11",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T20:01:48Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.12",
+        "object_type": "tag",
+        "object_sha": "a4fb125b2e24847159e364a9ff40f0a551d8c30a",
+        "resolved_commit": "71f1b832e87203121e1856aee0ce420c8078bfb9",
+        "release": {
+          "id": 407238425,
+          "name": "SHVIA 1.2.12 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.12",
+          "tag_name": "shvia-v1.2.12",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T20:31:49Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.13",
+        "object_type": "tag",
+        "object_sha": "fd425ce4aaafc9ad5020bf9fe35861c1e2ac4d1d",
+        "resolved_commit": "2b2de811c6028f4cce9e671c0779736d2897b69d",
+        "release": {
+          "id": 407275186,
+          "name": "SHVIA 1.2.13 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.13",
+          "tag_name": "shvia-v1.2.13",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T21:23:47Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.14",
+        "object_type": "tag",
+        "object_sha": "8555d77ed773fdb3734baf5f357504262f5aa2fb",
+        "resolved_commit": "77c0915080de9d6873a3023ef6a258988ade24c0",
+        "release": {
+          "id": 407296567,
+          "name": "SHVIA 1.2.14 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.14",
+          "tag_name": "shvia-v1.2.14",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T21:58:58Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.15",
+        "object_type": "tag",
+        "object_sha": "92856e20e9e9caa1ced53145dd56307e5dc98ba1",
+        "resolved_commit": "90efb537962adb25f10976fe991fa3df673b3480",
+        "release": {
+          "id": 407324278,
+          "name": "SHVIA 1.2.15 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.15",
+          "tag_name": "shvia-v1.2.15",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T22:51:54Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.16",
+        "object_type": "tag",
+        "object_sha": "d90b39edbef77efa996407fc09fc6dcf243feefd",
+        "resolved_commit": "bfb998c573418a2cc556993abf66b559aa533bb5",
+        "release": {
+          "id": 407327237,
+          "name": "SHVIA 1.2.16 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.16",
+          "tag_name": "shvia-v1.2.16",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T22:57:55Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.17",
+        "object_type": "tag",
+        "object_sha": "506b32f123c098f94c94c824c05d477533a2545e",
+        "resolved_commit": "50f305f30d04743fcf980ad314aa0c7d722a0674",
+        "release": {
+          "id": 407334997,
+          "name": "SHVIA 1.2.17 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.17",
+          "tag_name": "shvia-v1.2.17",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T23:14:13Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.18",
+        "object_type": "tag",
+        "object_sha": "ff1674a1e7b0fd39a4f4eaee7ce7c88d9ed746bf",
+        "resolved_commit": "1ebd8b68445c23ea0077655d043a0b65449d91df",
+        "release": {
+          "id": 407342696,
+          "name": "SHVIA 1.2.18 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.18",
+          "tag_name": "shvia-v1.2.18",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T23:30:57Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.19",
+        "object_type": "tag",
+        "object_sha": "63c52c173321eb485f8f69159b6f776f3682daee",
+        "resolved_commit": "123aa44219578a4f13628b2ab0d0ea07d2ad7707",
+        "release": {
+          "id": 407418872,
+          "name": "SHVIA 1.2.19 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.19",
+          "tag_name": "shvia-v1.2.19",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-09T01:51:32Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.2",
+        "object_type": "tag",
+        "object_sha": "5c86ad8c8d61d2a6c5aac1dc43ed02a1e1dae7ea",
+        "resolved_commit": "a5272037f37387e7a3117021acacb00abe331843",
+        "release": {
+          "id": 405201700,
+          "name": "SHVIA 1.2.2 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.2",
+          "tag_name": "shvia-v1.2.2",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-06T22:52:56Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.20",
+        "object_type": "tag",
+        "object_sha": "33af4d966164b10ea1bde8f30305f77d86df8317",
+        "resolved_commit": "44988e8ac23cff8eca82daf29f2ead675c5a8926",
+        "release": {
+          "id": 407426212,
+          "name": "SHVIA 1.2.20 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.20",
+          "tag_name": "shvia-v1.2.20",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-09T02:08:50Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.21",
+        "object_type": "tag",
+        "object_sha": "562cb26497ea3e2ac10ad30ed45f0fd85239c3ac",
+        "resolved_commit": "bf9c73359107340882c22a11a2ce67002d1c61a2",
+        "release": {
+          "id": 407847562,
+          "name": "SHVIA 1.2.21 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.21",
+          "tag_name": "shvia-v1.2.21",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-09T11:27:41Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.22",
+        "object_type": "tag",
+        "object_sha": "69b2e972dccec2173382aa1b450baa1a1d541f94",
+        "resolved_commit": "354a72fbd0af2b49c13e846503c741f14957c681",
+        "release": {
+          "id": 408996207,
+          "name": "SHVIA 1.2.22 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.22",
+          "tag_name": "shvia-v1.2.22",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T14:21:38Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.23",
+        "object_type": "tag",
+        "object_sha": "01c1451a800deec3ca5f2c86a4ab158877bf9151",
+        "resolved_commit": "6bf5bfdc23c3cd32f9db6061af739d2cf3eb92c8",
+        "release": {
+          "id": 409047547,
+          "name": "SHVIA 1.2.23 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.23",
+          "tag_name": "shvia-v1.2.23",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T15:56:44Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.24",
+        "object_type": "tag",
+        "object_sha": "979a0a8d8c06524c83cac2ac4917dcc07b257cbe",
+        "resolved_commit": "938d8386bdc12db19e1b4f139668a89a9f63777f",
+        "release": {
+          "id": 409058186,
+          "name": "SHVIA 1.2.24 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.24",
+          "tag_name": "shvia-v1.2.24",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T16:16:52Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.25",
+        "object_type": "tag",
+        "object_sha": "c6a60476e6bcfbf9cebbae7130230ae83867d7db",
+        "resolved_commit": "2aeb34f45ed61552b0c10e7e96ce869b17a05311",
+        "release": {
+          "id": 409152069,
+          "name": "SHVIA 1.2.25 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.25",
+          "tag_name": "shvia-v1.2.25",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T19:16:14Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.26",
+        "object_type": "tag",
+        "object_sha": "d4a0d7d8619d32b8f2fee6462c82a03c09b2a4cc",
+        "resolved_commit": "e44fbf5a64178fcc75ef3faff92c5c69c99c3212",
+        "release": {
+          "id": 409158721,
+          "name": "SHVIA 1.2.26 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.26",
+          "tag_name": "shvia-v1.2.26",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T19:29:43Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.27",
+        "object_type": "tag",
+        "object_sha": "54c37ad2e86a041181aa4cfc69d3cad0cf9cdb7c",
+        "resolved_commit": "dc25a8bd278901804b3738e22439409b69ad002e",
+        "release": {
+          "id": 409172691,
+          "name": "1.2.27 - Export bounded private assessment reports",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.27",
+          "tag_name": "shvia-v1.2.27",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T19:57:47Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.28",
+        "object_type": "tag",
+        "object_sha": "edfa0fd7a07a7efb680824d9ed257f564b02aaeb",
+        "resolved_commit": "2196e2d2719fd6a6c77d6dac37cb721e8bfde25a",
+        "release": {
+          "id": 409180117,
+          "name": "SHVIA 1.2.28 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.28",
+          "tag_name": "shvia-v1.2.28",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-10T20:12:32Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.29",
+        "object_type": "tag",
+        "object_sha": "8a81534da393efb22c4427ea6ad3a3433705fc81",
+        "resolved_commit": "5daa4bea967ae8f5a6463ddb1e0e225e0b95989d",
+        "release": {
+          "id": 410057310,
+          "name": "SHVIA 1.2.29 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.29",
+          "tag_name": "shvia-v1.2.29",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T01:48:12Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.3",
+        "object_type": "tag",
+        "object_sha": "ff054815d11f53b34190215ddedebf8b371a82db",
+        "resolved_commit": "9f3d348df0363996c924566d3dc94e24b1fd4bbd",
+        "release": {
+          "id": 405213108,
+          "name": "SHVIA 1.2.3 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.3",
+          "tag_name": "shvia-v1.2.3",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-06T23:18:23Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.30",
+        "object_type": "tag",
+        "object_sha": "7b6d859680d1f6a8a6964fb9834bbb9b33b85b46",
+        "resolved_commit": "07b3981c62541e6f4d711ea785c596cc6328ed40",
+        "release": {
+          "id": 410552619,
+          "name": "SHVIA 1.2.30 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.30",
+          "tag_name": "shvia-v1.2.30",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T11:54:19Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.31",
+        "object_type": "tag",
+        "object_sha": "7269d0aaf011b246c8d6a128c3c6b8e3e52f2c4b",
+        "resolved_commit": "b6e6e3b175482b973c80ffab7e8768cb0ff253bc",
+        "release": {
+          "id": 410596164,
+          "name": "SHVIA 1.2.31 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.31",
+          "tag_name": "shvia-v1.2.31",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T12:50:46Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.32",
+        "object_type": "tag",
+        "object_sha": "240e94a5bee6e6a5f1692e4be8683d4ef36352df",
+        "resolved_commit": "94d4f56087c8811c815c7fadbfa8062c7ffaf705",
+        "release": {
+          "id": 410609811,
+          "name": "SHVIA 1.2.32 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.32",
+          "tag_name": "shvia-v1.2.32",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T13:06:56Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.33",
+        "object_type": "tag",
+        "object_sha": "5573862ca152da4778107f78933b4cbe46d2ff30",
+        "resolved_commit": "fa40e83a733949484e4b62b79cd0a3622eaa5c25",
+        "release": {
+          "id": 410631625,
+          "name": "SHVIA 1.2.33 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.33",
+          "tag_name": "shvia-v1.2.33",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T13:28:13Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.34",
+        "object_type": "tag",
+        "object_sha": "7494452c9b4b1ce2823da6e8155a769b03f2f3c6",
+        "resolved_commit": "8801f5496e21963cf3aaa4944d6dc8f48612c916",
+        "release": {
+          "id": 410651552,
+          "name": "SHVIA 1.2.34 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.34",
+          "tag_name": "shvia-v1.2.34",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-12T13:46:08Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.35",
+        "object_type": "tag",
+        "object_sha": "4ed35259838f2eb0324b80e23b30d8734937fbe1",
+        "resolved_commit": "331a2fa1eeec2524e242da5de7ea06523d1c4d4e",
+        "release": {
+          "id": 412893044,
+          "name": "SHVIA 1.2.35 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.35",
+          "tag_name": "shvia-v1.2.35",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-14T15:43:19Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.36",
+        "object_type": "tag",
+        "object_sha": "8144d816ae3e2649a828b12a34b343593e96f5de",
+        "resolved_commit": "69ca4254a8bb8214d2c929c54b750b9d6a5e1767",
+        "release": {
+          "id": 413118312,
+          "name": "SHVIA 1.2.36 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.36",
+          "tag_name": "shvia-v1.2.36",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-14T19:47:39Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.37",
+        "object_type": "commit",
+        "object_sha": "15070c4ad5ebee019d221ab39095444b25675f52",
+        "resolved_commit": "15070c4ad5ebee019d221ab39095444b25675f52",
+        "release": {
+          "id": 414282243,
+          "name": "SHVIA 1.2.37 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.37",
+          "tag_name": "shvia-v1.2.37",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-15T21:14:44Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.38",
+        "object_type": "tag",
+        "object_sha": "e70b47f10531cebf3f038de3e7d4dfeeb2787f11",
+        "resolved_commit": "780ca2a89a7b56e0dcc456810629a6af91bf0d9e",
+        "release": {
+          "id": 414759908,
+          "name": "SHVIA 1.2.38 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.38",
+          "tag_name": "shvia-v1.2.38",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-16T09:16:48Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.39",
+        "object_type": "tag",
+        "object_sha": "f26ea78717b19f8c5063d8604f84052e45d07380",
+        "resolved_commit": "cf5d371c4d06dc36140d214a21419f7c8019c0d8",
+        "release": {
+          "id": 415335663,
+          "name": "SHVIA 1.2.39 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.39",
+          "tag_name": "shvia-v1.2.39",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-16T20:04:05Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.4",
+        "object_type": "tag",
+        "object_sha": "86fa41320c96c0cd4c6ad8ded404df85a8b36371",
+        "resolved_commit": "499b2de6ebbf3aeda009fc5984e3d387be559ea1",
+        "release": {
+          "id": 405216274,
+          "name": "SHVIA 1.2.4 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.4",
+          "tag_name": "shvia-v1.2.4",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-06T23:25:53Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.40",
+        "object_type": "tag",
+        "object_sha": "e99b9280c7c1bac579725787afcce7d30a72f425",
+        "resolved_commit": "f83522b86fd88aea77b290091091a978ab66029e",
+        "release": {
+          "id": 415390646,
+          "name": "SHVIA 1.2.40 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.40",
+          "tag_name": "shvia-v1.2.40",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-16T21:22:22Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.43",
+        "object_type": "commit",
+        "object_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "resolved_commit": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "release": {
+          "id": 426747181,
+          "name": "SHVIA 1.2.43 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.43",
+          "tag_name": "shvia-v1.2.43",
+          "target_commitish": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-28T14:04:47Z"
+        },
+        "asset_count": 5,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.5",
+        "object_type": "tag",
+        "object_sha": "0a0296a91ce9e623d4b44698f8bed66a00e9121f",
+        "resolved_commit": "1533af5012f934b3cb076d8d61736c73bcd7d49f",
+        "release": {
+          "id": 406232591,
+          "name": "SHVIA 1.2.5 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.5",
+          "tag_name": "shvia-v1.2.5",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-07T22:57:12Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.6",
+        "object_type": "tag",
+        "object_sha": "6123041a23aa90307773af854450384a2eb9b561",
+        "resolved_commit": "e58f11b0f3b670e2433ecbb09f2a4625ac131040",
+        "release": {
+          "id": 406246080,
+          "name": "SHVIA 1.2.6 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.6",
+          "tag_name": "shvia-v1.2.6",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-07T23:26:22Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.7",
+        "object_type": "tag",
+        "object_sha": "f41270e9a0089fe65dbf0d6afb8591d99135989c",
+        "resolved_commit": "3d565b12af36483ff4e99a436d87692b95d5086f",
+        "release": {
+          "id": 406275692,
+          "name": "SHVIA 1.2.7 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.7",
+          "tag_name": "shvia-v1.2.7",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T00:28:07Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.8",
+        "object_type": "tag",
+        "object_sha": "09eca93d2cb9881a05084f9e7a9d3317c01ee3cf",
+        "resolved_commit": "1f9fc180a340b22554c086ca1a9d9847281ddbad",
+        "release": {
+          "id": 407107223,
+          "name": "SHVIA 1.2.8 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.8",
+          "tag_name": "shvia-v1.2.8",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T17:45:39Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "shvia-v1.2.9",
+        "object_type": "tag",
+        "object_sha": "37d0aa683b304f9c2cae964aabb3a5f4aa293c27",
+        "resolved_commit": "4580c6e7ef0bf098be255b0b7d22e5c3fc5da9cf",
+        "release": {
+          "id": 407146380,
+          "name": "SHVIA 1.2.9 (Strix 1.7.0)",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.9",
+          "tag_name": "shvia-v1.2.9",
+          "target_commitish": "master",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-08T18:34:06Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      }
+    ],
+    "upstream": [
+      {
+        "tag": "v0.3.1",
+        "object_type": "tag",
+        "object_sha": "0a2ab4337adb56c734e6060f65a6320cf49a181d",
+        "resolved_commit": "2763998821fe1cbd66f2940ca0156d234d68c8ad",
+        "release": {
+          "id": 258997482,
+          "name": "Strix Agent v0.3.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.3.1",
+          "tag_name": "v0.3.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2025-11-01T12:08:14Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.4.0",
+        "object_type": "tag",
+        "object_sha": "672df45ec24568f2a307f6248141af6dfb4e5569",
+        "resolved_commit": "9825fb46ec48eae3006ae08cccee8da253a8acb9",
+        "release": {
+          "id": 265197020,
+          "name": "Strix Agent v0.4.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.4.0",
+          "tag_name": "v0.4.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2025-11-25T16:41:08Z"
+        },
+        "asset_count": 0,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.5.0",
+        "object_type": "commit",
+        "object_sha": "78b6c26652be77720e73c72e40f60e5f4bf83e22",
+        "resolved_commit": "78b6c26652be77720e73c72e40f60e5f4bf83e22",
+        "release": {
+          "id": 270464178,
+          "name": "Strix Agent v0.5.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.5.0",
+          "tag_name": "v0.5.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2025-12-15T18:34:10Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.6.0",
+        "object_type": "commit",
+        "object_sha": "d7f712581dc0f72025d0898ca669c6bb6a997930",
+        "resolved_commit": "d7f712581dc0f72025d0898ca669c6bb6a997930",
+        "release": {
+          "id": 276095118,
+          "name": "v0.6.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.6.0",
+          "tag_name": "v0.6.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-01-12T17:26:14Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.6.1",
+        "object_type": "tag",
+        "object_sha": "404874b3e2f7f3eae2ff6acdd316c30e0cc3d02d",
+        "resolved_commit": "e5104eb93a46001a69effb90c93d5c9000655901",
+        "release": {
+          "id": 276944884,
+          "name": "v0.6.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.6.1",
+          "tag_name": "v0.6.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-01-15T05:35:50Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.6.2",
+        "object_type": "commit",
+        "object_sha": "86f8835ccb9192c52458e6a538f2c783c71cd987",
+        "resolved_commit": "86f8835ccb9192c52458e6a538f2c783c71cd987",
+        "release": {
+          "id": 277784364,
+          "name": "v0.6.2",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.6.2",
+          "tag_name": "v0.6.2",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-01-19T02:35:43Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.7.0",
+        "object_type": "commit",
+        "object_sha": "386e64fa2904f094528eb89b96a968a286292208",
+        "resolved_commit": "386e64fa2904f094528eb89b96a968a286292208",
+        "release": {
+          "id": 279474437,
+          "name": "v0.7.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.7.0",
+          "tag_name": "v0.7.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-01-23T19:10:44Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.8.0",
+        "object_type": "commit",
+        "object_sha": "1833f1a021eca77e1a83cc3c8e4424a06da5666c",
+        "resolved_commit": "1833f1a021eca77e1a83cc3c8e4424a06da5666c",
+        "release": {
+          "id": 288471642,
+          "name": "v0.8.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.8.0",
+          "tag_name": "v0.8.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-02-19T22:18:31Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.8.1",
+        "object_type": "commit",
+        "object_sha": "643f6ba54aef3f124786283aad96e8b05a1c122f",
+        "resolved_commit": "643f6ba54aef3f124786283aad96e8b05a1c122f",
+        "release": {
+          "id": 288834223,
+          "name": "v0.8.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.8.1",
+          "tag_name": "v0.8.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-02-20T18:41:25Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.8.2",
+        "object_type": "commit",
+        "object_sha": "4384f5bff82e816b8e089d69f2fb3bea6f19414d",
+        "resolved_commit": "4384f5bff82e816b8e089d69f2fb3bea6f19414d",
+        "release": {
+          "id": 289676324,
+          "name": "v0.8.2",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.8.2",
+          "tag_name": "v0.8.2",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-02-24T02:47:38Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v0.8.3",
+        "object_type": "commit",
+        "object_sha": "7d5a45deaf30a7d0169138be29fc81a7ea42cb02",
+        "resolved_commit": "7d5a45deaf30a7d0169138be29fc81a7ea42cb02",
+        "release": {
+          "id": 300037565,
+          "name": "v0.8.3",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v0.8.3",
+          "tag_name": "v0.8.3",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-03-23T05:16:53Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.0.0",
+        "object_type": "tag",
+        "object_sha": "cc227d2b1f5f890379e513acff6f4a7e35e2897b",
+        "resolved_commit": "63faecd3b548742edb664eb06d767a3d25de6117",
+        "release": {
+          "id": 329728270,
+          "name": "v1.0.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.0.0",
+          "tag_name": "v1.0.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-05-26T21:51:38Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.0.1",
+        "object_type": "tag",
+        "object_sha": "b02d0c1ca6413fe359be53abf35f904f19e7c8fb",
+        "resolved_commit": "3bd9d56814ed7dad290cd8aae47422ecbf19c63d",
+        "release": {
+          "id": 329877411,
+          "name": "v1.0.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.0.1",
+          "tag_name": "v1.0.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-05-27T03:07:48Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.0.2",
+        "object_type": "tag",
+        "object_sha": "659f11df9c640978e78952a9ff63865c90bcbaf2",
+        "resolved_commit": "d0321510d23f97fe65d53f347ea8d5358874084d",
+        "release": {
+          "id": 331067200,
+          "name": "v1.0.2",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.0.2",
+          "tag_name": "v1.0.2",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-05-28T19:00:41Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.0.3",
+        "object_type": "commit",
+        "object_sha": "250fe2cf3e0f9e36c1b07764435e8afd5c5b7eac",
+        "resolved_commit": "250fe2cf3e0f9e36c1b07764435e8afd5c5b7eac",
+        "release": {
+          "id": 336307391,
+          "name": "v1.0.3",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.0.3",
+          "tag_name": "v1.0.3",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-06-09T01:10:24Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.0.4",
+        "object_type": "commit",
+        "object_sha": "cc23eeb65de1bae88ec81dfdae4a9597a6aba1d3",
+        "resolved_commit": "cc23eeb65de1bae88ec81dfdae4a9597a6aba1d3",
+        "release": {
+          "id": 336740644,
+          "name": "v1.0.4",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.0.4",
+          "tag_name": "v1.0.4",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-06-09T16:46:48Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.1.0",
+        "object_type": "tag",
+        "object_sha": "a56a50bcf0bdc035f13a7731068d435354e4cfe4",
+        "resolved_commit": "91d9a847166fe2f82125643d13e099b0d989bbe4",
+        "release": {
+          "id": 353759205,
+          "name": "v1.1.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.1.0",
+          "tag_name": "v1.1.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-14T11:47:01Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.2.0",
+        "object_type": "commit",
+        "object_sha": "48b4821f6960f38a289118a5c17b7e88e3a168b2",
+        "resolved_commit": "48b4821f6960f38a289118a5c17b7e88e3a168b2",
+        "release": {
+          "id": 357474234,
+          "name": "v1.2.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.2.0",
+          "tag_name": "v1.2.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-21T16:11:47Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.3.0",
+        "object_type": "commit",
+        "object_sha": "8ec54d9e2bd4f4c3b87afcdfdd6e9819f9964d30",
+        "resolved_commit": "8ec54d9e2bd4f4c3b87afcdfdd6e9819f9964d30",
+        "release": {
+          "id": 358162068,
+          "name": "v1.3.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.3.0",
+          "tag_name": "v1.3.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-22T16:27:56Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.3.1",
+        "object_type": "commit",
+        "object_sha": "a2f5e3acb6148147ba2ad43b09beb6e9fe2ad5fc",
+        "resolved_commit": "a2f5e3acb6148147ba2ad43b09beb6e9fe2ad5fc",
+        "release": {
+          "id": 358245199,
+          "name": "v1.3.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.3.1",
+          "tag_name": "v1.3.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-22T18:52:35Z"
+        },
+        "asset_count": 4,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.4.0",
+        "object_type": "commit",
+        "object_sha": "37c7f5a6ba4a800a34131a8a3cc8b8b3826b3feb",
+        "resolved_commit": "37c7f5a6ba4a800a34131a8a3cc8b8b3826b3feb",
+        "release": {
+          "id": 360395156,
+          "name": "v1.4.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.4.0",
+          "tag_name": "v1.4.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-27T11:59:57Z"
+        },
+        "asset_count": 5,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.4.1",
+        "object_type": "commit",
+        "object_sha": "ac0014fe6540506777ff7df028f9309f0785fa6d",
+        "resolved_commit": "ac0014fe6540506777ff7df028f9309f0785fa6d",
+        "release": {
+          "id": 360676588,
+          "name": "v1.4.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.4.1",
+          "tag_name": "v1.4.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-07-27T20:02:01Z"
+        },
+        "asset_count": 5,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.5.0",
+        "object_type": "commit",
+        "object_sha": "b08662449d3a073377576b981d13f2636f40bd92",
+        "resolved_commit": "b08662449d3a073377576b981d13f2636f40bd92",
+        "release": {
+          "id": 366375251,
+          "name": "v1.5.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.5.0",
+          "tag_name": "v1.5.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-08-07T02:16:36Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.5.1",
+        "object_type": "commit",
+        "object_sha": "22750077da60eb004a5e03656e2c0e7d304826f8",
+        "resolved_commit": "22750077da60eb004a5e03656e2c0e7d304826f8",
+        "release": {
+          "id": 366909986,
+          "name": "v1.5.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.5.1",
+          "tag_name": "v1.5.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-08-07T17:32:43Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.5.2",
+        "object_type": "commit",
+        "object_sha": "597aae67159636ee794a02a3cc1694138d619c44",
+        "resolved_commit": "597aae67159636ee794a02a3cc1694138d619c44",
+        "release": {
+          "id": 367349993,
+          "name": "v1.5.2",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.5.2",
+          "tag_name": "v1.5.2",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-08-09T01:35:09Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.5.3",
+        "object_type": "commit",
+        "object_sha": "7cc9fa9faa0179fc7e35111102fe3d20a9028393",
+        "resolved_commit": "7cc9fa9faa0179fc7e35111102fe3d20a9028393",
+        "release": {
+          "id": 368123160,
+          "name": "v1.5.3",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.5.3",
+          "tag_name": "v1.5.3",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-08-10T18:35:38Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.6.0",
+        "object_type": "tag",
+        "object_sha": "911ada1db093a72ff245092b784115b2cba14b18",
+        "resolved_commit": "8fdf6a5c09ef20a9dc0f1a0ea91e10935f430498",
+        "release": {
+          "id": 380804649,
+          "name": "v1.6.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.6.0",
+          "tag_name": "v1.6.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-01T20:33:42Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.6.1",
+        "object_type": "tag",
+        "object_sha": "972cc6908ba4155a949a58d612489c95ded7905f",
+        "resolved_commit": "f1e24fe3f2a5d0d332e2c47f8511a436c9033fbf",
+        "release": {
+          "id": 381402104,
+          "name": "v1.6.1",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.6.1",
+          "tag_name": "v1.6.1",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-02T16:10:57Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.6.2",
+        "object_type": "tag",
+        "object_sha": "a0daa135a8e0c09c53bcd9c308a7827bc14b3095",
+        "resolved_commit": "ff5c8cc8e46d8e60c2bc2439f7bcb07c05ca3db2",
+        "release": {
+          "id": 383094886,
+          "name": "v1.6.2",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.6.2",
+          "tag_name": "v1.6.2",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-09-05T01:30:11Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      },
+      {
+        "tag": "v1.7.0",
+        "object_type": "tag",
+        "object_sha": "24f228a13bbcddbb66c802db55b4802c25bdb247",
+        "resolved_commit": "55bc07991aacb1c26a81b43e7ca53148730d2019",
+        "release": {
+          "id": 403320960,
+          "name": "v1.7.0",
+          "html_url": "https://github.com/usestrix/strix/releases/tag/v1.7.0",
+          "tag_name": "v1.7.0",
+          "target_commitish": "main",
+          "draft": false,
+          "prerelease": false,
+          "published_at": "2026-10-05T02:39:14Z"
+        },
+        "asset_count": 10,
+        "review_depth": "metadata inventory; historical asset bytes/notes not independently validated"
+      }
+    ]
+  },
+  "workflow_audit": {
+    "fork_build_release": {
+      "id": 375522266,
+      "name": "Build & Release",
+      "path": ".github/workflows/build-release.yml",
+      "state": "disabled_manually",
+      "html_url": "https://github.com/samirhvbr/strix/blob/master/.github/workflows/build-release.yml",
+      "updated_at": "2026-10-05T11:53:09.000-03:00"
+    },
+    "required_state_preserved": true,
+    "build_release_file_unchanged_in_integration": true,
+    "build_release_trigger": "push tag v* and workflow_dispatch; inherited upstream publishing workflow must stay disabled on fork.",
+    "fork_pentest_binaries": {
+      "id": 388819502,
+      "name": "Pentest binaries",
+      "path": ".github/workflows/pentest-binaries.yml",
+      "state": "active",
+      "html_url": "https://github.com/samirhvbr/strix/blob/master/.github/workflows/pentest-binaries.yml"
+    },
+    "fork_binary_delivery_contract": "Manual dispatch. Empty release_tag builds artifacts only. Publishing requires shvia-vX.Y.Z equal .fork-version and tagged commit equal GITHUB_SHA; each native binary must print matching --fork-version; attach exactly four binaries plus SHA256SUMS.",
+    "upstream_build_release": {
+      "id": 213747001,
+      "name": "Build & Release",
+      "state": "active",
+      "html_url": "https://github.com/usestrix/strix/blob/main/.github/workflows/build-release.yml"
+    },
+    "current_ci_blocker": {
+      "run": "https://github.com/samirhvbr/strix/actions/runs/40935898645",
+      "check": "https://github.com/samirhvbr/strix/actions/runs/40935898645/job/123666242890",
+      "annotation": "The job was not started because your account is locked due to a billing issue.",
+      "meaning": "Account billing lock prevented package/binary job from starting; it is not a test result and historical successful binary builds do not establish current release pipeline availability.",
+      "observed_run_created_at": "2026-10-29T18:59:14Z",
+      "billing_status_limit": "This is the latest observed job annotation, not a direct account billing-status query or a new workflow attempt."
+    }
+  },
+  "historical_record_gaps": [
+    {
+      "id": "missing-41-42",
+      "finding": "FORK/history contain deliveries1.2.41 and1.2.42, but live tags/releases catalogs lack both. All61 existing fork tags have matching releases.",
+      "evidence": [
+        "0f253969161adfd21df72cf1db6cd3f8a672dee5",
+        "4d205886b2a4bfa6898e3f30eb7d18baddb7e4ba",
+        "1d16343af881df655df9c14cb957a2f281e65ac3",
+        "d14351bded34add0f4e2b5214ba070e836b1c09c"
+      ],
+      "action": "Record accurately; do not create historical releases without separate authorization. If later authorized, anchor exact delivery commits and mark latest=false."
+    },
+    {
+      "id": "lightweight-tags",
+      "finding": "shvia-v1.2.37 and shvia-v1.2.43 are lightweight;59 other fork version tags are annotated. version.md prescribes annotated tags.",
+      "action": "Do not rewrite published tags. Use annotated tags for future deliveries; document existing exception."
+    },
+    {
+      "id": "documented-base",
+      "finding": "version.md/release notes still cite62b4964(+14) although master also contains f7a32ae6(+15) via#1510. Difference is12 README insertions only.",
+      "action": "Distinguish historical declared base and actual ancestry in permanent record; future delivery records exact integrated upstream SHA."
+    },
+    {
+      "id": "historical-binary-docs",
+      "finding": "docs/PENTEST/pentest-binaries.md real-binary exercise section still describes1.2.42 and older macOS-not-exercised boundary. Latest release documents1.2.43 platform smoke steps; four successful native jobs are verified.",
+      "action": "Treat as dated validation history, not current binary acceptance; future docs should identify tested commit/version/date explicitly."
+    },
+    {
+      "id": "source-vs-binary",
+      "finding": "Published1.2.43 binaries are from047cc8cb; source tag/master is8aa0791e. Release notes already disclose this exception.",
+      "action": "Future delivery must build from its exact tag and verify provenance; do not claim these assets contain the current unreleased integration."
+    }
+  ],
+  "future_delivery_requirements": [
+    "Complete review and validation of the integration and obtain delivery authorization before changing master/main, bumping, tagging or publishing.",
+    "Choose the next fork version under version.md: ordinary delivery on the same upstream1.7.0 is next patch1.2.44; a new structural phase may instead require an explicit minor decision. Do not change pyproject version solely for fork numbering.",
+    "On the authorized delivery update version.md, .fork-version and one FORK.md delivery row together, with actual upstream6b7ae2e provenance (64 commits afterv1.7.0) and measured validation limits.",
+    "Commit delivery, create an annotated shvia-vX.Y.Z tag at the exact delivered commit, and verify remote peeled tag identity against that commit before creating an English SHVIA X.Y.Z (Strix1.7.0) release.",
+    "Keep inherited Build & Release disabled and recheck its remote state after sync. Use only the fork Pentest binaries workflow for sidecars; billing currently blocks Actions startup and requires resolution before this pipeline can run.",
+    "Build all four native binaries from the release tag, pass --fork-version/version checks, publish matching SHA256SUMS, and verify downloaded binary hashes against the manifest and recorded source/run provenance.",
+    "Update any Desktop sidecar version/SHA pins through its separate authorized delivery, then validate signing/notarization and installed-app compatibility on applicable platforms; source merge or metadata-only audit does not prove deployment.",
+    "Historical tag/release gaps or metadata corrections are separate decisions; do not retag or edit existing releases automatically."
+  ],
+  "limits": [
+    "No version, release, workflow, tag or branch mutation performed; audit prepared locally and preserved with this record.",
+    "Only current release assets received detailed metadata/manifest audit; historical releases and upstream releases received metadata/catalog checks, not binary or full release-note validation.",
+    "No binary rebuilt/downloaded/executed, no real scan/LLM/cloud operation, no installed Desktop acceptance, no signature verification, and no new test-suite result claimed by this audit.",
+    "Remote observations are a2026-10-29 snapshot. Parent agent owns permanent repository records and subsequent changes; this audit remains a prepared local artifact until copied/committed there."
+  ],
+  "rechecks": [
+    {
+      "at": "2026-10-29T21:04:34.141249+00:00",
+      "scope": "Read-only. No tag, release, ref or binary was changed, downloaded or executed.",
+      "unchanged": {
+        "fork_version": "1.2.43 (.fork-version on master and the review branch)",
+        "fork_tag_and_release": "shvia-v1.2.43 and its Release (Latest) resolve to 8aa0791e, equal to remote master",
+        "upstream_latest_release": "v1.7.0",
+        "package_version": "1.7.0 on both sides",
+        "missing_or_lightweight_tags": "1.2.41 and 1.2.42 still have no tag or release; 1.2.37 and 1.2.43 are lightweight"
+      },
+      "mirror": "origin/main is 50 commits behind upstream/main (0 ahead); it only advances with a master delivery"
+    },
+    {
+      "at": "2026-10-30T19:04:00.251813+00:00",
+      "scope": "Read-only. No tag, release, ref or binary was changed, downloaded or executed.",
+      "unchanged": {
+        "fork_version_on_master": "1.2.43; the delivery branch carries 1.2.44 (unmerged, untagged, unreleased)",
+        "fork_tag_and_release": "shvia-v1.2.43 and its Release (Latest) still resolve to 8aa0791e, equal to remote master",
+        "upstream_latest_release": "v1.7.0 (2026-10-05)",
+        "upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "missing_or_lightweight_tags": "1.2.41 and 1.2.42 still have no tag or release; 1.2.37 and 1.2.43 are lightweight"
+      },
+      "actions": "Latest fork CI runs (2026-10-29 18:57 and 18:59) completed with failure; the billing-lock annotation was not re-read in this pass.",
+      "mirror": "origin/main is 50 commits behind upstream/main (0 ahead); it only advances with a master delivery"
+    },
+    {
+      "at": "2026-10-30T19:21:40.398366+00:00",
+      "scope": "Fork mirror update after the 2026-10-30 delivery consolidation. No tag, release or master change.",
+      "changed": {
+        "origin_main": "62b496430da5df5e9e79a190e7af6f92529883a3 -> 6b7ae2ebe4d47037a927aade23265ff4e4f27e84 (fast-forward to upstream/main, 50 commits)"
+      },
+      "unchanged": {
+        "origin_master": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "tag_shvia_v1.2.43": "8aa0791e",
+        "delivery_pr": "https://github.com/samirhvbr/strix/pull/45 (open, unmerged)"
+      }
+    }
+  ],
+  "sandbox_image_audit": {
+    "audited_at_utc": "2026-10-29T21:04:34.141249+00:00",
+    "registry_image": "ghcr.io/usestrix/strix-sandbox",
+    "method": "Anonymous pull token, then manifest and tags/list requests. 1.3.0 answering 200 is the positive control for the token.",
+    "master_default_tag": "1.3.0",
+    "review_branch_default_tag": "1.3.1",
+    "review_branch_default_tag_published": false,
+    "manifest_http_status": {
+      "1.3.0": 200,
+      "1.3.1": 404
+    },
+    "published_semver_tags_latest": "1.3.0",
+    "other_tags": [
+      "0.1",
+      "latest"
+    ],
+    "tags_total": 13,
+    "source_references_to_1_3_1": [
+      "strix/config/settings.py (default)",
+      "scripts/install.sh"
+    ],
+    "implication": "A scan or an engine binary built from the review branch cannot pull its default sandbox image until 1.3.1 exists in the registry; STRIX_IMAGE can override it. Delivering the synchronization to master without resolving this would break the default runtime.",
+    "tradeoff": "Pinning 1.3.0 keeps the runtime working but leaves libbrotli 1.2.0-4 (CVE-2026-111497) in the image used against hostile targets.",
+    "decision": "Pinned to 1.3.0 on the delivery branch feat/upstream-sync-delivery-20261029 (RuntimeSettings.image and scripts/install.sh, kept equal by a test). The host-side tools and caido_api.py are unchanged between the two images; the Dockerfile and entrypoint differ only by the brotli patch, trufflehog 3.99.2 and the #1499 NSS restart guard, so the engine runs against 1.3.0 and the brotli CVE stays unpatched in the image until 1.3.1 is published. Revisit: when `manifest inspect` finds 1.3.1, move both pins and drop this note.",
+    "rechecked_at_utc": "2026-10-30T15:22:00+00:00",
+    "rechecked_manifest_http_status": {
+      "1.3.0": 200,
+      "1.3.1": 404
+    },
+    "image_source_diff_vs_master": {
+      "containers/Dockerfile": "trufflehog 3.95.9 -> 3.99.2; brotli 1.2.0-4.1 packages for CVE-2026-111497",
+      "containers/docker-entrypoint.sh": "certutil -N skipped when cert9.db exists (#1499, restart only)",
+      "strix/tools/proxy/caido_api.py": "unchanged; tools run host-side"
+    }
+  },
+  "latest_recheck": {
+    "checked_at": "2026-10-30T15:34:11.423222+00:00",
+    "fork_master": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+    "fork_main_mirror": "62b496430da5df5e9e79a190e7af6f92529883a3",
+    "upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "fork_latest_release": "shvia-v1.2.43",
+    "fork_release_published_at": "2026-10-28T14:04:47Z",
+    "upstream_latest_release": "v1.7.0",
+    "upstream_release_published_at": "2026-10-05T02:39:14Z",
+    "tag_resolves_to_master": true,
+    "version_file": "1.2.43",
+    "package_version": "1.7.0",
+    "release_assets_rebuilt": false,
+    "release_assets_downloaded_or_executed": false,
+    "tags_or_releases_changed": false,
+    "sandbox_image": {
+      "checked_at": "2026-10-30T15:14:59.668732+00:00",
+      "image": "ghcr.io/usestrix/strix-sandbox",
+      "manifests": {
+        "1.3.0": {
+          "status": 200,
+          "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+        },
+        "1.3.1": {
+          "status": 404,
+          "body": "{\"errors\":[{\"code\":\"MANIFEST_UNKNOWN\",\"message\":\"manifest unknown\"}]}\n"
+        }
+      }
+    },
+    "missing_image_issue": "https://github.com/usestrix/strix/issues/1628",
+    "scope": "Release metadata/ref comparison and registry manifest checks only. Source contribution branches and integration documentation were updated separately; no release/delivery."
+  }
+}

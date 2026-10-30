@@ -1,7 +1,13 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.43`
-**Upstream base:** Strix `1.7.0` + 14 commits (`62b4964`)
+**Current version:** `1.2.44`
+**Released upstream base:** Strix `1.7.0` + 64 commits (`6b7ae2eb`, verified ancestry).
+The previous release, 1.2.43, sat on `1.7.0` + 15 commits (`f7a32ae6`); its published notes
+name `62b4964` (+14), one README-only commit earlier, and are preserved.
+
+**Sandbox image:** the fork pins `ghcr.io/usestrix/strix-sandbox:1.3.0` in `RuntimeSettings.image` and
+`scripts/install.sh` (a test keeps them equal). Upstream's own default, `1.3.1`, is not in the registry yet.
+Move both pins when `docker manifest inspect` finds it; see [the continuity record](docs/upstream-tracking.md).
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
 > line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you
@@ -107,3 +113,33 @@ change into `master` as a commit of its own (the updated PR branch contains a me
 
 > The house COMMITTER does not operate on this repository (no `.committer.yml`): versioning is
 > manual, done by the agent that delivers.
+
+## Release audit — 2026-10-29
+
+The latest [SHVIA 1.2.43 release](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.43)
+and its tag resolve to delivered `master` at `8aa0791e`. The audit below was taken before the
+1.2.44 delivery branch existed; `pyproject.toml` intentionally stays upstream 1.7.0.
+See [the full audit](docs/upstream-tracking/release-audit.json).
+
+Rechecked on **2026-10-30**: release, tag, master and mirror refs are unchanged.
+The new [upstream review](docs/UPSTREAM_REVIEW_2026-10-30.md) adds two unreleased fixes
+on the integration branch and reports the missing sandbox image as upstream #1628.
+No version, tag, published release or installed binary was changed by that round.
+
+- Deliveries 1.2.41 and 1.2.42 have no corresponding tags/releases. All 61 existing fork
+  version tags do have matching releases. No historical release was created by this audit.
+- Tags 1.2.37 and 1.2.43 are lightweight, contrary to the annotated-tag rule above. Preserve
+  published refs; create future tags according to the rule instead of rewriting them.
+- Current release assets are documented as coming from build 047cc8cb, before the tagged
+  source 8aa0791e. API digests match the notes and SHA256SUMS manifest; this audit did not
+  download or execute the four binaries or establish fresh-build equivalence.
+- Build & Release remains disabled. The observed Actions billing lock still prevents
+  treating remote jobs as successful. Exact-tag binary builds and native acceptance are
+  required for a future delivery; this review branch does not update installed binaries.
+
+### Recheck — 2026-10-30
+
+Read-only, nothing changed: `.fork-version` on `master`, tag `shvia-v1.2.43` and the Latest Release still resolve to `8aa0791e`,
+equal to remote `master`; `upstream/main` is still `6b7ae2eb` and its latest release v1.7.0. The 1.2.44 delivery is on its branch only
+(unmerged, untagged, unreleased) and no new engine binaries exist, because the `pentest-<triple>` workflow needs Actions. The sandbox
+tag `1.3.1` is still 404 in the registry, so the 1.3.0 pin stands. See [the delivery consolidation](docs/UPSTREAM_DELIVERY_2026-10-30.md).

@@ -163,13 +163,18 @@ def test_pin_stays_out_of_the_environment_and_the_operators_saved_defaults(
     loader.apply_config_override(saved)
     assert loader.load_settings().llm.model == "openai/gpt-5"
 
+    # Persist legitimate ambient configuration (for example STRIX_TELEMETRY=0)
+    # before checking that a per-run pin cannot alter these saved defaults.
+    loader.persist_current()
+    expected = json.loads(saved.read_text(encoding="utf-8"))
+    assert expected["env"]["STRIX_LLM"] == "openai/gpt-5"
+    assert expected["env"]["LLM_API_KEY"] == "sk-openai"
+
     loader.pin_run_model("deepseek/deepseek-v4-pro")
     loader.persist_current()
 
     assert "STRIX_LLM" not in os.environ
-    assert json.loads(saved.read_text(encoding="utf-8")) == {
-        "env": {"STRIX_LLM": "openai/gpt-5", "LLM_API_KEY": "sk-openai"}
-    }
+    assert json.loads(saved.read_text(encoding="utf-8")) == expected
 
 
 def test_readiness_for_a_subscription_model_is_the_sign_in(

@@ -24,6 +24,8 @@ from openai import (
 
 from strix.config import codex
 from strix.core.hooks import (
+    SUBAGENT_TURN_LIMITS_KEY,
+    TURN_LIMIT_KEY,
     BudgetExceededError,
     BudgetPausedError,
     SubagentBudgetReservedError,
@@ -39,6 +41,7 @@ from strix.core.sessions import (
 )
 from strix.llm import request_log
 from strix.llm.compaction import is_context_overflow, maybe_compact
+from strix.skills import skill_turn_limit
 
 
 if TYPE_CHECKING:
@@ -58,9 +61,10 @@ logger = logging.getLogger(__name__)
 
 StreamEventSink = Callable[[str, Any], None]
 
-_INPUT_REJECTION_CODES = frozenset({400, 404, 422})
-# Replies meaning "this model takes no images", not image errors in general: a
-# context overflow that counts "image/vision expansion" must not match.
+_INPUT_REJECTION_CODES = frozenset({400, 404, 415, 422})
+# Replies meaning "this model takes no images" or "this image is not a decodable
+# image"; stripping images and retrying fixes both. Not image errors in general:
+# a context overflow that counts "image/vision expansion" must not match.
 _IMAGE_REJECTION = re.compile(
     r"no endpoints found that support image input"  # OpenRouter
     r"|image_url is only supported by certain models"  # OpenAI
@@ -68,7 +72,16 @@ _IMAGE_REJECTION = re.compile(
     r"|does not support image input"  # LiteLLM's Fireworks check
     r"|doesn't support the image field"  # Bedrock Converse
     r"|unknown variant `image_url`"  # DeepSeek, e.g. via Vercel AI Gateway
-    r"|'[^']*image[^']*' functionality not supported",  # Vercel AI Gateway (AI SDK), unverified
+    r"|'[^']*image[^']*' functionality not supported"  # Vercel AI Gateway (AI SDK), unverified
+    r"|\binvalid_image\b"  # xAI error code
+    r"|does not contain a valid JPG, PNG, WebP, or ICO image"  # xAI
+    r"|unsupported content-type encountered when downloading image"  # xAI
+    r"|does not represent a valid image"  # OpenAI
+    r"|could not process image"  # Anthropic, Bedrock
+    r"|provided image is not valid"  # Gemini
+    r"|could not be loaded as a valid image"  # Mistral
+    r"|url did not return an image"  # OpenRouter
+    r"|not an allowed image type|cannot identify image file",  # vLLM/PIL-based hosts
     re.IGNORECASE,
 )
 _MAX_COMPACTIONS_PER_CYCLE = 2
@@ -499,6 +512,7 @@ async def spawn_child_agent(
         name=name,
         parent_id=parent_id,
         task=task,
+        skills=skills,
         initial_input=child_initial_input(
             name=name,
             child_id=child_id,
@@ -582,6 +596,7 @@ async def respawn_subagents(
                 name=name,
                 parent_id=parent_id,
                 task=str(md.get("task", "")),
+                skills=child_skills,
                 initial_input=[],
                 start_parked=start_parked,
                 event_sink=event_sink,
@@ -684,8 +699,14 @@ async def _run_until_lifecycle(
                 # Stopped while parked (operator stop or a parent's stop_agent).
                 await coordinator.reset_recovery(agent_id)
                 return result
-            if session is not None:
-                input_data = []
+            _, pending_items = await coordinator.consume_pending(
+                agent_id, include_items=session is None
+            )
+            input_data = (
+                []
+                if session is not None
+                else ItemHelpers.input_to_new_input_list(input_data) + pending_items
+            )
             continue
 
         said_to_user = said_to_user or _said_to_user(result)
@@ -1092,7 +1113,7 @@ async def _append_tool_required_message(
         message = (
             "Your previous message ended a turn without a tool call. Plain text never ends "
             "execution and never hands control to the user: it is shown to the user, and the "
-            "run continues. Continue immediately and call exactly one tool. "
+            "run continues. Continue immediately and call a tool. "
             "If you have nothing to do until the user replies, call wait_for_user; your "
             "text already reached them, so do not repeat it. "
             "If you are blocked waiting for another agent, call wait_for_agents. "
@@ -1104,7 +1125,7 @@ async def _append_tool_required_message(
         message = (
             "Your previous response ended the autonomous run without a lifecycle tool "
             "call. That is invalid in non-interactive mode; plain text final answers are "
-            "ignored. Continue immediately and call exactly one tool. "
+            "ignored. Continue immediately and call a tool. "
             f"If your work is complete, call {finish_tool}. "
             "If you are blocked waiting for another agent, call wait_for_agents. "
             "Otherwise use the appropriate execution or planning tool. "
@@ -1249,6 +1270,7 @@ async def _start_child_runner(
     name: str,
     parent_id: str | None,
     task: str,
+    skills: list[str],
     initial_input: Any,
     start_parked: bool = False,
     event_sink: StreamEventSink | None = None,
@@ -1262,6 +1284,9 @@ async def _start_child_runner(
     child_ctx["agent_id"] = child_id
     child_ctx["parent_id"] = parent_id
     child_ctx["task"] = task
+    child_ctx[TURN_LIMIT_KEY] = skill_turn_limit(
+        skills, parent_ctx.get(SUBAGENT_TURN_LIMITS_KEY) or {}
+    )
 
     async def _child_loop() -> None:
         # A budget stop is a clean scan-wide shutdown, not a child failure: the

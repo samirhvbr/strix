@@ -171,7 +171,14 @@ def request(
     body: dict[str, Any] | None = None,
     stream: bool = False,
     idempotency_key: str | None = None,
+    timeout: float | None = None,
 ) -> requests.Response:
+    """Send one platform API request.
+
+    ``timeout`` can only shorten the configured request timeout, so a caller
+    with a smaller remaining budget (``--wait``) cannot be held past it by a
+    stalled connection.
+    """
     url = f"{app_url()}/api/v1{path}"
     headers = {
         "Authorization": f"Bearer {api_token(token)}",
@@ -193,7 +200,7 @@ def request(
             }
             or None,
             json=body,
-            timeout=_timeout_s,
+            timeout=_timeout_s if timeout is None else min(_timeout_s, timeout),
             stream=stream,
             allow_redirects=False,
         )
@@ -339,7 +346,12 @@ def parsed(response: requests.Response) -> Any:
 
 
 def check(response: requests.Response) -> Any:
-    data = parsed(response)
+    try:
+        data = parsed(response)
+    except requests.RequestException as exc:
+        raise CloudTransportError(
+            f"could not read the platform response (HTTP {response.status_code}): {exc}"
+        ) from exc
     if 200 <= response.status_code < 300:
         content_type = response.headers.get("content-type", "").lower()
         if "application/json" not in content_type:

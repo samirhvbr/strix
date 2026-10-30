@@ -142,6 +142,7 @@ def test_update_moves_outcome_and_keeps_history() -> None:
     entry = entries[0]
     assert entry["outcome"] == "reported"
     assert entry["agent_name"] == "followup-tester"
+    assert entry["agent_id"] == "agent-2"
     assert entry["history"] == [
         {
             "outcome": "needs_follow_up",
