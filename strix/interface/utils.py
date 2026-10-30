@@ -1501,6 +1501,10 @@ def rewrite_localhost_targets(targets_info: list[dict[str, Any]], host_gateway: 
 #: from wherever they happen to live on the host.
 API_SPEC_WORKSPACE_SUBDIR = "api-specs"
 
+# Keep ownership of downloads until staging succeeds. TemporaryDirectory also
+# removes pending downloads at normal process exit if setup is abandoned.
+_fetched_collections: dict[str, tempfile.TemporaryDirectory[str]] = {}
+
 
 def write_fetched_collection(collection: dict[str, Any], collection_uid: str) -> str:
     """Write a collection fetched from the Postman API to a local file.
@@ -1512,9 +1516,14 @@ def write_fetched_collection(collection: dict[str, Any], collection_uid: str) ->
     staging.mkdir(parents=True, exist_ok=True)
     # One collection can be targeted with multiple environments in the same run.
     # Keep each resolved snapshot independent, including across concurrent runs.
-    snapshot = Path(tempfile.mkdtemp(prefix="collection-", dir=staging))
-    path = snapshot / f"{sanitize_name(collection_uid)}.postman_collection.json"
-    write_secret_text(path, json.dumps(collection, indent=2))
+    snapshot = tempfile.TemporaryDirectory(prefix="collection-", dir=staging)
+    path = Path(snapshot.name) / f"{sanitize_name(collection_uid)}.postman_collection.json"
+    try:
+        write_secret_text(path, json.dumps(collection, indent=2))
+    except BaseException:
+        snapshot.cleanup()
+        raise
+    _fetched_collections[str(path)] = snapshot
     return str(path)
 
 
@@ -1544,8 +1553,21 @@ def stage_api_specs(targets_info: list[dict[str, Any]], run_name: str) -> list[d
             count += 1
             name = f"{stem}-{count}{suffix}"
         used.add(name)
-        shutil.copy2(source, staging / name)
+        destination = staging / name
+        if source.resolve() != destination.resolve():
+            shutil.copy2(source, destination)
         details["workspace_path"] = f"/workspace/{API_SPEC_WORKSPACE_SUBDIR}/{name}"
+
+    # Release only downloads this process created, after every copy succeeds.
+    # Retain the per-run staged files: resume still needs those snapshots.
+    for target in specs:
+        details = target["details"]
+        downloaded = str(details["target_spec"])
+        snapshot = _fetched_collections.get(downloaded)
+        if snapshot is not None:
+            details["target_spec"] = str(staging / Path(details["workspace_path"]).name)
+            snapshot.cleanup()
+            del _fetched_collections[downloaded]
 
     return [
         {

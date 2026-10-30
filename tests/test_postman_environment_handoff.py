@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import shutil
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -162,3 +163,37 @@ def test_references_in_collection_values_find_environment_dependencies(
     variables = postman_variables(json.loads(Path(target["details"]["target_spec"]).read_text()))
     assert variables["token"] == "{{accessToken}}"  # noqa: S105 - unresolved template
     assert variables["accessToken"] == "scan-only-token"
+
+
+@pytest.mark.usefixtures("postman_api")
+def test_staging_releases_the_download_snapshot_and_keeps_the_run_copy() -> None:
+    targets = _targets("postman://collection-1?env=env-1")
+    downloaded = Path(targets[0]["details"]["target_spec"])
+    (source,) = stage_api_specs(targets, "snapshot-cleanup")
+
+    assert not downloaded.parent.exists()
+    staged = Path(targets[0]["details"]["target_spec"])
+    assert staged.parent == Path(source["source_path"])
+    assert postman_variables(json.loads(staged.read_text()))["tenant"] == "tenant-one"
+    # Repeating setup uses the retained run snapshot rather than a removed input.
+    assert stage_api_specs(targets, "snapshot-cleanup") == [source]
+
+
+@pytest.mark.usefixtures("postman_api")
+def test_failed_staging_keeps_downloads_available_for_retry(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    targets = _targets("postman://collection-1?env=env-1")
+    downloaded = Path(targets[0]["details"]["target_spec"])
+    copy_file = shutil.copy2
+
+    def fail_copy(*_args: Any, **_kwargs: Any) -> None:
+        raise OSError("staging unavailable")
+
+    monkeypatch.setattr(shutil, "copy2", fail_copy)
+    with pytest.raises(OSError, match="staging unavailable"):
+        stage_api_specs(targets, "failed-staging")
+    assert downloaded.is_file()
+    monkeypatch.setattr(shutil, "copy2", copy_file)
+    stage_api_specs(targets, "failed-staging")
+    assert not downloaded.parent.exists()
