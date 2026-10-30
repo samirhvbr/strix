@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-30T19:21:40.398366+00:00",
+  "updated_at": "2026-10-30T21:15:04.820703+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -8,12 +8,15 @@
   "code_synchronization": {
     "last_delivered": {
       "fork_ref": "refs/heads/master",
-      "fork_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
-      "fork_version": "1.2.43",
-      "tag": "shvia-v1.2.43",
-      "upstream_effective_ancestor": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
-      "previous_documented_upstream_base": "62b496430da5df5e9e79a190e7af6f92529883a3",
-      "validation_scope": "Historical delivered state; current audit separately confirms tag/master equality and records baseline failures."
+      "fork_sha": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5",
+      "fork_version": "1.2.44",
+      "tag": "shvia-v1.2.44",
+      "upstream_effective_ancestor": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "previous_documented_upstream_base": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
+      "validation_scope": "Delivered 2026-10-30; code validated on d3d221b9 (3612 passed, 12 skipped, 3 xfailed, 0 failed with the bundled LiteLLM price map); only documentation changed afterwards. No remote CI (billing-locked).",
+      "tag_type": "lightweight",
+      "release_published_at": "2026-10-30T21:13:42Z",
+      "release_assets": 0
     },
     "last_completed": {
       "upstream_ref": "refs/heads/main",
@@ -25,8 +28,8 @@
       "status": "locally_validated_with_documented_limits",
       "full_quality_gate": "failed_at_pyright_1259_diagnostics",
       "validation_record": "followup-2026-10-30.json",
-      "delivered_to_master": false,
-      "released": false,
+      "delivered_to_master": true,
+      "released": true,
       "recheck": {
         "at": "2026-10-30T16:32:16.736137+00:00",
         "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -331,10 +334,10 @@
     "review_branch": "feat/upstream-sync-contributions-20261029",
     "master_changed": true,
     "mirror_changed": true,
-    "tags_changed": false,
-    "releases_changed": false,
+    "tags_changed": true,
+    "releases_changed": true,
     "upstream_messages_created": true,
-    "version_bumped": false,
+    "version_bumped": true,
     "upstream_prs": [
       1631,
       1634,
@@ -352,13 +355,14 @@
       "prepared_version": "1.2.44",
       "contains_review_branch": "feat/upstream-sync-contributions-20261029",
       "merged_to_master": true,
-      "tag_created": false,
-      "release_created": false,
-      "note": "last_delivered stays 1.2.43 until tag shvia-v1.2.44 and the Release exist; advance it then.",
+      "tag_created": true,
+      "release_created": true,
+      "note": "Released 2026-10-30. The tag was created by gh release create from the default branch head (the owner's git tag/push ran in another repository); it resolves to 8dab158f.",
       "includes_round_2026_10_30": true,
       "validation": "3612 passed, 12 skipped, 3 xfailed, 0 failed on d3d221b9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True); only documentation changed afterwards",
       "merge_commit": "e2ec6f9d0372bf740985f4e9a0d8fd7e4e7dfacc",
-      "merge_pull_request": 45
+      "merge_pull_request": 45,
+      "tag_type": "lightweight"
     }
   }
 }
