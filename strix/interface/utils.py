@@ -21,6 +21,7 @@ from rich.text import Text
 from strix.config import load_settings
 from strix.telemetry import report_error
 from strix.utils.api_spec import detect_spec_format
+from strix.utils.secret_files import write_secret_text
 
 
 logger = logging.getLogger(__name__)
@@ -1537,8 +1538,11 @@ def write_fetched_collection(collection: dict[str, Any], collection_uid: str) ->
     """
     staging = Path(tempfile.gettempdir()) / "strix_api_specs" / "fetched"
     staging.mkdir(parents=True, exist_ok=True)
-    path = staging / f"{sanitize_name(collection_uid)}.postman_collection.json"
-    path.write_text(json.dumps(collection, indent=2), encoding="utf-8")
+    # One collection can be targeted with multiple environments in the same run.
+    # Keep each resolved snapshot independent, including across concurrent runs.
+    snapshot = Path(tempfile.mkdtemp(prefix="collection-", dir=staging))
+    path = snapshot / f"{sanitize_name(collection_uid)}.postman_collection.json"
+    write_secret_text(path, json.dumps(collection, indent=2))
     return str(path)
 
 
