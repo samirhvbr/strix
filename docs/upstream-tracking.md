@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest round](UPSTREAM_REVIEW_2026-10-30.md)
+Start every review here, then read the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md),
+the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.
 A GitHub state is not a fork decision: a closed PR may still be carried, an open PR may already
@@ -11,8 +12,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
 | Delivered fork | `master` / `shvia-v1.2.43` at `8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5` | Existing release; no master, mirror, tag or release update in this round |
-| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Validated fork code `3154805db216d40f35852b8fb608126a9dabcfcd` on `feat/upstream-sync-contributions-20261029`, including the two new fixes; 3590 passed, 12 skipped, 3 xfailed, with existing Pyright limits |
-| Contribution review | 2026-10-30: all 574 previous records rechecked; final upstream catalog has 324 open PRs and 208 open issues | Two focused PRs and five supporting/design issues published; targeted code review and historical metadata coverage remain separate |
+| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Fork code `41be416c96a1cc9dd9518907c7daaf0737a0420c` on `feat/upstream-sync-contributions-20261029`: 120 focused tests pass after #1635 and its cleanup follow-up; last full suite remains at `3154805d` (3590 passed, 12 skipped, 3 xfailed). Existing Pyright limits remain. |
+| Contribution review | 2026-10-30 follow-up: all 596 previous records rechecked; final catalog has 325 open PRs and 208 open issues | 16 existing authored PRs reviewed, 81 targeted feedback tests pass; new Postman PR #1635 published and imported. Ledger now has 597 records. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code

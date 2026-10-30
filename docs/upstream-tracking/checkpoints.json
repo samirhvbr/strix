@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-30T15:38:00.832119+00:00",
+  "updated_at": "2026-10-30T16:32:16.736137+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -20,17 +20,23 @@
       "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
       "sync_merge_sha": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
       "fork_ref": "refs/heads/feat/upstream-sync-contributions-20261029",
-      "fork_validated_code_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
-      "validated_at": "2026-10-30T15:38:00.832119+00:00",
+      "fork_validated_code_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
+      "validated_at": "2026-10-30T16:32:16.736137+00:00",
       "status": "locally_validated_with_documented_limits",
       "full_quality_gate": "failed_at_pyright_1259_diagnostics",
-      "validation_record": "round-2026-10-30.json",
+      "validation_record": "followup-2026-10-30.json",
       "delivered_to_master": false,
       "released": false,
       "recheck": {
-        "at": "2026-10-30T15:38:00.832119+00:00",
+        "at": "2026-10-30T16:32:16.736137+00:00",
         "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-        "status": "upstream_base_unchanged;two_new_contribution_fixes_validated"
+        "status": "upstream_base_unchanged;Postman_handoff_and_cleanup_feedback_validated"
+      },
+      "validation_scope": "120focused tests including adapted resume behavior; Ruff/Mypy/Bandit pass; unchanged1259Pyright. Full suite not rerun for this patch.",
+      "last_full_suite": {
+        "fork_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+        "result": "3590passed,12skipped,3xfailed",
+        "record": "round-2026-10-30.json"
       }
     },
     "history": [
@@ -54,75 +60,115 @@
           1634
         ],
         "validation_record": "round-2026-10-30.json"
+      },
+      {
+        "fork_sha": "e219e11aeec4d68ec48614ad693afce75f923b5f",
+        "validated_at": "2026-10-30T16:24:29.943927+00:00",
+        "status": "focused_incremental_validation_completed",
+        "result": "118focused passed; Ruff/Mypy/Bandit pass; Pyright1259 unchanged. Last full suite remains at3154805d.",
+        "source_prs": [
+          1635
+        ],
+        "validation_record": "followup-2026-10-30.json",
+        "previous_checkpoint": {
+          "upstream_ref": "refs/heads/main",
+          "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "sync_merge_sha": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+          "fork_ref": "refs/heads/feat/upstream-sync-contributions-20261029",
+          "fork_validated_code_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+          "validated_at": "2026-10-30T15:38:00.832119+00:00",
+          "status": "locally_validated_with_documented_limits",
+          "full_quality_gate": "failed_at_pyright_1259_diagnostics",
+          "validation_record": "round-2026-10-30.json",
+          "delivered_to_master": false,
+          "released": false,
+          "recheck": {
+            "at": "2026-10-30T15:38:00.832119+00:00",
+            "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "status": "upstream_base_unchanged;two_new_contribution_fixes_validated"
+          }
+        }
+      },
+      {
+        "fork_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
+        "validated_at": "2026-10-30T16:32:16.736137+00:00",
+        "status": "focused_feedback_followup_validated",
+        "result": "120focused pass, including resume after cleanup; Ruff/Mypy/Bandit pass; Pyright1259unchanged.",
+        "source_prs": [
+          1635
+        ],
+        "source_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "adaptations": [
+          "Cleanup follow-up reconciled with existing stage_api_specs(resume=True): preserve missing staged-file validation, skip same-file copies only on fresh staging.",
+          "Fork regression additionally verifies resume=True after removing the downloaded snapshot."
+        ],
+        "validation_record": "followup-2026-10-30.json"
       }
     ],
     "in_progress": null
   },
   "contribution_review": {
     "round": "2026-10-30",
-    "report": "../UPSTREAM_REVIEW_2026-10-30.md",
+    "report": "../UPSTREAM_FOLLOWUP_2026-10-30.md",
     "ledger": "items.json",
-    "last_completed_inventory_at": "2026-10-30T15:32:08.766644+00:00",
-    "inventory_method": "All574 previous records individually fetched; complete paginated all-state catalogs compared before/after. Final1156PR/419issues,324/208open. Only our2PRs/5issues were added during the round; no other update/removal. New PR feedback rechecked separately after publication.",
-    "state": "complete_known_recheck_and_selected_contributions;deeper_backlog_pending",
+    "last_completed_inventory_at": "2026-10-30T16:22:27.007465+00:00",
+    "inventory_method": "All596 prior records individually fetched, complete paginated all-state catalogs compared before/after with48h overlap; only our1635added. All16 pre-existing authored open PR discussions/threads/CI checked;81 focused feedback tests passed.",
+    "state": "complete_known_recheck_and_selected_issue_implementation;deeper_backlog_pending",
     "coverage": {
-      "total_records": 596,
+      "total_records": 597,
       "upstream_open_inventory": {
-        "issue": 208,
-        "pr": 324
+        "pr": 325,
+        "issue": 208
       },
       "known_additional": 20,
       "fork_catalog": 44,
       "review_depth": {
-        "deep": 38,
         "identified": 36,
-        "triage": 522
+        "triage": 522,
+        "deep": 39
       },
       "review_depth_upstream": {
-        "deep": 31,
-        "triage": 521
+        "triage": 521,
+        "deep": 32
       },
       "review_depth_fork": {
-        "deep": 7,
         "identified": 36,
-        "triage": 1
+        "triage": 1,
+        "deep": 7
       },
       "fork_decisions": {
-        "adapted": 13,
+        "pending": 174,
+        "incorporated_fully": 50,
+        "adapted": 15,
         "already_covered": 90,
         "deferred": 241,
         "discarded": 26,
-        "incorporated_fully": 50,
-        "incorporated_partially": 1,
-        "pending": 175
+        "incorporated_partially": 1
       },
       "implementation_phases": {
-        "decision_required": 115,
-        "deferred": 241,
-        "integrated_review_branch": 43,
-        "not_planned": 26,
-        "pending": 12,
+        "unknown": 118,
         "present_before_round": 41,
-        "unknown": 118
+        "integrated_review_branch": 45,
+        "decision_required": 114,
+        "deferred": 241,
+        "not_planned": 26,
+        "pending": 12
       }
     },
     "known_items_checked": {
-      "count": 574,
-      "upstream": 530,
+      "count": 596,
+      "upstream": 552,
       "fork": 44,
       "missing": 0,
-      "actual_changed": [
-        "usestrix/strix#pr:1370"
-      ],
-      "own_feedback_rechecked": 14,
-      "note": "All previously recorded states/heads/merge SHAs compared, preserving previous decisions/imports;44draft fields enriched without state change."
+      "actual_changed": [],
+      "own_feedback_rechecked": 16,
+      "note": "No prior source head/state/update/merge change. No new code fix required for feedback; older requests verified at current heads."
     },
     "selected_new_or_updated_prs": [
-      1631,
-      1634
+      1635
     ],
     "next_discovery": {
-      "since_inclusive": "2026-10-28T15:32:08Z",
+      "since_inclusive": "2026-10-28T16:22:27Z",
       "overlap_hours": 48,
       "include_closed_and_merged": true,
       "recheck_all_ledger_ids_first": true,
@@ -132,6 +178,7 @@
       "code_integrations_pending": [],
       "deep_review_pending": "Catalog and targeted overlap reviews are not complete acceptance reviews. Remaining identified/triage-depth items keep their individual pending/deferred decisions and revisit conditions.",
       "priority_queue": [
+        "usestrix/strix#pr:1635",
         "usestrix/strix#issue:1628",
         "usestrix/strix#pr:1631",
         "usestrix/strix#pr:1634",
@@ -151,10 +198,10 @@
       ]
     },
     "decisions_required": [
-      "Maintainers: publish sandbox1.3.1 (#1628); define external-reference and Postman environment handoff contracts (#1632/#1633).",
-      "Maintainers: authorize current-head CI and review #1631/#1634; action_required is not green.",
-      "Existing design queue: per-model resume pricing and SARIF identity migration remain unresolved.",
-      "Fork master delivery/release remains deferred while sandbox availability and prior release/quality limits remain. The review branch is unreleased."
+      "Maintainers: publish sandbox1.3.1 (#1628), decide external-reference policy (#1632), historical pricing (#1622) and deferred PTY capabilities (#1623).",
+      "Maintainers: review #1635 effective-variable proposal and coordinate writer overlap with #1158; authorize current-head CI for our open PRs.",
+      "The four earlier inline review threads still await reviewer resolution despite satisfied code/test requests.",
+      "Fork master/release remains separate; existing Pyright and sandbox artifact blockers persist."
     ],
     "second_pass": {
       "recorded_at": "2026-10-29T21:04:34.141249+00:00",
@@ -232,7 +279,16 @@
       1625,
       1626,
       1627
-    ]
+    ],
+    "in_progress": null,
+    "followup_record": "followup-2026-10-30.json",
+    "latest_pr_feedback_at": "2026-10-30T16:32:16.736137+00:00",
+    "new_feedback_addressed": {
+      "pr": 1635,
+      "comment": "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
+      "source_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "fork_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c"
+    }
   },
   "version_release_audit": "release-audit.json",
   "publication_scope": {
@@ -245,7 +301,8 @@
     "version_bumped": false,
     "upstream_prs": [
       1631,
-      1634
+      1634,
+      1635
     ],
     "upstream_issues": [
       1628,

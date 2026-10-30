@@ -1,5 +1,8 @@
 # Upstream operational reliability review — 2026-10-30
 
+Later same-day work is recorded in the [issue implementation and PR feedback follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md).
+It preserves this round's completed results and records the subsequent Postman fix separately.
+
 This round continues [2026-10-29](UPSTREAM_INTEGRATION_2026-10-29.md) from review-branch
 commit `783d738a3f00d168e6bee968004f661e7e622254`. The new user request authorizes
 focused issues and PRs in `usestrix/strix`. Fork delivery remains on the existing
