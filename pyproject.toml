@@ -257,6 +257,8 @@ ignore = [
 "tests/test_unknown_tool_recovery.py" = ["N802"]
 "tests/test_warm_up_event_loop.py" = ["N802"]
 "tests/test_report_pdf.py" = ["S105", "S106"]
+# Runs git and the script under test with fixed argument lists, on a throwaway repository.
+"tests/test_build_pentest_local.py" = ["S603", "S607", "PLW1510"]
 # Fake MCP server matches the SDK's MCPServer signature; its args are unused.
 "tests/test_mcp_client.py" = ["S105", "S106", "ARG002"]
 # MCP connection request in a test carries a dummy bearer token.
