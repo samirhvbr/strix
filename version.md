@@ -143,3 +143,10 @@ Read-only, nothing changed: `.fork-version` on `master`, tag `shvia-v1.2.43` and
 equal to remote `master`; `upstream/main` is still `6b7ae2eb` and its latest release v1.7.0. The 1.2.44 delivery is on its branch only
 (unmerged, untagged, unreleased) and no new engine binaries exist, because the `pentest-<triple>` workflow needs Actions. The sandbox
 tag `1.3.1` is still 404 in the registry, so the 1.3.0 pin stands. See [the delivery consolidation](docs/UPSTREAM_DELIVERY_2026-10-30.md).
+
+### Merge — 2026-10-30
+
+Delivery PR [#45](https://github.com/samirhvbr/strix/pull/45) was merged into `master` with a merge commit (`--no-ff`) as `e2ec6f9d`
+(parents `8aa0791e`, the 1.2.43 release, and `14777bac`, the delivery). The companion PRs #38 to #44 closed with it. `.fork-version`
+and this file say 1.2.44 on `master`, but **the annotated tag `shvia-v1.2.44` and the Release do not exist yet**: the Latest Release
+is still 1.2.43. No new engine binaries exist (the `pentest-<triple>` workflow needs Actions, which are billing-locked).

@@ -91,3 +91,12 @@ itself a fast-forward of `origin/master` (0 commits behind). So they are not mer
 2. The owner confirms #1635 and the pinned sandbox image, then merges that PR with `--no-ff` and creates the annotated tag
    `shvia-v1.2.44` and the Release `SHVIA 1.2.44 (Strix 1.7.0)`. The `main` mirror is already at `upstream/main`.
 3. When upstream publishes `strix-sandbox:1.3.1`, move both pins. Next discovery window: `2026-10-28T19:03:26Z`.
+
+## After the merge
+
+PR #45 was merged into `master` as `e2ec6f9d` after a review that covered the #1635 diff line by line (only the values a request
+template references enter the staged collection; an unrelated environment value and the host's Postman key stay out; files are
+mode 0600; the downloaded snapshot is removed after staging; resume reuses the staged copy; 8 tests pass) and a check that nothing
+outside documentation changed since the validated tree `d3d221b9`. Tag `shvia-v1.2.44` and the Release remain with the owner.
+One residual: the staged copy under the system temp directory keeps the credentials, mode 0600, until the temp directory is cleaned,
+because resume needs it.
