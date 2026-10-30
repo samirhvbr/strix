@@ -329,7 +329,7 @@
   "version_release_audit": "release-audit.json",
   "publication_scope": {
     "review_branch": "feat/upstream-sync-contributions-20261029",
-    "master_changed": false,
+    "master_changed": true,
     "mirror_changed": true,
     "tags_changed": false,
     "releases_changed": false,
@@ -351,12 +351,14 @@
       "branch": "feat/upstream-sync-delivery-20261029",
       "prepared_version": "1.2.44",
       "contains_review_branch": "feat/upstream-sync-contributions-20261029",
-      "merged_to_master": false,
+      "merged_to_master": true,
       "tag_created": false,
       "release_created": false,
-      "note": "Last_delivered above stays 1.2.43 until the merge happens; advance it after the delivery commit exists.",
+      "note": "last_delivered stays 1.2.43 until tag shvia-v1.2.44 and the Release exist; advance it then.",
       "includes_round_2026_10_30": true,
-      "validation": "3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)"
+      "validation": "3612 passed, 12 skipped, 3 xfailed, 0 failed on d3d221b9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True); only documentation changed afterwards",
+      "merge_commit": "e2ec6f9d0372bf740985f4e9a0d8fd7e4e7dfacc",
+      "merge_pull_request": 45
     }
   }
 }
