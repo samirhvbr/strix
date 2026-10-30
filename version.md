@@ -142,4 +142,4 @@ No version, tag, published release or installed binary was changed by that round
 Read-only, nothing changed: `.fork-version` on `master`, tag `shvia-v1.2.43` and the Latest Release still resolve to `8aa0791e`,
 equal to remote `master`; `upstream/main` is still `6b7ae2eb` and its latest release v1.7.0. The 1.2.44 delivery is on its branch only
 (unmerged, untagged, unreleased) and no new engine binaries exist, because the `pentest-<triple>` workflow needs Actions. The sandbox
-tag `1.3.1` is still 404 in the registry, so the 1.3.0 pin stands. See [the round record](docs/UPSTREAM_INTEGRATION_2026-10-30.md).
+tag `1.3.1` is still 404 in the registry, so the 1.3.0 pin stands. See [the delivery consolidation](docs/UPSTREAM_DELIVERY_2026-10-30.md).

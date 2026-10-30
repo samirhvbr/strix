@@ -315,7 +315,8 @@
         "reason": "The owner's upstream PRs #1634 and #1631 are stricter; carried instead."
       },
       "live_cost_map_note": "tests/test_pricing.py::test_resolves_common_bare_model_names fails on 2026-10-30 when LiteLLM downloads its live price map (kyma/grok-4.5 is priced differently from xai/, perplexity/xai/ and github_copilot/), and passes with LITELLM_LOCAL_MODEL_COST_MAP=True. Data drift, not a code regression; run the suite with the bundled map for a deterministic result.",
-      "validation": "pending: full suite on the merge commit"
+      "validation": "Full suite on the merged tree d3d221b9: 3612 passed, 12 skipped, 3 xfailed, 0 failed (LITELLM_LOCAL_MODEL_COST_MAP=True); Ruff, Mypy and Bandit pass; Pyright is not comparable in this environment (5941 vs 1259 recorded on macOS).",
+      "merged_tree_sha": "d3d221b98862b66aeae7617cbdd7a26db7c37961"
     }
   },
   "version_release_audit": "release-audit.json",
