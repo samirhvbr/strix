@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-29T21:04:34.141249+00:00",
+  "updated_at": "2026-10-30T19:04:00.251813+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -28,7 +28,7 @@
       "delivered_to_master": false,
       "released": false,
       "recheck": {
-        "at": "2026-10-29T21:04:34.141249+00:00",
+        "at": "2026-10-30T19:04:00.251813+00:00",
         "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
         "status": "unchanged_since_integration"
       }
@@ -48,28 +48,28 @@
     "in_progress": null
   },
   "contribution_review": {
-    "round": "2026-10-29",
-    "report": "../UPSTREAM_INTEGRATION_2026-10-29.md",
+    "round": "2026-10-30",
+    "report": "../UPSTREAM_INTEGRATION_2026-10-30.md",
     "ledger": "items.json",
-    "last_completed_inventory_at": "2026-10-29T20:58:03.199291+00:00",
-    "inventory_method": "Paginated full open PR/issue inventories; second full fetch including bodies/heads/updatedAt has no additions/removals/changes. Counts match earlier API totals. Second pass (same day): inventory fetched again at 2026-10-29T20:58:03.199291+00:00 with identical totals (320 PRs + 203 issues); one known item changed (#1393) and four closed/merged items entered the ledger.",
+    "last_completed_inventory_at": "2026-10-30T19:03:26.738370+00:00",
+    "inventory_method": "Paginated full open PR/issue inventories; second full fetch including bodies/heads/updatedAt has no additions/removals/changes. Counts match earlier API totals. Second pass (same day): inventory fetched again at 2026-10-29T20:58:03.199291+00:00 with identical totals (320 PRs + 203 issues); one known item changed (#1393) and four closed/merged items entered the ledger. Round 2026-10-30: inventory fetched again at 2026-10-30T19:03:26.738370+00:00: 325 PRs + 208 issues; one known item changed (#1370 closed by its author), 11 new records entered.",
     "state": "complete_inventory_triage_and_selected_integrations; deeper_backlog_pending",
     "coverage": {
-      "total_records": 574,
+      "total_records": 585,
       "upstream_open_inventory": {
-        "issue": 203,
-        "pr": 320
+        "issue": 208,
+        "pr": 325
       },
-      "known_additional": 7,
+      "known_additional": 8,
       "fork_catalog": 44,
       "review_depth": {
         "identified": 36,
-        "triage": 507,
-        "deep": 31
+        "triage": 509,
+        "deep": 40
       },
       "review_depth_upstream": {
-        "triage": 506,
-        "deep": 24
+        "triage": 508,
+        "deep": 33
       },
       "review_depth_fork": {
         "identified": 36,
@@ -77,21 +77,21 @@
         "deep": 7
       },
       "fork_decisions": {
-        "pending": 160,
-        "incorporated_fully": 46,
-        "adapted": 13,
-        "already_covered": 90,
-        "deferred": 238,
-        "discarded": 26,
+        "pending": 159,
+        "incorporated_fully": 50,
+        "adapted": 14,
+        "already_covered": 92,
+        "deferred": 242,
+        "discarded": 27,
         "incorporated_partially": 1
       },
       "implementation_phases": {
         "unknown": 106,
         "present_before_round": 41,
-        "integrated_review_branch": 39,
-        "decision_required": 112,
+        "integrated_review_branch": 46,
+        "decision_required": 115,
         "deferred": 238,
-        "not_planned": 26,
+        "not_planned": 27,
         "pending": 12
       }
     },
@@ -120,10 +120,13 @@
       1502,
       1499,
       1571,
-      1446
+      1446,
+      1627,
+      1631,
+      1634
     ],
     "next_discovery": {
-      "since_inclusive": "2026-10-27T20:58:03Z",
+      "since_inclusive": "2026-10-28T19:03:26Z",
       "overlap_hours": 48,
       "include_closed_and_merged": true,
       "recheck_all_ledger_ids_first": true,
@@ -131,7 +134,7 @@
     },
     "partial_work": {
       "code_integrations_pending": [],
-      "deep_review_pending": "500 current-open items remain at triage depth;36 additional fork-catalog entries are metadata-only. Deep review is not claimed for the full inventory.",
+      "deep_review_pending": "500 current-open upstream items remain at triage depth; 36 fork-catalog entries are metadata-only. Deep review is not claimed for the full inventory.",
       "priority_queue": [
         "usestrix/strix#issue:1622",
         "usestrix/strix#issue:1623",
@@ -150,7 +153,10 @@
       "Historical per-model cost ledger and SARIF identity migration need bounded policy/design before incorporation.",
       "Master delivery (merge, tag, Release, main mirror push) needs the owner: the delivery branch feat/upstream-sync-delivery-20261029 carries the 1.2.44 bump; retrospective historical releases remain out of scope.",
       "Remote Actions account availability must be resolved before relying on its builds.",
-      "Sandbox image: resolved for delivery by pinning ghcr.io/usestrix/strix-sandbox:1.3.0 on the delivery branch (the synchronized source's 1.3.1 is not published). Revisit when upstream publishes 1.3.1; the brotli CVE-2026-111497 stays unpatched in the image until then."
+      "Sandbox image: resolved for delivery by pinning ghcr.io/usestrix/strix-sandbox:1.3.0 on the delivery branch (the synchronized source's 1.3.1 is not published). Revisit when upstream publishes 1.3.1; the brotli CVE-2026-111497 stays unpatched in the image until then.",
+      "Upstream contract questions, nothing implemented: #1632 (local $ref files in staged API specs) and #1633 (Postman environment values reaching the agent). Wait for a maintainer answer.",
+      "#1635 (the owner's parallel-session PR for #1633) would deliver enabled Postman environment values, including credentials, to the agent workspace; confirm that contract before it is carried.",
+      "#1625 replaces Semgrep with Opengrep in the sandbox image and prompts; it needs an image the fork can pull (not possible with the 1.3.0 pin) and an owner decision on the tool."
     ],
     "second_pass": {
       "recorded_at": "2026-10-29T21:04:34.141249+00:00",
@@ -167,6 +173,40 @@
       "upstream_main_sha_at_check": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
       "upstream_main_moved_since_sync": false,
       "bin_pr_watch": "Run read-only after the sync. Upstream-touched flags for #1469, #1470 and #1612 are the ones already checked in the integration; no unanswered human feedback besides bot output."
+    },
+    "previous_rounds": [
+      {
+        "round": "2026-10-29",
+        "report": "../UPSTREAM_INTEGRATION_2026-10-29.md",
+        "last_completed_inventory_at": "2026-10-29T20:58:03.199291+00:00"
+      }
+    ],
+    "round_2026_10_30": {
+      "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+      "inventory_at": "2026-10-30T19:03:26.738370+00:00",
+      "upstream_main_sha_at_check": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "upstream_main_moved_since_sync": false,
+      "sandbox_image": {
+        "1.3.1_manifest_http_status": 404,
+        "1.3.0": 200,
+        "checked_at": "2026-10-30T15:22Z"
+      },
+      "carried": {
+        "1627": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "1631": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "1634": "beb55e88d5b36cfdf27e7490b434b09e3f376638"
+      },
+      "own_implementations_superseded": {
+        "branch": "wt-r3-superseded-own-fixes (local only)",
+        "commits": [
+          "ed3797f2345a2c80bd4e345fc4ab070ac39cfbf6",
+          "f1d0a5fadba50bc738ef988f63cdb097e9c5c313"
+        ],
+        "reason": "The owner's upstream PRs #1634 and #1631 are stricter; carried instead."
+      },
+      "validation": "3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+      "live_cost_map_note": "tests/test_pricing.py::test_resolves_common_bare_model_names fails on 2026-10-30 when LiteLLM downloads its live price map (kyma/grok-4.5 is priced differently from xai/, perplexity/xai/ and github_copilot/), and passes with LITELLM_LOCAL_MODEL_COST_MAP=True. Data drift, not a code regression; run the suite with the bundled map for a deterministic result.",
+      "parallel_session_activity": "Upstream issues 1628-1630, 1632, 1633 and PRs 1631, 1634, 1635 were opened from the fork owner's account on 2026-10-30, not by this session."
     }
   },
   "version_release_audit": "release-audit.json",
@@ -185,7 +225,9 @@
       "merged_to_master": false,
       "tag_created": false,
       "release_created": false,
-      "note": "Last_delivered above stays 1.2.43 until the merge happens; advance it after the delivery commit exists."
+      "note": "Last_delivered above stays 1.2.43 until the merge happens; advance it after the delivery commit exists.",
+      "includes_round_2026_10_30": true,
+      "validation": "3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)"
     }
   }
 }

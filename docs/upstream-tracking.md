@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest round](UPSTREAM_INTEGRATION_2026-10-29.md)
+Start every review here, then read the [latest round](UPSTREAM_INTEGRATION_2026-10-30.md)
+(built on [2026-10-29](UPSTREAM_INTEGRATION_2026-10-29.md))
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.
 A GitHub state is not a fork decision: a closed PR may still be carried, an open PR may already
@@ -11,8 +12,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
 | Delivered fork | `master` / `shvia-v1.2.43` at `8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5` | Existing release; no master, mirror, tag or release update in this round |
-| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Integrated on `feat/upstream-sync-contributions-20261029`; local functional validation and explicit quality limits below |
-| Contribution review | 2026-10-29 inventory at 20:58:03 UTC (second pass): all 320 open PRs and 203 open issues triaged; 574 ledger records | Selected contributions deeply reviewed; historical known-item recheck is separate from open inventory |
+| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Integrated on `feat/upstream-sync-contributions-20261029` and carried by the delivery branch `feat/upstream-sync-delivery-20261029` (fork 1.2.44, unmerged); local functional validation and explicit quality limits below |
+| Contribution review | 2026-10-30 inventory at 19:03:26 UTC (third pass): all 325 open PRs and 208 open issues triaged; 585 ledger records | Selected contributions deeply reviewed; historical known-item recheck is separate from open inventory |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -62,7 +63,7 @@ Useful read-only queries (use pagination and save results before changing the le
 
 ```bash
 gh api --paginate 'repos/usestrix/strix/pulls?state=open&per_page=100'
-gh api --paginate 'repos/usestrix/strix/issues?state=all&since=2026-10-27T20:18:34Z&per_page=100'
+gh api --paginate 'repos/usestrix/strix/issues?state=all&since=2026-10-28T19:03:26Z&per_page=100'
 gh pr view NUMBER -R usestrix/strix --json number,title,url,state,isDraft,headRefOid,mergeCommit,updatedAt,comments,reviews,statusCheckRollup
 gh api --paginate repos/usestrix/strix/pulls/NUMBER/comments
 gh api --paginate repos/usestrix/strix/issues/NUMBER/timeline
@@ -102,7 +103,7 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image (found in the second pass, resolved for delivery):** the synchronized source defaults to
+**Sandbox image (found in the second pass, resolved for delivery; 1.3.1 still 404 on 2026-10-30):** the synchronized source defaults to
 `ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; `master` pins the published 1.3.0). The
 delivery branch `feat/upstream-sync-delivery-20261029` pins 1.3.0 in `RuntimeSettings.image` and `scripts/install.sh`
 (a test keeps them equal). The libbrotli CVE-2026-111497 patch stays out of the image until upstream publishes 1.3.1;

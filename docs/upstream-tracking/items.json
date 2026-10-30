@@ -173,6 +173,11 @@
         "usestrix/strix#issue:1620",
         "usestrix/strix#issue:1622",
         "usestrix/strix#issue:1623",
+        "usestrix/strix#issue:1628",
+        "usestrix/strix#issue:1629",
+        "usestrix/strix#issue:1630",
+        "usestrix/strix#issue:1632",
+        "usestrix/strix#issue:1633",
         "usestrix/strix#issue:164",
         "usestrix/strix#issue:19",
         "usestrix/strix#issue:215",
@@ -373,7 +378,6 @@
         "usestrix/strix#pr:1365",
         "usestrix/strix#pr:1367",
         "usestrix/strix#pr:1368",
-        "usestrix/strix#pr:1370",
         "usestrix/strix#pr:1374",
         "usestrix/strix#pr:1377",
         "usestrix/strix#pr:1378",
@@ -473,6 +477,12 @@
         "usestrix/strix#pr:1618",
         "usestrix/strix#pr:1621",
         "usestrix/strix#pr:1624",
+        "usestrix/strix#pr:1625",
+        "usestrix/strix#pr:1626",
+        "usestrix/strix#pr:1627",
+        "usestrix/strix#pr:1631",
+        "usestrix/strix#pr:1634",
+        "usestrix/strix#pr:1635",
         "usestrix/strix#pr:177",
         "usestrix/strix#pr:192",
         "usestrix/strix#pr:216",
@@ -583,7 +593,7 @@
         "usestrix/strix#pr:998",
         "usestrix/strix#pr:999"
       ],
-      "triaged_open_count": 523
+      "triaged_open_count": 533
     },
     "warnings": [],
     "semantics": {
@@ -604,21 +614,21 @@
       "Preserved source_triage is historical input evidence. Current top-level overrides take precedence over stale triage claims."
     ],
     "counts": {
-      "total_records": 570,
+      "total_records": 585,
       "upstream_open_inventory": {
-        "issue": 203,
-        "pr": 320
+        "issue": 208,
+        "pr": 325
       },
-      "known_additional": 3,
+      "known_additional": 8,
       "fork_catalog": 44,
       "review_depth": {
         "identified": 36,
-        "triage": 504,
-        "deep": 30
+        "triage": 509,
+        "deep": 40
       },
       "review_depth_upstream": {
-        "triage": 503,
-        "deep": 23
+        "triage": 508,
+        "deep": 33
       },
       "review_depth_fork": {
         "identified": 36,
@@ -626,21 +636,21 @@
         "deep": 7
       },
       "fork_decisions": {
-        "pending": 160,
-        "incorporated_fully": 46,
-        "adapted": 13,
-        "already_covered": 87,
-        "deferred": 238,
-        "discarded": 25,
+        "pending": 159,
+        "incorporated_fully": 50,
+        "adapted": 14,
+        "already_covered": 92,
+        "deferred": 242,
+        "discarded": 27,
         "incorporated_partially": 1
       },
       "implementation_phases": {
         "unknown": 106,
         "present_before_round": 41,
-        "integrated_review_branch": 36,
-        "decision_required": 112,
+        "integrated_review_branch": 46,
+        "decision_required": 115,
         "deferred": 238,
-        "not_planned": 25,
+        "not_planned": 27,
         "pending": 12
       }
     },
@@ -696,9 +706,65 @@
           "fork_prs_changed": 0
         },
         "note": "Records other than the ones listed were compared on updated_at, head SHA and state and were identical; their stored decisions are unchanged."
+      },
+      {
+        "id": "round-2026-10-30",
+        "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+        "inventory_snapshot_at": "2026-10-30T19:03:26.738370+00:00",
+        "method": "Full paginated open PR and issue inventories, issues?state=all&since=2026-10-27T20:58:03Z (48 h overlap, closed and merged included), live fork PR list, bin/pr-watch.",
+        "inputs": {
+          "open-prs.jsonl": {
+            "sha256": "c7fcabade2898121667d1364aef993d8d806ce7e584bb1f15b46930eecb1eba2",
+            "count": 325
+          },
+          "open-issues.jsonl": {
+            "sha256": "85af832337edab21e6c9af7a3e3475f9a2846f13a88bb8bd2d0e85aa9142c5b3",
+            "count": 208
+          },
+          "updated-since.jsonl": {
+            "sha256": "228ca471fc4514703d79dce588520be3f1b1b8a529578d7a49ddee48e57cd5dd",
+            "count": 41
+          }
+        },
+        "results": {
+          "open_inventory": {
+            "pr": 325,
+            "issue": 208,
+            "previous": {
+              "pr": 320,
+              "issue": 203
+            }
+          },
+          "ledger_records_compared": 574,
+          "changed": [
+            "usestrix/strix#pr:1370",
+            "usestrix/strix#issue:1607"
+          ],
+          "new_records": [
+            "usestrix/strix#pr:1627",
+            "usestrix/strix#pr:1631",
+            "usestrix/strix#pr:1634",
+            "usestrix/strix#pr:1625",
+            "usestrix/strix#pr:1626",
+            "usestrix/strix#pr:1635",
+            "usestrix/strix#issue:1628",
+            "usestrix/strix#issue:1629",
+            "usestrix/strix#issue:1630",
+            "usestrix/strix#issue:1632",
+            "usestrix/strix#issue:1633"
+          ],
+          "removed_from_open": [
+            "usestrix/strix#pr:1370"
+          ],
+          "fork_prs_compared": 44,
+          "fork_prs_changed": 0,
+          "note_on_parallel_activity": "Issues 1628-1630, 1632, 1633 and PRs 1631, 1634, 1635 were opened from the fork owner's account on 2026-10-30 in a parallel session; this session did not create them.",
+          "correction": "metadata.counts and metadata.coverage were still the 2026-10-29 first-pass values after the second pass (570 records); recomputed here."
+        },
+        "note": "Records other than the ones listed were compared on updated_at, head SHA and state and were identical; their stored decisions are unchanged."
       }
     ],
-    "last_incremental_update_at": "2026-10-29T21:04:34.141249+00:00"
+    "last_incremental_update_at": "2026-10-30T19:04:00.251813+00:00"
   },
   "records": [
     {
@@ -34642,8 +34708,8 @@
       "url": "https://github.com/usestrix/strix/issues/1607",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-10-29T20:18:34.998964+00:00",
-      "last_checked_basis": "Explicit confirmed source collection/recheck timestamp",
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
       "updated_at": "2026-10-29T16:44:07Z",
       "source": {
         "observed_head_sha": null,
@@ -34659,12 +34725,12 @@
         ],
         "present_in_current_open_inventory": true
       },
-      "review_depth": "triage",
+      "review_depth": "deep",
       "reviewed_sha": null,
-      "review_scope": "Description and historical-fit triage; not a complete diff or behavior review.",
-      "review_checked_at": "2026-10-29T20:00:44.001735+00:00",
-      "fork_decision": "deferred",
-      "rationale": "Lookup case-sensitive tem reprodução fornecida; nenhum PR correspondente localizado no catálogo pelo corpo1607/mixed-case. Validar contra config/models recém-sincronizado antes de implementar.",
+      "review_scope": "Body read; reproduced on the integrated base (125 of 130 mixed-case reasoning ids read False); fix PR #1627 reviewed in depth.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "incorporated_fully",
+      "rationale": "Previously deferred while no patch existed. PR #1627 (opened 2026-10-30, 'Fixes #1607') carries the author's fix with tests; it was reviewed in depth and cherry-picked unchanged. Reproduction after the fix: 0 of 130 mixed-case reasoning ids read False.",
       "assessment": {
         "benefit": "Not individually assessed beyond the recorded rationale.",
         "risk": "Not individually assessed at the recorded review depth.",
@@ -34672,29 +34738,35 @@
         "maintenance": "Not individually estimated."
       },
       "implementation": {
-        "phase": "deferred",
+        "phase": "integrated_review_branch",
         "source_reviewed_sha": null,
         "reviewed_repository": "usestrix/strix",
-        "source_imported_sha": null,
-        "source_repository": null,
-        "source_pr": null,
-        "fork_commits": [],
+        "source_imported_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1627,
+        "fork_commits": [
+          "d2adc9c9478da3a40c7519e50af76d892498e1c2"
+        ],
         "adaptations": [],
         "provenance_unknown_reason": null
       },
       "validation": {
-        "summary": "Triagem documental e histórico; sem execução específica nesta rodada, salvo evidência explícita a acrescentar na revisão profunda. Não equivale a validação funcional completa.",
+        "summary": "See the #1627 record: 100 targeted tests pass, 9 fail without the fix; the issue's reproduction is clean.",
         "limits": [
-          "GitHub state, content review, local validation, integration and release are separate facts."
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
         ]
       },
       "evidence": [
         "https://github.com/usestrix/strix/issues/1607 (corpo/descrição lido no inventário2026-10-29)",
-        "FORK.md + CLAUDE.md de origin/master8aa0791e; regras de versão e histórico de contribuições consultados"
+        "FORK.md + CLAUDE.md de origin/master8aa0791e; regras de versão e histórico de contribuições consultados",
+        "https://github.com/usestrix/strix/pull/1627"
       ],
-      "linked_items": [],
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1627"
+      ],
       "revisit_conditions": [
-        "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
+        "Reread if PR #1627 changes or upstream merges a different fix."
       ],
       "source_triage": [
         {
@@ -34750,6 +34822,41 @@
             },
             "revisit_conditions": [
               "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
+            ]
+          }
+        },
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "51d77d99db8d32a7299f94f58c988cced0d2b0368146a263dadf14103e2325e9",
+          "event": "decision_changed_patch_available_and_carried",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "incorporated_fully",
+            "rationale": "Previously deferred while no patch existed. PR #1627 (opened 2026-10-30, 'Fixes #1607') carries the author's fix with tests; it was reviewed in depth and cherry-picked unchanged. Reproduction after the fix: 0 of 130 mixed-case reasoning ids read False.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1627,
+              "fork_commits": [
+                "d2adc9c9478da3a40c7519e50af76d892498e1c2"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "See the #1627 record: 100 targeted tests pass, 9 fail without the fix; the issue's reproduction is clean.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Reread if PR #1627 changes or upstream merges a different fix."
             ]
           }
         }
@@ -69385,31 +69492,32 @@
       "number": 1370,
       "title": "feat(llm): add OrcaRouter provider with API-key and browser (PKCE) sign-in",
       "url": "https://github.com/usestrix/strix/pull/1370",
-      "upstream_state": "OPEN",
+      "upstream_state": "CLOSED",
       "fork_pr_state": null,
-      "last_checked": "2026-10-29T20:18:34.998964+00:00",
-      "last_checked_basis": "Explicit confirmed source collection/recheck timestamp",
-      "updated_at": "2026-09-28T13:07:34Z",
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T03:07:51Z",
       "source": {
         "observed_head_sha": "fc1f0bf9df8d4756900d8350345e345fc6a839df",
         "base_sha": "d6dd9dec26aee7b283b988c4f650e6e124d9cb60",
         "base_branch": null,
         "merge_commit": null,
-        "closed_at": null,
+        "closed_at": "2026-10-30T03:07:51Z",
         "merged_at": null,
-        "state_reason": null,
+        "state_reason": "closed by its author; comment: 'Closing this in favor of a cleaner version rebased on current main.'",
         "draft": false,
         "snapshots": [
-          "open-prs.json"
+          "open-prs.json",
+          "updated-since.jsonl (round-2026-10-30)"
         ],
-        "present_in_current_open_inventory": true
+        "present_in_current_open_inventory": false
       },
       "review_depth": "triage",
       "reviewed_sha": "fc1f0bf9df8d4756900d8350345e345fc6a839df",
       "review_scope": "Description and historical-fit triage; not a complete diff or behavior review.",
       "review_checked_at": "2026-10-29T20:00:44.001735+00:00",
-      "fork_decision": "pending",
-      "rationale": "Novo provedor OrcaRouter/PKCE, armazenamento e catálogo remoto; aumenta superfícies de auth e manutenção, sem demanda específica do fork nesta frente.",
+      "fork_decision": "discarded",
+      "rationale": "Closed by its author in favor of a rebased version, which is most likely #1626 (identical title, different account of the same vendor team; the link is inferred, not stated). It had only inventory-depth triage; nothing was carried. The successor is deferred, see #1626.",
       "assessment": {
         "benefit": "Not individually assessed beyond the recorded rationale.",
         "risk": "Not individually assessed at the recorded review depth.",
@@ -69417,29 +69525,32 @@
         "maintenance": "Not individually estimated."
       },
       "implementation": {
-        "phase": "decision_required",
-        "source_reviewed_sha": "fc1f0bf9df8d4756900d8350345e345fc6a839df",
+        "phase": "not_planned",
+        "source_reviewed_sha": null,
         "reviewed_repository": "usestrix/strix",
         "source_imported_sha": null,
         "source_repository": null,
         "source_pr": null,
         "fork_commits": [],
         "adaptations": [],
-        "provenance_unknown_reason": null
+        "provenance_unknown_reason": "Closed without merge; nothing to import."
       },
       "validation": {
-        "summary": "Triagem documental e histórico; sem execução específica nesta rodada, salvo evidência explícita a acrescentar na revisão profunda. Não equivale a validação funcional completa.",
+        "summary": "No validation applicable.",
         "limits": [
-          "GitHub state, content review, local validation, integration and release are separate facts."
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
         ]
       },
       "evidence": [
         "https://github.com/usestrix/strix/pull/1370 (corpo/descrição lido no inventário2026-10-29)",
         "FORK.md + CLAUDE.md de origin/master8aa0791e; regras de versão e histórico de contribuições consultados"
       ],
-      "linked_items": [],
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1626"
+      ],
       "revisit_conditions": [
-        "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
+        "Follow #1626."
       ],
       "source_triage": [
         {
@@ -69529,6 +69640,39 @@
               "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "7d93c28acccb2a84b3fc379ebeb07766b1689cfdaab0224951c9de4338593367",
+          "event": "closed_by_author_superseded",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": "fc1f0bf9df8d4756900d8350345e345fc6a839df",
+            "fork_decision": "discarded",
+            "rationale": "Closed by its author in favor of a rebased version, which is most likely #1626 (identical title, different account of the same vendor team; the link is inferred, not stated). It had only inventory-depth triage; nothing was carried. The successor is deferred, see #1626.",
+            "implementation": {
+              "phase": "not_planned",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": "Closed without merge; nothing to import."
+            },
+            "validation": {
+              "summary": "No validation applicable.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Follow #1626."
+            ]
+          }
         }
       ],
       "analyzed_version": {
@@ -69537,7 +69681,7 @@
         "reviewed_item_sha": "fc1f0bf9df8d4756900d8350345e345fc6a839df",
         "scope": "Round context; per-item review depth and evidence determine what was actually examined."
       },
-      "review_head_status": "matches_observed_head"
+      "review_head_status": "not_applicable_closed"
     },
     {
       "id": "usestrix/strix#pr:1374",
@@ -85315,6 +85459,1270 @@
             },
             "revisit_conditions": [
               "Revisit only if upstream adds a first-class report-language option."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
+    },
+    {
+      "id": "usestrix/strix#pr:1627",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1627,
+      "title": "fix(models): preserve case-sensitive LiteLLM catalog lookups",
+      "url": "https://github.com/usestrix/strix/pull/1627",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T06:48:21Z",
+      "source": {
+        "observed_head_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+      "review_scope": "Full diff (one commit, 3 files), description, Greptile review (5/5), issue #1607. Behavior measured here: reproduction on the integrated base, old versus new catalog lookup over 19,528 name variants, RED/GREEN on the PR tests.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "incorporated_fully",
+      "rationale": "Fixes a silent capability loss: LiteLLM's cost map is case-sensitive but _catalog_entry lowercased the name first, so a mixed-case provider id missed its own row and model_supports_reasoning() returned False (reasoning_effort never sent), with image support and the Responses-versus-chat choice reading the same lookup. Reproduced on the integrated base: 125 of 130 mixed-case reasoning ids read False. The patch tries the exact supplied id first and keeps the old lowercase and bare-suffix fallbacks. Measured impact on existing configuration: for all-lowercase names the lookup result is unchanged except one non-model catalog row (openai/container); every other difference is a mixed-case name, which is the intended fix. Imported unchanged by cherry-pick.",
+      "assessment": {
+        "benefit": "Reasoning effort, image support and endpoint choice follow the model's exact catalog row for mixed-case provider ids (DeepInfra, Hugging Face style names).",
+        "risk": "Low: +14 production lines; behavior for lowercase names is unchanged except the non-model row noted above.",
+        "effort": "None beyond the cherry-pick; applied cleanly on 6b7ae2eb.",
+        "maintenance": "Same function as upstream; drop the carried commit when upstream merges the PR."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1627,
+        "fork_commits": [
+          "d2adc9c9478da3a40c7519e50af76d892498e1c2"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "tests/test_models.py + tests/test_inputs.py: 100 passed; the 9 new/changed tests fail on the unfixed models.py (91 pass), reverted and restored. Pyright on strix/config/models.py: 45 diagnostics before, 42 after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+          "Mixed-case catalog names were exercised through the local cost map only; no paid model call."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1627",
+        "https://github.com/usestrix/strix/issues/1607"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1607"
+      ],
+      "revisit_conditions": [
+        "Upstream merges #1627 (arrives with the next synchronization; drop the carried commit) or the head changes (compare with the imported SHA)."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "08e600dfe9fa777117d8a06c981f1015a99ddf9606f8300877f72e303cb80646",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Fixes a silent capability loss: LiteLLM's cost map is case-sensitive but _catalog_entry lowercased the name first, so a mixed-case provider id missed its own row and model_supports_reasoning() returned False (reasoning_effort never sent), with image support and the Responses-versus-chat choice reading the same lookup. Reproduced on the integrated base: 125 of 130 mixed-case reasoning ids read False. The patch tries the exact supplied id first and keeps the old lowercase and bare-suffix fallbacks. Measured impact on existing configuration: for all-lowercase names the lookup result is unchanged except one non-model catalog row (openai/container); every other difference is a mixed-case name, which is the intended fix. Imported unchanged by cherry-pick.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1627,
+              "fork_commits": [
+                "d2adc9c9478da3a40c7519e50af76d892498e1c2"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "tests/test_models.py + tests/test_inputs.py: 100 passed; the 9 new/changed tests fail on the unfixed models.py (91 pass), reverted and restored. Pyright on strix/config/models.py: 45 diagnostics before, 42 after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+                "Mixed-case catalog names were exercised through the local cost map only; no paid model call."
+              ]
+            },
+            "revisit_conditions": [
+              "Upstream merges #1627 (arrives with the next synchronization; drop the carried commit) or the head changes (compare with the imported SHA)."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "3f79c1098dc027c5ed35c83ff76b02651a9986ab",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1631",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1631,
+      "title": "fix(cloud): deduplicate conflicted Git source paths",
+      "url": "https://github.com/usestrix/strix/pull/1631",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:26:50Z",
+      "source": {
+        "observed_head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+      "review_scope": "Full diff (2 files), description, checks; the defect was reproduced on the integrated base before and after, and an independent implementation of mine was compared.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "incorporated_fully",
+      "rationale": "An unresolved merge lists one path once per index stage; cloud source packaging counted every occurrence (66-byte file became 3 manifest entries, 198 bytes, 3 ZIP members with one name). The PR drops repeated relative paths while streaming Git's manifest and keeps the raw candidate bound. Its set-based dedupe also covers non-adjacent repeats, which my own consecutive-only version (local branch wt-r3-superseded-own-fixes, f1d0a5fa) did not, so the PR head was carried instead. Opened on 2026-10-30 from the fork owner's account in a parallel session, after issue #1629 and after this round's inventory; carried as it is so a later upstream merge does not conflict.",
+      "assessment": {
+        "benefit": "Correct manifest, byte accounting and archive for a working tree with unresolved merges (affects `strix cloud scans start --source`).",
+        "risk": "Low: +7 production lines; a set of already-yielded paths is bounded by the existing candidate limit.",
+        "effort": "None beyond the cherry-pick.",
+        "maintenance": "Drop the carried commit when upstream merges the PR."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1631,
+        "fork_commits": [
+          "111a34e9a0d24e5b4b3d41af7f2e151dd120f577"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "tests/test_cloud_source_upload.py + tests/test_local_sources.py + dedupe neighbours: 192 passed with the dedupe PR. The issue's reproduction prints 3 manifest entries before and 1 after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+          "The managed service's handling of duplicate ZIP members was not tested (the PR makes the same statement)."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1631",
+        "https://github.com/usestrix/strix/issues/1629"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1629"
+      ],
+      "revisit_conditions": [
+        "Upstream merges #1631 or the head changes (compare with the imported SHA)."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "40bdab0cdc193dd94080729706d1163bee6d5845e169bb927e659ea6009ec9bb",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+            "fork_decision": "incorporated_fully",
+            "rationale": "An unresolved merge lists one path once per index stage; cloud source packaging counted every occurrence (66-byte file became 3 manifest entries, 198 bytes, 3 ZIP members with one name). The PR drops repeated relative paths while streaming Git's manifest and keeps the raw candidate bound. Its set-based dedupe also covers non-adjacent repeats, which my own consecutive-only version (local branch wt-r3-superseded-own-fixes, f1d0a5fa) did not, so the PR head was carried instead. Opened on 2026-10-30 from the fork owner's account in a parallel session, after issue #1629 and after this round's inventory; carried as it is so a later upstream merge does not conflict.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1631,
+              "fork_commits": [
+                "111a34e9a0d24e5b4b3d41af7f2e151dd120f577"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "tests/test_cloud_source_upload.py + tests/test_local_sources.py + dedupe neighbours: 192 passed with the dedupe PR. The issue's reproduction prints 3 manifest entries before and 1 after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+                "The managed service's handling of duplicate ZIP members was not tested (the PR makes the same statement)."
+              ]
+            },
+            "revisit_conditions": [
+              "Upstream merges #1631 or the head changes (compare with the imported SHA)."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1634",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1634,
+      "title": "fix(report): validate deduplication decisions before suppressing findings",
+      "url": "https://github.com/usestrix/strix/pull/1634",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:34:16Z",
+      "source": {
+        "observed_head_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+      "review_scope": "Full diff (2 files), description; reproduced issue #1630 on the integrated base, then ran my own tests against the PR for a differential.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "incorporated_fully",
+      "rationale": "A malformed dedupe verdict suppressed findings: bool('false') is True, and a positive verdict with an empty or unknown id was accepted, after which both reporting tools rejected the finding and told the agent not to re-file it. The PR requires a JSON boolean and an id that exactly matches a report sent to the judge; any other verdict takes the existing logged error path (is_duplicate False, finding stored). It compares the id verbatim, where my own version (local branch wt-r3-superseded-own-fixes, ed3797f2) truncated to 64 characters first and so accepted an invented id sharing a 64-character prefix with a real one. Differential: 13 of my 14 checks pass against the PR; the one difference is a verdict that omits is_duplicate, which the PR sends to the error path (finding still stored). Carried as it is; opened 2026-10-30 from the fork owner's account in a parallel session.",
+      "assessment": {
+        "benefit": "A model that returns a malformed dedupe answer can no longer hide a real vulnerability from the report.",
+        "risk": "Low: +16 production lines on the existing error path; valid verdicts and the deterministic dependency check are unchanged.",
+        "effort": "None beyond the cherry-pick; composes with carried #1469 (race test passes).",
+        "maintenance": "Drop the carried commit when upstream merges the PR; tests/test_dedupe_decisions.py comes with it."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1634,
+        "fork_commits": [
+          "f8cf41f30c61989696ec64e4ce45f9524a0f3f43"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "tests/test_dedupe_decisions.py plus the carried dedupe-race and reporting tests pass (192 with the cloud PR). The issue's synthetic reproduction returned True for three invalid verdicts before and False after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+          "Only synthetic model responses; no claim about how often real providers return malformed verdicts."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1634",
+        "https://github.com/usestrix/strix/issues/1630"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1630"
+      ],
+      "revisit_conditions": [
+        "Upstream merges #1634 (note its stated conflict with the tests-only #597 ID-truncation assertion) or the head changes."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "ac7e232cc7a538b713dca16b51f4870bb2c9103125d1c128b502c60a18223dd0",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+            "fork_decision": "incorporated_fully",
+            "rationale": "A malformed dedupe verdict suppressed findings: bool('false') is True, and a positive verdict with an empty or unknown id was accepted, after which both reporting tools rejected the finding and told the agent not to re-file it. The PR requires a JSON boolean and an id that exactly matches a report sent to the judge; any other verdict takes the existing logged error path (is_duplicate False, finding stored). It compares the id verbatim, where my own version (local branch wt-r3-superseded-own-fixes, ed3797f2) truncated to 64 characters first and so accepted an invented id sharing a 64-character prefix with a real one. Differential: 13 of my 14 checks pass against the PR; the one difference is a verdict that omits is_duplicate, which the PR sends to the error path (finding still stored). Carried as it is; opened 2026-10-30 from the fork owner's account in a parallel session.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1634,
+              "fork_commits": [
+                "f8cf41f30c61989696ec64e4ce45f9524a0f3f43"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "tests/test_dedupe_decisions.py plus the carried dedupe-race and reporting tests pass (192 with the cloud PR). The issue's synthetic reproduction returned True for three invalid verdicts before and False after. Round branch full suite: 3604 passed, 12 skipped, 3 xfailed, 0 failed in 7m42s on 111a34e9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True)",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+                "Only synthetic model responses; no claim about how often real providers return malformed verdicts."
+              ]
+            },
+            "revisit_conditions": [
+              "Upstream merges #1634 (note its stated conflict with the tests-only #597 ID-truncation assertion) or the head changes."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1625",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1625,
+      "title": "Feat/str 1646 opengrep",
+      "url": "https://github.com/usestrix/strix/pull/1625",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T01:59:29Z",
+      "source": {
+        "observed_head_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "triage",
+      "reviewed_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+      "review_scope": "Description (empty), file list, the Dockerfile and system-prompt hunks and the Greptile summary were read. Nothing was built or run.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "deferred",
+      "rationale": "Replaces Semgrep with Opengrep across the sandbox image and every white-box prompt and skill (15 files): the Dockerfile fetches a pinned Opengrep binary and a community rules bundle, removes `pipx install semgrep`, and the system prompt tells agents to run `opengrep`. That is a change of the tool the agents use, not a bounded fix. The fork pins sandbox image 1.3.0 (1.3.1 is not published), which carries Semgrep and no Opengrep, so taking the prompt change alone would send agents to a missing binary, and the image part needs a build the fork cannot publish today. Greptile reports two P2 test gaps (no check that the rules load with the pinned engine; the custom rule has no tests). No Semgrep defect has been reported against this fork.",
+      "assessment": {
+        "benefit": "Possibly better SAST coverage and an open-source engine; not demonstrated for this fork's white-box flow.",
+        "risk": "Prompt and image change together; mismatched with the pinned 1.3.0 image; rules baked from an external repository at a pinned ref.",
+        "effort": "High: image rebuild, prompt/skill rewrite, coverage comparison.",
+        "maintenance": "Large surface in shared prompts and docs."
+      },
+      "implementation": {
+        "phase": "decision_required",
+        "source_reviewed_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Not executed.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1625"
+      ],
+      "linked_items": [
+        "usestrix/strix#pr:1617"
+      ],
+      "revisit_conditions": [
+        "Upstream publishes an image containing Opengrep (and 1.3.1 or later) and the owner decides Semgrep to Opengrep; then compare finding coverage on a controlled target."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "f93deb3cf3d34cabae69e90ae70200985fa705f282954837f0e72c74657807b8",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+            "fork_decision": "deferred",
+            "rationale": "Replaces Semgrep with Opengrep across the sandbox image and every white-box prompt and skill (15 files): the Dockerfile fetches a pinned Opengrep binary and a community rules bundle, removes `pipx install semgrep`, and the system prompt tells agents to run `opengrep`. That is a change of the tool the agents use, not a bounded fix. The fork pins sandbox image 1.3.0 (1.3.1 is not published), which carries Semgrep and no Opengrep, so taking the prompt change alone would send agents to a missing binary, and the image part needs a build the fork cannot publish today. Greptile reports two P2 test gaps (no check that the rules load with the pinned engine; the custom rule has no tests). No Semgrep defect has been reported against this fork.",
+            "implementation": {
+              "phase": "decision_required",
+              "source_reviewed_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Not executed.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Upstream publishes an image containing Opengrep (and 1.3.1 or later) and the owner decides Semgrep to Opengrep; then compare finding coverage on a controlled target."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1626",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1626,
+      "title": "feat(llm): add OrcaRouter Cyber Inference provider (API key + browser sign-in)",
+      "url": "https://github.com/usestrix/strix/pull/1626",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T03:10:45Z",
+      "source": {
+        "observed_head_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "triage",
+      "reviewed_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+      "review_scope": "Description, file list and the Greptile findings were read; the diff (1,827 lines) was not reviewed line by line and nothing was run.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "deferred",
+      "rationale": "Adds a named OrcaRouter provider (+1,557 lines): a provider module with API-key and OAuth 2.0/PKCE sign-in, an `auth` CLI, environment wiring and docs. The author discloses being on the vendor's team. The fork resolves keys by provider prefix in its launcher and configures no provider of this vendor, so no demand is shown. Greptile reports four unanswered P1 findings (configured gateway ignored, saved settings ignored, sign-ins overwrite each other, dedupe disables the main sign-in). Replaces #1370, which its author closed 'in favor of a cleaner version rebased on current main' (the successor is inferred from the identical title).",
+      "assessment": {
+        "benefit": "None demonstrated for this fork.",
+        "risk": "A new credential flow and external model route in shared config, auth and models modules; open P1 findings.",
+        "effort": "High to review and carry.",
+        "maintenance": "Vendor integration this fork would have to support."
+      },
+      "implementation": {
+        "phase": "deferred",
+        "source_reviewed_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Not executed.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1626",
+        "https://github.com/usestrix/strix/pull/1370"
+      ],
+      "linked_items": [
+        "usestrix/strix#pr:1370"
+      ],
+      "revisit_conditions": [
+        "The fork starts using OrcaRouter, or the P1 findings are fixed and a maintainer merges it (then it arrives with the synchronization)."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "a130ac95bf0349b417cdd4dd1a5967565cccd50748ad79adac31167b4f57a341",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+            "fork_decision": "deferred",
+            "rationale": "Adds a named OrcaRouter provider (+1,557 lines): a provider module with API-key and OAuth 2.0/PKCE sign-in, an `auth` CLI, environment wiring and docs. The author discloses being on the vendor's team. The fork resolves keys by provider prefix in its launcher and configures no provider of this vendor, so no demand is shown. Greptile reports four unanswered P1 findings (configured gateway ignored, saved settings ignored, sign-ins overwrite each other, dedupe disables the main sign-in). Replaces #1370, which its author closed 'in favor of a cleaner version rebased on current main' (the successor is inferred from the identical title).",
+            "implementation": {
+              "phase": "deferred",
+              "source_reviewed_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Not executed.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "The fork starts using OrcaRouter, or the P1 findings are fixed and a maintainer merges it (then it arrives with the synchronization)."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1635",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1635,
+      "title": "fix(api-spec): preserve referenced Postman environment values",
+      "url": "https://github.com/usestrix/strix/pull/1635",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T16:29:01Z",
+      "source": {
+        "observed_head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "base_branch": "main",
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": false,
+        "snapshots": [
+          "open-prs.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "triage",
+      "reviewed_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "review_scope": "Description, file list (5 files, +289 -5) and checks were read. The diff was not reviewed line by line, nothing was run and no differential was made.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "deferred",
+      "rationale": "Opened on 2026-10-30 at 16:19Z from the fork owner's account in a parallel session, after this round's other items, as the fix for #1633. It chooses a contract that issue asks upstream to decide: enabled, referenced environment values are written into the staged collection's `variable` block, so credentials from the environment now reach the agent's workspace (the host's Postman API key stays out). It also adds a per-fetch snapshot directory, an exit-time cleanup and a CLI documentation paragraph. That is a secret-delivery and file-lifecycle change, so it is not carried in the 1.2.44 delivery until the owner confirms the contract. It overlaps #1158 in the same writer and #1621 in the staging code.",
+      "assessment": {
+        "benefit": "Authenticated API tests from a Postman collection would see the environment values the base URL was already authorized from.",
+        "risk": "Environment credentials enter the model-visible workspace; snapshot and cleanup lifecycle; overlap with open #1158 and carried #1621.",
+        "effort": "Medium: line-by-line review, differential against the issue's reproduction, then a cherry-pick.",
+        "maintenance": "Shared staging code in strix/interface/utils.py and scan_setup.py."
+      },
+      "implementation": {
+        "phase": "decision_required",
+        "source_reviewed_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Not executed here. The PR body reports five red-to-green regressions and 114 focused tests; those are the author's figures, not re-measured.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1635",
+        "https://github.com/usestrix/strix/issues/1633"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1633",
+        "https://github.com/usestrix/strix/pull/1158",
+        "https://github.com/usestrix/strix/pull/1621"
+      ],
+      "revisit_conditions": [
+        "The owner confirms that environment values may reach the agent workspace (then review the diff line by line and carry it), or a maintainer answers the contract question on #1633."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "990bfc3fa7cf22f383b123cdd2f2947ba10b29159d6a93cb9497e07f9b9a5567",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "triage",
+            "reviewed_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+            "fork_decision": "deferred",
+            "rationale": "Opened on 2026-10-30 at 16:19Z from the fork owner's account in a parallel session, after this round's other items, as the fix for #1633. It chooses a contract that issue asks upstream to decide: enabled, referenced environment values are written into the staged collection's `variable` block, so credentials from the environment now reach the agent's workspace (the host's Postman API key stays out). It also adds a per-fetch snapshot directory, an exit-time cleanup and a CLI documentation paragraph. That is a secret-delivery and file-lifecycle change, so it is not carried in the 1.2.44 delivery until the owner confirms the contract. It overlaps #1158 in the same writer and #1621 in the staging code.",
+            "implementation": {
+              "phase": "decision_required",
+              "source_reviewed_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Not executed here. The PR body reports five red-to-green regressions and 114 focused tests; those are the author's figures, not re-measured.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "The owner confirms that environment values may reach the agent workspace (then review the diff line by line and carry it), or a maintainer answers the contract question on #1633."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#issue:1628",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1628,
+      "title": "[BUG] Default sandbox tag 1.3.1 is not published to GHCR",
+      "url": "https://github.com/usestrix/strix/issues/1628",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:17:06Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": null,
+        "snapshots": [
+          "open-issues.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_scope": "Body read; the registry claim was verified independently twice (2026-10-29 and 2026-10-30) with an anonymous pull token and a 1.3.0 positive control.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "adapted",
+      "rationale": "Upstream's default sandbox image 1.3.1 (#1617) is not in the registry (404; 1.3.0 answers 200). Opened on 2026-10-30 from the fork owner's account in a parallel session. The fork's own answer is a pin: RuntimeSettings.image and scripts/install.sh stay at the published 1.3.0, with a test that keeps them equal. The upstream fix is to publish 1.3.1; the issue says it is not proposing a rollback, which is a different choice from the fork's, taken because the fork cannot wait for the image and the engine runs unchanged against 1.3.0.",
+      "assessment": {
+        "benefit": "The fork's default runtime and installer pre-pull work again.",
+        "risk": "The brotli CVE-2026-111497 patch (#1617) stays out of the image used against hostile targets until 1.3.1 exists.",
+        "effort": "Done.",
+        "maintenance": "Move both pins when the tag is published; a sync conflict in those lines keeps the published tag (CLAUDE.md)."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [
+          "4d526eb5127f82188373f44a55539f2258d9c1ae"
+        ],
+        "adaptations": [
+          "Fork-only pin of ghcr.io/usestrix/strix-sandbox to 1.3.0 in strix/config/settings.py and scripts/install.sh, plus tests/test_install_script.py::test_installer_pulls_the_image_the_engine_defaults_to."
+        ],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Registry rechecked 2026-10-30T15:22Z: 1.3.1 404, 1.3.0 200. The pin test fails when one of the two lines drifts (reverted and restored).",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1628",
+        "docs/upstream-tracking/release-audit.json (sandbox_image_audit)"
+      ],
+      "linked_items": [
+        "usestrix/strix#pr:1617",
+        "usestrix/strix#pr:960"
+      ],
+      "revisit_conditions": [
+        "Upstream publishes 1.3.1: move both pins, run the installer pre-pull, delete the pin note in CLAUDE.md and version.md."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "ae6547b063c964c96a490f36156b511e20863f12de9f043c4bda4fe7398dc382",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "adapted",
+            "rationale": "Upstream's default sandbox image 1.3.1 (#1617) is not in the registry (404; 1.3.0 answers 200). Opened on 2026-10-30 from the fork owner's account in a parallel session. The fork's own answer is a pin: RuntimeSettings.image and scripts/install.sh stay at the published 1.3.0, with a test that keeps them equal. The upstream fix is to publish 1.3.1; the issue says it is not proposing a rollback, which is a different choice from the fork's, taken because the fork cannot wait for the image and the engine runs unchanged against 1.3.0.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [
+                "4d526eb5127f82188373f44a55539f2258d9c1ae"
+              ],
+              "adaptations": [
+                "Fork-only pin of ghcr.io/usestrix/strix-sandbox to 1.3.0 in strix/config/settings.py and scripts/install.sh, plus tests/test_install_script.py::test_installer_pulls_the_image_the_engine_defaults_to."
+              ],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Registry rechecked 2026-10-30T15:22Z: 1.3.1 404, 1.3.0 200. The pin test fails when one of the two lines drifts (reverted and restored).",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Upstream publishes 1.3.1: move both pins, run the installer pre-pull, delete the pin note in CLAUDE.md and version.md."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
+    },
+    {
+      "id": "usestrix/strix#issue:1629",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1629,
+      "title": "[BUG] Git merge stages duplicate files in cloud source archives",
+      "url": "https://github.com/usestrix/strix/issues/1629",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:18:25Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": null,
+        "snapshots": [
+          "open-issues.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_scope": "Body read and the synthetic reproduction run on the integrated base before and after the carried fix.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Real defect, reproduced on the integrated base with the issue's own offline script. It has an upstream patch, PR #1631, carried in the fork; see that record. Opened on 2026-10-30 from the fork owner's account in a parallel session.",
+      "assessment": {
+        "benefit": "See the carried PR.",
+        "risk": "None added by this record.",
+        "effort": "None.",
+        "maintenance": "Follows PR #1631."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1631,
+        "fork_commits": [
+          "111a34e9a0d24e5b4b3d41af7f2e151dd120f577"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Reproduction output changes as the issue expects once the PR is applied; see the PR record.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1629",
+        "https://github.com/usestrix/strix/pull/1631"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1631"
+      ],
+      "revisit_conditions": [
+        "Reread if PR #1631 changes or upstream merges a different fix."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "ce588151577715194231a0cc7e2826cee79ba8559bd2006fee17bdc0ba129560",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "already_covered",
+            "rationale": "Real defect, reproduced on the integrated base with the issue's own offline script. It has an upstream patch, PR #1631, carried in the fork; see that record. Opened on 2026-10-30 from the fork owner's account in a parallel session.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1631,
+              "fork_commits": [
+                "111a34e9a0d24e5b4b3d41af7f2e151dd120f577"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Reproduction output changes as the issue expects once the PR is applied; see the PR record.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Reread if PR #1631 changes or upstream merges a different fix."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
+    },
+    {
+      "id": "usestrix/strix#issue:1630",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1630,
+      "title": "[BUG] Invalid dedupe decisions can suppress findings without a valid duplicate",
+      "url": "https://github.com/usestrix/strix/issues/1630",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:20:17Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": null,
+        "snapshots": [
+          "open-issues.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_scope": "Body read and the synthetic reproduction run on the integrated base before and after the carried fix.",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Real defect, reproduced on the integrated base with the issue's own offline script. It has an upstream patch, PR #1634, carried in the fork; see that record. Opened on 2026-10-30 from the fork owner's account in a parallel session.",
+      "assessment": {
+        "benefit": "See the carried PR.",
+        "risk": "None added by this record.",
+        "effort": "None.",
+        "maintenance": "Follows PR #1634."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+        "source_repository": "usestrix/strix",
+        "source_pr": 1634,
+        "fork_commits": [
+          "f8cf41f30c61989696ec64e4ce45f9524a0f3f43"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Reproduction output changes as the issue expects once the PR is applied; see the PR record.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1630",
+        "https://github.com/usestrix/strix/pull/1634"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1634"
+      ],
+      "revisit_conditions": [
+        "Reread if PR #1634 changes or upstream merges a different fix."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "f7ef3473095b5ec18aea1f0ed32b2d1cd7649f0a7c3feeef961df517d10a53aa",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "already_covered",
+            "rationale": "Real defect, reproduced on the integrated base with the issue's own offline script. It has an upstream patch, PR #1634, carried in the fork; see that record. Opened on 2026-10-30 from the fork owner's account in a parallel session.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1634,
+              "fork_commits": [
+                "f8cf41f30c61989696ec64e4ce45f9524a0f3f43"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Reproduction output changes as the issue expects once the PR is applied; see the PR record.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "Reread if PR #1634 changes or upstream merges a different fix."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
+    },
+    {
+      "id": "usestrix/strix#issue:1632",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1632,
+      "title": "[BUG] Staging API specifications drops local external $ref files",
+      "url": "https://github.com/usestrix/strix/issues/1632",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:26:29Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": null,
+        "snapshots": [
+          "open-issues.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_scope": "Body read and the issue's offline reproduction run on the integrated base (identical output to the report).",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "deferred",
+      "rationale": "Real defect: Staging copies only the main file of a local OpenAPI spec, so relative $ref files never reach /workspace/api-specs. The report itself asks upstream which contract is intended (copy contained local references, require a bundled spec, or deliver an effective variable map), and the second one decides how secrets from an environment reach the model context without the API key. Opened on 2026-10-30 from the fork owner's account in a parallel session. Implementing a guess would fix an interface the maintainers have not chosen and would add file or secret handling the fork does not need today.",
+      "assessment": {
+        "benefit": "Complete API specifications and environment values for agents that test an API from a spec.",
+        "risk": "File access and secret delivery decisions; behavior visible to the model.",
+        "effort": "Medium once the contract is known.",
+        "maintenance": "Shared staging code in strix/interface/utils.py and scan_setup.py."
+      },
+      "implementation": {
+        "phase": "decision_required",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Reproduced on the integrated base (3 lines of output match the report); no fix attempted.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1632"
+      ],
+      "linked_items": [],
+      "revisit_conditions": [
+        "A maintainer answers the contract question or a PR appears; compare it with the fork's staging code and with carried #1621 before importing."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "82675078a4040bdcd7d958b29b1d80bcd68afaeb3db56adf2d8536009d65b70b",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "deferred",
+            "rationale": "Real defect: Staging copies only the main file of a local OpenAPI spec, so relative $ref files never reach /workspace/api-specs. The report itself asks upstream which contract is intended (copy contained local references, require a bundled spec, or deliver an effective variable map), and the second one decides how secrets from an environment reach the model context without the API key. Opened on 2026-10-30 from the fork owner's account in a parallel session. Implementing a guess would fix an interface the maintainers have not chosen and would add file or secret handling the fork does not need today.",
+            "implementation": {
+              "phase": "decision_required",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Reproduced on the integrated base (3 lines of output match the report); no fix attempted.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "A maintainer answers the contract question or a PR appears; compare it with the fork's staging code and with carried #1621 before importing."
+            ]
+          }
+        }
+      ],
+      "override_provenance": null,
+      "analyzed_version": {
+        "fork_baseline_sha": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+        "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "reviewed_item_sha": null,
+        "scope": "Round context; per-item review depth and evidence determine what was actually examined."
+      },
+      "review_head_status": "not_applicable_issue"
+    },
+    {
+      "id": "usestrix/strix#issue:1633",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1633,
+      "title": "[BUG] Postman environment values are discarded after base-URL extraction",
+      "url": "https://github.com/usestrix/strix/issues/1633",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "last_checked": "2026-10-30T19:04:00.251813+00:00",
+      "last_checked_basis": "Live GitHub API read during the 2026-10-30 round",
+      "updated_at": "2026-10-30T15:26:30Z",
+      "source": {
+        "observed_head_sha": null,
+        "base_sha": null,
+        "base_branch": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null,
+        "state_reason": null,
+        "draft": null,
+        "snapshots": [
+          "open-issues.jsonl (round-2026-10-30)"
+        ],
+        "present_in_current_open_inventory": true
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_scope": "Body read and the issue's offline reproduction run on the integrated base (identical output to the report).",
+      "review_checked_at": "2026-10-30T19:04:00.251813+00:00",
+      "fork_decision": "deferred",
+      "rationale": "Real defect: A Postman environment is used for the base URL and then dropped, so non-URL values never reach the sandbox or the root task. The report itself asks upstream which contract is intended (copy contained local references, require a bundled spec, or deliver an effective variable map), and the second one decides how secrets from an environment reach the model context without the API key. Opened on 2026-10-30 from the fork owner's account in a parallel session. Implementing a guess would fix an interface the maintainers have not chosen and would add file or secret handling the fork does not need today. PR #1635, opened later the same day from the same account, implements one contract; it is recorded as deferred pending the owner's decision.",
+      "assessment": {
+        "benefit": "Complete API specifications and environment values for agents that test an API from a spec.",
+        "risk": "File access and secret delivery decisions; behavior visible to the model.",
+        "effort": "Medium once the contract is known.",
+        "maintenance": "Shared staging code in strix/interface/utils.py and scan_setup.py."
+      },
+      "implementation": {
+        "phase": "decision_required",
+        "source_reviewed_sha": null,
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Reproduced on the integrated base (3 lines of output match the report); no fix attempted.",
+        "limits": [
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+        ]
+      },
+      "evidence": [
+        "https://github.com/usestrix/strix/issues/1633"
+      ],
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1635"
+      ],
+      "revisit_conditions": [
+        "A maintainer answers the contract question or a PR appears; compare it with the fork's staging code and with carried #1621 before importing."
+      ],
+      "source_triage": [],
+      "source_history": null,
+      "decision_history": [
+        {
+          "recorded_at": "2026-10-30T19:04:00.251813+00:00",
+          "fingerprint": "b141ee9507a5b67030444ba22681aacdcc1b773300501f8b10bf15d1ceea7861",
+          "event": "initial_record",
+          "timing_note": "Ledger recording time; not the time an older implementation was originally made.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": null,
+            "fork_decision": "deferred",
+            "rationale": "Real defect: A Postman environment is used for the base URL and then dropped, so non-URL values never reach the sandbox or the root task. The report itself asks upstream which contract is intended (copy contained local references, require a bundled spec, or deliver an effective variable map), and the second one decides how secrets from an environment reach the model context without the API key. Opened on 2026-10-30 from the fork owner's account in a parallel session. Implementing a guess would fix an interface the maintainers have not chosen and would add file or secret handling the fork does not need today. PR #1635, opened later the same day from the same account, implements one contract; it is recorded as deferred pending the owner's decision.",
+            "implementation": {
+              "phase": "decision_required",
+              "source_reviewed_sha": null,
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": null,
+              "fork_commits": [],
+              "adaptations": [],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "Reproduced on the integrated base (3 lines of output match the report); no fix attempted.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer."
+              ]
+            },
+            "revisit_conditions": [
+              "A maintainer answers the contract question or a PR appears; compare it with the fork's staging code and with carried #1621 before importing."
             ]
           }
         }
