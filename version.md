@@ -150,3 +150,14 @@ Delivery PR [#45](https://github.com/samirhvbr/strix/pull/45) was merged into `m
 (parents `8aa0791e`, the 1.2.43 release, and `14777bac`, the delivery). The companion PRs #38 to #44 closed with it. `.fork-version`
 and this file say 1.2.44 on `master`, but **the annotated tag `shvia-v1.2.44` and the Release do not exist yet**: the Latest Release
 is still 1.2.43. No new engine binaries exist (the `pentest-<triple>` workflow needs Actions, which are billing-locked).
+
+### Release — 2026-10-30
+
+The Release [`SHVIA 1.2.44 (Strix 1.7.0)`](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.44) was published at 2026-10-30T21:13:42 UTC
+and is the Latest. Its tag `shvia-v1.2.44` resolves to `8dab158f` (`master` right after the documentation PR #46), with no assets.
+**The tag is lightweight, not annotated as the steps above say:** the owner's commands were pasted into another repository, so
+`git tag` and `git push` failed there, and `gh release create` created the tag itself from the head of the default branch, which was
+the right commit. Tags 1.2.37 and 1.2.43 are lightweight too. `master` is one documentation commit ahead of the tag (this record).
+No new engine binaries exist, so the ShvIA Desktop keeps pinning the ones on the 1.2.43 Release. For the next release use
+`gh release create ... --verify-tag` after pushing the tag, so a missing tag fails instead of being created from a branch head.
+
