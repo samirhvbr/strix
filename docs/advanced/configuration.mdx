@@ -236,6 +236,10 @@ strix --target ./app --config /path/to/config.json
 }
 ```
 
+<Note>
+  `STRIX_RUN_LLM_API_KEY` is internal and is not a setting. The ShvIA Desktop uses it to hand one run a model key from the person's SHVIA account; the engine removes it from the environment at startup, keeps it in memory only and never writes it to the config file. Do not set it yourself: use `LLM_API_KEY`.
+</Note>
+
 ## Example Setup
 
 ```bash

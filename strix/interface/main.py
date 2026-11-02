@@ -15,7 +15,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from strix.config import codex, load_settings, persist_current
+from strix.config import codex, ephemeral, load_settings, persist_current
 from strix.core.paths import RUNS_DIR_NAME, run_dir_for, runtime_state_dir
 from strix.core.run_lease import controller_lease
 from strix.interface.cli_args import (
@@ -461,6 +461,10 @@ def _force_utf8_streams() -> None:
 
 
 def main() -> None:
+    # First, before anything can log, persist, spawn or iterate the environment: the model key an
+    # account grant hands this process leaves ``os.environ`` here (see strix.config.ephemeral).
+    ephemeral.take_run_credentials()
+
     if sys.platform == "win32":
         _force_utf8_streams()
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

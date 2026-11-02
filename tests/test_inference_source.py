@@ -67,6 +67,19 @@ def test_parse_treats_a_missing_block_as_no_model_approved() -> None:
     assert parse_inference(None) is None
 
 
+def test_parse_accepts_the_account_credential_and_reports_it_only_then() -> None:
+    raw = {"model": "minimax/MiniMax-M3", "source": "local", "credential": "account"}
+    choice = parse_inference(raw)
+    assert choice == InferenceChoice("minimax/MiniMax-M3", "local", "account")
+    assert choice is not None
+    assert choice.summary() == raw
+    # An approval without the key is byte-for-byte what it was before the key existed.
+    plain = parse_inference({"model": "minimax/MiniMax-M3", "source": "local"})
+    assert plain == InferenceChoice("minimax/MiniMax-M3", "local")
+    assert plain is not None
+    assert plain.summary() == {"model": "minimax/MiniMax-M3", "source": "local"}
+
+
 @pytest.mark.parametrize(
     "raw",
     [
@@ -74,6 +87,16 @@ def test_parse_treats_a_missing_block_as_no_model_approved() -> None:
         [],
         {"model": "deepseek/x"},
         {"model": "deepseek/x", "source": "local", "api_key": "sk-x"},
+        {"model": "deepseek/x", "source": "local", "credential": "local"},
+        {"model": "deepseek/x", "source": "local", "credential": "Account"},
+        {"model": "deepseek/x", "source": "local", "credential": ""},
+        {"model": "deepseek/x", "source": "local", "credential": None},
+        {"model": "deepseek/x", "source": "local", "credential": True},
+        {"model": "deepseek/x", "source": "local", "credential": ["account"]},
+        {"model": "deepseek/x", "source": "local", "credential": "account", "api_key": "sk-x"},
+        {"model": "deepseek/x", "credential": "account"},
+        # A subscription signs in; an account key would be ignored and this computer would pay.
+        {"model": "chatgpt/gpt-5.4", "source": "local", "credential": "account"},
         {"model": "deepseek/x", "source": "gateway"},
         {"model": "deepseek/x", "source": ""},
         {"model": "deepseek/x", "source": None},
@@ -249,6 +272,7 @@ def test_authorization_without_a_model_approves_none(
         {"model": "deepseek/x", "source": "gateway"},
         {"model": "not a model", "source": "local"},
         {"model": "deepseek/x", "source": "local", "api_key": "sk-x"},
+        {"model": "deepseek/x", "source": "local", "credential": "local"},
         "deepseek/x",
     ],
 )
