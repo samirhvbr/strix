@@ -652,18 +652,18 @@
       "fork_decisions": {
         "pending": 173,
         "incorporated_fully": 52,
-        "adapted": 16,
+        "adapted": 17,
         "already_covered": 90,
-        "deferred": 239,
+        "deferred": 238,
         "discarded": 26,
         "incorporated_partially": 1
       },
       "implementation_phases": {
         "unknown": 118,
         "present_before_round": 41,
-        "integrated_review_branch": 48,
+        "integrated_review_branch": 49,
         "decision_required": 113,
-        "deferred": 239,
+        "deferred": 238,
         "not_planned": 26,
         "pending": 12
       }
@@ -908,9 +908,21 @@
           ],
           "corrections": "Earlier delivery-branch counts (585 records) did not include the 12 historical items the review branch added; the merged ledger has 597 records."
         }
+      },
+      {
+        "id": "round-2026-10-30-caido-deadline",
+        "recorded_at": "2026-10-30T21:07:25.732358+00:00",
+        "method": "Adaptation of one deferred pull request from the priority queue; no inventory was refetched.",
+        "results": {
+          "adapted": [
+            "1053"
+          ],
+          "fork_commit": "444519a6ea3265da0bc61254bca6e6bfc0ae2277",
+          "branch": "feat/backport-1053-caido-ready-deadline"
+        }
       }
     ],
-    "last_incremental_update_at": "2026-10-30T19:09:33.904111+00:00",
+    "last_incremental_update_at": "2026-10-30T21:07:25.732358+00:00",
     "latest_known_recheck": {
       "at": "2026-10-30T16:07:27.793500+00:00",
       "baseline_commit": "e6752b5c7f5a9fd903960d0aa7b87d6dd4270b73",
@@ -56503,8 +56515,8 @@
       "reviewed_sha": "81dce10fed21a6af7527de4a5db5783a3bd06bf0",
       "review_scope": "Diff/code and bounded validation review; consult per-item limitations.",
       "review_checked_at": "2026-10-29T20:23:07.261769+00:00",
-      "fork_decision": "deferred",
-      "rationale": "Deadline Caido ainda ausente, head corrigiu timeout subsegundo; exige preservar _setup_project com retry do fork e novo deferred _caido, ajustar fixtures e validar offline.",
+      "fork_decision": "adapted",
+      "rationale": "Adapted to the fork, not cherry-picked: the upstream branch conflicts with main and replaces tests/test_caido_bootstrap.py wholesale. Readiness of the Caido guest login is bounded by elapsed time (STRIX_CAIDO_BOOT_WAIT_S, default 300 s) instead of ten attempts (about 70 s); each curl attempt and retry delay is capped to the remaining budget. The fork's _setup_project retry, scan_id, authorized_targets and the deferred _caido path are kept. Trade-off: a Caido that never starts is reported after the budget, not after about 70 s.",
       "assessment": {
         "benefit": "Not individually assessed beyond the recorded rationale.",
         "risk": "Not individually assessed at the recorded review depth.",
@@ -56512,24 +56524,28 @@
         "maintenance": "Not individually estimated."
       },
       "implementation": {
-        "phase": "deferred",
+        "phase": "integrated_review_branch",
         "source_reviewed_sha": "81dce10fed21a6af7527de4a5db5783a3bd06bf0",
         "reviewed_repository": "usestrix/strix",
         "source_imported_sha": null,
         "source_repository": null,
-        "source_pr": null,
-        "fork_commits": [],
+        "source_pr": 1053,
+        "fork_commits": [
+          "444519a6ea3265da0bc61254bca6e6bfc0ae2277"
+        ],
         "adaptations": [
-          "Preservar _setup_project/retry #1205 e authorized_targets/scan_id do fork.",
-          "Passar timeout pelo _caido do novo lifecycle deferred; manter guard/mount protections.",
-          "Atualizar fixtures runtime/settings sem excluir testes para ocultar regressões."
+          "Kept the fork's _setup_project retry, scan_id and authorized_targets; wait_timeout_s is a keyword with the 300 s default so existing callers and tests keep working.",
+          "Passed the budget through the deferred _caido path in session_manager; the fakes of RuntimeSettings in test_deferred_session and test_session_entries gained the field instead of dropping tests.",
+          "Kept tests/test_caido_bootstrap.py and added three deadline tests plus one wiring test; the attempt timeout has a 0.1 s floor, which the upstream patch does not have."
         ],
         "provenance_unknown_reason": null
       },
       "validation": {
-        "summary": "Revisão estática de diff completo, discussão/reviews e aplicabilidade ao código do fork. Testes autorrelatados no PR não equivalem a execução local nossa; reprodução local e gates de integração pendentes da base validada. O head tem somente supply-chain aprovados, sem execução pytest registrada nos checks atuais.",
+        "summary": "106 targeted tests pass; the 4 new tests fail on the unadapted production code (reverted and restored). Full suite on 444519a6: 3616 passed, 12 skipped, 3 xfailed, 0 failed (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True). Ruff and Mypy clean on the touched files.",
         "limits": [
-          "GitHub state, content review, local validation, integration and release are separate facts."
+          "GitHub state, content review, local validation, integration and release are separate facts.",
+          "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+          "The deadline is exercised with a virtual clock; no real slow Caido start was reproduced here."
         ]
       },
       "evidence": [
@@ -56539,11 +56555,12 @@
         "Head atual confirmado via connector: 81dce10fed21a6af7527de4a5db5783a3bd06bf0; mergeable=False",
         "Diff completo e timeline de comentários/reviews lidos: deep-1053.json",
         "Threads atuais relidas via connector e checks via GraphQL: deep-status-threads-0.json, deep-ci-0.json; strix/supply-chain=SUCCESS",
-        "Thread Greptile de timeout mínimo resolvida/outdated; patch atual usa min(15, remaining), sem piso de1s; reprodução local segue pendente."
+        "Thread Greptile de timeout mínimo resolvida/outdated; patch atual usa min(15, remaining), sem piso de1s; reprodução local segue pendente.",
+        "Adapted on 2026-10-30; head 81dce10f unchanged at that time (state OPEN, 2 comments, 2 reviews)."
       ],
       "linked_items": [],
       "revisit_conditions": [
-        "Perform the fork-specific adaptation and regression proof described in the triage reason; do not import the patch unchanged."
+        "Drop the fork copy when upstream merges #1053 or its own readiness deadline; keep upstream's."
       ],
       "source_triage": [
         {
@@ -56612,6 +56629,46 @@
             },
             "revisit_conditions": [
               "Perform the fork-specific adaptation and regression proof described in the triage reason; do not import the patch unchanged."
+            ]
+          }
+        },
+        {
+          "recorded_at": "2026-10-30T21:07:25.732358+00:00",
+          "fingerprint": "ac956425ce6261251b8a49eebf2ba9e3513438834743281b9b208a9ce5a505f7",
+          "event": "adapted_and_validated",
+          "timing_note": "Recorded when the adaptation was validated.",
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "81dce10fed21a6af7527de4a5db5783a3bd06bf0",
+            "fork_decision": "adapted",
+            "rationale": "Adapted to the fork, not cherry-picked: the upstream branch conflicts with main and replaces tests/test_caido_bootstrap.py wholesale. Readiness of the Caido guest login is bounded by elapsed time (STRIX_CAIDO_BOOT_WAIT_S, default 300 s) instead of ten attempts (about 70 s); each curl attempt and retry delay is capped to the remaining budget. The fork's _setup_project retry, scan_id, authorized_targets and the deferred _caido path are kept. Trade-off: a Caido that never starts is reported after the budget, not after about 70 s.",
+            "implementation": {
+              "phase": "integrated_review_branch",
+              "source_reviewed_sha": "81dce10fed21a6af7527de4a5db5783a3bd06bf0",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": null,
+              "source_repository": null,
+              "source_pr": 1053,
+              "fork_commits": [
+                "444519a6ea3265da0bc61254bca6e6bfc0ae2277"
+              ],
+              "adaptations": [
+                "Kept the fork's _setup_project retry, scan_id and authorized_targets; wait_timeout_s is a keyword with the 300 s default so existing callers and tests keep working.",
+                "Passed the budget through the deferred _caido path in session_manager; the fakes of RuntimeSettings in test_deferred_session and test_session_entries gained the field instead of dropping tests.",
+                "Kept tests/test_caido_bootstrap.py and added three deadline tests plus one wiring test; the attempt timeout has a 0.1 s floor, which the upstream patch does not have."
+              ],
+              "provenance_unknown_reason": null
+            },
+            "validation": {
+              "summary": "106 targeted tests pass; the 4 new tests fail on the unadapted production code (reverted and restored). Full suite on 444519a6: 3616 passed, 12 skipped, 3 xfailed, 0 failed (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True). Ruff and Mypy clean on the touched files.",
+              "limits": [
+                "GitHub state, content review, local validation, integration and release are separate facts.",
+                "Local tests are not remote CI: the fork's Actions account is billing-locked and upstream CI waits for a maintainer.",
+                "The deadline is exercised with a virtual clock; no real slow Caido start was reproduced here."
+              ]
+            },
+            "revisit_conditions": [
+              "Drop the fork copy when upstream merges #1053 or its own readiness deadline; keep upstream's."
             ]
           }
         }

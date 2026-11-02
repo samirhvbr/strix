@@ -26,6 +26,7 @@ if TYPE_CHECKING:
 @dataclass
 class _RuntimeSettings:
     backend: str
+    caido_boot_wait_s: int = 300
 
 
 @dataclass

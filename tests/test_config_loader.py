@@ -35,6 +35,7 @@ _LLM_ENV_KEYS = [
     # RuntimeSettings
     "STRIX_IMAGE",
     "STRIX_RUNTIME_BACKEND",
+    "STRIX_CAIDO_BOOT_WAIT_S",
     # TelemetrySettings
     "STRIX_TELEMETRY",
     # JSON-object settings
