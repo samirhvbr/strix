@@ -234,12 +234,25 @@ class NativeControl:
         except (OSError, TimeoutError):
             pass
         finally:
+            # close() lets the transport hand what it still buffers to the socket before the
+            # socket closes. drain() above only waits for the buffer to fall under its
+            # high-water mark, so on a small socket buffer (macOS local stream sockets: about
+            # 8 KB) most of a large answer is still buffered here, and an immediate abort() threw
+            # it away: the client got a few KB and no trailing newline (fork 1.2.47).
             writer.close()
-            writer.transport.abort()  # A non-reading local client cannot hold scan teardown.
-            with contextlib.suppress(OSError):
-                await writer.wait_closed()
-            if task is not None:
-                self._clients.discard(task)
+            flushed = False
+            try:
+                await asyncio.wait_for(writer.wait_closed(), timeout=1)
+                flushed = True
+            except (OSError, TimeoutError):
+                pass
+            finally:
+                if not flushed:
+                    # A non-reading local client cannot hold scan teardown: this wait and the
+                    # drain above are each bounded to one second.
+                    writer.transport.abort()
+                if task is not None:
+                    self._clients.discard(task)
 
     async def close(self) -> None:
         if self.server is not None:

@@ -5,10 +5,12 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import socket
 import sys
 import tempfile
 import uuid
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
@@ -290,3 +292,85 @@ def test_invalid_operator_pause_is_not_silently_discarded(tmp_path, contents):
             coordinator=coordinator,
             test_pause=pause,
         )
+
+
+async def answer_on_a_small_socket_buffer(tmp_path, monkeypatch, size):
+    """A started control whose ``status`` answer is ``size`` bytes, sent on a tiny send buffer.
+
+    macOS local stream sockets default to about 8 KB of send buffer where Linux's is about
+    200 KB, which is why a large answer only breaks there. The real accept path runs
+    untouched; the only change is ``SO_SNDBUF`` forced small on the accepted socket before it
+    answers, and a ledger whose snapshot is as large as asked.
+    """
+    control, _, ledger = setup_control(tmp_path / "scan")
+    accept = control._accept
+
+    async def with_small_buffer(reader, writer):
+        writer.get_extra_info("socket").setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, 4096)
+        await accept(reader, writer)
+
+    monkeypatch.setattr(control, "_accept", with_small_buffer)
+    await control.start(ledger)
+    control.ledger = SimpleNamespace(snapshot=lambda: {"padding": "x" * size})
+    return control, ledger
+
+
+async def ask_status(control):
+    descriptor = _read_private(control.directory / "control.json")
+    reader, writer = await asyncio.open_unix_connection(descriptor["socket"])
+    request = {"controller_ref": control.controller_ref, "token": descriptor["token"]}
+    writer.write(json.dumps({**request, "action": "status"}).encode() + b"\n")
+    await writer.drain()
+    return reader, writer
+
+
+@pytest.mark.asyncio
+async def test_a_large_answer_reaches_a_slow_client_whole_on_a_small_socket_buffer(
+    tmp_path, monkeypatch
+):
+    size = 200_000
+    control, ledger = await answer_on_a_small_socket_buffer(tmp_path, monkeypatch, size)
+    reader, writer = await ask_status(control)
+    received = bytearray()
+
+    async def read_in_small_chunks():
+        while chunk := await reader.read(8192):
+            received.extend(chunk)
+            await asyncio.sleep(0.001)
+
+    try:
+        await asyncio.wait_for(read_in_small_chunks(), 10)
+    finally:
+        writer.close()
+        await asyncio.wait_for(control.close(), 5)
+        ledger.close()
+    # The Desktop refuses an answer that does not end in a newline, and a cut answer cannot parse.
+    assert received.endswith(b"\n")
+    answer = json.loads(received)
+    assert answer["ok"] is True
+    assert len(answer["snapshot"]["telemetry"]["padding"]) == size
+
+
+@pytest.mark.asyncio
+async def test_a_client_that_never_reads_cannot_hold_the_handler_or_the_shutdown(
+    tmp_path, monkeypatch
+):
+    control, ledger = await answer_on_a_small_socket_buffer(tmp_path, monkeypatch, 200_000)
+    loop = asyncio.get_running_loop()
+    _, writer = await ask_status(control)
+    try:
+        started = loop.time()
+        await asyncio.sleep(0.5)
+        assert control._clients, "the answer should still be waiting for a client that never reads"
+        while control._clients:
+            assert loop.time() - started < 3, (
+                "the handler is holding on to a client that never reads"
+            )
+            await asyncio.sleep(0.05)
+        await asyncio.wait_for(control.close(), 1)
+    finally:
+        # The client leaves last, so a handler that wrongly waits for it fails the test above
+        # instead of hanging the suite here.
+        writer.close()
+        await asyncio.wait_for(control.close(), 5)
+        ledger.close()
