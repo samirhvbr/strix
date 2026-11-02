@@ -346,3 +346,39 @@ def test_close_waits_for_an_inflight_callback(
         callback.result(timeout=5)
         closing.result(timeout=5)
     assert rows(tmp_path / "test_telemetry.db", "test_summary")[0]["total_cost_usd"] == 0.02
+
+
+def record_replayed_attempts(ledger: TestLedger, count: int) -> datetime:
+    """``count`` attempts one second apart, each of them an event and an incident."""
+    first = datetime(2026, 10, 8, tzinfo=UTC)
+    for number in range(count):
+        started = first + timedelta(seconds=number)
+        ledger.record_llm_event(
+            event(
+                call_id=f"call-{number}",
+                retry_attempt=1,
+                started_at=started,
+                finished_at=started + timedelta(seconds=1),
+            )
+        )
+    return first
+
+
+@pytest.mark.parametrize(
+    ("count", "limit", "dropped", "truncated"),
+    [(300, 256, 44, True), (100, 256, 0, False), (10, 10, 0, False), (11, 10, 1, True)],
+)
+def test_a_cut_snapshot_keeps_the_most_recent_events_and_incidents_in_order(
+    ledger: TestLedger, count: int, limit: int, dropped: int, truncated: bool
+) -> None:
+    first = record_replayed_attempts(ledger, count)
+    snapshot = ledger.snapshot(limit=limit)
+    assert snapshot["truncated"] is truncated
+    # The oldest rows are the ones dropped, and what is kept stays in chronological order: past
+    # 256 events a run's last model call used to be invisible for the rest of the run.
+    assert [item["started_at"] for item in snapshot["events"]] == [
+        (first + timedelta(seconds=number)).isoformat() for number in range(dropped, count)
+    ]
+    assert [item["occurred_at"] for item in snapshot["incidents"]] == [
+        (first + timedelta(seconds=number + 1)).isoformat() for number in range(dropped, count)
+    ]

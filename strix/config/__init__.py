@@ -10,12 +10,16 @@ Public surface:
 - :func:`apply_config_override` — switch the JSON source to a custom path.
 - :func:`persist_current` — write currently-set env vars to the active file.
 - :func:`pin_run_model` — set the model for this process only; never persisted.
+- :func:`pin_run_credentials` — set the API key for this process only, clearing the base URL
+  and extra headers/body it could be paired with; never persisted. The key comes from
+  :mod:`strix.config.ephemeral`.
 """
 
 from strix.config.loader import (
     apply_config_override,
     load_settings,
     persist_current,
+    pin_run_credentials,
     pin_run_model,
 )
 from strix.config.settings import (
@@ -40,5 +44,6 @@ __all__ = [
     "apply_config_override",
     "load_settings",
     "persist_current",
+    "pin_run_credentials",
     "pin_run_model",
 ]

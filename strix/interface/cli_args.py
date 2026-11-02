@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 from typing import Any, cast
 
-from strix.config import apply_config_override, load_settings
+from strix.config import apply_config_override, ephemeral, load_settings
 from strix.config.settings import DEFAULT_MAX_TURNS
 from strix.core.assessment import (
     bind_assessment_policy,
@@ -405,6 +405,14 @@ Strix Cloud:
     if args.inspect_web_authorization:
         args.web_authorization = args.inspect_web_authorization
     if args.web_authorization:
+        if args.config:
+            # ``--config`` replaces the whole settings source after the approved model (and the
+            # key it was handed) has been pinned in memory, so the run would silently use the
+            # file's model and credentials instead of the approved ones.
+            parser.error(
+                "--config cannot be combined with --web-authorization: the approved model and "
+                "its credentials are not taken from a configuration file"
+            )
         try:
             web_authorization = WebAuthorization(Path(args.web_authorization))
             approved_policy, approved_context, approved_budget = web_authorization.fetch()
@@ -422,8 +430,10 @@ Strix Cloud:
             args.inference = approved_inference.summary() if approved_inference else None
             inference_summary: dict[str, str] | None = None
             if approved_inference is not None:
-                apply_choice(approved_inference)
-                credentials = local_credentials_state(approved_inference.model)
+                apply_choice(approved_inference, inspecting=bool(args.inspect_web_authorization))
+                credentials = local_credentials_state(
+                    approved_inference.model, approved_inference.credential
+                )
                 inference_summary = {**approved_inference.summary(), "credentials": credentials}
                 if credentials == CREDENTIALS_MISSING and not args.inspect_web_authorization:
                     parser.error(
@@ -435,6 +445,7 @@ Strix Cloud:
                 # this machine (``inference_source: local``), exactly like an unauthorized scan.
                 # Nothing until now ever checked that configuration exists before spending the
                 # budget's time; surface it here, before the sandbox even starts.
+                ephemeral.discard_stray_run_credentials("WEB approved no model for this run")
                 local_model = (load_settings().llm.model or "").strip()
                 if not local_model:
                     inference_summary = {
@@ -475,6 +486,8 @@ Strix Cloud:
                 parser.exit()
         except ValueError as exc:
             parser.error(str(exc))
+    else:
+        ephemeral.discard_stray_run_credentials("this run has no WEB authorization")
     if args.assessment_context and not args.web_authorization:
         try:
             identity_context = parse_context(read_assessment_json(Path(args.assessment_context)))

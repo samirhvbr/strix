@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any, Union, get_args, get_origin
 
 from pydantic import AliasChoices, BaseModel
 
+from strix.config.ephemeral import is_run_api_key
 from strix.config.settings import LlmSettings, Settings
 from strix.utils.secret_files import write_secret_text
 
@@ -93,6 +94,28 @@ def pin_run_model(model: str) -> None:
     logger.info("run model pinned: %s (provider scope %s)", model.strip(), provider_scope(model))
 
 
+def pin_run_credentials(api_key: str) -> None:
+    """Make ``api_key`` the key of this process only, for exactly the model already pinned.
+
+    Call it after :func:`pin_run_model`. The key lives in the memoized settings, never in the
+    environment or the config file, so ``persist_current`` cannot write it. The connection the
+    key is paired with is replaced as a whole: the base URL, the extra headers and the extra
+    body a person has in the environment or in their stored file belong to their own
+    credentials, and an account key must reach the provider's own standard host and nothing
+    else. Nothing here logs the key.
+    """
+    global _cached  # noqa: PLW0603
+    current = load_settings()
+    updates: dict[str, Any] = {
+        "api_key": api_key,
+        "api_base": None,
+        "extra_headers": None,
+        "extra_body": None,
+    }
+    _cached = current.model_copy(update={"llm": current.llm.model_copy(update=updates)})
+    logger.info("run key pinned for model %s", current.llm.model)
+
+
 def persist_current() -> None:
     """Merge currently-set env vars into the active config file (0o600).
 
@@ -100,27 +123,39 @@ def persist_current() -> None:
     run that gets its settings from the file does not erase them. An env
     var set to the empty string clears the field from the file. A change to
     any linked LLM connection var drops the whole stored connection first.
+
+    A variable whose value is the key this run was handed for itself (see
+    :mod:`strix.config.ephemeral`) is treated as not set: the key never reaches the file,
+    and the stored connection of the person is neither replaced nor dropped because of it.
+    That is the case of ``_mirror_api_key_to_provider_env``, which copies the key into
+    ``OPENAI_API_KEY``, an alias of ``LLM_API_KEY``, for an OpenAI model.
     """
     s = load_settings()
     target = _override or _DEFAULT_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
 
-    env_block = _drop_stale_llm_connection(_read_env_block(target))
+    environ = _persistable_environ()
+    env_block = _drop_stale_llm_connection(_read_env_block(target), environ)
     for sub_name in type(s).model_fields:
         sub_model = getattr(s, sub_name)
         if not isinstance(sub_model, BaseModel):
             continue
         for finfo in type(sub_model).model_fields.values():
             aliases = [alias.upper() for alias in _aliases_for(finfo)]
-            active = next((alias for alias in aliases if alias in os.environ), None)
+            active = next((alias for alias in aliases if alias in environ), None)
             if active is None:
                 continue
             for alias in aliases:
                 env_block.pop(alias, None)
-            if os.environ[active]:
-                env_block[active] = os.environ[active]
+            if environ[active]:
+                env_block[active] = environ[active]
 
     write_secret_text(target, json.dumps({"env": env_block}, indent=2))
+
+
+def _persistable_environ() -> dict[str, str]:
+    """The environment as the config file may see it: without the run's own key."""
+    return {name: value for name, value in os.environ.items() if not is_run_api_key(value)}
 
 
 def _aliases_for(finfo: FieldInfo) -> list[str]:
@@ -193,14 +228,17 @@ def _first_alias_value(aliases: list[str], source: Mapping[str, Any]) -> Any | N
     return next((source[alias] for alias in aliases if alias in source), None)
 
 
-def _drop_stale_llm_connection(env_block: dict[str, Any]) -> dict[str, Any]:
+def _drop_stale_llm_connection(
+    env_block: dict[str, Any], environ: Mapping[str, str] | None = None
+) -> dict[str, Any]:
     """Remove every linked LLM var from ``env_block`` if the shell changed any of them."""
+    environ = _persistable_environ() if environ is None else environ
     linked_aliases = [
         [alias.upper() for alias in _aliases_for(LlmSettings.model_fields[name])]
         for name in _LINKED_LLM_FIELDS
     ]
     changed = any(
-        (env_value := _first_alias_value(aliases, os.environ)) is not None
+        (env_value := _first_alias_value(aliases, environ)) is not None
         and env_value != _first_alias_value(aliases, env_block)
         for aliases in linked_aliases
     )

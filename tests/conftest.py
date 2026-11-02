@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 import pytest
 
-from strix.config import loader
+from strix.config import ephemeral, loader
 from strix.interface import platform_identity
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @pytest.fixture(autouse=True)
@@ -45,6 +51,20 @@ def _isolate_user_state(
     state = tmp_path_factory.mktemp("strix-user-state")
     monkeypatch.setattr(loader, "_DEFAULT_PATH", state / "cli-config.json")
     monkeypatch.setattr(platform_identity, "IDENTITY_PATH", state / "cli-identity.json")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_run_credentials(monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
+    """Keep a model key held by one test from being the key of the next.
+
+    ``main()`` takes the run key out of the environment into a module-level holder, and an
+    account grant reads it from there, so state left behind would decide the outcome of a
+    later test (an account grant that "finds" a key nobody gave it).
+    """
+    monkeypatch.delenv(ephemeral.ENV_NAME, raising=False)
+    ephemeral.discard_run_credentials()
+    yield
+    ephemeral.discard_run_credentials()
 
 
 @pytest.fixture(autouse=True)
