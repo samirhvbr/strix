@@ -2076,6 +2076,18 @@
         "tag_shvia_v1.2.43": "8aa0791e",
         "delivery_pr": "https://github.com/samirhvbr/strix/pull/45 (open, unmerged)"
       }
+    },
+    {
+      "at": "2026-10-30T21:15:04.820703+00:00",
+      "scope": "After the owner published the 1.2.44 Release.",
+      "changed": {
+        "tag_shvia_v1.2.44": "created (lightweight) -> 8dab158f",
+        "release": "shvia-v1.2.44 published 2026-10-30T21:13:42Z (Latest, 0 assets)"
+      },
+      "unchanged": {
+        "origin_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "tag_shvia_v1.2.43": "8aa0791e"
+      }
     }
   ],
   "sandbox_image_audit": {
@@ -2114,20 +2126,20 @@
     }
   },
   "latest_recheck": {
-    "checked_at": "2026-10-30T15:34:11.423222+00:00",
-    "fork_master": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
-    "fork_main_mirror": "62b496430da5df5e9e79a190e7af6f92529883a3",
+    "checked_at": "2026-10-30T21:15:04.820703+00:00",
+    "fork_master": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5 (before the record PR for this release)",
+    "fork_main_mirror": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
     "upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-    "fork_latest_release": "shvia-v1.2.43",
-    "fork_release_published_at": "2026-10-28T14:04:47Z",
+    "fork_latest_release": "shvia-v1.2.44",
+    "fork_release_published_at": "2026-10-30T21:13:42Z",
     "upstream_latest_release": "v1.7.0",
     "upstream_release_published_at": "2026-10-05T02:39:14Z",
     "tag_resolves_to_master": true,
-    "version_file": "1.2.43",
+    "version_file": "1.2.44",
     "package_version": "1.7.0",
     "release_assets_rebuilt": false,
     "release_assets_downloaded_or_executed": false,
-    "tags_or_releases_changed": false,
+    "tags_or_releases_changed": true,
     "sandbox_image": {
       "checked_at": "2026-10-30T15:14:59.668732+00:00",
       "image": "ghcr.io/usestrix/strix-sandbox",
@@ -2143,6 +2155,6 @@
       }
     },
     "missing_image_issue": "https://github.com/usestrix/strix/issues/1628",
-    "scope": "Release metadata/ref comparison and registry manifest checks only. Source contribution branches and integration documentation were updated separately; no release/delivery."
+    "scope": "Release metadata/ref comparison after the 1.2.44 Release; no assets were attached and none were rebuilt."
   }
 }

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import dataclasses
 import inspect
 import json
@@ -21,7 +20,7 @@ from pydantic import ValidationError
 from strix.agents.prompt import render_system_prompt
 from strix.config import load_settings
 from strix.config.tool_call_arguments import describe_malformed_arguments
-from strix.core.web_authorization import WebAuthorizationError
+from strix.core.web_authorization import WebAuthorizationError, verify_patiently
 from strix.tools.agents_graph.tools import (
     agent_finish,
     create_agent,
@@ -775,7 +774,7 @@ def _with_controlled_authorization(tool: FunctionTool) -> FunctionTool:
         if not callable(authorize):
             raise WebAuthorizationError("Controlled tool requires WEB authorization")
         try:
-            await asyncio.to_thread(authorize)
+            await verify_patiently(authorize)
         except WebAuthorizationError:
             executor = ctx.context.get("identity_executor")
             if executor is not None:

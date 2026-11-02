@@ -15,7 +15,7 @@ from strix.core.business_case import run_single_credit_case
 from strix.core.evidence_ledger import EvidenceError
 from strix.core.server_name import request_presentation
 from strix.core.transport_case import run_transport_case
-from strix.core.web_authorization import WebAuthorizationError
+from strix.core.web_authorization import WebAuthorizationError, verify_patiently
 from strix.core.web_hygiene_case import run_web_hygiene_case
 
 
@@ -144,7 +144,7 @@ class IdentityExecutor:
             revision = 0
             try:
                 if self._authorize is not None:
-                    await asyncio.to_thread(self._authorize)
+                    await verify_patiently(self._authorize)
                 if identity.secret_ref is not None:
                     credential = self.credentials.resolve(identity.secret_ref, identity_ref)
                     headers = {

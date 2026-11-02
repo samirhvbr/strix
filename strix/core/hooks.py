@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 import math
 import time
@@ -12,7 +11,7 @@ from typing import TYPE_CHECKING, Any
 from agents.lifecycle import RunHooks
 
 from strix.core.agents import BudgetPolicy, coordinator_from_context
-from strix.core.web_authorization import WebAuthorizationError
+from strix.core.web_authorization import WebAuthorizationError, verify_patiently
 from strix.report.state import get_global_report_state, record_tool_call
 
 
@@ -225,7 +224,7 @@ class ReportUsageHooks(RunHooks[dict[str, Any]]):
         authorize = context.context.get("authorize_assessment")
         if authorize is not None:
             try:
-                await asyncio.to_thread(authorize)
+                await verify_patiently(authorize)
             except WebAuthorizationError:
                 executor = context.context.get("identity_executor")
                 if executor is not None:
