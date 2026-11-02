@@ -12,6 +12,14 @@ if TYPE_CHECKING:
 def ledger_snapshot(
     db: sqlite3.Connection, *, parents: dict[str, Any], limit: int = 256
 ) -> dict[str, Any]:
+    """Up to ``limit`` rows per group, with ``truncated`` set when any group had more.
+
+    ``events`` and ``incidents`` grow for as long as a run lasts, so when they are cut they
+    keep the most recent rows, still in chronological order. Until fork 1.2.47 they kept the
+    oldest: past 256 events the list never changed again, and a consumer asking when the last
+    model call happened got the answer of the first minutes of the run. ``tests`` and
+    ``models`` are few (models are aggregates) and keep their order.
+    """
     if not 1 <= limit <= 256:
         raise ValueError("invalid telemetry snapshot limit")
 
@@ -38,11 +46,11 @@ def ledger_snapshot(
         "SELECT event_id, test_id, agent_id, route, provider, model, cost_basis, "
         "outcome, retry_attempt, status_code, input_tokens, output_tokens, "
         "total_tokens, cost_usd, started_at, finished_at, duration_ms "
-        "FROM test_events ORDER BY started_at, event_id LIMIT ?"
+        "FROM test_events ORDER BY started_at DESC, event_id DESC LIMIT ?"
     )
     incidents = rows(
         "SELECT incident_id, test_id, agent_id, severity, source, occurred_at "
-        "FROM scan_incidents ORDER BY occurred_at, incident_id LIMIT ?"
+        "FROM scan_incidents ORDER BY occurred_at DESC, incident_id DESC LIMIT ?"
     )
     cursor = db.execute(
         "SELECT scan_id, ingestion_status, write_errors, history_started_at, history_scope, "
@@ -55,7 +63,9 @@ def ledger_snapshot(
         "metadata": metadata,
         "tests": tests[:limit],
         "models": models[:limit],
-        "events": events[:limit],
-        "incidents": incidents[:limit],
+        # Newest first from SQL, so the first ``limit`` are the most recent rows;
+        # reversed, they are chronological again, as consumers have always read them.
+        "events": events[:limit][::-1],
+        "incidents": incidents[:limit][::-1],
         "truncated": any(len(group) > limit for group in (tests, models, events, incidents)),
     }
