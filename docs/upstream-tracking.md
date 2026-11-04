@@ -103,13 +103,14 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image (reproduced 2026-10-30, resolved for delivery by a pin):** the synchronized source defaults to
-`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; the published 1.3.0 is the access control).
-[Upstream issue #1628](https://github.com/usestrix/strix/issues/1628) requests publication and distinguishes
-the current installer from the released runtime. The delivery branch pins 1.3.0 in `RuntimeSettings.image` and
-`scripts/install.sh` (a test keeps them equal), so the default runtime works; the libbrotli CVE-2026-111497 patch of
-#1617 stays out of the image until upstream publishes 1.3.1. Then move both pins and drop this paragraph; on a sync
-conflict in those lines keep the published tag.
+**Sandbox image (reproduced 2026-10-30, resolved 2026-11-04 by moving the pin):** the synchronized source defaulted to
+`ghcr.io/usestrix/strix-sandbox:1.3.1` while that tag was not published (404; 1.3.0 answered 200), so the fork held
+`1.3.0`. [Upstream issue #1628](https://github.com/usestrix/strix/issues/1628) asked for publication. The tag exists now
+(`linux/amd64` and `linux/arm64`; index digest `sha256:78df914f…`), and fork 1.2.48 pins it in
+`RuntimeSettings.image` and `scripts/install.sh` (a test keeps them equal). Checked on 2026-11-04: pulled the amd64 image
+and started it through the engine's own Docker backend (`libbrotli1` 1.2.0-4.1, trufflehog 3.99.2, Caido 0.56.0 listening
+on 48080); the arm64 image, a real scan and the Caido certificate path were not run. On a sync conflict in those lines
+keep the newest tag `docker manifest inspect` finds.
 
 The new fixes are [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
