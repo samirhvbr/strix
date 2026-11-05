@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-05T14:18:35.457672+00:00",
+  "updated_at": "2026-11-05T15:54:10.766347+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -159,6 +159,51 @@
       "observed_at": "2026-11-05T14:18:35.457672+00:00",
       "integrated": false,
       "note": "Do not equate observing main and reviewing selected merges with a full synchronization."
+    },
+    "last_selected_patch_validation": {
+      "branch": "feat/pr1654-ci-followup-20261105",
+      "base_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+      "validated_code_sha": "4f992de780f24ff53550004fe894f209811e7ee2",
+      "source_function_equivalence": [
+        {
+          "path": "strix/report/state.py",
+          "name": "_estimate_response_cost",
+          "equal": true,
+          "sha256": "58838c4077da31b4087127bb740057912c96c45b519c28754726f2944a5f420a"
+        },
+        {
+          "path": "strix/report/usage.py",
+          "name": "_estimate_litellm_entry_cost",
+          "equal": true,
+          "sha256": "1980ba73e445b7324f8e8dc0b3c423202942f2209b88eae1e0d179ab162bcda7"
+        },
+        {
+          "path": "tests/test_pricing.py",
+          "name": "test_ledger_estimates_cost_without_provider_authentication",
+          "equal": true,
+          "sha256": "2092f4d10fcba4bc2f484994548264fa78be2024eaca5db1a51c175db5f6ceab"
+        },
+        {
+          "path": "tests/test_cost_tracking.py",
+          "name": "test_cost_callback_estimates_without_provider_authentication",
+          "equal": true,
+          "sha256": "3a409828d99cbccbe60abf7c563d755bf961d093da9d124ba1931610b821545a"
+        }
+      ],
+      "adaptations": [
+        "1658: preserve existing fork subscription-route filtering; duplicate pricing import already present.",
+        "1660: resolve append conflict by keeping the existing subscription-route test and adding the synthetic catalog test; no production change."
+      ],
+      "validation": [
+        "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+        "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+        "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+      ],
+      "previous_login_guard_sha": "8263641333f46df12d9efadbae292f253989b370",
+      "effective_integrated_upstream_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "validated_at": "2026-11-05T15:54:10.766347+00:00",
+      "record": "ci-1654-2026-11-05.json",
+      "status": "focused_checks_complete_with_existing_pyright_limit"
     }
   },
   "contribution_review": {
@@ -458,6 +503,22 @@
       "review_url": "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768",
       "source_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
       "summary": "Greptile5/5; no change requested."
+    },
+    "latest_targeted_followup": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "record": "ci-1654-2026-11-05.json",
+      "report": "../UPSTREAM_CI_1654_2026-11-05.md",
+      "scope": "Targeted follow-up for PR1654 CI; no new all-item inventory or full upstream synchronization.",
+      "ledger_records": 633,
+      "original_ci_status": "in_progress",
+      "diagnostic_ci_status": "completed",
+      "diagnostic_ci_conclusion": "success",
+      "next_resume": [
+        "Re-read this record and PR1654 current head/checks, including jobs that no longer appear open.",
+        "Monitor maintainer integration of1577/1657/1658/1660; rerun1654 only against a base that contains the fixes. Account has no upstream push/maintain permission.",
+        "Compare source/imported heads before taking later changes; do not cherry-pick1657/1577 again into the fork.",
+        "The fork branch is separate from master/release; preserve existing PR53 and concurrent local catalog fix9e1af834 when reconciling overlap."
+      ]
     }
   },
   "version_release_audit": "release-audit.json",

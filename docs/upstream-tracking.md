@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest round](UPSTREAM_REVIEW_2026-11-05.md),
+Start every review here, then read the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
+the [latest full round](UPSTREAM_REVIEW_2026-11-05.md),
 the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
 the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md), the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
@@ -21,6 +22,16 @@ fork commit, check results, coverage, partial work and the next query window. Ad
 checkpoint only after its corresponding checks finish. A fetch, inventory refresh or code
 review must never advance the integration checkpoint. A full suite passing does not turn a
 failed type-check or blocked remote workflow green.
+
+**Targeted follow-up, 2026-11-05:** the original #1654 CI still has three blocked
+pytest jobs. Independent fixes #1657/#1658/#1660 plus existing #1577 and #1654
+pass the complete Linux Python 3.12–3.14 diagnostic matrix (2,534 passed / 3 xfailed
+per version). Latest selected fork code is `4f992de7` on
+`feat/pr1654-ci-followup-20261105`; #1657/#1577 were already covered in the fork.
+The ledger now has 633 records after this targeted analysis. The table above and
+full-inventory timestamp retain their prior completed checkpoints; see the
+[separate follow-up evidence](upstream-tracking/ci-1654-2026-11-05.json) for the
+new selected imports, validations and exact next actions.
 
 ## Resume a round
 
@@ -104,13 +115,12 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image (reproduced 2026-10-30, resolved for delivery by a pin):** the synchronized source defaults to
-`ghcr.io/usestrix/strix-sandbox:1.3.1`, which is not published (404; the published 1.3.0 is the access control).
-[Upstream issue #1628](https://github.com/usestrix/strix/issues/1628) requests publication and distinguishes
-the current installer from the released runtime. The delivery branch pins 1.3.0 in `RuntimeSettings.image` and
-`scripts/install.sh` (a test keeps them equal), so the default runtime works; the libbrotli CVE-2026-111497 patch of
-#1617 stays out of the image until upstream publishes 1.3.1. Then move both pins and drop this paragraph; on a sync
-conflict in those lines keep the published tag.
+**Sandbox image:** the 2026-11-05 full-round audit confirmed that images 1.3.1
+and 1.4.0 are published, resolving the publication part of
+[upstream issue #1628](https://github.com/usestrix/strix/issues/1628). The delivered
+fork still pins 1.3.0; existing [fork PR #53](https://github.com/samirhvbr/strix/pull/53)
+prepares the 1.3.1 transition. Publication, fork integration and released runtime
+validation remain separate; this CI follow-up did not change the pin or duplicate #53.
 
 The new fixes are [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
@@ -121,6 +131,7 @@ before a master delivery. Their evidence, exact source versions, local commits a
 round and ledger.
 
 Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
-The release is still 1.2.43, with upstream package version 1.7.0 by policy. Existing published
-binaries predate this integration. A source commit, built wheel, remote CI, released binary
-and installed/runtime acceptance are separate evidence.
+Remote release metadata was rechecked during this follow-up: the latest published
+fork release is `shvia-v1.2.47` at `895ab37d`, with upstream package version 1.7.0
+by policy. Selected review-branch imports are unreleased. A source commit, built
+wheel, remote CI, released binary and installed/runtime acceptance are separate evidence.

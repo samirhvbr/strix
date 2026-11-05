@@ -1017,7 +1017,30 @@
         "report": "../UPSTREAM_FOLLOWUP_2026-10-30.md",
         "validation": "followup-2026-10-30.json"
       }
-    ]
+    ],
+    "latest_targeted_ci_followup": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "record": "ci-1654-2026-11-05.json",
+      "known_ids_rechecked": [
+        "usestrix/strix#pr:1654",
+        "usestrix/strix#pr:1577",
+        "usestrix/strix#pr:1279",
+        "usestrix/strix#pr:1639",
+        "usestrix/strix#issue:1653"
+      ],
+      "new_ids": [
+        "usestrix/strix#pr:1215",
+        "usestrix/strix#pr:1657",
+        "usestrix/strix#pr:1658",
+        "usestrix/strix#pr:1660",
+        "usestrix/strix#issue:1213",
+        "usestrix/strix#issue:1655",
+        "usestrix/strix#issue:1656",
+        "usestrix/strix#issue:1659"
+      ],
+      "current_ledger_records": 633,
+      "full_inventory_checkpoint_advanced": false
+    }
   },
   "records": [
     {
@@ -68781,13 +68804,13 @@
       "url": "https://github.com/usestrix/strix/pull/1279",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-05T13:49:21.383215+00:00",
-      "last_checked_basis": "Live individually addressed GitHub GraphQL lookup of every known ID, including closed/merged items.",
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
       "updated_at": "2026-10-29T10:03:33Z",
       "source": {
         "observed_head_sha": "ad33c2c2200d620096092540574f814180740b8e",
         "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-        "base_branch": null,
+        "base_branch": "main",
         "merge_commit": null,
         "closed_at": null,
         "merged_at": null,
@@ -69019,6 +69042,14 @@
             "command": "uv run --frozen pytest -q tests/test_pricing.py"
           },
           "evidence_record": "followup-2026-10-30.json"
+        },
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": "already_covered",
+          "decision": "already_covered",
+          "source_sha": "ad33c2c2200d620096092540574f814180740b8e",
+          "record": "ci-1654-2026-11-05.json"
         }
       ],
       "override_provenance": {
@@ -69033,9 +69064,8 @@
       },
       "review_head_status": "matches_observed_head",
       "latest_recheck": {
-        "at": "2026-11-05T13:49:21.383215+00:00",
-        "scope": "State/head/update/merge metadata. Reviewed/imported source versions and adoption decisions preserved unless a separate event below records reassessment.",
-        "verified_changes": {},
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
         "decision_preserved": true
       },
       "latest_feedback": {
@@ -89605,13 +89635,13 @@
       "url": "https://github.com/usestrix/strix/pull/1577",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-05T13:49:21.383215+00:00",
-      "last_checked_basis": "Live individually addressed GitHub GraphQL lookup of every known ID, including closed/merged items.",
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
       "updated_at": "2026-10-23T16:39:40Z",
       "source": {
         "observed_head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
         "base_sha": "14cc948c36e90517a774cf32bdfe5d8cd3605b62",
-        "base_branch": null,
+        "base_branch": "main",
         "merge_commit": null,
         "closed_at": null,
         "merged_at": null,
@@ -89622,12 +89652,12 @@
         ],
         "present_in_current_open_inventory": true
       },
-      "review_depth": "triage",
+      "review_depth": "deep",
       "reviewed_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
       "review_scope": "Description and historical-fit triage; not a complete diff or behavior review.",
-      "review_checked_at": "2026-10-29T20:00:44.001735+00:00",
-      "fork_decision": "pending",
-      "rationale": "Mocks de telemetria da suite runner ficaram desatualizados; adaptar ao runner e telemetria atuais, preservando testes de teardown/retry do fork, após baseline.",
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "fork_decision": "already_covered",
+      "rationale": "Four affected telemetry stubs already present atd3654fb2; root_prompt stub came from upstreamd6f4bc5c. Existing PR included unchanged in diagnostic validation, not duplicated.",
       "assessment": {
         "benefit": "Not individually assessed beyond the recorded rationale.",
         "risk": "Not individually assessed at the recorded review depth.",
@@ -89635,20 +89665,25 @@
         "maintenance": "Not individually estimated."
       },
       "implementation": {
-        "phase": "pending",
+        "phase": "present_before_round",
         "source_reviewed_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
         "reviewed_repository": "usestrix/strix",
         "source_imported_sha": null,
         "source_repository": null,
         "source_pr": null,
-        "fork_commits": [],
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+          "d6f4bc5ced7118b713dcf280bd133cb76513f5a7"
+        ],
         "adaptations": [],
-        "provenance_unknown_reason": null
+        "provenance_unknown_reason": null,
+        "provenance_note": "Current equivalents mapped by blame and combined Linux runner tests; not imported a second time."
       },
       "validation": {
-        "summary": "Triagem documental e histórico; sem execução específica nesta rodada, salvo evidência explícita a acrescentar na revisão profunda. Não equivale a validação funcional completa.",
+        "summary": "12 runner telemetry failures reproduced on untouched base. Existing PR patch combined unchanged for Linux checks; fork172focused tests pass and equivalent stubs already exist.",
+        "record": "ci-1654-2026-11-05.json",
         "limits": [
-          "GitHub state, content review, local validation, integration and release are separate facts."
+          "Full upstream acceptance remains a maintainer action."
         ]
       },
       "evidence": [
@@ -89747,6 +89782,14 @@
               "Recheck the source head, discussion and fork overlap; reproduce the rationale before any implementation."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": "pending",
+          "decision": "already_covered",
+          "source_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+          "record": "ci-1654-2026-11-05.json"
         }
       ],
       "analyzed_version": {
@@ -89757,10 +89800,9 @@
       },
       "review_head_status": "matches_observed_head",
       "latest_recheck": {
-        "at": "2026-11-05T13:49:21.383215+00:00",
-        "scope": "State/head/update/merge metadata. Reviewed/imported source versions and adoption decisions preserved unless a separate event below records reassessment.",
-        "verified_changes": {},
-        "decision_preserved": true
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
       }
     },
     {
@@ -98515,13 +98557,13 @@
       "url": "https://github.com/usestrix/strix/pull/1654",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-05T14:18:35.457672+00:00",
-      "last_checked_basis": "Complete live paginated all-state catalog; body/version triage.",
-      "updated_at": "2026-11-05T14:05:14Z",
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:48:52Z",
       "source": {
         "observed_head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
         "base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
-        "base_branch": null,
+        "base_branch": "main",
         "merge_commit": null,
         "closed_at": null,
         "merged_at": null,
@@ -98575,27 +98617,123 @@
           "Review branch is unreleased and does not advance the full upstream synchronization base."
         ],
         "remote_ci": {
-          "checked_at": "2026-11-05T14:22:28.055419+00:00",
-          "run_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+          "id": 42041347484,
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+          "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+          "run_attempt": 1,
           "status": "in_progress",
           "conclusion": null,
-          "jobs": {
-            "workflows / zizmor": "success",
-            "workflows / actionlint": "success",
-            "python / pytest (3.14)": "in_progress",
-            "tui / go": "success",
-            "package / wheel": "success",
-            "viewer / build": "success",
-            "package / binary": "success",
-            "python / ruff": "success",
-            "python / lock": "success",
-            "python / pytest (3.12)": "in_progress",
-            "python / pytest (3.13)": "in_progress",
-            "python / mypy": "success",
-            "python / bandit": "success"
-          },
-          "limit": "Ten successful jobs do not establish the unfinished pytest matrix result."
-        }
+          "run_started_at": "2026-11-05T14:03:36Z",
+          "updated_at": "2026-11-05T14:03:48Z",
+          "checked_at": "2026-11-05T15:54:10.766347+00:00",
+          "jobs": [
+            {
+              "name": "workflows / zizmor",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:03:49Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292663671"
+            },
+            {
+              "name": "workflows / actionlint",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:03:46Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664026"
+            },
+            {
+              "name": "python / pytest (3.14)",
+              "status": "in_progress",
+              "conclusion": null,
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": null,
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664027"
+            },
+            {
+              "name": "tui / go",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:05:06Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664201"
+            },
+            {
+              "name": "package / wheel",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:40Z",
+              "completed_at": "2026-11-05T14:04:20Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664315"
+            },
+            {
+              "name": "viewer / build",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:03:57Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664326"
+            },
+            {
+              "name": "package / binary",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:05:48Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664419"
+            },
+            {
+              "name": "python / ruff",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:42Z",
+              "completed_at": "2026-11-05T14:04:00Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664438"
+            },
+            {
+              "name": "python / lock",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:03:51Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664535"
+            },
+            {
+              "name": "python / pytest (3.12)",
+              "status": "in_progress",
+              "conclusion": null,
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": null,
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664600"
+            },
+            {
+              "name": "python / pytest (3.13)",
+              "status": "in_progress",
+              "conclusion": null,
+              "started_at": "2026-11-05T14:03:38Z",
+              "completed_at": null,
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664604"
+            },
+            {
+              "name": "python / mypy",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:04:18Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664644"
+            },
+            {
+              "name": "python / bandit",
+              "status": "completed",
+              "conclusion": "success",
+              "started_at": "2026-11-05T14:03:39Z",
+              "completed_at": "2026-11-05T14:03:59Z",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664784"
+            }
+          ]
+        },
+        "ci_followup": "ci-1654-2026-11-05.json"
       },
       "evidence": [
         {
@@ -98630,7 +98768,11 @@
         }
       ],
       "linked_items": [
-        "https://github.com/usestrix/strix/issues/1653"
+        "https://github.com/usestrix/strix/issues/1653",
+        "https://github.com/usestrix/strix/pull/1577",
+        "https://github.com/usestrix/strix/pull/1657",
+        "https://github.com/usestrix/strix/pull/1658",
+        "https://github.com/usestrix/strix/pull/1660"
       ],
       "revisit_conditions": [
         "Recheck upstream feedback/CI and compare future source/merge changes with the imported SHA.",
@@ -98739,6 +98881,14 @@
               "Keep full upstream synchronization, fork release and selected-patch validation separate."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": "adapted",
+          "decision": "adapted",
+          "source_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+          "record": "ci-1654-2026-11-05.json"
         }
       ],
       "analyzed_version": {
@@ -98749,111 +98899,18 @@
       },
       "review_head_status": "matches_observed_head",
       "latest_feedback": {
-        "checked_at": "2026-11-05T14:18:35.457672+00:00",
+        "checked_at": "2026-11-05T15:54:10.766347+00:00",
         "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
-        "comment_urls": [
+        "greptile_5_of_5_at_head": [
           "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768"
         ],
-        "new_comments": [
-          {
-            "url": "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768",
-            "author": "greptile-apps[bot]",
-            "summary": "\n\nConfidence Score: 5/5\n\n**[Medium impact]** This PR appears safe to merge.\n\nSummary\n\nThis PR keeps damaged run metadata from blocking listings of healthy sibling runs.\n- Run summaries keep listing runs when saved metadata is damaged.\n- Named resume reports unreadable saved run records as a usage error.\n\n\n\nReviews (1) · Last reviewed commit: [\"fix(resume): tolerate damaged metadata w...\"](https://github.com/usestrix/strix/commit/b6ac4037b8c6e18507d6cb476ebe775a594795b4) · [Reviewed by Greptile](https://www.greptile.com/?utm_source=greptile_review&utm_medium=github&utm_campaign=review_public&utm_content=usestrix/strix)"
-          }
-        ],
-        "code_change_required": false,
-        "ci": {
-          "checked_at": "2026-11-05T14:22:28.055419+00:00",
-          "run": {
-            "conclusion": null,
-            "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
-            "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
-            "status": "in_progress",
-            "updated_at": "2026-11-05T14:03:48Z"
-          },
-          "jobs": [
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292663671",
-              "name": "workflows / zizmor",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664026",
-              "name": "workflows / actionlint",
-              "status": "completed"
-            },
-            {
-              "conclusion": null,
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664027",
-              "name": "python / pytest (3.14)",
-              "status": "in_progress"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664201",
-              "name": "tui / go",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664315",
-              "name": "package / wheel",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664326",
-              "name": "viewer / build",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664419",
-              "name": "package / binary",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664438",
-              "name": "python / ruff",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664535",
-              "name": "python / lock",
-              "status": "completed"
-            },
-            {
-              "conclusion": null,
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664600",
-              "name": "python / pytest (3.12)",
-              "status": "in_progress"
-            },
-            {
-              "conclusion": null,
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664604",
-              "name": "python / pytest (3.13)",
-              "status": "in_progress"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664644",
-              "name": "python / mypy",
-              "status": "completed"
-            },
-            {
-              "conclusion": "success",
-              "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664784",
-              "name": "python / bandit",
-              "status": "completed"
-            }
-          ]
-        },
-        "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
-        "conclusion": "Greptile5/5 on exact published head; no requested adjustment."
+        "reviews": [],
+        "limit": "Automated review is separate from executed tests and maintainer approval."
+      },
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": true
       }
     },
     {
@@ -99783,13 +99840,13 @@
       "url": "https://github.com/usestrix/strix/pull/1639",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-05T14:18:35.457672+00:00",
-      "last_checked_basis": "Complete live paginated all-state catalog; body/version triage.",
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
       "updated_at": "2026-10-31T22:57:46Z",
       "source": {
         "observed_head_sha": "37d03fa11aeea2c3cd8ae0594001ec4bd9df395b",
         "base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-        "base_branch": null,
+        "base_branch": "main",
         "merge_commit": null,
         "closed_at": null,
         "merged_at": null,
@@ -99866,6 +99923,14 @@
               "Recheck current source/discussion and perform targeted validation before adoption."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": "pending",
+          "decision": "pending",
+          "source_sha": "37d03fa11aeea2c3cd8ae0594001ec4bd9df395b",
+          "record": "ci-1654-2026-11-05.json"
         }
       ],
       "analyzed_version": {
@@ -99874,7 +99939,12 @@
         "reviewed_item_sha": "37d03fa11aeea2c3cd8ae0594001ec4bd9df395b",
         "scope": "Metadata/body triage; no code import implied."
       },
-      "review_head_status": "matches_observed_head"
+      "review_head_status": "matches_observed_head",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": true
+      }
     },
     {
       "id": "usestrix/strix#pr:1638",
@@ -100089,8 +100159,8 @@
       "url": "https://github.com/usestrix/strix/issues/1653",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-05T14:18:35.457672+00:00",
-      "last_checked_basis": "Complete live paginated all-state catalog; body/version triage.",
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
       "updated_at": "2026-11-05T13:58:09Z",
       "source": {
         "observed_head_sha": null,
@@ -100291,6 +100361,14 @@
               "Keep full upstream synchronization, fork release and selected-patch validation separate."
             ]
           }
+        },
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": "adapted",
+          "decision": "adapted",
+          "source_sha": null,
+          "record": "ci-1654-2026-11-05.json"
         }
       ],
       "analyzed_version": {
@@ -100299,7 +100377,12 @@
         "reviewed_item_sha": null,
         "scope": "Metadata/body triage; no code import implied."
       },
-      "review_head_status": "not_applicable"
+      "review_head_status": "not_applicable",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": true
+      }
     },
     {
       "id": "usestrix/strix#issue:1646",
@@ -101800,6 +101883,719 @@
         "scope": "Metadata/body triage; no code import implied."
       },
       "review_head_status": "matches_observed_head"
+    },
+    {
+      "id": "usestrix/strix#pr:1215",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1215,
+      "title": "test(pricing): make bare-model resolution test deterministic",
+      "url": "https://github.com/usestrix/strix/pull/1215",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": "31e0183edefe7d941e8a4ed2478d2a4a18e557f6",
+        "base_sha": "a0f8ea2cd379c4bf56e665d3db2ba8a4f7c0683c",
+        "base_branch": "main",
+        "draft": false,
+        "merge_commit": null,
+        "closed_at": "2026-10-24T03:36:42Z",
+        "merged_at": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "discarded",
+          "source_sha": "31e0183edefe7d941e8a4ed2478d2a4a18e557f6",
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-10-24T03:36:42Z",
+      "upstream_state": "CLOSED",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": "31e0183edefe7d941e8a4ed2478d2a4a18e557f6",
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Historical issue/PR body, explicit maintainer closure reason and current test compared; no import of the closed patch.",
+      "fork_decision": "discarded",
+      "rationale": "The earlier bare-MiniMax assertion was removed byde73011. Preserve that completed/superseded decision; the new bare-Grok recurrence is tracked in1659/1660.",
+      "assessment": {
+        "benefit": "Avoid duplicating a closed superseded proposal while retaining evidence for the new recurrence.",
+        "risk": "Closure does not establish that every future catalog-dependent example is deterministic.",
+        "effort": "Historical closure/current-test comparison only.",
+        "maintenance": "Monitor current1660 instead of reapplying1215 unchanged."
+      },
+      "implementation": {
+        "phase": "not_planned",
+        "source_reviewed_sha": "31e0183edefe7d941e8a4ed2478d2a4a18e557f6",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_note": "No import of1215. Historical upstream fixde73011 is in the already integrated ancestry; current recurrence has a separate patch.",
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Maintainer closure comment explicitly identifiesde73011/#1177. Current main/fork use a provider-qualified MiniMax assertion; combined Linux diagnosis instead fails the remaining Grok assertion.",
+        "limits": [
+          "Historical patch not executed or incorporated; source-head metadata is not a deep code review."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1215#issuecomment-6379386991",
+        "https://github.com/usestrix/strix/issues/1659",
+        "https://github.com/usestrix/strix/pull/1660"
+      ],
+      "revisit_conditions": [
+        "Compare new catalogue/test failures with1659/1660; do not treat the closed1215 proposal as an unclaimed task."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "scope": "Historical resolution/current-test comparison."
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1657",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1657,
+      "title": "test(budget): pass selected skills when starting child runners",
+      "url": "https://github.com/usestrix/strix/pull/1657",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "base_branch": "main",
+        "draft": false,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "already_covered",
+          "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:52:56Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "already_covered",
+      "rationale": "Passskills=[] at three budget fixture child starts.",
+      "assessment": {
+        "benefit": "Passskills=[] at three budget fixture child starts.",
+        "risk": "No production change.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "present_before_round",
+        "source_reviewed_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": 1657,
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Existing fork equivalent, not a new cherry-pick."
+      },
+      "validation": {
+        "summary": "7failed/14passed before;21passed after. Ruff/Mypy/Banditpass;Pyright941existing.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1655"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-05T15:54:10.766347+00:00",
+        "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "greptile_5_of_5_at_head": [
+          "https://github.com/usestrix/strix/pull/1657#issuecomment-6661837499"
+        ],
+        "reviews": [],
+        "limit": "Automated review is separate from executed tests and maintainer approval."
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1658",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1658,
+      "title": "fix(report): avoid provider authentication during cost estimates",
+      "url": "https://github.com/usestrix/strix/pull/1658",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "base_branch": "main",
+        "draft": false,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "adapted",
+          "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:52:59Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "adapted",
+      "rationale": "Pass the resolved provider to both real LiteLLM cost estimators.",
+      "assessment": {
+        "benefit": "Pass the resolved provider to both real LiteLLM cost estimators.",
+        "risk": "Retains resolver/price policy and observed-cost precedence; relies on the existing provider-qualified resolver contract.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "source_repository": "samirhvbr/strix",
+        "source_pr": 1658,
+        "fork_commits": [
+          "4deed266833532edf81923aacf79bb9c087ecdd1"
+        ],
+        "adaptations": [
+          "1658: preserve existing fork subscription-route filtering; duplicate pricing import already present."
+        ],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Cherry-pick -x; original and effective source versions pinned in ci-1654-2026-11-05.json."
+      },
+      "validation": {
+        "summary": "6retained regressions fail before.119focused pass after; Ruff/Mypy/Banditpass; complete normalized Pyright output identical to base941.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1656"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-05T15:54:10.766347+00:00",
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "greptile_5_of_5_at_head": [
+          "https://github.com/usestrix/strix/pull/1658#issuecomment-6661969317"
+        ],
+        "reviews": [],
+        "limit": "Automated review is separate from executed tests and maintainer approval."
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1660",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1660,
+      "title": "test(pricing): isolate bare-name resolution from live catalog changes",
+      "url": "https://github.com/usestrix/strix/pull/1660",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "base_branch": "main",
+        "draft": false,
+        "merge_commit": null,
+        "closed_at": null,
+        "merged_at": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "adapted",
+          "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:53:02Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "adapted",
+      "rationale": "Synthetic equal-price bare-model test replaces the live Grok assertion; restore catalog/cache.",
+      "assessment": {
+        "benefit": "Synthetic equal-price bare-model test replaces the live Grok assertion; restore catalog/cache.",
+        "risk": "No production change.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "source_repository": "samirhvbr/strix",
+        "source_pr": 1660,
+        "fork_commits": [
+          "4f992de780f24ff53550004fe894f209811e7ee2"
+        ],
+        "adaptations": [
+          "1660: resolve append conflict by keeping the existing subscription-route test and adding the synthetic catalog test; no production change."
+        ],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Cherry-pick -x; original and effective source versions pinned in ci-1654-2026-11-05.json."
+      },
+      "validation": {
+        "summary": "43pricing/cost tests pass with normal and bundled maps. Ruff/Mypy/Banditpass;Pyright941existing.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/issues/1659"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-05T15:54:10.766347+00:00",
+        "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "greptile_5_of_5_at_head": [
+          "https://github.com/usestrix/strix/pull/1660#issuecomment-6662221529"
+        ],
+        "reviews": [],
+        "limit": "Automated review is separate from executed tests and maintainer approval."
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1213",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1213,
+      "title": "[BUG] test_pricing depends on mutable LiteLLM model-cost registry",
+      "url": "https://github.com/usestrix/strix/issues/1213",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": null,
+        "merge_commit": null,
+        "closed_at": "2026-10-04T20:29:30Z",
+        "draft": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "already_covered",
+          "source_sha": null,
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-10-04T20:29:30Z",
+      "upstream_state": "CLOSED",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "triage",
+      "reviewed_sha": null,
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Historical issue/PR body, explicit maintainer closure reason and current test compared; no import of the closed patch.",
+      "fork_decision": "already_covered",
+      "rationale": "The earlier bare-MiniMax assertion was removed byde73011. Preserve that completed/superseded decision; the new bare-Grok recurrence is tracked in1659/1660.",
+      "assessment": {
+        "benefit": "Avoid duplicating a closed superseded proposal while retaining evidence for the new recurrence.",
+        "risk": "Closure does not establish that every future catalog-dependent example is deterministic.",
+        "effort": "Historical closure/current-test comparison only.",
+        "maintenance": "Monitor current1660 instead of reapplying1215 unchanged."
+      },
+      "implementation": {
+        "phase": "present_before_round",
+        "source_reviewed_sha": null,
+        "source_imported_sha": null,
+        "source_repository": null,
+        "fork_commits": [],
+        "adaptations": [],
+        "provenance_note": "No import of1215. Historical upstream fixde73011 is in the already integrated ancestry; current recurrence has a separate patch.",
+        "provenance_unknown_reason": null
+      },
+      "validation": {
+        "summary": "Maintainer closure comment explicitly identifiesde73011/#1177. Current main/fork use a provider-qualified MiniMax assertion; combined Linux diagnosis instead fails the remaining Grok assertion.",
+        "limits": [
+          "Historical patch not executed or incorporated; source-head metadata is not a deep code review."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1215#issuecomment-6379386991",
+        "https://github.com/usestrix/strix/issues/1659",
+        "https://github.com/usestrix/strix/pull/1660"
+      ],
+      "revisit_conditions": [
+        "Compare new catalogue/test failures with1659/1660; do not treat the closed1215 proposal as an unclaimed task."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "scope": "Historical resolution/current-test comparison."
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1655",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1655,
+      "title": "[BUG] Budget regression tests omit required child runner skills argument",
+      "url": "https://github.com/usestrix/strix/issues/1655",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "draft": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "already_covered",
+          "source_sha": null,
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:17:39Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "already_covered",
+      "rationale": "Passskills=[] at three budget fixture child starts.",
+      "assessment": {
+        "benefit": "Passskills=[] at three budget fixture child starts.",
+        "risk": "No production change.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "present_before_round",
+        "source_reviewed_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": null,
+        "source_repository": null,
+        "source_pr": 1657,
+        "fork_commits": [
+          "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+        ],
+        "adaptations": [],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Existing fork equivalent, not a new cherry-pick."
+      },
+      "validation": {
+        "summary": "7failed/14passed before;21passed after. Ruff/Mypy/Banditpass;Pyright941existing.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1657"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": null,
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1656",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1656,
+      "title": "[BUG] Cost estimation can block on an unrelated GitHub Copilot device login",
+      "url": "https://github.com/usestrix/strix/issues/1656",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "draft": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "adapted",
+          "source_sha": null,
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:21:19Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "adapted",
+      "rationale": "Pass the resolved provider to both real LiteLLM cost estimators.",
+      "assessment": {
+        "benefit": "Pass the resolved provider to both real LiteLLM cost estimators.",
+        "risk": "Retains resolver/price policy and observed-cost precedence; relies on the existing provider-qualified resolver contract.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "source_repository": "samirhvbr/strix",
+        "source_pr": 1658,
+        "fork_commits": [
+          "4deed266833532edf81923aacf79bb9c087ecdd1"
+        ],
+        "adaptations": [
+          "1658: preserve existing fork subscription-route filtering; duplicate pricing import already present."
+        ],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Cherry-pick -x; original and effective source versions pinned in ci-1654-2026-11-05.json."
+      },
+      "validation": {
+        "summary": "6retained regressions fail before.119focused pass after; Ruff/Mypy/Banditpass; complete normalized Pyright output identical to base941.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1658"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": null,
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1659",
+      "repository": "usestrix/strix",
+      "kind": "issue",
+      "number": 1659,
+      "title": "[BUG] Bare Grok pricing test fails after LiteLLM catalog changes",
+      "url": "https://github.com/usestrix/strix/issues/1659",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": null,
+        "merge_commit": null,
+        "closed_at": null,
+        "draft": null
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-05T15:54:10.766347+00:00",
+          "event": "ci1654_targeted_followup",
+          "previous_decision": null,
+          "decision": "adapted",
+          "source_sha": null,
+          "record": "ci-1654-2026-11-05.json"
+        }
+      ],
+      "last_checked": "2026-11-05T15:54:10.766347+00:00",
+      "last_checked_basis": "Targeted PR1654 CI follow-up; current metadata plus the explicitly recorded code/discussion/validation scope.",
+      "updated_at": "2026-11-05T15:36:10Z",
+      "upstream_state": "OPEN",
+      "latest_recheck": {
+        "at": "2026-11-05T15:54:10.766347+00:00",
+        "scope": "Targeted CI diagnosis and duplicate/known-solution review; see ci-1654-2026-11-05.json. Other ledger decisions and the full inventory checkpoint are preserved.",
+        "decision_preserved": false
+      },
+      "review_depth": "deep",
+      "reviewed_sha": null,
+      "review_checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "review_scope": "Reproduced CI/base defect, reviewed minimal patch and regression behavior; source and fork validation explicitly separated.",
+      "fork_decision": "adapted",
+      "rationale": "Synthetic equal-price bare-model test replaces the live Grok assertion; restore catalog/cache.",
+      "assessment": {
+        "benefit": "Synthetic equal-price bare-model test replaces the live Grok assertion; restore catalog/cache.",
+        "risk": "No production change.",
+        "effort": "Small bounded patch plus focused regression and diagnostic matrix.",
+        "maintenance": "No new dependencies; synthetic fixtures restore global catalog/cache state."
+      },
+      "implementation": {
+        "phase": "integrated_review_branch",
+        "source_reviewed_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "reviewed_repository": "usestrix/strix",
+        "source_imported_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "source_repository": "samirhvbr/strix",
+        "source_pr": 1660,
+        "fork_commits": [
+          "4f992de780f24ff53550004fe894f209811e7ee2"
+        ],
+        "adaptations": [
+          "1660: resolve append conflict by keeping the existing subscription-route test and adding the synthetic catalog test; no production change."
+        ],
+        "provenance_unknown_reason": null,
+        "provenance_note": "Cherry-pick -x; original and effective source versions pinned in ci-1654-2026-11-05.json."
+      },
+      "validation": {
+        "summary": "43pricing/cost tests pass with normal and bundled maps. Ruff/Mypy/Banditpass;Pyright941existing.",
+        "fork_integration": [
+          "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+          "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+          "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+        ],
+        "combined_linux_record": "ci-1654-2026-11-05.json",
+        "limits": [
+          "Passing a combined diagnostic is not the upstream PR's own check result.",
+          "No full fork-suite rerun, release or real scan acceptance."
+        ]
+      },
+      "linked_items": [
+        "https://github.com/usestrix/strix/pull/1660"
+      ],
+      "revisit_conditions": [
+        "Recheck current source/reviews/merge changes before updating the imported version.",
+        "Recheck PR1654 base and CI after maintainers merge the independent fixes."
+      ],
+      "analyzed_version": {
+        "upstream_base_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "reviewed_item_sha": null,
+        "fork_baseline_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+        "fork_result_sha": "4f992de780f24ff53550004fe894f209811e7ee2"
+      }
     }
   ]
 }
