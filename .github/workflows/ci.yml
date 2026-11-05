@@ -8,14 +8,19 @@ permissions:
 
 jobs:
   diagnose-upstream-pytest:
+    name: diagnose (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: ./.github/actions/setup-python-env
         with:
-          python-version: '3.12'
-      - name: Diagnose the unchanged upstream test suite
-        run: timeout --kill-after=10s 8m uv run --frozen pytest -vv -o faulthandler_timeout=45
+          python-version: ${{ matrix.python-version }}
+      - name: Validate the combined CI fixes and PR 1654
+        run: timeout --kill-after=10s 8m uv run --frozen pytest -q -o faulthandler_timeout=45 --durations=15
