@@ -518,7 +518,8 @@
         "Monitor maintainer integration of1577/1657/1658/1660; rerun1654 only against a base that contains the fixes. Account has no upstream push/maintain permission.",
         "Compare source/imported heads before taking later changes; do not cherry-pick1657/1577 again into the fork.",
         "The fork branch is separate from master/release; preserve existing PR53 and concurrent local catalog fix9e1af834 when reconciling overlap."
-      ]
+      ],
+      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/54"
     }
   },
   "version_release_audit": "release-audit.json",

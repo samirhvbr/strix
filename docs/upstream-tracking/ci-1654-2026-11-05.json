@@ -469,5 +469,13 @@
       "limit": "Automated review is separate from executed tests and maintainer approval."
     }
   },
-  "pr1654_status_comment": "https://github.com/usestrix/strix/pull/1654#issuecomment-6662425207"
+  "pr1654_status_comment": "https://github.com/usestrix/strix/pull/1654#issuecomment-6662425207",
+  "publication": {
+    "fork_pull_request": "https://github.com/samirhvbr/strix/pull/54",
+    "fork_base_branch": "feat/upstream-contributions-20261105",
+    "fork_head_branch": "feat/pr1654-ci-followup-20261105",
+    "first_published_documentation_sha": "37b17d4a45a87d894f95fc9b036714feed8dd7d5",
+    "validated_code_sha": "4f992de780f24ff53550004fe894f209811e7ee2",
+    "scope": "PR54 contains selected backports and continuity records. Subsequent publication-link commit changes documentation only; no master/release delivery."
+  }
 }
