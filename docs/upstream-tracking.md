@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
+Start every review here, then read the [latest round](UPSTREAM_REVIEW_2026-11-05.md),
+the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
 the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md), the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.
@@ -11,9 +12,9 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Delivered fork | Release `shvia-v1.2.44` (Latest, published 2026-10-30T21:13:42 UTC), tag at `8dab158fe6fce88da4f13f83a9bfc6c1f19660d5`; `master` one documentation commit ahead | Delivery PR [#45](https://github.com/samirhvbr/strix/pull/45) merged and released on 2026-10-30; the tag is lightweight and the Release has no assets. The `main` mirror equals `upstream/main` (`6b7ae2eb`). |
-| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Fork code `41be416c96a1cc9dd9518907c7daaf0737a0420c` on `feat/upstream-sync-contributions-20261029`: 120 focused tests pass after #1635 and its cleanup follow-up; last full suite there remains at `3154805d` (3590 passed, 12 skipped, 3 xfailed). The delivery branch `feat/upstream-sync-delivery-20261029` (fork 1.2.44, merged to `master` in #45) carries that code plus the sandbox pin and #1627; its own full-suite result is in the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md). Existing Pyright limits remain. |
-| Contribution review | 2026-10-30 follow-up and delivery consolidation: all 597 records kept, 325 open PRs and 208 open issues triaged | 16 existing authored PRs reviewed, 81 targeted feedback tests pass; #1631, #1634 and #1635 are carried; #1627 was added by the delivery pass. |
+| Delivered fork | `master` and release tag `shvia-v1.2.47` at `895ab37d8178155db8b373a7e25a84a3c500d3c2`; release published 2026-11-02T19:01:33 UTC | Two binaries and `SHA256SUMS` are published. Metadata was checked; this round did not rebuild or digest-verify the assets. Existing [fork PR #53](https://github.com/samirhvbr/strix/pull/53) prepares 1.2.48/image 1.3.1 and remains open. |
+| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed upstream is `09536cf1`: #1634 is equivalent to the carried fix, while #1625's Opengrep/image transition is not integrated. Selected #1654 import `91938128177fd90c7845dfd04b324f68bf501e7c` on `feat/upstream-contributions-20261105` passes 189 focused tests; Ruff/Mypy/Bandit pass; Pyright1256 versus baseline1257, none added. No full-suite rerun for this patch. |
+| Contribution review | 2026-11-05: all 597 prior records rechecked; 625 current records, 330 open upstream PRs and 210 open issues | #1634 merged upstream; images1.3.1/1.4.0 are published; new #1654 fixes damaged run history. Existing proposals #1638/#1639/#1648 and fork #53 are tracked without duplication. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code

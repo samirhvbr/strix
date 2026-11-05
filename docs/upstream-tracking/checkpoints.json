@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-10-30T21:15:04.820703+00:00",
+  "updated_at": "2026-11-05T14:18:35.457672+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -8,34 +8,32 @@
   "code_synchronization": {
     "last_delivered": {
       "fork_ref": "refs/heads/master",
-      "fork_sha": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5",
-      "fork_version": "1.2.44",
-      "tag": "shvia-v1.2.44",
+      "fork_sha": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+      "fork_version": "1.2.47",
+      "tag": "shvia-v1.2.47",
       "upstream_effective_ancestor": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-      "previous_documented_upstream_base": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
-      "validation_scope": "Delivered 2026-10-30; code validated on d3d221b9 (3612 passed, 12 skipped, 3 xfailed, 0 failed with the bundled LiteLLM price map); only documentation changed afterwards. No remote CI (billing-locked).",
-      "tag_type": "lightweight",
-      "release_published_at": "2026-10-30T21:13:42Z",
-      "release_assets": 0
+      "release_published_at": "2026-11-02T19:01:33Z",
+      "release_assets": 3,
+      "validation_scope": "Release/tag/master metadata and ancestry observed this round. Released tree full suite not independently rerun here;selected patch tests belong to the separate review branch."
     },
     "last_completed": {
       "upstream_ref": "refs/heads/main",
       "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
       "sync_merge_sha": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
-      "fork_ref": "refs/heads/feat/upstream-sync-contributions-20261029",
-      "fork_validated_code_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
-      "validated_at": "2026-10-30T16:32:16.736137+00:00",
+      "fork_ref": "refs/heads/feat/upstream-contributions-20261105",
+      "fork_validated_code_sha": "91938128177fd90c7845dfd04b324f68bf501e7c",
+      "validated_at": "2026-11-05T14:18:35.457672+00:00",
       "status": "locally_validated_with_documented_limits",
-      "full_quality_gate": "failed_at_pyright_1259_diagnostics",
-      "validation_record": "followup-2026-10-30.json",
-      "delivered_to_master": true,
-      "released": true,
+      "full_quality_gate": "failed_at_existing_pyright_1256_diagnostics",
+      "validation_record": "round-2026-11-05.json",
+      "delivered_to_master": false,
+      "released": false,
       "recheck": {
-        "at": "2026-10-30T16:32:16.736137+00:00",
-        "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-        "status": "upstream_base_unchanged;Postman_handoff_and_cleanup_feedback_validated"
+        "at": "2026-11-05T14:18:35.457672+00:00",
+        "observed_upstream_main_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+        "status": "Observed two new upstream commits;dedupe equivalent already carried,Opengrep transition unintegrated. Selected resume-reader patch imported separately."
       },
-      "validation_scope": "120focused tests including adapted resume behavior; Ruff/Mypy/Bandit pass; unchanged1259Pyright. Full suite not rerun for this patch.",
+      "validation_scope": "189focused tests and source quality comparison. No full upstream merge or full-suite rerun;effective upstream base remains6b7ae2eb.",
       "last_full_suite": {
         "fork_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
         "result": "3590passed,12skipped,3xfailed",
@@ -106,83 +104,146 @@
           "Fork regression additionally verifies resume=True after removing the downloaded snapshot."
         ],
         "validation_record": "followup-2026-10-30.json"
+      },
+      {
+        "recorded_at": "2026-11-05T14:18:35.457672+00:00",
+        "event": "incremental_contribution_validated",
+        "previous_completed": {
+          "upstream_ref": "refs/heads/main",
+          "upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "sync_merge_sha": "d3654fb29c8fb86bdee2d23d648f978c82f74a33",
+          "fork_ref": "refs/heads/feat/upstream-sync-contributions-20261029",
+          "fork_validated_code_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c",
+          "validated_at": "2026-10-30T16:32:16.736137+00:00",
+          "status": "locally_validated_with_documented_limits",
+          "full_quality_gate": "failed_at_pyright_1259_diagnostics",
+          "validation_record": "followup-2026-10-30.json",
+          "delivered_to_master": true,
+          "released": true,
+          "recheck": {
+            "at": "2026-10-30T16:32:16.736137+00:00",
+            "upstream_main_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "status": "upstream_base_unchanged;Postman_handoff_and_cleanup_feedback_validated"
+          },
+          "validation_scope": "120focused tests including adapted resume behavior; Ruff/Mypy/Bandit pass; unchanged1259Pyright. Full suite not rerun for this patch.",
+          "last_full_suite": {
+            "fork_sha": "3154805db216d40f35852b8fb608126a9dabcfcd",
+            "result": "3590passed,12skipped,3xfailed",
+            "record": "round-2026-10-30.json"
+          }
+        },
+        "fork_sha": "91938128177fd90c7845dfd04b324f68bf501e7c",
+        "upstream_full_sync_sha_unchanged": true,
+        "validation_record": "round-2026-11-05.json",
+        "result": "189focused tests pass at91938128177fd90c7845dfd04b324f68bf501e7c;Ruff/Mypy/Bandit pass. Pyright1256vs1257current-master baseline,0added/1removed. No new full-suite run."
       }
     ],
-    "in_progress": null
+    "in_progress": null,
+    "delivery_observation_history": [
+      {
+        "fork_ref": "refs/heads/master",
+        "fork_sha": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5",
+        "fork_version": "1.2.44",
+        "tag": "shvia-v1.2.44",
+        "upstream_effective_ancestor": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "previous_documented_upstream_base": "f7a32ae62d94872631bc8415073868d02a6ffdaf",
+        "validation_scope": "Delivered 2026-10-30; code validated on d3d221b9 (3612 passed, 12 skipped, 3 xfailed, 0 failed with the bundled LiteLLM price map); only documentation changed afterwards. No remote CI (billing-locked).",
+        "tag_type": "lightweight",
+        "release_published_at": "2026-10-30T21:13:42Z",
+        "release_assets": 0
+      }
+    ],
+    "last_observed_upstream": {
+      "ref": "refs/heads/main",
+      "sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "observed_at": "2026-11-05T14:18:35.457672+00:00",
+      "integrated": false,
+      "note": "Do not equate observing main and reviewing selected merges with a full synchronization."
+    }
   },
   "contribution_review": {
-    "round": "2026-10-30",
-    "report": "../UPSTREAM_FOLLOWUP_2026-10-30.md",
+    "round": "2026-11-05",
+    "report": "../UPSTREAM_REVIEW_2026-11-05.md",
     "ledger": "items.json",
-    "last_completed_inventory_at": "2026-10-30T19:03:26.738370+00:00",
-    "inventory_method": "All596 prior records individually fetched, complete paginated all-state catalogs compared before/after with48h overlap; only our1635added. All16 pre-existing authored open PR discussions/threads/CI checked;81 focused feedback tests passed. The delivery consolidation fetched the full open inventory (325 PRs + 208 issues, equal to the API total) and the 48-hour update query again at 2026-10-30T19:03:26Z; nothing known had changed since the review branch.",
-    "state": "complete_known_recheck_and_selected_issue_implementation;deeper_backlog_pending",
+    "last_completed_inventory_at": "2026-11-05T14:10:41.837065+00:00",
+    "inventory_method": "All597prior IDs individually rechecked,closures/changed heads recorded,full all-state catalogs and48h overlap compared;new body triage and one validated operational fix.",
+    "state": "complete_known_recheck_and_selected_contribution;deeper_backlog_pending",
     "coverage": {
-      "total_records": 597,
+      "total_records": 625,
       "upstream_open_inventory": {
-        "pr": 325,
-        "issue": 208
+        "pr": 330,
+        "issue": 210
       },
-      "known_additional": 20,
-      "fork_catalog": 44,
+      "known_additional": 32,
+      "fork_catalog": 53,
       "review_depth": {
         "identified": 36,
-        "triage": 522,
-        "deep": 39
+        "triage": 546,
+        "deep": 43
       },
       "review_depth_upstream": {
-        "triage": 521,
-        "deep": 32
+        "triage": 536,
+        "deep": 36
       },
       "review_depth_fork": {
         "identified": 36,
-        "triage": 1,
+        "triage": 10,
         "deep": 7
       },
       "fork_decisions": {
-        "pending": 174,
-        "incorporated_fully": 50,
-        "adapted": 15,
-        "already_covered": 90,
+        "pending": 183,
+        "incorporated_fully": 52,
+        "adapted": 19,
+        "already_covered": 98,
         "deferred": 241,
-        "discarded": 26,
+        "discarded": 31,
         "incorporated_partially": 1
       },
       "implementation_phases": {
         "unknown": 118,
-        "present_before_round": 41,
-        "integrated_review_branch": 45,
-        "decision_required": 114,
-        "deferred": 241,
-        "not_planned": 26,
+        "present_before_round": 49,
+        "integrated_review_branch": 51,
+        "decision_required": 124,
+        "deferred": 240,
+        "not_planned": 31,
         "pending": 12
       }
     },
     "known_items_checked": {
-      "count": 596,
-      "upstream": 552,
+      "count": 597,
+      "upstream": 553,
       "fork": 44,
       "missing": 0,
-      "actual_changed": [],
-      "own_feedback_rechecked": 16,
-      "note": "No prior source head/state/update/merge change. No new code fix required for feedback; older requests verified at current heads."
+      "changed_any_field": 36,
+      "changed_content_or_state": 24,
+      "own_open_feedback_rechecked": 16,
+      "new_pr_feedback_rechecked": 1654
     },
     "selected_new_or_updated_prs": [
-      1053,
-      1627,
-      1635
+      1654
     ],
     "next_discovery": {
-      "since_inclusive": "2026-10-28T19:03:26Z",
+      "since_inclusive": "2026-11-03T14:10:41Z",
       "overlap_hours": 48,
       "include_closed_and_merged": true,
       "recheck_all_ledger_ids_first": true,
       "number_watermark": null
     },
     "partial_work": {
-      "code_integrations_pending": [],
+      "code_integrations_pending": [
+        "Full upstream09536cf1sync,including Opengrep/image1.4.0,not performed;existing fork53image1.3.1is separate."
+      ],
       "deep_review_pending": "Catalog and targeted overlap reviews are not complete acceptance reviews. Remaining identified/triage-depth items keep their individual pending/deferred decisions and revisit conditions.",
       "priority_queue": [
+        "usestrix/strix#pr:1654",
+        "samirhvbr/strix#pr:53",
+        "usestrix/strix#pr:1638",
+        "usestrix/strix#pr:1639",
+        "usestrix/strix#pr:1648",
+        "usestrix/strix#pr:1647",
+        "usestrix/strix#pr:1642",
+        "usestrix/strix#issue:1645",
+        "usestrix/strix#issue:1646",
         "usestrix/strix#pr:1635",
         "usestrix/strix#issue:1628",
         "usestrix/strix#pr:1631",
@@ -203,12 +264,10 @@
       ]
     },
     "decisions_required": [
-      "Maintainers: publish sandbox1.3.1 (#1628), decide external-reference policy (#1632), historical pricing (#1622) and deferred PTY capabilities (#1623).",
-      "Maintainers: review #1635 effective-variable proposal and coordinate writer overlap with #1158; authorize current-head CI for our open PRs.",
-      "The four earlier inline review threads still await reviewer resolution despite satisfied code/test requests.",
-      "Fork master/release remains separate; existing Pyright and sandbox artifact blockers persist.",
-      "Confirm before the master delivery that #1635 (carried on the review branch) may deliver enabled Postman environment values, including credentials, to the agent workspace.",
-      "#1625 replaces Semgrep with Opengrep in the sandbox image and prompts; it needs an image the fork can pull (not possible with the 1.3.0 pin) and an owner decision on the tool."
+      "Maintainers: review/merge1654 and existing runtime/pricing/spec proposals;CI status tracked separately.",
+      "Fork image transition already has PR53;do not duplicate it or mark1.2.48released before merge/release.",
+      "Existing design backlog: mount-free transport,report persistence consistency,SARIF identity and child-context policy.",
+      "No new owner choice required for the bounded1654fix;review branch/master/release remain separate."
     ],
     "second_pass": {
       "recorded_at": "2026-10-29T21:04:34.141249+00:00",
@@ -272,30 +331,95 @@
             "pending": 12
           }
         }
+      },
+      {
+        "round": "2026-10-30",
+        "report": "../UPSTREAM_FOLLOWUP_2026-10-30.md",
+        "last_completed_inventory_at": "2026-10-30T19:03:26.738370+00:00",
+        "state": "complete_known_recheck_and_selected_issue_implementation;deeper_backlog_pending",
+        "coverage": {
+          "total_records": 597,
+          "upstream_open_inventory": {
+            "pr": 325,
+            "issue": 208
+          },
+          "known_additional": 20,
+          "fork_catalog": 44,
+          "review_depth": {
+            "identified": 36,
+            "triage": 522,
+            "deep": 39
+          },
+          "review_depth_upstream": {
+            "triage": 521,
+            "deep": 32
+          },
+          "review_depth_fork": {
+            "identified": 36,
+            "triage": 1,
+            "deep": 7
+          },
+          "fork_decisions": {
+            "pending": 174,
+            "incorporated_fully": 50,
+            "adapted": 15,
+            "already_covered": 90,
+            "deferred": 241,
+            "discarded": 26,
+            "incorporated_partially": 1
+          },
+          "implementation_phases": {
+            "unknown": 118,
+            "present_before_round": 41,
+            "integrated_review_branch": 45,
+            "decision_required": 114,
+            "deferred": 241,
+            "not_planned": 26,
+            "pending": 12
+          }
+        },
+        "selected_new_or_updated_prs": [
+          1053,
+          1627,
+          1635
+        ],
+        "decisions_required": [
+          "Maintainers: publish sandbox1.3.1 (#1628), decide external-reference policy (#1632), historical pricing (#1622) and deferred PTY capabilities (#1623).",
+          "Maintainers: review #1635 effective-variable proposal and coordinate writer overlap with #1158; authorize current-head CI for our open PRs.",
+          "The four earlier inline review threads still await reviewer resolution despite satisfied code/test requests.",
+          "Fork master/release remains separate; existing Pyright and sandbox artifact blockers persist.",
+          "Confirm before the master delivery that #1635 (carried on the review branch) may deliver enabled Postman environment values, including credentials, to the agent workspace.",
+          "#1625 replaces Semgrep with Opengrep in the sandbox image and prompts; it needs an image the fork can pull (not possible with the 1.3.0 pin) and an owner decision on the tool."
+        ],
+        "prior_feedback_addressed": {
+          "pr": 1635,
+          "comment": "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
+          "source_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+          "fork_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c"
+        }
       }
     ],
-    "completed_at": "2026-10-30T15:38:00.832119+00:00",
+    "completed_at": "2026-11-05T14:18:35.457672+00:00",
     "published_issues": [
-      1628,
-      1629,
-      1630,
-      1632,
-      1633
+      1653
     ],
     "newly_triaged_prs": [
-      1625,
-      1626,
-      1627
+      1652,
+      1651,
+      1650,
+      1649,
+      1648,
+      1647,
+      1643,
+      1642,
+      1641,
+      1639,
+      1638,
+      1636
     ],
     "in_progress": null,
-    "followup_record": "followup-2026-10-30.json",
-    "latest_pr_feedback_at": "2026-10-30T16:32:16.736137+00:00",
-    "new_feedback_addressed": {
-      "pr": 1635,
-      "comment": "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
-      "source_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
-      "fork_sha": "41be416c96a1cc9dd9518907c7daaf0737a0420c"
-    },
+    "followup_record": "round-2026-11-05.json",
+    "latest_pr_feedback_at": "2026-11-05T14:18:35.457672+00:00",
     "delivery_consolidation_2026_10_30": {
       "recorded_at": "2026-10-30T19:09:33.904111+00:00",
       "report": "../UPSTREAM_DELIVERY_2026-10-30.md",
@@ -328,42 +452,66 @@
         "master_changed": false,
         "tags_or_releases_changed": false
       }
+    },
+    "current_feedback": {
+      "pr": 1654,
+      "review_url": "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768",
+      "source_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "summary": "Greptile5/5; no change requested."
     }
   },
   "version_release_audit": "release-audit.json",
   "publication_scope": {
-    "review_branch": "feat/upstream-sync-contributions-20261029",
-    "master_changed": true,
-    "mirror_changed": true,
-    "tags_changed": true,
-    "releases_changed": true,
+    "round": "2026-11-05",
+    "review_branch": "feat/upstream-contributions-20261105",
+    "master_changed": false,
+    "mirror_changed": false,
+    "tags_changed": false,
+    "releases_changed": false,
+    "version_bumped": false,
     "upstream_messages_created": true,
-    "version_bumped": true,
     "upstream_prs": [
-      1631,
-      1634,
-      1635
+      1654
     ],
     "upstream_issues": [
-      1628,
-      1629,
-      1630,
-      1632,
-      1633
-    ],
-    "delivery_branch": {
-      "branch": "feat/upstream-sync-delivery-20261029",
-      "prepared_version": "1.2.44",
-      "contains_review_branch": "feat/upstream-sync-contributions-20261029",
-      "merged_to_master": true,
-      "tag_created": true,
-      "release_created": true,
-      "note": "Released 2026-10-30. The tag was created by gh release create from the default branch head (the owner's git tag/push ran in another repository); it resolves to 8dab158f.",
-      "includes_round_2026_10_30": true,
-      "validation": "3612 passed, 12 skipped, 3 xfailed, 0 failed on d3d221b9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True); only documentation changed afterwards",
-      "merge_commit": "e2ec6f9d0372bf740985f4e9a0d8fd7e4e7dfacc",
-      "merge_pull_request": 45,
-      "tag_type": "lightweight"
+      1653
+    ]
+  },
+  "publication_history": [
+    {
+      "review_branch": "feat/upstream-sync-contributions-20261029",
+      "master_changed": true,
+      "mirror_changed": true,
+      "tags_changed": true,
+      "releases_changed": true,
+      "upstream_messages_created": true,
+      "version_bumped": true,
+      "upstream_prs": [
+        1631,
+        1634,
+        1635
+      ],
+      "upstream_issues": [
+        1628,
+        1629,
+        1630,
+        1632,
+        1633
+      ],
+      "delivery_branch": {
+        "branch": "feat/upstream-sync-delivery-20261029",
+        "prepared_version": "1.2.44",
+        "contains_review_branch": "feat/upstream-sync-contributions-20261029",
+        "merged_to_master": true,
+        "tag_created": true,
+        "release_created": true,
+        "note": "Released 2026-10-30. The tag was created by gh release create from the default branch head (the owner's git tag/push ran in another repository); it resolves to 8dab158f.",
+        "includes_round_2026_10_30": true,
+        "validation": "3612 passed, 12 skipped, 3 xfailed, 0 failed on d3d221b9 (LITELLM_MODE=PRODUCTION, LITELLM_LOCAL_MODEL_COST_MAP=True); only documentation changed afterwards",
+        "merge_commit": "e2ec6f9d0372bf740985f4e9a0d8fd7e4e7dfacc",
+        "merge_pull_request": 45,
+        "tag_type": "lightweight"
+      }
     }
-  }
+  ]
 }

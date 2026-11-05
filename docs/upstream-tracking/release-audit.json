@@ -2024,14 +2024,10 @@
     }
   ],
   "future_delivery_requirements": [
-    "Complete review and validation of the integration and obtain delivery authorization before changing master/main, bumping, tagging or publishing.",
-    "Choose the next fork version under version.md: ordinary delivery on the same upstream1.7.0 is next patch1.2.44; a new structural phase may instead require an explicit minor decision. Do not change pyproject version solely for fork numbering.",
-    "On the authorized delivery update version.md, .fork-version and one FORK.md delivery row together, with actual upstream6b7ae2e provenance (64 commits afterv1.7.0) and measured validation limits.",
-    "Commit delivery, create an annotated shvia-vX.Y.Z tag at the exact delivered commit, and verify remote peeled tag identity against that commit before creating an English SHVIA X.Y.Z (Strix1.7.0) release.",
-    "Keep inherited Build & Release disabled and recheck its remote state after sync. Use only the fork Pentest binaries workflow for sidecars; billing currently blocks Actions startup and requires resolution before this pipeline can run.",
-    "Build all four native binaries from the release tag, pass --fork-version/version checks, publish matching SHA256SUMS, and verify downloaded binary hashes against the manifest and recorded source/run provenance.",
-    "Update any Desktop sidecar version/SHA pins through its separate authorized delivery, then validate signing/notarization and installed-app compatibility on applicable platforms; source merge or metadata-only audit does not prove deployment.",
-    "Historical tag/release gaps or metadata corrections are separate decisions; do not retag or edit existing releases automatically."
+    "Use current version.md and coordinate existing fork53, which already prepares1.2.48/image1.3.1;do not create duplicate pins or historical releases.",
+    "Full upstream synchronization remains6b7ae2eb;the observed09536cf1Opengrep/image transition is separate from selected1654patch adoption.",
+    "A master delivery/release is separate from this review;preserve version/tag/changelog consistency and validate its binaries and runtime.",
+    "Current release assets were inventoried only;do not infer checksum or platform acceptance."
   ],
   "limits": [
     "No version, release, workflow, tag or branch mutation performed; audit prepared locally and preserved with this record.",
@@ -2088,6 +2084,38 @@
         "origin_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
         "tag_shvia_v1.2.43": "8aa0791e"
       }
+    },
+    {
+      "checked_at": "2026-10-30T21:15:04.820703+00:00",
+      "fork_master": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5 (before the record PR for this release)",
+      "fork_main_mirror": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "fork_latest_release": "shvia-v1.2.44",
+      "fork_release_published_at": "2026-10-30T21:13:42Z",
+      "upstream_latest_release": "v1.7.0",
+      "upstream_release_published_at": "2026-10-05T02:39:14Z",
+      "tag_resolves_to_master": true,
+      "version_file": "1.2.44",
+      "package_version": "1.7.0",
+      "release_assets_rebuilt": false,
+      "release_assets_downloaded_or_executed": false,
+      "tags_or_releases_changed": true,
+      "sandbox_image": {
+        "checked_at": "2026-10-30T15:14:59.668732+00:00",
+        "image": "ghcr.io/usestrix/strix-sandbox",
+        "manifests": {
+          "1.3.0": {
+            "status": 200,
+            "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+          },
+          "1.3.1": {
+            "status": 404,
+            "body": "{\"errors\":[{\"code\":\"MANIFEST_UNKNOWN\",\"message\":\"manifest unknown\"}]}\n"
+          }
+        }
+      },
+      "missing_image_issue": "https://github.com/usestrix/strix/issues/1628",
+      "scope": "Release metadata/ref comparison after the 1.2.44 Release; no assets were attached and none were rebuilt."
     }
   ],
   "sandbox_image_audit": {
@@ -2126,35 +2154,108 @@
     }
   },
   "latest_recheck": {
-    "checked_at": "2026-10-30T21:15:04.820703+00:00",
-    "fork_master": "8dab158fe6fce88da4f13f83a9bfc6c1f19660d5 (before the record PR for this release)",
+    "checked_at": "2026-11-05T14:22:28.055419+00:00",
+    "scope": "Current authoritative metadata; top-level original audit is dated2026-10-29. No ref/tag/release/binary mutation.",
+    "fork_master": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
     "fork_main_mirror": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-    "upstream_main": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-    "fork_latest_release": "shvia-v1.2.44",
-    "fork_release_published_at": "2026-10-30T21:13:42Z",
+    "upstream_main": "09536cf1481731c790995bd8060db19a3b75ff48",
+    "fork_latest_release": "shvia-v1.2.47",
+    "fork_release_published_at": "2026-11-02T19:01:33Z",
     "upstream_latest_release": "v1.7.0",
     "upstream_release_published_at": "2026-10-05T02:39:14Z",
     "tag_resolves_to_master": true,
-    "version_file": "1.2.44",
+    "version_file": "1.2.47",
     "package_version": "1.7.0",
+    "release_asset_count": 3,
     "release_assets_rebuilt": false,
     "release_assets_downloaded_or_executed": false,
-    "tags_or_releases_changed": true,
-    "sandbox_image": {
-      "checked_at": "2026-10-30T15:14:59.668732+00:00",
-      "image": "ghcr.io/usestrix/strix-sandbox",
+    "tags_or_releases_changed": false,
+    "pending_existing_fork_pr": "https://github.com/samirhvbr/strix/pull/53",
+    "sandbox_registry_status": {
+      "checked_at": "2026-11-05T13:50:20.338755+00:00",
       "manifests": {
         "1.3.0": {
           "status": 200,
           "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
         },
         "1.3.1": {
-          "status": 404,
-          "body": "{\"errors\":[{\"code\":\"MANIFEST_UNKNOWN\",\"message\":\"manifest unknown\"}]}\n"
+          "status": 200,
+          "digest": "sha256:78df914f3029464c9d00580f531ec51025c251c422ec3b09c3f19c5fa6d80c30"
+        },
+        "1.4.0": {
+          "status": 200,
+          "digest": "sha256:9ff1be4044c3ff5e9fcecb118b9855f8d1270db39358523e43fb3a13c0027009"
+        }
+      }
+    }
+  },
+  "round_2026_11_05": {
+    "fork": [
+      {
+        "isLatest": true,
+        "publishedAt": "2026-11-02T19:01:33Z",
+        "tagName": "shvia-v1.2.47"
+      }
+    ],
+    "upstream": [
+      {
+        "isLatest": true,
+        "publishedAt": "2026-10-05T02:39:14Z",
+        "tagName": "v1.7.0"
+      }
+    ],
+    "fork_tag_peeled_sha": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+    "assets": [
+      {
+        "name": "pentest-aarch64-apple-darwin",
+        "size": 95364112
+      },
+      {
+        "name": "pentest-x86_64-unknown-linux-gnu",
+        "size": 107630248
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 194
+      }
+    ],
+    "binary_digests_verified": false,
+    "master_or_release_changed": false,
+    "sandbox_manifest": {
+      "checked_at": "2026-11-05T13:50:20.338755+00:00",
+      "manifests": {
+        "1.3.0": {
+          "status": 200,
+          "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+        },
+        "1.3.1": {
+          "status": 200,
+          "digest": "sha256:78df914f3029464c9d00580f531ec51025c251c422ec3b09c3f19c5fa6d80c30"
+        },
+        "1.4.0": {
+          "status": 200,
+          "digest": "sha256:9ff1be4044c3ff5e9fcecb118b9855f8d1270db39358523e43fb3a13c0027009"
         }
       }
     },
-    "missing_image_issue": "https://github.com/usestrix/strix/issues/1628",
-    "scope": "Release metadata/ref comparison after the 1.2.44 Release; no assets were attached and none were rebuilt."
-  }
+    "existing_pending_fork_pr": {
+      "number": 53,
+      "url": "https://github.com/samirhvbr/strix/pull/53",
+      "state": "OPEN",
+      "headRefOid": "2a6bb91e98a52a580ae53d303ee0c064f2124583",
+      "updatedAt": "2026-11-04T19:43:41Z"
+    },
+    "checked_at": "2026-11-05T14:18:35.457672+00:00",
+    "limits": "Metadata/manifest verification only;no binary or live image acceptance this round."
+  },
+  "historical_future_delivery_requirements_2026_10_29": [
+    "Complete review and validation of the integration and obtain delivery authorization before changing master/main, bumping, tagging or publishing.",
+    "Choose the next fork version under version.md: ordinary delivery on the same upstream1.7.0 is next patch1.2.44; a new structural phase may instead require an explicit minor decision. Do not change pyproject version solely for fork numbering.",
+    "On the authorized delivery update version.md, .fork-version and one FORK.md delivery row together, with actual upstream6b7ae2e provenance (64 commits afterv1.7.0) and measured validation limits.",
+    "Commit delivery, create an annotated shvia-vX.Y.Z tag at the exact delivered commit, and verify remote peeled tag identity against that commit before creating an English SHVIA X.Y.Z (Strix1.7.0) release.",
+    "Keep inherited Build & Release disabled and recheck its remote state after sync. Use only the fork Pentest binaries workflow for sidecars; billing currently blocks Actions startup and requires resolution before this pipeline can run.",
+    "Build all four native binaries from the release tag, pass --fork-version/version checks, publish matching SHA256SUMS, and verify downloaded binary hashes against the manifest and recorded source/run provenance.",
+    "Update any Desktop sidecar version/SHA pins through its separate authorized delivery, then validate signing/notarization and installed-app compatibility on applicable platforms; source merge or metadata-only audit does not prove deployment.",
+    "Historical tag/release gaps or metadata corrections are separate decisions; do not retag or edit existing releases automatically."
+  ]
 }

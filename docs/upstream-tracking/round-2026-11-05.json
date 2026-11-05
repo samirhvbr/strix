@@ -1,0 +1,2198 @@
+{
+  "recorded_at": "2026-11-05T14:18:35.457672+00:00",
+  "baseline_fork_sha": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+  "baseline_fork_version": "1.2.47",
+  "observed_upstream_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+  "effective_integrated_upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+  "known_recheck": {
+    "checked_at": "2026-11-05T13:49:21.383215+00:00",
+    "known": 597,
+    "fetched": 597,
+    "missing": 0,
+    "changed_any_field": 36,
+    "changed_content_or_state": 24,
+    "changes": [
+      {
+        "id": "samirhvbr/strix#pr:16",
+        "prior": {
+          "state": "MERGED",
+          "updatedAt": "2026-10-10T15:56:14Z",
+          "headRefOid": "736838d152b7e8693de9fdd170ef0611fce2460e",
+          "isDraft": false,
+          "mergeCommit": {
+            "oid": "6bf5bfdc23c3cd32f9db6061af739d2cf3eb92c8"
+          }
+        },
+        "current": {
+          "number": 16,
+          "title": "1.2.23 - pause at catalog test boundaries with independent durable reasons",
+          "url": "https://github.com/samirhvbr/strix/pull/16",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:42Z",
+          "closedAt": "2026-10-10T15:56:13Z",
+          "isDraft": false,
+          "headRefOid": "736838d152b7e8693de9fdd170ef0611fce2460e",
+          "baseRefOid": "354a72fbd0af2b49c13e846503c741f14957c681",
+          "mergedAt": "2026-10-10T15:56:13Z",
+          "mergeCommit": {
+            "oid": "6bf5bfdc23c3cd32f9db6061af739d2cf3eb92c8"
+          }
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-10T15:56:14Z",
+            "after": "2026-11-02T16:50:42Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "samirhvbr/strix#pr:32",
+        "prior": {
+          "state": "MERGED",
+          "updatedAt": "2026-10-16T19:56:16Z",
+          "headRefOid": "0c700775659ec9a36093dd84d401a2ee3fd4a690",
+          "isDraft": false,
+          "mergeCommit": {
+            "oid": "ec4aa9543783c28a2a6751d473065adb5859b502"
+          }
+        },
+        "current": {
+          "number": 32,
+          "title": "docs(fork): record upstream PR #1173 as closed and superseded",
+          "url": "https://github.com/samirhvbr/strix/pull/32",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:22Z",
+          "closedAt": "2026-10-16T19:56:16Z",
+          "isDraft": false,
+          "headRefOid": "0c700775659ec9a36093dd84d401a2ee3fd4a690",
+          "baseRefOid": "780ca2a89a7b56e0dcc456810629a6af91bf0d9e",
+          "mergedAt": "2026-10-16T19:56:16Z",
+          "mergeCommit": {
+            "oid": "ec4aa9543783c28a2a6751d473065adb5859b502"
+          }
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-16T19:56:16Z",
+            "after": "2026-11-02T16:50:22Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "samirhvbr/strix#pr:34",
+        "prior": {
+          "state": "MERGED",
+          "updatedAt": "2026-10-16T21:22:07Z",
+          "headRefOid": "f83522b86fd88aea77b290091091a978ab66029e",
+          "isDraft": false,
+          "mergeCommit": {
+            "oid": "52c89a975e4cf373dc93589327c1c532196caf81"
+          }
+        },
+        "current": {
+          "number": 34,
+          "title": "1.2.40 - Review our open upstream PRs, narrow three of them, add bin/pr-watch",
+          "url": "https://github.com/samirhvbr/strix/pull/34",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:44Z",
+          "closedAt": "2026-10-16T21:22:07Z",
+          "isDraft": false,
+          "headRefOid": "f83522b86fd88aea77b290091091a978ab66029e",
+          "baseRefOid": "cf5d371c4d06dc36140d214a21419f7c8019c0d8",
+          "mergedAt": "2026-10-16T21:22:07Z",
+          "mergeCommit": {
+            "oid": "52c89a975e4cf373dc93589327c1c532196caf81"
+          }
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-16T21:22:07Z",
+            "after": "2026-11-02T16:50:44Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "samirhvbr/strix#pr:37",
+        "prior": {
+          "state": "MERGED",
+          "updatedAt": "2026-10-28T14:04:26Z",
+          "headRefOid": "42108866e270f687d5c1dd8bfa2d518c21b719ec",
+          "isDraft": false,
+          "mergeCommit": {
+            "oid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5"
+          }
+        },
+        "current": {
+          "number": 37,
+          "title": "1.2.43 - Ship the engine as Pentest: binaries on the Release as pentest-<triple>, and the name on the report PDF cover",
+          "url": "https://github.com/samirhvbr/strix/pull/37",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:37Z",
+          "closedAt": "2026-10-28T14:04:26Z",
+          "isDraft": false,
+          "headRefOid": "42108866e270f687d5c1dd8bfa2d518c21b719ec",
+          "baseRefOid": "d14351bded34add0f4e2b5214ba070e836b1c09c",
+          "mergedAt": "2026-10-28T14:04:26Z",
+          "mergeCommit": {
+            "oid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5"
+          }
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-28T14:04:26Z",
+            "after": "2026-11-02T16:50:37Z"
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "samirhvbr/strix#pr:38",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T01:54:22Z",
+          "headRefOid": "8a6aa7aeff84311a474a2d3f535160e70730a1c2",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 38,
+          "title": "fix(tools): preserve records when an update is rejected",
+          "url": "https://github.com/samirhvbr/strix/pull/38",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:30Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "8a6aa7aeff84311a474a2d3f535160e70730a1c2",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "b20077d702096972bfb4787859c05dd8890710a4"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T01:54:22Z",
+            "after": "2026-11-02T16:50:30Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "b20077d702096972bfb4787859c05dd8890710a4"
+            }
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "samirhvbr/strix#pr:39",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T01:54:24Z",
+          "headRefOid": "66f460efd7b0fc6bb4a70b123becfb1d36c49da4",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 39,
+          "title": "fix(cloud): report local save failure after session scope update",
+          "url": "https://github.com/samirhvbr/strix/pull/39",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:26Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "66f460efd7b0fc6bb4a70b123becfb1d36c49da4",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "db1adf1616e264f3eb9554f7deaac12864002d81"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T01:54:24Z",
+            "after": "2026-11-02T16:50:26Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "db1adf1616e264f3eb9554f7deaac12864002d81"
+            }
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "samirhvbr/strix#pr:40",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T01:54:26Z",
+          "headRefOid": "ebe3ef0095418e7224568e0a34cf0ec62e88b469",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 40,
+          "title": "fix(runtime): honor DOCKER_CONTEXT when selecting the Docker endpoint",
+          "url": "https://github.com/samirhvbr/strix/pull/40",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:28Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "ebe3ef0095418e7224568e0a34cf0ec62e88b469",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "23d8719f5f83e5571fd555b470a03cf7a71d541f"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T01:54:26Z",
+            "after": "2026-11-02T16:50:28Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "23d8719f5f83e5571fd555b470a03cf7a71d541f"
+            }
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "samirhvbr/strix#pr:41",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T01:54:38Z",
+          "headRefOid": "160663fcaf420650a7d5f54170c3646bf83c983f",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 41,
+          "title": "fix(llm): distinguish duplicate tool call IDs within a response",
+          "url": "https://github.com/samirhvbr/strix/pull/41",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:33Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "160663fcaf420650a7d5f54170c3646bf83c983f",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "f5581cc3d20d574b4a4223299c283998e118f7fa"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T01:54:38Z",
+            "after": "2026-11-02T16:50:33Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "f5581cc3d20d574b4a4223299c283998e118f7fa"
+            }
+          }
+        },
+        "previous_decision": "adapted"
+      },
+      {
+        "id": "samirhvbr/strix#pr:42",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T10:07:25Z",
+          "headRefOid": "1f5bc2c1b619e367d2592f086560ae14c3cf95e9",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 42,
+          "title": "fix(reporting): serialize dependency dedupe model fallback",
+          "url": "https://github.com/samirhvbr/strix/pull/42",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:39Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "1f5bc2c1b619e367d2592f086560ae14c3cf95e9",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "56b42357850e314c3f2cc30245831f258f359c11"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T10:07:25Z",
+            "after": "2026-11-02T16:50:39Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "56b42357850e314c3f2cc30245831f258f359c11"
+            }
+          }
+        },
+        "previous_decision": "adapted"
+      },
+      {
+        "id": "samirhvbr/strix#pr:43",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T19:00:19Z",
+          "headRefOid": "bfadbf54f168b7c6037a9237713ee585bfd3e9af",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 43,
+          "title": "fix(cloud): preserve CLI errors on interrupted downloads",
+          "url": "https://github.com/samirhvbr/strix/pull/43",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:35Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "bfadbf54f168b7c6037a9237713ee585bfd3e9af",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "fc3142ed29f39b5279376a5ce858e56c98578e01"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T19:00:19Z",
+            "after": "2026-11-02T16:50:35Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "fc3142ed29f39b5279376a5ce858e56c98578e01"
+            }
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "samirhvbr/strix#pr:44",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T19:00:21Z",
+          "headRefOid": "50c365329ddb8a45fba41ebee37a6143631b2883",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 44,
+          "title": "fix(cli): restore API specifications when resuming scans",
+          "url": "https://github.com/samirhvbr/strix/pull/44",
+          "state": "MERGED",
+          "updatedAt": "2026-11-02T16:50:24Z",
+          "closedAt": "2026-10-30T20:53:17Z",
+          "isDraft": false,
+          "headRefOid": "50c365329ddb8a45fba41ebee37a6143631b2883",
+          "baseRefOid": "8aa0791ef2bd30b000f3e1d0f67cd388ccc8dfc5",
+          "mergedAt": "2026-10-30T20:53:17Z",
+          "mergeCommit": {
+            "oid": "9c365eac37487083eb56c3a9248f00b454961084"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-29T19:00:21Z",
+            "after": "2026-11-02T16:50:24Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "9c365eac37487083eb56c3a9248f00b454961084"
+            }
+          }
+        },
+        "previous_decision": "adapted"
+      },
+      {
+        "id": "usestrix/strix#issue:1080",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-19T03:14:44Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1080,
+          "title": "Support a fail-closed mount-free transport for local-code Docker scans",
+          "url": "https://github.com/usestrix/strix/issues/1080",
+          "state": "OPEN",
+          "updatedAt": "2026-11-01T00:10:19Z",
+          "closedAt": null,
+          "stateReason": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-09-19T03:14:44Z",
+            "after": "2026-11-01T00:10:19Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "usestrix/strix#issue:1191",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-08-28T18:56:48Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1191,
+          "title": "[BUG] TUI handshake times out (10s) on first \"go run\" when Go toolchain/module cache is cold",
+          "url": "https://github.com/usestrix/strix/issues/1191",
+          "state": "OPEN",
+          "updatedAt": "2026-11-03T19:41:32Z",
+          "closedAt": null,
+          "stateReason": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-08-28T18:56:48Z",
+            "after": "2026-11-03T19:41:32Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#issue:1604",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-28T06:55:30Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1604,
+          "title": "[BUG]",
+          "url": "https://github.com/usestrix/strix/issues/1604",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-04T19:44:18Z",
+          "closedAt": "2026-11-04T19:44:18Z",
+          "stateReason": "COMPLETED"
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-10-28T06:55:30Z",
+            "after": "2026-11-04T19:44:18Z"
+          }
+        },
+        "previous_decision": "discarded"
+      },
+      {
+        "id": "usestrix/strix#pr:673",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-01T20:02:24Z",
+          "headRefOid": "493f9cfe8652f91a70e80195ae6fcc1a02536774",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 673,
+          "title": "fix: execute tool calls emitted as plain text in interactive mode",
+          "url": "https://github.com/usestrix/strix/pull/673",
+          "state": "OPEN",
+          "updatedAt": "2026-10-31T18:55:53Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "5a5087436528e940711c2fba3acff7498d2a8388",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-09-01T20:02:24Z",
+            "after": "2026-10-31T18:55:53Z"
+          },
+          "headRefOid": {
+            "before": "493f9cfe8652f91a70e80195ae6fcc1a02536774",
+            "after": "5a5087436528e940711c2fba3acff7498d2a8388"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:907",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-01T20:02:23Z",
+          "headRefOid": "c65bc129891006c65668267026154873137b7779",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 907,
+          "title": "Raise on LiteLLM response.failed streams",
+          "url": "https://github.com/usestrix/strix/pull/907",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-02T00:10:52Z",
+          "closedAt": "2026-11-02T00:10:52Z",
+          "isDraft": false,
+          "headRefOid": "c65bc129891006c65668267026154873137b7779",
+          "baseRefOid": "3de947143162bb118cf4c1404a9b8bc8a4ca92d2",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-09-01T20:02:23Z",
+            "after": "2026-11-02T00:10:52Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:910",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-01T20:02:22Z",
+          "headRefOid": "80189e6ba779e44c1314cff48ef50e63a96117ff",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 910,
+          "title": "feat(llm): cache recent Claude prompt context",
+          "url": "https://github.com/usestrix/strix/pull/910",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-01T21:04:09Z",
+          "closedAt": "2026-11-01T21:04:09Z",
+          "isDraft": false,
+          "headRefOid": "80189e6ba779e44c1314cff48ef50e63a96117ff",
+          "baseRefOid": "3de947143162bb118cf4c1404a9b8bc8a4ca92d2",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-09-01T20:02:22Z",
+            "after": "2026-11-01T21:04:09Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:913",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-24T12:29:30Z",
+          "headRefOid": "b27f22ce088c0b813246f4eeb435453e8f77313d",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 913,
+          "title": "docs: explain local model context sizing",
+          "url": "https://github.com/usestrix/strix/pull/913",
+          "state": "OPEN",
+          "updatedAt": "2026-11-02T01:59:35Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "b27f22ce088c0b813246f4eeb435453e8f77313d",
+          "baseRefOid": "14cc948c36e90517a774cf32bdfe5d8cd3605b62",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-24T12:29:30Z",
+            "after": "2026-11-02T01:59:35Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1047",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-21T08:41:55Z",
+          "headRefOid": "0bb6dafdd38e3ab3983e21421d38feeb1d16f00b",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1047,
+          "title": "Feat/i18n spanish",
+          "url": "https://github.com/usestrix/strix/pull/1047",
+          "state": "OPEN",
+          "updatedAt": "2026-11-01T17:43:49Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "1098b624b41a06035ae84ce202fb526cef06922e",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-09-21T08:41:55Z",
+            "after": "2026-11-01T17:43:49Z"
+          },
+          "headRefOid": {
+            "before": "0bb6dafdd38e3ab3983e21421d38feeb1d16f00b",
+            "after": "1098b624b41a06035ae84ce202fb526cef06922e"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "usestrix/strix#pr:1252",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-03T07:44:50Z",
+          "headRefOid": "ac7fa554d1d715402ef824500019d937f3dac541",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1252,
+          "title": "fix: guard agents.models import in warm_up_llm against cross-thread partial-import race (#1248)",
+          "url": "https://github.com/usestrix/strix/pull/1252",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-05T10:23:22Z",
+          "closedAt": "2026-11-05T10:23:22Z",
+          "isDraft": false,
+          "headRefOid": "ac7fa554d1d715402ef824500019d937f3dac541",
+          "baseRefOid": "5d015df6b1b58934152f897e37d3032f0dc32e0d",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-09-03T07:44:50Z",
+            "after": "2026-11-05T10:23:22Z"
+          }
+        },
+        "previous_decision": "already_covered"
+      },
+      {
+        "id": "usestrix/strix#pr:1328",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-09-17T07:12:47Z",
+          "headRefOid": "8c4ad90a1e85e6ede0da94205fe4fa44e7c1ea4c",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1328,
+          "title": "feat(runtime): STRIX_REQUIRE_MOUNT_FREE uploads local sources instead of bind-mounting",
+          "url": "https://github.com/usestrix/strix/pull/1328",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-01T04:10:27Z",
+          "closedAt": "2026-11-01T04:10:27Z",
+          "isDraft": false,
+          "headRefOid": "8c4ad90a1e85e6ede0da94205fe4fa44e7c1ea4c",
+          "baseRefOid": "910c1ea4bbf22f8c01ab6c2a54bad09b94ccbc3b",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-09-17T07:12:47Z",
+            "after": "2026-11-01T04:10:27Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "usestrix/strix#pr:1425",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-27T06:55:02Z",
+          "headRefOid": "972732edd5907a97ec9bcb169468bb74ad877101",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1425,
+          "title": "build(deps): bump the go group across 1 directory with 4 updates",
+          "url": "https://github.com/usestrix/strix/pull/1425",
+          "state": "OPEN",
+          "updatedAt": "2026-11-03T06:54:53Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "25be187044330b785563df613c586f9193e83dab",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-27T06:55:02Z",
+            "after": "2026-11-03T06:54:53Z"
+          },
+          "headRefOid": {
+            "before": "972732edd5907a97ec9bcb169468bb74ad877101",
+            "after": "25be187044330b785563df613c586f9193e83dab"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1428",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-27T06:55:39Z",
+          "headRefOid": "fa613154dd04b3908916dfac30a82309caffaddf",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1428,
+          "title": "build(deps): bump the viewer group across 1 directory with 7 updates",
+          "url": "https://github.com/usestrix/strix/pull/1428",
+          "state": "OPEN",
+          "updatedAt": "2026-11-03T06:55:24Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "bbe631fbbfd6977c20c15f0ea55b07bd4fca0da7",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-27T06:55:39Z",
+            "after": "2026-11-03T06:55:24Z"
+          },
+          "headRefOid": {
+            "before": "fa613154dd04b3908916dfac30a82309caffaddf",
+            "after": "bbe631fbbfd6977c20c15f0ea55b07bd4fca0da7"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1433",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-27T06:58:22Z",
+          "headRefOid": "548f0feafd1e2fbc9ffe3531f191f2824457e3d4",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1433,
+          "title": "build(deps): bump the python group across 1 directory with 13 updates",
+          "url": "https://github.com/usestrix/strix/pull/1433",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-03T06:58:00Z",
+          "closedAt": "2026-11-03T06:57:56Z",
+          "isDraft": false,
+          "headRefOid": "548f0feafd1e2fbc9ffe3531f191f2824457e3d4",
+          "baseRefOid": "ef5d810047141dc536045e9bc5569138d1a333aa",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-10-27T06:58:22Z",
+            "after": "2026-11-03T06:58:00Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1552",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-21T05:25:16Z",
+          "headRefOid": "5a2ae1b27988e75e3b8669295faf0312b58a82f9",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1552,
+          "title": "feat(models): add MiniMax Flash-first text catalog",
+          "url": "https://github.com/usestrix/strix/pull/1552",
+          "state": "OPEN",
+          "updatedAt": "2026-11-05T08:47:54Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "260e551ea962b993e67e11ad34b7f90fdb07283b",
+          "baseRefOid": "fde37a149fc942dd107666441a1989f187d30c3b",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-21T05:25:16Z",
+            "after": "2026-11-05T08:47:54Z"
+          },
+          "headRefOid": {
+            "before": "5a2ae1b27988e75e3b8669295faf0312b58a82f9",
+            "after": "260e551ea962b993e67e11ad34b7f90fdb07283b"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1600",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-27T07:00:41Z",
+          "headRefOid": "8d533f23883c12ca37ecaf43280854311e0788f0",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1600,
+          "title": "build(deps): bump the actions group across 1 directory with 9 updates",
+          "url": "https://github.com/usestrix/strix/pull/1600",
+          "state": "OPEN",
+          "updatedAt": "2026-11-03T06:55:21Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "3112afb5682d52c8dd51e215d4bbf0aa8d794639",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-27T07:00:41Z",
+            "after": "2026-11-03T06:55:21Z"
+          },
+          "headRefOid": {
+            "before": "8d533f23883c12ca37ecaf43280854311e0788f0",
+            "after": "3112afb5682d52c8dd51e215d4bbf0aa8d794639"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1618",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T04:53:39Z",
+          "headRefOid": "3b7b7e4e7e5418acac57bbfa70428ce2cf2f4299",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1618,
+          "title": "fix(sarif): qualify CWE rule ids with the finding's vulnerability class",
+          "url": "https://github.com/usestrix/strix/pull/1618",
+          "state": "OPEN",
+          "updatedAt": "2026-10-31T04:54:25Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "32b1acf6bd319b61e8a886df4282b413f68e6a65",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-29T04:53:39Z",
+            "after": "2026-10-31T04:54:25Z"
+          },
+          "headRefOid": {
+            "before": "3b7b7e4e7e5418acac57bbfa70428ce2cf2f4299",
+            "after": "32b1acf6bd319b61e8a886df4282b413f68e6a65"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1621",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-29T18:55:28Z",
+          "headRefOid": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1621,
+          "title": "fix(cli): restore staged API specifications on resume",
+          "url": "https://github.com/usestrix/strix/pull/1621",
+          "state": "OPEN",
+          "updatedAt": "2026-11-01T02:16:49Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-29T18:55:28Z",
+            "after": "2026-11-01T02:16:49Z"
+          }
+        },
+        "previous_decision": "adapted"
+      },
+      {
+        "id": "usestrix/strix#issue:1628",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:17:06Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1628,
+          "title": "[BUG] Default sandbox tag 1.3.1 is not published to GHCR",
+          "url": "https://github.com/usestrix/strix/issues/1628",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-04T21:44:03Z",
+          "closedAt": "2026-11-04T21:44:03Z",
+          "stateReason": "COMPLETED"
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-10-30T15:17:06Z",
+            "after": "2026-11-04T21:44:03Z"
+          }
+        },
+        "previous_decision": "adapted"
+      },
+      {
+        "id": "usestrix/strix#issue:1629",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:18:25Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1629,
+          "title": "[BUG] Git merge stages duplicate files in cloud source archives",
+          "url": "https://github.com/usestrix/strix/issues/1629",
+          "state": "OPEN",
+          "updatedAt": "2026-10-31T23:43:18Z",
+          "closedAt": null,
+          "stateReason": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-30T15:18:25Z",
+            "after": "2026-10-31T23:43:18Z"
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "usestrix/strix#issue:1630",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:20:17Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1630,
+          "title": "[BUG] Invalid dedupe decisions can suppress findings without a valid duplicate",
+          "url": "https://github.com/usestrix/strix/issues/1630",
+          "state": "CLOSED",
+          "updatedAt": "2026-11-04T19:57:37Z",
+          "closedAt": "2026-11-04T19:57:37Z",
+          "stateReason": "COMPLETED"
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "CLOSED"
+          },
+          "updatedAt": {
+            "before": "2026-10-30T15:20:17Z",
+            "after": "2026-11-04T19:57:37Z"
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "usestrix/strix#issue:1632",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:26:29Z",
+          "headRefOid": null,
+          "isDraft": null,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1632,
+          "title": "[BUG] Staging API specifications drops local external $ref files",
+          "url": "https://github.com/usestrix/strix/issues/1632",
+          "state": "OPEN",
+          "updatedAt": "2026-11-01T00:01:09Z",
+          "closedAt": null,
+          "stateReason": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-30T15:26:29Z",
+            "after": "2026-11-01T00:01:09Z"
+          }
+        },
+        "previous_decision": "pending"
+      },
+      {
+        "id": "usestrix/strix#pr:1625",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T01:59:29Z",
+          "headRefOid": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1625,
+          "title": "Feat/str 1646 opengrep",
+          "url": "https://github.com/usestrix/strix/pull/1625",
+          "state": "MERGED",
+          "updatedAt": "2026-11-04T15:26:09Z",
+          "closedAt": "2026-11-04T15:26:08Z",
+          "isDraft": false,
+          "headRefOid": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": "2026-11-04T15:26:08Z",
+          "mergeCommit": {
+            "oid": "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-30T01:59:29Z",
+            "after": "2026-11-04T15:26:09Z"
+          },
+          "headRefOid": {
+            "before": "352221cf231bde011a1a7bf2d4c8e4126acc0d44",
+            "after": "4d793375e06650a1ff6fcab0a6bba62b542c8edf"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+            }
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1626",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T03:10:45Z",
+          "headRefOid": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1626,
+          "title": "feat(llm): add OrcaRouter Cyber Inference provider (API key + browser sign-in)",
+          "url": "https://github.com/usestrix/strix/pull/1626",
+          "state": "OPEN",
+          "updatedAt": "2026-11-04T08:55:08Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "a0a5b218771ff3120ab03baceef20bb177c70fc2",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-30T03:10:45Z",
+            "after": "2026-11-04T08:55:08Z"
+          }
+        },
+        "previous_decision": "deferred"
+      },
+      {
+        "id": "usestrix/strix#pr:1631",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:26:50Z",
+          "headRefOid": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1631,
+          "title": "fix(cloud): deduplicate conflicted Git source paths",
+          "url": "https://github.com/usestrix/strix/pull/1631",
+          "state": "OPEN",
+          "updatedAt": "2026-11-01T02:16:52Z",
+          "closedAt": null,
+          "isDraft": false,
+          "headRefOid": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": null,
+          "mergeCommit": null
+        },
+        "changes": {
+          "updatedAt": {
+            "before": "2026-10-30T15:26:50Z",
+            "after": "2026-11-01T02:16:52Z"
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      },
+      {
+        "id": "usestrix/strix#pr:1634",
+        "prior": {
+          "state": "OPEN",
+          "updatedAt": "2026-10-30T15:34:16Z",
+          "headRefOid": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+          "isDraft": false,
+          "mergeCommit": null
+        },
+        "current": {
+          "number": 1634,
+          "title": "fix(report): validate deduplication decisions before suppressing findings",
+          "url": "https://github.com/usestrix/strix/pull/1634",
+          "state": "MERGED",
+          "updatedAt": "2026-11-04T19:57:36Z",
+          "closedAt": "2026-11-04T19:57:35Z",
+          "isDraft": false,
+          "headRefOid": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+          "baseRefOid": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+          "mergedAt": "2026-11-04T19:57:35Z",
+          "mergeCommit": {
+            "oid": "09536cf1481731c790995bd8060db19a3b75ff48"
+          }
+        },
+        "changes": {
+          "state": {
+            "before": "OPEN",
+            "after": "MERGED"
+          },
+          "updatedAt": {
+            "before": "2026-10-30T15:34:16Z",
+            "after": "2026-11-04T19:57:36Z"
+          },
+          "mergeCommit": {
+            "before": null,
+            "after": {
+              "oid": "09536cf1481731c790995bd8060db19a3b75ff48"
+            }
+          }
+        },
+        "previous_decision": "incorporated_fully"
+      }
+    ]
+  },
+  "inventory": {
+    "since_inclusive": "2026-10-28T19:03:26Z",
+    "overlap_hours": 48,
+    "full_catalog_totals": {
+      "pr": 1170,
+      "issue": 425
+    },
+    "open_counts": {
+      "pr": 330,
+      "issue": 210
+    },
+    "new_upstream_ids": [
+      "usestrix/strix#pr:1654",
+      "usestrix/strix#pr:1652",
+      "usestrix/strix#pr:1651",
+      "usestrix/strix#pr:1650",
+      "usestrix/strix#pr:1649",
+      "usestrix/strix#pr:1648",
+      "usestrix/strix#pr:1647",
+      "usestrix/strix#pr:1643",
+      "usestrix/strix#pr:1642",
+      "usestrix/strix#pr:1641",
+      "usestrix/strix#pr:1639",
+      "usestrix/strix#pr:1638",
+      "usestrix/strix#pr:1636",
+      "usestrix/strix#issue:1653",
+      "usestrix/strix#issue:1646",
+      "usestrix/strix#issue:1645",
+      "usestrix/strix#issue:1644",
+      "usestrix/strix#issue:1640",
+      "usestrix/strix#issue:1637"
+    ],
+    "new_fork_ids": [
+      "samirhvbr/strix#pr:53",
+      "samirhvbr/strix#pr:52",
+      "samirhvbr/strix#pr:51",
+      "samirhvbr/strix#pr:50",
+      "samirhvbr/strix#pr:49",
+      "samirhvbr/strix#pr:48",
+      "samirhvbr/strix#pr:47",
+      "samirhvbr/strix#pr:46",
+      "samirhvbr/strix#pr:45"
+    ],
+    "total_ledger_records": 625,
+    "discussions_enabled": false,
+    "known_missing": 0
+  },
+  "source_rules": {
+    "read": [
+      "README.md",
+      "AGENTS.md",
+      "CONTRIBUTING.md",
+      "CLAUDE.md",
+      "version.md",
+      "docs/upstream-tracking.md",
+      "prior reports and checkpoints"
+    ],
+    "checked_in_security_policy": false,
+    "organization_default_security_file": "GitHub contents API404",
+    "finding_classification": "Ordinary operational metadata reliability;no vulnerability disclosure."
+  },
+  "upstream_merge_equivalence": {
+    "checked_at": "2026-11-05T14:18:35.457672+00:00",
+    "merge_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+    "carried_source_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+    "files_identical": [
+      "strix/report/dedupe.py",
+      "tests/test_dedupe_decisions.py"
+    ],
+    "current_upstream_tests": "18passed",
+    "fork_action": "No duplicate import; equivalent behavior already present in released fork."
+  },
+  "new_contribution": {
+    "issue": "https://github.com/usestrix/strix/issues/1653",
+    "pr": "https://github.com/usestrix/strix/pull/1654",
+    "implementation": {
+      "phase": "integrated_review_branch",
+      "source_reviewed_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "reviewed_repository": "usestrix/strix",
+      "source_imported_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "source_repository": "samirhvbr/strix",
+      "source_pr": 1654,
+      "source_branch": "fix/resume-corrupt-history-20261105",
+      "source_parent_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "upstream_pull_request": "https://github.com/usestrix/strix/pull/1654",
+      "fork_commits": [
+        "91938128177fd90c7845dfd04b324f68bf501e7c"
+      ],
+      "adaptations": [
+        "Resolve append-point conflict in tests/test_cli_resume_picker.py by retaining existing fork scan-mode tests and all new tests. No production-function change."
+      ],
+      "source_patch_id": "a69272d6fcf2b484681cc66dc5e670fb128fc427",
+      "fork_patch_id": "6bf6cc6fc2d3c076a1c88efe83cb4a26b6ff5ad6",
+      "provenance_unknown_reason": null,
+      "provenance_note": "Cherry-pick -x. Whole-patch IDs differ due to test-hunk context; production and appended test function AST hashes match, stored in round evidence."
+    },
+    "validation": {
+      "summary": "Six summary/CLI cases fail on unchanged upstream; additional named-resume case fails before its decode fix.178focused tests pass after. Ruff format/lint,Mypy,Bandit pass. Pyright940vs941base,0added/1removed; make check-all not green.",
+      "fork_integration": "189focused tests pass at91938128177fd90c7845dfd04b324f68bf501e7c;Ruff/Mypy/Bandit pass. Pyright1256vs1257current-master baseline,0added/1removed. No new full-suite run.",
+      "limits": [
+        "No live LLM,Docker scan or external target.",
+        "No local full-suite run for this focused patch.",
+        "Remote CI and review/merge remain separate evidence; see per-round latest status.",
+        "Review branch is unreleased and does not advance the full upstream synchronization base."
+      ]
+    },
+    "function_equivalence": [
+      {
+        "path": "strix/report/runs.py",
+        "matching_functions": {
+          "_describe_target": "baaa4e87ade8917282f1e4148d889139787e8079fed2cc8241e0dffb3b342941",
+          "_load_json": "de495b42a7cf6df9cc70cec6c775658cfaa0e7c455767a482b21bcf6561f9d1a"
+        }
+      },
+      {
+        "path": "strix/report/writer.py",
+        "matching_functions": {
+          "read_run_record": "e6e1aef46e0853dea8cbfc058a4b7799ceb1d5e967326f10291220492b156bd5"
+        }
+      },
+      {
+        "path": "tests/test_cli_resume_picker.py",
+        "matching_functions": {
+          "test_headless_run_list_survives_a_damaged_sibling_run": "54cad0c245a686c371a273195cc366d72a6f3024950b18795360b0b631aeba0f",
+          "test_named_resume_reports_undecodable_metadata_as_a_usage_error": "bbd7b588049031df2b62745c2e4d2cc8ae95477c0c12f9d837ca1f66ffd741be"
+        }
+      }
+    ],
+    "current_pr": {
+      "baseRefOid": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "createdAt": "2026-11-05T14:03:30Z",
+      "headRefOid": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "isDraft": false,
+      "mergeCommit": null,
+      "mergeStateStatus": "BLOCKED",
+      "mergeable": "MERGEABLE",
+      "number": 1654,
+      "reviewDecision": "REVIEW_REQUIRED",
+      "state": "OPEN",
+      "title": "fix(resume): tolerate damaged metadata when listing prior runs",
+      "updatedAt": "2026-11-05T14:05:14Z",
+      "url": "https://github.com/usestrix/strix/pull/1654",
+      "remote_ci_note": "Workflow started and10jobs passed;3Python pytest matrix jobs still in progress. Not a completed CI result."
+    },
+    "ci": {
+      "checked_at": "2026-11-05T14:22:28.055419+00:00",
+      "run": {
+        "conclusion": null,
+        "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+        "status": "in_progress",
+        "updated_at": "2026-11-05T14:03:48Z"
+      },
+      "jobs": [
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292663671",
+          "name": "workflows / zizmor",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664026",
+          "name": "workflows / actionlint",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664027",
+          "name": "python / pytest (3.14)",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664201",
+          "name": "tui / go",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664315",
+          "name": "package / wheel",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664326",
+          "name": "viewer / build",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664419",
+          "name": "package / binary",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664438",
+          "name": "python / ruff",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664535",
+          "name": "python / lock",
+          "status": "completed"
+        },
+        {
+          "conclusion": null,
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664600",
+          "name": "python / pytest (3.12)",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": null,
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664604",
+          "name": "python / pytest (3.13)",
+          "status": "in_progress"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664644",
+          "name": "python / mypy",
+          "status": "completed"
+        },
+        {
+          "conclusion": "success",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664784",
+          "name": "python / bandit",
+          "status": "completed"
+        }
+      ]
+    },
+    "latest_review": {
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768"
+      ],
+      "new_comments": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768",
+          "author": "greptile-apps[bot]",
+          "summary": "\n\nConfidence Score: 5/5\n\n**[Medium impact]** This PR appears safe to merge.\n\nSummary\n\nThis PR keeps damaged run metadata from blocking listings of healthy sibling runs.\n- Run summaries keep listing runs when saved metadata is damaged.\n- Named resume reports unreadable saved run records as a usage error.\n\n\n\nReviews (1) · Last reviewed commit: [\"fix(resume): tolerate damaged metadata w...\"](https://github.com/usestrix/strix/commit/b6ac4037b8c6e18507d6cb476ebe775a594795b4) · [Reviewed by Greptile](https://www.greptile.com/?utm_source=greptile_review&utm_medium=github&utm_campaign=review_public&utm_content=usestrix/strix)"
+        }
+      ],
+      "code_change_required": false,
+      "ci": [
+        {
+          "conclusion": null,
+          "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+          "name": "CI",
+          "status": "in_progress"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "Greptile5/5 on exact published head; no requested adjustment."
+    }
+  },
+  "authored_pr_feedback": [
+    {
+      "number": 1174,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1174#issuecomment-5425384383",
+        "https://github.com/usestrix/strix/pull/1174#discussion_r3862755062",
+        "https://github.com/usestrix/strix/pull/1174#pullrequestreview-5030424397",
+        "https://github.com/usestrix/strix/pull/1174#pullrequestreview-5030429338"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40855021444"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6cdUhq",
+          "resolved": false,
+          "outdated": true,
+          "path": "strix/core/execution.py"
+        }
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1279,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "ad33c2c2200d620096092540574f814180740b8e",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1279#pullrequestreview-5125726452",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-5560072587",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-5643185500",
+        "https://github.com/usestrix/strix/pull/1279#issuecomment-6224594976"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "ad33c2c2200d620096092540574f814180740b8e",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40854505714"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1469,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "b6cdb58ae7134321d304e93f6e5b28ba6f82f297",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1469#issuecomment-6026628164",
+        "https://github.com/usestrix/strix/pull/1469#discussion_r4201048184",
+        "https://github.com/usestrix/strix/pull/1469#pullrequestreview-5435249993"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "b6cdb58ae7134321d304e93f6e5b28ba6f82f297",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40854507652"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6prmea",
+          "resolved": false,
+          "outdated": true,
+          "path": "tests/test_reporting_dedupe_race.py"
+        }
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1470,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1470#issuecomment-6026614157",
+        "https://github.com/usestrix/strix/pull/1470#discussion_r4201040776",
+        "https://github.com/usestrix/strix/pull/1470#pullrequestreview-5435242042"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/38966150260"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6prlV-",
+          "resolved": false,
+          "outdated": false,
+          "path": "tests/test_scan_targets.py"
+        }
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1471,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "d8e6369301b15493061f1b2a282d82dbed757659",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1471#issuecomment-6026865596"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "d8e6369301b15493061f1b2a282d82dbed757659",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/37542593272"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1472,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "768b101615bd59a18acf8d1629ee5eb0f350dc65",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1472#issuecomment-6026859404"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "768b101615bd59a18acf8d1629ee5eb0f350dc65",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/37542597829"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1562,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "1cca4b6b1c5aa5e39f69670910bf8d0ca9880cf3",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1562#issuecomment-6346039664"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "1cca4b6b1c5aa5e39f69670910bf8d0ca9880cf3",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/39815502444"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1563,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "8c9ae6abbf33ec6975ebb622021cf69a8e00e5d2",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1563#issuecomment-6346117364"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "8c9ae6abbf33ec6975ebb622021cf69a8e00e5d2",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/39815926277"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1612,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "9a73ba0f7645e60a2548406c746b28f1c63a25f4",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1612#issuecomment-6482474686",
+        "https://github.com/usestrix/strix/pull/1612#issuecomment-6482518016"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "9a73ba0f7645e60a2548406c746b28f1c63a25f4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40781371343"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1613,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "e0d1a87ee0a996a6527b833b288f585e5c3c56ce",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1613#issuecomment-6482519951"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "e0d1a87ee0a996a6527b833b288f585e5c3c56ce",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40781385726"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1614,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1614#issuecomment-6482523382",
+        "https://github.com/usestrix/strix/pull/1614#discussion_r4406842870",
+        "https://github.com/usestrix/strix/pull/1614#pullrequestreview-5690642268"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40782377235"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6xWTTU",
+          "resolved": false,
+          "outdated": true,
+          "path": "strix/interface/cloud/session.py"
+        }
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1615,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "79c82d5f1f1593bad3ea76ead2ae954dfaec4b6e",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1615#issuecomment-6482645122"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "79c82d5f1f1593bad3ea76ead2ae954dfaec4b6e",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40782173149"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1621,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1621#issuecomment-6505640557",
+        "https://github.com/usestrix/strix/pull/1621#issuecomment-6552231785"
+      ],
+      "new_comments": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1621#issuecomment-6552231785",
+          "author": "phant0um",
+          "summary": "The 2 new resume tests fail on `main` and pass on this PR's head. Reverting the fix makes them fail again. A separate read of the diff found no blocker.\n\nThis is a reproduction and a diff read, not a merge-readiness claim. I did not run `make check-all` or the full suite.\n\n## Environment\n\n- macOS 27.0.1 arm64, Python 3.12.15, pytest 9.1.1, git 2.54.0, uv 0.13.5.\n- `uv sync --python 3.12` in a fresh clone, then the tests ran with an empty `HOME` and no credentials in the environment.\n- Base `main` at `6b7ae2e`, PR head `c652b20`.\n\n## Reproduction\n\nThree trees: `main` with only the PR's test file copied in (`git checkout  -- tests/test_api_spec_targets.py`), the PR head, and the PR head with `strix/interface/cli_args.py` and `strix/interface/utils.py` reverted to `main`. Each tree ran twice with:\n\n```bash\nenv -i PATH=/usr/bin:/bin HOME=\"$(mktemp -d)\" PYTHONPATH=\"$PWD\" \\\n  .venv/bin/python -m pytest tests/test_api_spec_targets.py -q -p no:cacheprovider\n```\n\n| Tree | Result (both runs) |\n|---|---|\n| `main` + PR tests | 2 failed, 13 passed |\n| PR head | 15 passed |\n| PR head, fix reverted | 2 failed, 13 passed (same 2 tests) |\n\nThe two failing tests and their messages on `main`:\n- `test_resume_restores_staged_api_specs`: `assert [] == [{'source_path': '.../strix_api_specs/openapi_91b3', 'workspace_subdir': 'api-specs', 'protect_metadata': False}]`. On `main`, `local_sources` after resume has no `api-specs` entry.\n- `test_resume_rejects_a_missing_staged_api_spec`: `Failed: DID NOT RAISE SystemExit`. On `main`, resuming with the staged spec deleted does not fail.\n\n## Notes from reading the diff\n\nResume now stages under the same `strix_api_specs/` path and in the same order as the first run. A missing staged file ends in `ResumeError` (exit 2). No blocker. Non-blocking:\n- The `api-specs` mount entry returned by `stage_api_specs` sets no `read_only`, so the sandbox may be able to delete the staged files and break a later resume. I did not test this. `read_only: True` could be a follow-up.\n- The fix assumes the staging dir under `tempfile.gettempdir()` still exists at resume. If it was cleaned up, or `TMPDIR` differs, resume exits 2. The error message could mention `TMPDIR`.\n- `targets_info: Any` in `load_resume_state` hides the type from mypy. A `cast` would be clearer.\n- `resumed.targets_info == original.targets_info` in the first test also passes without recomputing `workspace_path`, because `run.json` already stores it. The `local_sources` and bind-mount assertions are what prove the fix.\n\n## Not tested\n\nA real resume against a Docker sandbox: `docker manifest inspect ghcr.io/usestrix/strix-sandbox:1.3.1` returned `manifest unknown`, so the default sandbox image could not be pulled (this matches #1628). Also not run: `make check-all` and the rest of the suite. Separate from this PR, `uv sync` failed on Python 3.15: it tried to build `tiktoken` 0.13 from source and stopped without a Rust toolchain.\n"
+        }
+      ],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "c652b20a797f1d785c3bbf5c1d950d5a6293b96a",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40934993650"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "New independent reproduction and diff read found no blocker; non-blocking suggestions retained as follow-ups without changing code.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1624,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "340bc40daf168e3cc72d7927edd61906529f66b7",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1624#issuecomment-6505686163"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "340bc40daf168e3cc72d7927edd61906529f66b7",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/40935327596"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1631,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1631#issuecomment-6526478811",
+        "https://github.com/usestrix/strix/pull/1631#issuecomment-6552232240"
+      ],
+      "new_comments": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1631#issuecomment-6552232240",
+          "author": "phant0um",
+          "summary": "4 of the 5 new test cases fail on `main` and all pass on this PR's head. Reverting the fix makes them fail again. A separate read of the diff found no blocker.\n\nThis is a reproduction and a diff read, not a merge-readiness claim. I did not run `make check-all` or the full suite.\n\n## Environment\n\n- macOS 27.0.1 arm64, Python 3.12.15, pytest 9.1.1, git 2.54.0, uv 0.13.5.\n- `uv sync --python 3.12` in a fresh clone, then the tests ran with an empty `HOME` and no credentials in the environment.\n- Base `main` at `6b7ae2e`, PR head `5c57940`.\n\n## Reproduction\n\nThree trees: `main` with only the PR's test file copied in (`git checkout  -- tests/test_cloud_source_upload.py`), the PR head, and the PR head with `strix/interface/cloud/source_upload.py` reverted to `main`. Each tree ran twice with:\n\n```bash\nenv -i PATH=/usr/bin:/bin HOME=\"$(mktemp -d)\" PYTHONPATH=\"$PWD\" \\\n  .venv/bin/python -m pytest tests/test_cloud_source_upload.py -q -p no:cacheprovider\n```\n\n| Tree | Result (both runs) |\n|---|---|\n| `main` + PR tests | 4 failed, 32 passed |\n| PR head | 36 passed |\n| PR head, fix reverted | 4 failed, 32 passed (same 4 cases) |\n\nThe four failing cases on `main`:\n- `test_source_archive_deduplicates_unmerged_git_paths[]` and `[src]`: `At index 1 diff: 'conflict.py' != 'tracked.py'`, with the left list containing 2 more items. `conflict.py` appears once per stage.\n- `test_unmerged_git_paths_do_not_inflate_selection_limits[files]`: `CloudError: source contains more than 3 files`.\n- `test_unmerged_git_paths_do_not_inflate_selection_limits[bytes]`: `CloudError: selected source is larger than the 250 MB expanded-size limit`.\n\nThe fifth new case, `test_unmerged_git_entries_still_count_towards_candidate_limit`, passes on `main` and on the head. It pins the behavior that the candidate limit keeps counting every Git record.\n\n## Notes from reading the diff\n\nThe dedupe sits after the candidate counter. `MAX_CANDIDATE_PATHS` still counts every Git record, and `MAX_FILES` and `MAX_TOTAL_BYTES` no longer count a conflicted path three times. No blocker. Non-blocking:\n- `seen` can grow to `MAX_CANDIDATE_PATHS` entries. In a small repro, `git ls-files -z --cached --others --exclude-standard` listed the stages of one path next to each other, so comparing with the previous record would use constant memory. I did not measure the real cost on a large repo.\n- No test covers a modify/delete conflict (file missing on disk) or an add/add conflict (only stages 2 and 3).\n- `git ls-files --deduplicate` might be simpler. I believe it needs Git 2.31 or newer and would make the candidate limit count unique paths, but I did not check either.\n\n## Not tested\n\nA real cloud upload, `make check-all`, and the rest of the suite.\n"
+        }
+      ],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "5c57940ac11f2d2bf26d5a80ac90f882c48154e4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41080426313"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "New independent reproduction and diff read found no blocker; non-blocking suggestions retained as follow-ups without changing code.",
+      "threads": [],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1634,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "beb55e88d5b36cfdf27e7490b434b09e3f376638",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1634#issuecomment-6526669229",
+        "https://github.com/usestrix/strix/pull/1634#pullrequestreview-5774882654"
+      ],
+      "new_comments": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1634#pullrequestreview-5774882654",
+          "author": "0xallam",
+          "summary": ""
+        }
+      ],
+      "code_change_required": false,
+      "ci": [],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "Merged upstream; production/test equivalence and18current tests confirmed."
+    },
+    {
+      "number": 1635,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1635#issuecomment-6527659458",
+        "https://github.com/usestrix/strix/pull/1635#issuecomment-6527740859",
+        "https://github.com/usestrix/strix/pull/1635#discussion_r4425901702",
+        "https://github.com/usestrix/strix/pull/1635#pullrequestreview-5715308678"
+      ],
+      "new_comments": [],
+      "code_change_required": false,
+      "ci": [
+        {
+          "name": "CI",
+          "status": "completed",
+          "conclusion": "action_required",
+          "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/41090222957"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "No new actionable code request; previously addressed comments remain satisfied.",
+      "threads": [
+        {
+          "id": "PRRT_kwDOPY9pZs6yDGVN",
+          "resolved": false,
+          "outdated": true,
+          "path": "strix/interface/utils.py"
+        }
+      ],
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED"
+    },
+    {
+      "number": 1654,
+      "checked_at": "2026-11-05T14:18:35.457672+00:00",
+      "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "comment_urls": [
+        "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768"
+      ],
+      "new_comments": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768",
+          "author": "greptile-apps[bot]",
+          "summary": "\n\nConfidence Score: 5/5\n\n**[Medium impact]** This PR appears safe to merge.\n\nSummary\n\nThis PR keeps damaged run metadata from blocking listings of healthy sibling runs.\n- Run summaries keep listing runs when saved metadata is damaged.\n- Named resume reports unreadable saved run records as a usage error.\n\n\n\nReviews (1) · Last reviewed commit: [\"fix(resume): tolerate damaged metadata w...\"](https://github.com/usestrix/strix/commit/b6ac4037b8c6e18507d6cb476ebe775a594795b4) · [Reviewed by Greptile](https://www.greptile.com/?utm_source=greptile_review&utm_medium=github&utm_campaign=review_public&utm_content=usestrix/strix)"
+        }
+      ],
+      "code_change_required": false,
+      "ci": [
+        {
+          "conclusion": null,
+          "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+          "name": "CI",
+          "status": "in_progress"
+        }
+      ],
+      "limits": "Automated feedback is not human approval or CI. Peers reported independent reproductions; optional follow-ups were not established blockers.",
+      "conclusion": "Greptile5/5 on exact published head; no requested adjustment."
+    }
+  ],
+  "source_validation": {
+    "focused_passed": 178,
+    "pyright": {
+      "baseline_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "baseline": 941,
+      "patched": 940,
+      "added": [],
+      "removed": [
+        [
+          "report/runs.py",
+          "reportUnknownVariableType",
+          "error",
+          "Type of \"entry\" is partially unknown\n  Type of \"entry\" is \"Any | Unknown\"",
+          1
+        ]
+      ]
+    },
+    "ruff_format": true,
+    "ruff_lint": true,
+    "mypy": true,
+    "bandit": true,
+    "local_full_suite_run": false
+  },
+  "fork_validation": {
+    "focused_passed": 189,
+    "pyright": {
+      "baseline_sha": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+      "baseline": 1257,
+      "patched": 1256,
+      "added": [],
+      "removed": [
+        [
+          "report/runs.py",
+          "reportUnknownVariableType",
+          "error",
+          "Type of \"entry\" is partially unknown\n  Type of \"entry\" is \"Any | Unknown\"",
+          1
+        ]
+      ]
+    },
+    "ruff_format": true,
+    "ruff_lint": true,
+    "mypy": true,
+    "bandit": true,
+    "local_full_suite_run": false
+  },
+  "image_availability": {
+    "checked_at": "2026-11-05T13:50:20.338755+00:00",
+    "manifests": {
+      "1.3.0": {
+        "status": 200,
+        "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+      },
+      "1.3.1": {
+        "status": 200,
+        "digest": "sha256:78df914f3029464c9d00580f531ec51025c251c422ec3b09c3f19c5fa6d80c30"
+      },
+      "1.4.0": {
+        "status": 200,
+        "digest": "sha256:9ff1be4044c3ff5e9fcecb118b9855f8d1270db39358523e43fb3a13c0027009"
+      }
+    }
+  },
+  "pending_existing_image_pr": {
+    "number": 53,
+    "url": "https://github.com/samirhvbr/strix/pull/53",
+    "state": "OPEN",
+    "headRefOid": "2a6bb91e98a52a580ae53d303ee0c064f2124583",
+    "updatedAt": "2026-11-04T19:43:41Z"
+  },
+  "releases": {
+    "fork": [
+      {
+        "isLatest": true,
+        "publishedAt": "2026-11-02T19:01:33Z",
+        "tagName": "shvia-v1.2.47"
+      }
+    ],
+    "upstream": [
+      {
+        "isLatest": true,
+        "publishedAt": "2026-10-05T02:39:14Z",
+        "tagName": "v1.7.0"
+      }
+    ],
+    "fork_tag_peeled_sha": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+    "assets": [
+      {
+        "name": "pentest-aarch64-apple-darwin",
+        "size": 95364112
+      },
+      {
+        "name": "pentest-x86_64-unknown-linux-gnu",
+        "size": 107630248
+      },
+      {
+        "name": "SHA256SUMS",
+        "size": 194
+      }
+    ],
+    "binary_digests_verified": false,
+    "master_or_release_changed": false,
+    "latest_recheck": {
+      "checked_at": "2026-11-05T14:22:28.055419+00:00",
+      "scope": "Current authoritative metadata; top-level original audit is dated2026-10-29. No ref/tag/release/binary mutation.",
+      "fork_master": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+      "fork_main_mirror": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+      "upstream_main": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "fork_latest_release": "shvia-v1.2.47",
+      "fork_release_published_at": "2026-11-02T19:01:33Z",
+      "upstream_latest_release": "v1.7.0",
+      "upstream_release_published_at": "2026-10-05T02:39:14Z",
+      "tag_resolves_to_master": true,
+      "version_file": "1.2.47",
+      "package_version": "1.7.0",
+      "release_asset_count": 3,
+      "release_assets_rebuilt": false,
+      "release_assets_downloaded_or_executed": false,
+      "tags_or_releases_changed": false,
+      "pending_existing_fork_pr": "https://github.com/samirhvbr/strix/pull/53",
+      "sandbox_registry_status": {
+        "checked_at": "2026-11-05T13:50:20.338755+00:00",
+        "manifests": {
+          "1.3.0": {
+            "status": 200,
+            "digest": "sha256:f6906c3114e504fd1a218fcf028d7a0e46851118403a438b63956de6ea7c4331"
+          },
+          "1.3.1": {
+            "status": 200,
+            "digest": "sha256:78df914f3029464c9d00580f531ec51025c251c422ec3b09c3f19c5fa6d80c30"
+          },
+          "1.4.0": {
+            "status": 200,
+            "digest": "sha256:9ff1be4044c3ff5e9fcecb118b9855f8d1270db39358523e43fb3a13c0027009"
+          }
+        }
+      }
+    }
+  },
+  "validation_commands": {
+    "tests": "uv run --frozen pytest -q tests/test_run_summaries.py tests/test_cli_resume_picker.py tests/test_resume_picker.py tests/test_tui_resume_history.py tests/test_cli_fail_on.py tests/test_cli_target_list.py tests/test_inputs.py tests/test_api_spec_targets.py tests/test_report_writer.py",
+    "quality": [
+      "make check-all",
+      "uv run --frozen bandit -r strix/ -c pyproject.toml",
+      "uv run --frozen pyright strix/ --outputjson"
+    ],
+    "environment": "Python3.12.14;frozenuv.lock;temporary HOME;LITELLM_MODE=PRODUCTION;LITELLM_LOCAL_MODEL_COST_MAP=True;STRIX_TELEMETRY=0;STRIX_NO_UPDATE_CHECK=1"
+  },
+  "limits": [
+    "Metadata/body triage is not full code acceptance. Changed unimported heads retain their prior reviewed SHA.",
+    "No live LLM,Docker/target scan or locally rerun full suite for selected patch.",
+    "Source09536cf1was observed,not fully integrated;upstream synchronization remains6b7ae2eb.",
+    "Binary assets were inventoried but not rebuilt/downloaded/digest-verified."
+  ],
+  "evidence_hashes": {
+    "resume-bandit.log": "bb1578a69f5f2ca3face80b76f2c1e2a936b50273874dcff6d5dc77d45263589",
+    "resume-final-tests.log": "5e0575074afe5a09fc7978f6d949f5f98bc62a0fe320b3a6dec4835df387f235",
+    "resume-after.log": "101d0a1cdb19276076cc89b5aa153c1f4cef43716ac033bdfb25f5a7844d9ad7",
+    "fork-check-all.log": "73889e39fc0d29e35240945591702a80871d924a3d813e08485044339537381f",
+    "merged-dedupe-tests.log": "a745a15915e5bee8264e2c1312d6fd09bd93454b7de80f6b3b0250fcb205925c",
+    "fork-bandit.log": "15e0cf471dadee8c3ba973762e42c1551a57860eb1e3431c258da9b458b3e906",
+    "fork-tests.log": "a7b4830df59060e16da514afa1061f0cf55cae752a6c733312b61c375081f6b8",
+    "resume-named-before.log": "38ea78df56d72e43f5178982aff29f63f85a901b4c0a208ec398daf58079ba61",
+    "resume-check-all.log": "c74c0e2c11f43a4a6ba90e80de3681f2abd3d097a01203fdff573da899f8c932",
+    "resume-before.log": "766add3af14e408a68c37db62599a643eac8ebeb2009d5bd2e17d2862f0a47d9"
+  }
+}
