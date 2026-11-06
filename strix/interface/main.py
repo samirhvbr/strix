@@ -67,6 +67,7 @@ Additional commands:
   strix view [RUN]         View a completed or running scan
   strix review RUN_DIR     Review verified controlled evidence offline as JSON
   strix history RUN_DIR    Export bounded stopped-run accounting offline as JSON
+  strix activity RUN_DIR   Read a short, redacted window of what the agents are doing as JSON
   strix report-export RUN_DIR  Export report content for explicit authorized sharing
   strix retest RUN_DIR ... Retest one approved private-read case without a model
   strix completions SHELL  Generate zsh, bash, or fish tab completion
@@ -490,6 +491,11 @@ def main() -> None:
         from strix.interface.assessment_review import run_review
 
         sys.exit(run_review(sys.argv[2:]))
+
+    if len(sys.argv) > 1 and sys.argv[1] == "activity":
+        from strix.interface.activity import run_activity
+
+        sys.exit(run_activity(sys.argv[2:]))
 
     if len(sys.argv) == 2 and sys.argv[1] in ("-h", "--help"):
         try:
