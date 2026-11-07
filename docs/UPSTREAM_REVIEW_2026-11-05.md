@@ -112,6 +112,10 @@ wheel and binary jobs passed (10 jobs). The Python 3.12/3.13/3.14 pytest matrix
 was still in progress at the recorded checkpoint. It is not a completed green
 workflow; follow its run URL and exact head in the machine-readable record.
 
+The later [targeted CI follow-up](UPSTREAM_CI_1654_2026-11-05.md) identifies the
+base defects, publishes three independent fixes and validates the combined Linux
+matrix. Its selected fork imports and review coverage have separate checkpoints.
+
 ## Continuity
 
 The effective upstream synchronization remains **6b7ae2eb**. Observing upstream

@@ -2194,5 +2194,21 @@
     "resume-named-before.log": "38ea78df56d72e43f5178982aff29f63f85a901b4c0a208ec398daf58079ba61",
     "resume-check-all.log": "c74c0e2c11f43a4a6ba90e80de3681f2abd3d097a01203fdff573da899f8c932",
     "resume-before.log": "766add3af14e408a68c37db62599a643eac8ebeb2009d5bd2e17d2862f0a47d9"
+  },
+  "ci_followup": {
+    "checked_at": "2026-11-05T15:54:10.766347+00:00",
+    "record": "ci-1654-2026-11-05.json",
+    "report": "../UPSTREAM_CI_1654_2026-11-05.md",
+    "upstream_prs": [
+      1657,
+      1658,
+      1660
+    ],
+    "upstream_issues": [
+      1655,
+      1656,
+      1659
+    ],
+    "no_new_full_inventory": true
   }
 }

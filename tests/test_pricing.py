@@ -49,17 +49,39 @@ def test_resolves_common_bare_model_names() -> None:
     resolve_litellm_model.cache_clear()
     assert resolve_litellm_model("deepseek-v4-flash") == "deepseek/deepseek-v4-flash"
     assert resolve_litellm_model("openai/deepseek-v4-flash") == "deepseek/deepseek-v4-flash"
-    # LiteLLM prices grok-4.5 identically under xai/, perplexity/xai/ and
-    # openrouter/x-ai/, so the resolver may return any of them; the contract
-    # is a provider-qualified name LiteLLM can price.
-    grok = resolve_litellm_model("grok-4.5")
-    assert grok is not None
-    assert grok.endswith("/grok-4.5")
-    assert grok in litellm.model_cost
     # MiniMax-M3 is sold by several LiteLLM providers at different prices, so
     # the resolver must not guess from its bare name. A provider-qualified
     # model remains deterministic.
     assert resolve_litellm_model("minimax/MiniMax-M3") == "minimax/MiniMax-M3"
+
+
+def test_resolves_a_bare_model_that_several_providers_sell(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A synthetic price map, so the test does not depend on what LiteLLM lists
+    # today: LiteLLM drops and re-keys models between releases, and a real
+    # bare model name can stop resolving without any change on our side.
+    price = {"input_cost_per_token": 3e-06, "output_cost_per_token": 1.5e-05}
+    monkeypatch.setattr(
+        litellm,
+        "model_cost",
+        {
+            "xai/native-model-9": {**price, "litellm_provider": "xai"},
+            "perplexity/xai/native-model-9": {**price, "litellm_provider": "perplexity"},
+            "openrouter/x-ai/native-model-9": {**price, "litellm_provider": "openrouter"},
+        },
+    )
+    resolve_litellm_model.cache_clear()
+
+    try:
+        # Every provider prices it identically, so the resolver may return any of
+        # them; the contract is a provider-qualified name LiteLLM can price.
+        resolved = resolve_litellm_model("native-model-9")
+        assert resolved is not None
+        assert resolved.endswith("/native-model-9")
+        assert resolved in litellm.model_cost
+    finally:
+        resolve_litellm_model.cache_clear()
 
 
 def test_resolver_never_falls_back_to_a_provider_that_signs_in(
@@ -97,6 +119,38 @@ def test_resolver_never_falls_back_to_a_provider_that_signs_in(
 def test_resolver_returns_none_for_unresolvable_model() -> None:
     resolve_litellm_model.cache_clear()
     assert resolve_litellm_model("provider/not-a-real-model") is None
+
+
+@pytest.mark.parametrize("provider", ["github_copilot", "chatgpt", "openai"])
+def test_ledger_estimates_cost_without_provider_authentication(provider: str) -> None:
+    model = f"{provider}/test-cost-model"
+    catalog = {
+        model: {
+            "litellm_provider": provider,
+            "mode": "chat",
+            "input_cost_per_token": 1e-6,
+            "output_cost_per_token": 2e-6,
+        }
+    }
+    ledger = LLMUsageLedger()
+    resolve_litellm_model.cache_clear()
+    try:
+        with (
+            patch.object(litellm, "model_cost", catalog),
+            patch.object(
+                litellm,
+                "get_llm_provider",
+                side_effect=AssertionError(
+                    "cost estimation must not start provider authentication"
+                ),
+            ) as infer_provider,
+        ):
+            ledger.record(agent_id="a", usage=_usage(10, 5), model=model)
+
+        assert ledger.total_cost == pytest.approx(0.00002)
+        infer_provider.assert_not_called()
+    finally:
+        resolve_litellm_model.cache_clear()
 
 
 def test_ledger_uses_estimate_when_routed_provider_reports_no_cost() -> None:

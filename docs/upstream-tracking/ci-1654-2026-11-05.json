@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-11-05T15:54:10.766347+00:00",
+  "scope": "Targeted follow-up for PR1654 CI; no new all-item inventory or full upstream synchronization.",
+  "prior_complete_inventory_at": "2026-11-05T14:10:41.837065+00:00",
+  "source_base": "09536cf1481731c790995bd8060db19a3b75ff48",
+  "pr1654_head": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+  "pr1654_original_ci": {
+    "id": 42041347484,
+    "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484",
+    "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+    "run_attempt": 1,
+    "status": "in_progress",
+    "conclusion": null,
+    "run_started_at": "2026-11-05T14:03:36Z",
+    "updated_at": "2026-11-05T14:03:48Z",
+    "checked_at": "2026-11-05T15:54:10.766347+00:00",
+    "jobs": [
+      {
+        "name": "workflows / zizmor",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:03:49Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292663671"
+      },
+      {
+        "name": "workflows / actionlint",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:03:46Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664026"
+      },
+      {
+        "name": "python / pytest (3.14)",
+        "status": "in_progress",
+        "conclusion": null,
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": null,
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664027"
+      },
+      {
+        "name": "tui / go",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:05:06Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664201"
+      },
+      {
+        "name": "package / wheel",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:40Z",
+        "completed_at": "2026-11-05T14:04:20Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664315"
+      },
+      {
+        "name": "viewer / build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:03:57Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664326"
+      },
+      {
+        "name": "package / binary",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:05:48Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664419"
+      },
+      {
+        "name": "python / ruff",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:42Z",
+        "completed_at": "2026-11-05T14:04:00Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664438"
+      },
+      {
+        "name": "python / lock",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:03:51Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664535"
+      },
+      {
+        "name": "python / pytest (3.12)",
+        "status": "in_progress",
+        "conclusion": null,
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": null,
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664600"
+      },
+      {
+        "name": "python / pytest (3.13)",
+        "status": "in_progress",
+        "conclusion": null,
+        "started_at": "2026-11-05T14:03:38Z",
+        "completed_at": null,
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664604"
+      },
+      {
+        "name": "python / mypy",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:04:18Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664644"
+      },
+      {
+        "name": "python / bandit",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T14:03:39Z",
+        "completed_at": "2026-11-05T14:03:59Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664784"
+      }
+    ]
+  },
+  "unchanged_main_ci": {
+    "url": "https://github.com/usestrix/strix/actions/runs/41901969765",
+    "head_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+    "pytest_matrix": "All three Python jobs reached the six-hour GitHub limit. The3.12 job started2026-11-04T19:59:16Z and completed2026-11-05T01:59:43Z.",
+    "local_base": "19failed,2498passed,3xfailed in271.28s on macOS/Python3.12.14 with isolated HOME and bundled cost map."
+  },
+  "root_cause_diagnostic": {
+    "url": "https://github.com/samirhvbr/strix/actions/runs/42052955676/job/127333640032",
+    "head_sha": "be4bd341dab80192d5c76a254f07e2ad3bb4805a",
+    "source_code_sha": "09536cf1481731c790995bd8060db19a3b75ff48",
+    "workflow_only_difference": "Manual-only workflow with bounded runtime, verbose pytest and faulthandler_timeout45. Deliberately cancelled after the blocked stack was captured; not a passing result.",
+    "observed_stack": [
+      "github_copilot.authenticator._poll_for_access_token",
+      "get_llm_provider",
+      "completion_cost",
+      "strix.report.state._estimate_response_cost",
+      "litellm_cost_callback"
+    ],
+    "local_control": "The gateway files alone completed369passed/3xfailed under CI-like environment on macOS; no claim that this reproduced the Linux hang."
+  },
+  "first_combined_matrix": {
+    "url": "https://github.com/samirhvbr/strix/actions/runs/42055296507",
+    "head_sha": "9c7a5d567715628a469d46e2b9addfe3b4c1c801",
+    "sources": [
+      1654,
+      1657,
+      1658,
+      1577
+    ],
+    "result_each_python": "1failed,2532passed,3xfailed",
+    "duration_seconds": {
+      "3.12": 279.55,
+      "3.13": 287.75,
+      "3.14": 287.96
+    },
+    "remaining_failure": "tests/test_pricing.py::test_resolves_common_bare_model_names: live Grok resolution returnedNone."
+  },
+  "final_combined_matrix": {
+    "id": 42056923004,
+    "html_url": "https://github.com/samirhvbr/strix/actions/runs/42056923004",
+    "head_sha": "c0651c343e3d7a58391214a2d6b133b14f363bbe",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "run_started_at": "2026-11-05T15:37:52Z",
+    "updated_at": "2026-11-05T15:43:22Z",
+    "checked_at": "2026-11-05T15:54:10.766347+00:00",
+    "jobs": [
+      {
+        "name": "diagnose (3.14)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:37:55Z",
+        "completed_at": "2026-11-05T15:43:21Z",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/42056923004/job/127347720208"
+      },
+      {
+        "name": "diagnose (3.13)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:37:55Z",
+        "completed_at": "2026-11-05T15:43:19Z",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/42056923004/job/127347720321"
+      },
+      {
+        "name": "diagnose (3.12)",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:37:56Z",
+        "completed_at": "2026-11-05T15:42:55Z",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/42056923004/job/127347720447"
+      }
+    ],
+    "scope": "Diagnostic branch only: current upstream plus PRs1654/1657/1658/1660 and existing1577. This is not the upstream PR1654 check run or a fork master validation.",
+    "expected_total_tests": 2537,
+    "log_results": [
+      {
+        "python": "3.12",
+        "job_id": 127347720447,
+        "summary": "2026-11-05T15:42:50.0027600Z 2534 passed, 3 xfailed, 106 warnings in 275.45s (0:04:35)"
+      },
+      {
+        "python": "3.13",
+        "job_id": 127347720321,
+        "summary": "2026-11-05T15:43:13.7568351Z 2534 passed, 3 xfailed, 106 warnings in 297.91s (0:04:57)"
+      },
+      {
+        "python": "3.14",
+        "job_id": 127347720208,
+        "summary": "2026-11-05T15:43:17.2486611Z 2534 passed, 3 xfailed, 106 warnings in 302.44s (0:05:02)"
+      }
+    ]
+  },
+  "upstream_cost_pr_ci": {
+    "url": "https://github.com/usestrix/strix/actions/runs/42055312290",
+    "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+    "jobs": [
+      {
+        "name": "tui / go",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:29:49Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987213"
+      },
+      {
+        "name": "python / lock",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:25Z",
+        "completed_at": "2026-11-05T15:28:34Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987572"
+      },
+      {
+        "name": "python / bandit",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:25Z",
+        "completed_at": "2026-11-05T15:28:41Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987607"
+      },
+      {
+        "name": "workflows / zizmor",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:28:37Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987649"
+      },
+      {
+        "name": "python / ruff",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:27Z",
+        "completed_at": "2026-11-05T15:28:38Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987664"
+      },
+      {
+        "name": "package / binary",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:30:44Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987768"
+      },
+      {
+        "name": "python / pytest (3.12)",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:33:32Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987786"
+      },
+      {
+        "name": "python / pytest (3.13)",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:33:43Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987801"
+      },
+      {
+        "name": "python / pytest (3.14)",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:33:22Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987879"
+      },
+      {
+        "name": "python / mypy",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:29:18Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987883"
+      },
+      {
+        "name": "workflows / actionlint",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:25Z",
+        "completed_at": "2026-11-05T15:28:31Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987909"
+      },
+      {
+        "name": "viewer / build",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:28:40Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987980"
+      },
+      {
+        "name": "package / wheel",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-11-05T15:28:26Z",
+        "completed_at": "2026-11-05T15:28:54Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341988896"
+      },
+      {
+        "name": "ci-passed",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-11-05T15:33:45Z",
+        "completed_at": "2026-11-05T15:33:48Z",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127345202760"
+      }
+    ],
+    "limit": "The authentication wait is gone. Its own upstream CI still inherits the7skills/12telemetry/live-catalog failures; it is not green."
+  },
+  "fixes": {
+    "1657": {
+      "issue": 1655,
+      "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+      "change": "Passskills=[] at three budget fixture child starts.",
+      "validation": "7failed/14passed before;21passed after. Ruff/Mypy/Banditpass;Pyright941existing.",
+      "fork_decision": "already_covered",
+      "fork_commit": "d3654fb29c8fb86bdee2d23d648f978c82f74a33"
+    },
+    "1658": {
+      "issue": 1656,
+      "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+      "change": "Pass the resolved provider to both real LiteLLM cost estimators.",
+      "validation": "6retained regressions fail before.119focused pass after; Ruff/Mypy/Banditpass; complete normalized Pyright output identical to base941.",
+      "fork_decision": "adapted",
+      "fork_commit": "4deed266833532edf81923aacf79bb9c087ecdd1"
+    },
+    "1660": {
+      "issue": 1659,
+      "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+      "local_origin_sha": "9e1af83447392f389771160d2de8040c60cb89c1",
+      "change": "Synthetic equal-price bare-model test replaces the live Grok assertion; restore catalog/cache.",
+      "validation": "43pricing/cost tests pass with normal and bundled maps. Ruff/Mypy/Banditpass;Pyright941existing.",
+      "fork_decision": "adapted",
+      "fork_commit": "4f992de780f24ff53550004fe894f209811e7ee2"
+    }
+  },
+  "existing_solutions": {
+    "1577": {
+      "head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+      "state": "OPEN",
+      "decision": "already_covered",
+      "proof": "Four affected telemetry stubs already present atd3654fb2; root_prompt stub came from upstreamd6f4bc5c. Existing PR included unchanged in diagnostic validation, not duplicated."
+    },
+    "1215": {
+      "head_sha": "31e0183edefe7d941e8a4ed2478d2a4a18e557f6",
+      "state": "CLOSED",
+      "merge_commit": null,
+      "closure_reason_url": "https://github.com/usestrix/strix/pull/1215#issuecomment-6379386991",
+      "decision": "prior closure preserved: de73011 addressed old MiniMax assertion; new Grok recurrence has separate1659/1660."
+    }
+  },
+  "fork_integration": {
+    "branch": "feat/pr1654-ci-followup-20261105",
+    "base_sha": "6c1c305698b1341ccb4ff69d681a50b19b3614bb",
+    "validated_code_sha": "4f992de780f24ff53550004fe894f209811e7ee2",
+    "source_function_equivalence": [
+      {
+        "path": "strix/report/state.py",
+        "name": "_estimate_response_cost",
+        "equal": true,
+        "sha256": "58838c4077da31b4087127bb740057912c96c45b519c28754726f2944a5f420a"
+      },
+      {
+        "path": "strix/report/usage.py",
+        "name": "_estimate_litellm_entry_cost",
+        "equal": true,
+        "sha256": "1980ba73e445b7324f8e8dc0b3c423202942f2209b88eae1e0d179ab162bcda7"
+      },
+      {
+        "path": "tests/test_pricing.py",
+        "name": "test_ledger_estimates_cost_without_provider_authentication",
+        "equal": true,
+        "sha256": "2092f4d10fcba4bc2f484994548264fa78be2024eaca5db1a51c175db5f6ceab"
+      },
+      {
+        "path": "tests/test_cost_tracking.py",
+        "name": "test_cost_callback_estimates_without_provider_authentication",
+        "equal": true,
+        "sha256": "3a409828d99cbccbe60abf7c563d755bf961d093da9d124ba1931610b821545a"
+      }
+    ],
+    "adaptations": [
+      "1658: preserve existing fork subscription-route filtering; duplicate pricing import already present.",
+      "1660: resolve append conflict by keeping the existing subscription-route test and adding the synthetic catalog test; no production change."
+    ],
+    "validation": [
+      "172focused tests at4deed266;59pricing/cost tests at final4f992de7.",
+      "Ruff/Mypy/Banditpass;Pyright1256existing at4deed266; final commit changes one test file only, Ruffformat passes.",
+      "Full fork suite not rerun; no master, mirror, version, tag, binary or release mutation."
+    ],
+    "previous_login_guard_sha": "8263641333f46df12d9efadbae292f253989b370",
+    "effective_integrated_upstream_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84"
+  },
+  "release_recheck": {
+    "master": "895ab37d8178155db8b373a7e25a84a3c500d3c2",
+    "tag": "shvia-v1.2.47",
+    "release_published_at": "2026-11-02T19:01:33Z",
+    "fork_pr53": "OPEN",
+    "scope": "Remote metadata only; concurrent local1.2.48/pricing work preserved, not published by this follow-up."
+  },
+  "next_resume": [
+    "Re-read this record and PR1654 current head/checks, including jobs that no longer appear open.",
+    "Monitor maintainer integration of1577/1657/1658/1660; rerun1654 only against a base that contains the fixes. Account has no upstream push/maintain permission.",
+    "Compare source/imported heads before taking later changes; do not cherry-pick1657/1577 again into the fork.",
+    "The fork branch is separate from master/release; preserve existing PR53 and concurrent local catalog fix9e1af834 when reconciling overlap."
+  ],
+  "feedback_checks": {
+    "1654": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "greptile_5_of_5_at_head": [
+        "https://github.com/usestrix/strix/pull/1654#issuecomment-6659988768"
+      ],
+      "reviews": [],
+      "limit": "Automated review is separate from executed tests and maintainer approval."
+    },
+    "1657": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+      "greptile_5_of_5_at_head": [
+        "https://github.com/usestrix/strix/pull/1657#issuecomment-6661837499"
+      ],
+      "reviews": [],
+      "limit": "Automated review is separate from executed tests and maintainer approval."
+    },
+    "1658": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+      "greptile_5_of_5_at_head": [
+        "https://github.com/usestrix/strix/pull/1658#issuecomment-6661969317"
+      ],
+      "reviews": [],
+      "limit": "Automated review is separate from executed tests and maintainer approval."
+    },
+    "1660": {
+      "checked_at": "2026-11-05T15:54:10.766347+00:00",
+      "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+      "greptile_5_of_5_at_head": [
+        "https://github.com/usestrix/strix/pull/1660#issuecomment-6662221529"
+      ],
+      "reviews": [],
+      "limit": "Automated review is separate from executed tests and maintainer approval."
+    }
+  },
+  "pr1654_status_comment": "https://github.com/usestrix/strix/pull/1654#issuecomment-6662425207",
+  "publication": {
+    "fork_pull_request": "https://github.com/samirhvbr/strix/pull/54",
+    "fork_base_branch": "feat/upstream-contributions-20261105",
+    "fork_head_branch": "feat/pr1654-ci-followup-20261105",
+    "first_published_documentation_sha": "37b17d4a45a87d894f95fc9b036714feed8dd7d5",
+    "validated_code_sha": "4f992de780f24ff53550004fe894f209811e7ee2",
+    "scope": "PR54 contains selected backports and continuity records. Subsequent publication-link commit changes documentation only; no master/release delivery."
+  }
+}
