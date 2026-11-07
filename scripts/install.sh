@@ -5,7 +5,7 @@ set -euo pipefail
 APP=strix
 REPO="usestrix/strix"
 # Fork pin: 1.3.1 is not published yet. Keep in step with strix/config/settings.py.
-STRIX_IMAGE="ghcr.io/usestrix/strix-sandbox:1.3.0"
+STRIX_IMAGE="ghcr.io/usestrix/strix-sandbox:1.3.1"
 
 MUTED='\033[0;2m'
 RED='\033[0;31m'
