@@ -163,8 +163,10 @@ class ContextSettings(BaseSettings):
 class RuntimeSettings(BaseSettings):
     model_config = _BASE_CONFIG
 
-    # Fork pin: upstream's 1.3.1 (#1617) is not in the registry yet; 1.3.0 is. Move both this
-    # default and scripts/install.sh to 1.3.1 once `docker manifest inspect` finds it.
+    # Fork pin: 1.3.1, published for amd64 and arm64 and taken in fork 1.2.48. Upstream's default
+    # has moved on to 1.4.0 (Opengrep, #1625), which the fork has not taken; move both this
+    # default and scripts/install.sh once `docker manifest inspect` finds the tag and the fork
+    # has the change.
     image: str = Field(
         default="ghcr.io/usestrix/strix-sandbox:1.3.1",
         alias="STRIX_IMAGE",

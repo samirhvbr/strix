@@ -2123,6 +2123,11 @@
       "containers/Dockerfile": "trufflehog 3.95.9 -> 3.99.2; brotli 1.2.0-4.1 packages for CVE-2026-111497",
       "containers/docker-entrypoint.sh": "certutil -N skipped when cert9.db exists (#1499, restart only)",
       "strix/tools/proxy/caido_api.py": "unchanged; tools run host-side"
+    },
+    "resolution": {
+      "recorded_at_utc": "2026-11-07",
+      "state": "resolved in fork 1.2.48",
+      "note": "1.3.1 was published (linux/amd64 and linux/arm64) and both pins moved to it in 1.2.48; the text above is the 2026-10-29/30 state, kept as the record. image_source_diff_vs_master describes this fork's own containers/ sources, not the image the engine pulls: the published 1.3.1 image does not carry the #1499 restart guard, its entrypoint still runs certutil -N unconditionally (arm64 image 78df914f, independent review of 2026-11-06). Upstream's default moved to 1.4.0 on 2026-11-04 (cb581bf9, #1625, Semgrep replaced by Opengrep), which the fork has not taken."
     }
   },
   "latest_recheck": {

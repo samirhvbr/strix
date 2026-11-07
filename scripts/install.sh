@@ -4,7 +4,8 @@ set -euo pipefail
 
 APP=strix
 REPO="usestrix/strix"
-# Fork pin: 1.3.1 is not published yet. Keep in step with strix/config/settings.py.
+# Fork pin: 1.3.1, published and taken in fork 1.2.48 (upstream's default is 1.4.0, which the fork has
+# not taken). Keep in step with strix/config/settings.py.
 STRIX_IMAGE="ghcr.io/usestrix/strix-sandbox:1.3.1"
 
 MUTED='\033[0;2m'
