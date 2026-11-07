@@ -1,7 +1,8 @@
 # Upstream continuity record
 
-Start every review here, then read the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
-the [latest full round](UPSTREAM_REVIEW_2026-11-05.md),
+Start every review here, then read the [latest reliability review](UPSTREAM_REVIEW_2026-11-07.md),
+the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
+the [November 5 full round](UPSTREAM_REVIEW_2026-11-05.md),
 the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
 the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md), the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
@@ -14,8 +15,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
 | Delivered fork | `master` and release tag `shvia-v1.2.47` at `895ab37d8178155db8b373a7e25a84a3c500d3c2`; release published 2026-11-02T19:01:33 UTC | Two binaries and `SHA256SUMS` are published. Metadata was checked; this round did not rebuild or digest-verify the assets. Existing [fork PR #53](https://github.com/samirhvbr/strix/pull/53) prepares 1.2.48/image 1.3.1 and remains open. |
-| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed upstream is `09536cf1`: #1634 is equivalent to the carried fix, while #1625's Opengrep/image transition is not integrated. Selected #1654 import `91938128177fd90c7845dfd04b324f68bf501e7c` on `feat/upstream-contributions-20261105` passes 189 focused tests; Ruff/Mypy/Bandit pass; Pyright1256 versus baseline1257, none added. No full-suite rerun for this patch. |
-| Contribution review | 2026-11-05: all 597 prior records rechecked; 625 current records, 330 open upstream PRs and 210 open issues | #1634 merged upstream; images1.3.1/1.4.0 are published; new #1654 fixes damaged run history. Existing proposals #1638/#1639/#1648 and fork #53 are tracked without duplication. |
+| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Reviewed upstream `06015506`, including the CI rewrite and an agent skill update. Current reliability patches were validated on upstream branches and await a separate fork import review. |
+| Contribution review | 2026-11-07: 633 known items rechecked, with 345 open upstream PRs and 218 open issues in the pre-publication inventory | Replay body whitespace, source archive cleanup, PDF code formatting and a test fixture teardown defect were reproduced. The round report records their fixes, checks and limits. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -23,13 +24,12 @@ checkpoint only after its corresponding checks finish. A fetch, inventory refres
 review must never advance the integration checkpoint. A full suite passing does not turn a
 failed type-check or blocked remote workflow green.
 
-**Targeted follow-up, 2026-11-05:** the original #1654 CI still has three blocked
-pytest jobs. Independent fixes #1657/#1658/#1660 plus existing #1577 and #1654
+**Targeted follow-up, 2026-11-05:** the original #1654 CI had three blocked
+pytest jobs and later ended cancelled. Independent fixes #1657/#1658/#1660 plus existing #1577 and #1654
 pass the complete Linux Python 3.12–3.14 diagnostic matrix (2,534 passed / 3 xfailed
 per version). Latest selected fork code is `4f992de7` on
 `feat/pr1654-ci-followup-20261105`; #1657/#1577 were already covered in the fork.
-The ledger now has 633 records after this targeted analysis. The table above and
-full-inventory timestamp retain their prior completed checkpoints; see the
+The ledger reached 633 records after that targeted analysis. See the
 [separate follow-up evidence](upstream-tracking/ci-1654-2026-11-05.json) for the
 new selected imports, validations and exact next actions.
 
@@ -110,7 +110,8 @@ real scan data or raw environment dumps in this public ledger.
 
 ## Current limits and next work
 
-See the latest round for priorities: manual-price accounting on model-switch resume (#1622),
+The [November 5 round](UPSTREAM_REVIEW_2026-11-05.md) carries pending work on
+manual-price accounting on model-switch resume (#1622),
 deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Caido deadline
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
@@ -130,8 +131,9 @@ carried on the review branch, which delivers environment values to the agent wor
 before a master delivery. Their evidence, exact source versions, local commits and validation limits are in the latest
 round and ledger.
 
-Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
-Remote release metadata was rechecked during this follow-up: the latest published
-fork release is `shvia-v1.2.47` at `895ab37d`, with upstream package version 1.7.0
-by policy. Selected review-branch imports are unreleased. A source commit, built
+Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json)
+and the [November 7 inventory](upstream-tracking/round-2026-11-07.json).
+The latest published fork release is `shvia-v1.2.47` at `895ab37d`, with upstream
+package version 1.7.0. Fork PRs #53 and #55 track the proposed next deliveries.
+Selected review-branch imports are unreleased. A source commit, built
 wheel, remote CI, released binary and installed/runtime acceptance are separate evidence.

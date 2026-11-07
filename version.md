@@ -6,8 +6,9 @@ The previous release, 1.2.43, sat on `1.7.0` + 15 commits (`f7a32ae6`); its publ
 name `62b4964` (+14), one README-only commit earlier, and are preserved.
 
 **Sandbox image:** the fork pins `ghcr.io/usestrix/strix-sandbox:1.3.0` in `RuntimeSettings.image` and
-`scripts/install.sh` (a test keeps them equal). Upstream's own default, `1.3.1`, is not in the registry yet.
-Move both pins when `docker manifest inspect` finds it; see [the continuity record](docs/upstream-tracking.md).
+`scripts/install.sh` (a test keeps them equal). Images 1.3.1 and 1.4.0 are published.
+The reviewed upstream source defaults to 1.4.0. The pending fork 1.2.48 delivery prepares
+the paired pin update to 1.3.1. See [the continuity record](docs/upstream-tracking.md).
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
 > line for tools, and [`FORK.md`](FORK.md) is the changelog, one row per delivery. When you
