@@ -36,6 +36,21 @@ The Go TUI fix was verified separately at its published head with the real local
 
 At the recorded remote check, pytest was running on #1710, #1712 and #1713. #1708 had no reported Actions run or checks for its head. The current main CI and the previous four PRs timed out before a useful traceback. The cause of the remote stall remains pending.
 
+## CI follow-up
+
+Rechecked the four published heads on November 9. Greptile gave each 5/5 without actionable findings. GitHub reported no formal reviews or inline threads, and all four linked issues remained open without comments.
+
+| PR and head | Remote result |
+| --- | --- |
+| [#1708](https://github.com/usestrix/strix/pull/1708) at `040614cf` | Greptile and supply-chain passed. The Actions API returned zero runs for the head. |
+| [#1710](https://github.com/usestrix/strix/pull/1710) at `151eacbb` | Six checks passed. Both pytest jobs reached the 15-minute limit. After accounting for 21 additional passing cases, the printed results match main's prefix. [Run](https://github.com/usestrix/strix/actions/runs/42599090477) |
+| [#1712](https://github.com/usestrix/strix/pull/1712) at `0964106b` | Seven checks passed. Both pytest jobs reached the 15-minute limit. The 1,872 published result markers match main across both versions. [Run](https://github.com/usestrix/strix/actions/runs/42599523253) |
+| [#1713](https://github.com/usestrix/strix/pull/1713) at `5fb5ca8b` | Seven checks passed, including the Go race suite. Both pytest jobs reached the 15-minute limit. Their 20 failure markers and final 74 percent line match main. [Run](https://github.com/usestrix/strix/actions/runs/42600153315) |
+
+The isolated Ubuntu run at `92abd3b3a905d0e64d6f6c9fdaac919d234c436d` changed only the workflow on current main `215482eb`. The 120-second dump shows the cost callback entering LiteLLM's GitHub Copilot device authentication during provider inference. The five-minute bound interrupted the diagnostic with exit 124 after 1,908 passes, 20 failures and 3 expected failures. The 20 named failures are covered by the existing budget fixtures #1657, runner fixtures #1577 and price catalog test #1660. The upstream logs lack their own stack traces. [Linux stack](https://github.com/samirhvbr/strix/actions/runs/42636022292/job/129224277424) · [Main run](https://github.com/usestrix/strix/actions/runs/42431780800)
+
+The existing #1658 patch supplies the provider during cost estimation. The exact patch reapplied cleanly to current main, and 386 focused cost and provider tests passed with 3 expected failures on macOS. The full upstream matrix remains pending. The four contribution heads are unchanged. The #1708 description now links the Linux evidence. The [follow-up record](upstream-tracking/ci-1708-2026-11-09.json) pins the check URLs, review evidence and next resume conditions. [Existing fix #1658](https://github.com/usestrix/strix/pull/1658)
+
 ## Fork release and continuation
 
 Fork `master` and the peeled annotated tag `shvia-v1.2.49` resolve to `a9fd40e5383b2c255d6372233eda5652fbea8d6e`. Its `.fork-version` is 1.2.49 and the published release has two binaries and `SHA256SUMS`. The latest upstream release is 1.7.0. The fork delivers sandbox image 1.3.1 through #53; current upstream source defaults to 1.4.0. The release check covered metadata and ancestry. Installed binaries and asset digests were outside this round. [Fork release](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.49) · [Upstream release](https://github.com/usestrix/strix/releases/tag/v1.7.0)

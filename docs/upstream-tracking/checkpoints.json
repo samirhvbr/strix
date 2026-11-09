@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09T10:21:19.465135+00:00",
+  "updated_at": "2026-11-09T14:44:46.200331+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -707,22 +707,36 @@
       "summary": "Greptile5/5; no change requested."
     },
     "latest_targeted_followup": {
-      "checked_at": "2026-11-05T15:54:10.766347+00:00",
-      "record": "ci-1654-2026-11-05.json",
-      "report": "../UPSTREAM_CI_1654_2026-11-05.md",
-      "scope": "Targeted follow-up for PR1654 CI; no new all-item inventory or full upstream synchronization.",
-      "ledger_records": 633,
-      "original_ci_status": "in_progress",
-      "diagnostic_ci_status": "completed",
-      "diagnostic_ci_conclusion": "success",
+      "checked_at": "2026-11-09T14:44:46.200331+00:00",
+      "record": "ci-1708-2026-11-09.json",
+      "report": "../UPSTREAM_REVIEW_2026-11-09.md#ci-follow-up",
+      "scope": "Targeted CI and review follow-up for #1708, #1710, #1712 and #1713.",
       "next_resume": [
-        "Re-read this record and PR1654 current head/checks, including jobs that no longer appear open.",
-        "Monitor maintainer integration of1577/1657/1658/1660; rerun1654 only against a base that contains the fixes. Account has no upstream push/maintain permission.",
-        "Compare source/imported heads before taking later changes; do not cherry-pick1657/1577 again into the fork.",
-        "The fork branch is separate from master/release; preserve existing PR53 and concurrent local catalog fix9e1af834 when reconciling overlap."
+        "Refresh all four exact PR heads and reviews. Check whether #1708 has a hosted upstream workflow run.",
+        "Follow the current cost-inference fix #1658 and the existing baseline test fixes #1577/#1657/#1660. Retest the independent PRs on a base containing accepted fixes.",
+        "Keep this targeted follow-up separate from the completed inventory cursor, code synchronization and release."
       ],
-      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/54"
-    }
+      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57"
+    },
+    "targeted_followup_history": [
+      {
+        "checked_at": "2026-11-05T15:54:10.766347+00:00",
+        "record": "ci-1654-2026-11-05.json",
+        "report": "../UPSTREAM_CI_1654_2026-11-05.md",
+        "scope": "Targeted follow-up for PR1654 CI; no new all-item inventory or full upstream synchronization.",
+        "ledger_records": 633,
+        "original_ci_status": "in_progress",
+        "diagnostic_ci_status": "completed",
+        "diagnostic_ci_conclusion": "success",
+        "next_resume": [
+          "Re-read this record and PR1654 current head/checks, including jobs that no longer appear open.",
+          "Monitor maintainer integration of1577/1657/1658/1660; rerun1654 only against a base that contains the fixes. Account has no upstream push/maintain permission.",
+          "Compare source/imported heads before taking later changes; do not cherry-pick1657/1577 again into the fork.",
+          "The fork branch is separate from master/release; preserve existing PR53 and concurrent local catalog fix9e1af834 when reconciling overlap."
+        ],
+        "fork_pull_request": "https://github.com/samirhvbr/strix/pull/54"
+      }
+    ]
   },
   "version_release_audit": "release-audit.json",
   "publication_scope": {
