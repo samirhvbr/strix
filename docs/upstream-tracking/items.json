@@ -90011,6 +90011,14 @@
           "decision": "already_covered",
           "source_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
           "record": "ci-base-fixes-2026-11-09.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:17:51.241613+00:00",
+          "event": "maintainer_review_requested",
+          "decision": "already_covered",
+          "source_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+          "comment_url": "https://github.com/usestrix/strix/pull/1577#issuecomment-6743640575",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
       "analyzed_version": {
@@ -102815,6 +102823,14 @@
           "decision": "already_covered",
           "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
           "record": "ci-base-fixes-2026-11-09.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:17:51.241613+00:00",
+          "event": "maintainer_review_requested",
+          "decision": "already_covered",
+          "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+          "comment_url": "https://github.com/usestrix/strix/pull/1657#issuecomment-6743639971",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
       "last_checked": "2026-11-09T15:11:43.288929+00:00",
@@ -103054,6 +103070,14 @@
           "event": "upstream_ci_base_recheck",
           "decision": "adapted",
           "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+          "record": "ci-base-fixes-2026-11-09.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:17:51.241613+00:00",
+          "event": "maintainer_review_requested",
+          "decision": "adapted",
+          "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+          "comment_url": "https://github.com/usestrix/strix/pull/1658#issuecomment-6743639428",
           "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
@@ -103318,6 +103342,14 @@
           "event": "upstream_ci_base_recheck",
           "decision": "adapted",
           "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+          "record": "ci-base-fixes-2026-11-09.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:17:51.241613+00:00",
+          "event": "maintainer_review_requested",
+          "decision": "adapted",
+          "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+          "comment_url": "https://github.com/usestrix/strix/pull/1660#issuecomment-6743641174",
           "record": "ci-base-fixes-2026-11-09.json"
         }
       ],

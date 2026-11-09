@@ -309,5 +309,44 @@
     "Once main carries the fixes, refresh the merge refs for #1708, #1710, #1712 and #1713 and inspect fresh CI. A rerun of an old workflow keeps its original SHA and ref.",
     "Confirm the Actions workflow starts on #1708 separately from its passing third-party checks.",
     "Keep the diagnostic result, upstream CI, and fork synchronization checkpoint separate."
-  ]
+  ],
+  "maintainer_review_requests": {
+    "verified_at": "2026-11-09T15:17:51.241613+00:00",
+    "validated_run": "https://github.com/samirhvbr/strix/actions/runs/42641120618",
+    "observed_main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+    "requests": {
+      "1658": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1658#issuecomment-6743639428",
+        "posted_at": "2026-11-09T15:16:36Z",
+        "author": "samirhvbr",
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1657": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1657#issuecomment-6743639971",
+        "posted_at": "2026-11-09T15:16:37Z",
+        "author": "samirhvbr",
+        "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1577": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1577#issuecomment-6743640575",
+        "posted_at": "2026-11-09T15:16:39Z",
+        "author": "samirhvbr",
+        "head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1660": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1660#issuecomment-6743641174",
+        "posted_at": "2026-11-09T15:16:40Z",
+        "author": "samirhvbr",
+        "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      }
+    }
+  }
 }

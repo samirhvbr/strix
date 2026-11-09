@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-09T15:11:43.288929+00:00",
+  "updated_at": "2026-11-09T15:17:51.241613+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -717,7 +717,9 @@
         "Confirm the Actions workflow starts on #1708 separately from its passing third-party checks.",
         "Keep the diagnostic result, upstream CI, and fork synchronization checkpoint separate."
       ],
-      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57"
+      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57",
+      "maintainer_review_requests_verified_at": "2026-11-09T15:17:51.241613+00:00",
+      "upstream_integration_pending": true
     },
     "targeted_followup_history": [
       {
