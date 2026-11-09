@@ -51,6 +51,21 @@ The isolated Ubuntu run at `92abd3b3a905d0e64d6f6c9fdaac919d234c436d` changed on
 
 The existing #1658 patch supplies the provider during cost estimation. The exact patch reapplied cleanly to current main, and 386 focused cost and provider tests passed with 3 expected failures on macOS. The full upstream matrix remains pending. The four contribution heads are unchanged. The #1708 description now links the Linux evidence. The [follow-up record](upstream-tracking/ci-1708-2026-11-09.json) pins the check URLs, review evidence and next resume conditions. [Existing fix #1658](https://github.com/usestrix/strix/pull/1658)
 
+## Base fixes for CI
+
+Current upstream main is `215482eb2204cd30ac6b87520e3f5c6511e2e2e8`. The four PRs are open and their heads are outside its ancestry. All apply cleanly in a three-way merge and together in the diagnostic branch. Each has a Greptile 5/5 result and no formal human review or inline thread. GitHub reports `REVIEW_REQUIRED` and `BLOCKED`.
+
+| PR and head | Remaining gap in main | Recorded upstream check |
+| --- | --- | --- |
+| [#1658](https://github.com/usestrix/strix/pull/1658) at `d48174eb` | Two cost estimators still infer a provider and can wait for Copilot device authentication. | Pytest 3.12 completes with 20 failures from the other three gaps below. [CI](https://github.com/usestrix/strix/actions/runs/42055312290) |
+| [#1657](https://github.com/usestrix/strix/pull/1657) at `072a5178` | Three child-runner calls still omit `skills`, causing seven budget-test failures. | Historical pytest jobs cancelled. [CI](https://github.com/usestrix/strix/actions/runs/42054380267) |
+| [#1577](https://github.com/usestrix/strix/pull/1577) at `d21e58bc` | One of five telemetry fixtures is already covered by #1592. Four remain, causing twelve failures. | Historical pytest jobs cancelled. [CI](https://github.com/usestrix/strix/actions/runs/39988365999) |
+| [#1660](https://github.com/usestrix/strix/pull/1660) at `23271d8a` | One resolver test still depends on the live Grok catalog. | Historical pytest jobs cancelled. The actionlint installer failed to extract its download before linting started. Current actionlint passes locally. [CI](https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326523) |
+
+The fork diagnostic at `29a6a8cb4ea4949d14ce7eac1cc7f5a1ebf49d55` tested current main plus the four original patches. Both Ubuntu jobs completed with **2,524 passed and 3 xfailed**. Python 3.12 took 286.25 seconds and 3.14 took 273.39 seconds. The 71 focused tests and local actionlint also passed. This verifies the combined fixes against the current base. The individual upstream checks retain their earlier results. [Linux matrix](https://github.com/samirhvbr/strix/actions/runs/42641120618)
+
+The current account has read access to upstream and write access to the fork. The upstream maintainers own integration. After main carries the fixes, validate #1708, #1710, #1712 and #1713 with new executions against the updated base. GitHub's rerun operation retains the old SHA and ref. The previous results remain in the [CI follow-up](#ci-follow-up), and the [base-fix record](upstream-tracking/ci-base-fixes-2026-11-09.json) pins this review and its exact resume condition. [GitHub rerun behavior](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs)
+
 ## Fork release and continuation
 
 Fork `master` and the peeled annotated tag `shvia-v1.2.49` resolve to `a9fd40e5383b2c255d6372233eda5652fbea8d6e`. Its `.fork-version` is 1.2.49 and the published release has two binaries and `SHA256SUMS`. The latest upstream release is 1.7.0. The fork delivers sandbox image 1.3.1 through #53; current upstream source defaults to 1.4.0. The release check covered metadata and ancestry. Installed binaries and asset digests were outside this round. [Fork release](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.49) · [Upstream release](https://github.com/usestrix/strix/releases/tag/v1.7.0)

@@ -1403,6 +1403,16 @@
           1712,
           1713
         ]
+      },
+      {
+        "at": "2026-11-09T15:11:43.288929+00:00",
+        "record": "ci-base-fixes-2026-11-09.json",
+        "upstream_prs": [
+          1658,
+          1657,
+          1577,
+          1660
+        ]
       }
     ]
   },
@@ -89828,8 +89838,8 @@
       "url": "https://github.com/usestrix/strix/pull/1577",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-09T09:55:23.656519+00:00",
-      "last_checked_basis": "Live individually addressed GitHub GraphQL lookup of every known ID, including closed/merged items.",
+      "last_checked": "2026-11-09T15:11:43.288929+00:00",
+      "last_checked_basis": "Exact head, ancestor/equivalence check, GitHub review/CI and clean merge-tree against current main.",
       "updated_at": "2026-10-23T16:39:40Z",
       "source": {
         "observed_head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
@@ -89877,6 +89887,17 @@
         "record": "ci-1654-2026-11-05.json",
         "limits": [
           "Full upstream acceptance remains a maintainer action."
+        ],
+        "base_ci_rechecks": [
+          {
+            "checked_at": "2026-11-09T15:11:43.288929+00:00",
+            "record": "ci-base-fixes-2026-11-09.json",
+            "head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+            "main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+            "in_main": "partial",
+            "merge_tree": "bfdb5883d60bbdf0b7ac20e31deeb2a89267e043",
+            "historical_ci_summary": "Three historical pytest jobs were cancelled at the six-hour limit. Other checks passed except the aggregate."
+          }
         ]
       },
       "evidence": [
@@ -89983,6 +90004,13 @@
           "decision": "already_covered",
           "source_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
           "record": "ci-1654-2026-11-05.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "event": "upstream_ci_base_recheck",
+          "decision": "already_covered",
+          "source_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
       "analyzed_version": {
@@ -89997,7 +90025,16 @@
         "scope": "State/head/update/merge metadata. Reviewed/imported source versions and adoption decisions preserved unless a separate event below records reassessment.",
         "verified_changes": {},
         "decision_preserved": true
-      }
+      },
+      "targeted_reviews": [
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "observed_upstream_base": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+          "reviewed_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+          "conclusion": "Root-prompt telemetry fixture is already covered by d6f4bc5c from #1592. Four fixtures remain missing, and a three-way merge adds those four lines cleanly. The observed missing-telemetry failures affect twelve tests.",
+          "record": "ci-base-fixes-2026-11-09.json"
+        }
+      ]
     },
     {
       "id": "usestrix/strix#pr:1578",
@@ -102771,10 +102808,17 @@
           "decision": "already_covered",
           "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
           "record": "ci-1654-2026-11-05.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "event": "upstream_ci_base_recheck",
+          "decision": "already_covered",
+          "source_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
-      "last_checked": "2026-11-09T09:55:23.656519+00:00",
-      "last_checked_basis": "Live individually addressed GitHub GraphQL lookup of every known ID, including closed/merged items.",
+      "last_checked": "2026-11-09T15:11:43.288929+00:00",
+      "last_checked_basis": "Exact head, ancestor/equivalence check, GitHub review/CI and clean merge-tree against current main.",
       "updated_at": "2026-11-05T15:52:56Z",
       "upstream_state": "OPEN",
       "latest_recheck": {
@@ -102928,6 +102972,17 @@
             ],
             "human_reviews": []
           }
+        ],
+        "base_ci_rechecks": [
+          {
+            "checked_at": "2026-11-09T15:11:43.288929+00:00",
+            "record": "ci-base-fixes-2026-11-09.json",
+            "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+            "main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+            "in_main": "absent",
+            "merge_tree": "3ba0189b9bdd997e29464cb68466b6bc6b85865b",
+            "historical_ci_summary": "Three historical pytest jobs were cancelled at the six-hour limit. Other checks passed except the aggregate."
+          }
         ]
       },
       "linked_items": [
@@ -102958,6 +103013,13 @@
           "recorded_at": "2026-11-07T12:50:44.742875+00:00",
           "observed_upstream_base": "06015506625a78b981ae0b34be40239fc1b389be",
           "conclusion": "Open overlapping proposal #1668. Reviewed current scope before selecting new work. Keep existing validated fork decision and coordinate through upstream review."
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "observed_upstream_base": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+          "reviewed_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+          "conclusion": "All three calls still omit skills in current main. Patch adds the required keyword across two budget-test files and fixes the seven observed failures. Merge applies cleanly.",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ]
     },
@@ -102986,10 +103048,17 @@
           "decision": "adapted",
           "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
           "record": "ci-1654-2026-11-05.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "event": "upstream_ci_base_recheck",
+          "decision": "adapted",
+          "source_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
-      "last_checked": "2026-11-09T14:44:46.200331+00:00",
-      "last_checked_basis": "Exact upstream head and independent reproduction on current main.",
+      "last_checked": "2026-11-09T15:11:43.288929+00:00",
+      "last_checked_basis": "Exact head, ancestor/equivalence check, GitHub review/CI and clean merge-tree against current main.",
       "updated_at": "2026-11-05T15:52:59Z",
       "upstream_state": "OPEN",
       "latest_recheck": {
@@ -103160,6 +103229,17 @@
             "seconds": 191.59,
             "limits": "Focused local suite; dependency warnings and aiohttp client-session cleanup messages were emitted. This is separate from upstream CI."
           }
+        ],
+        "base_ci_rechecks": [
+          {
+            "checked_at": "2026-11-09T15:11:43.288929+00:00",
+            "record": "ci-base-fixes-2026-11-09.json",
+            "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+            "main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+            "in_main": "absent",
+            "merge_tree": "f943dbe6e3180b49067951da0651637d8dd47afd",
+            "historical_ci_summary": "Python 3.12 completed with 20 failed, 2503 passed and 3 xfailed. Seven budget fixture failures, twelve runner telemetry fixture failures and one Grok price-catalog assertion remain on the old base. Python 3.13 and 3.14 also reported failure."
+          }
         ]
       },
       "linked_items": [
@@ -103197,6 +103277,13 @@
           "observed_upstream_base": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
           "conclusion": "Linux runner reproduced the cost-inference wait. The existing patch was rechecked on current source.",
           "record": "ci-1708-2026-11-09.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "observed_upstream_base": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+          "reviewed_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+          "conclusion": "Main still omits the resolved provider in both cost estimators. This patch removes the confirmed Copilot device-login wait. Three-way merge and joint cherry-pick are clean.",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ]
     },
@@ -103225,10 +103312,17 @@
           "decision": "adapted",
           "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
           "record": "ci-1654-2026-11-05.json"
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "event": "upstream_ci_base_recheck",
+          "decision": "adapted",
+          "source_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ],
-      "last_checked": "2026-11-09T09:55:23.656519+00:00",
-      "last_checked_basis": "Live individually addressed GitHub GraphQL lookup of every known ID, including closed/merged items.",
+      "last_checked": "2026-11-09T15:11:43.288929+00:00",
+      "last_checked_basis": "Exact head, ancestor/equivalence check, GitHub review/CI and clean merge-tree against current main.",
       "updated_at": "2026-11-05T15:53:02Z",
       "upstream_state": "OPEN",
       "latest_recheck": {
@@ -103384,6 +103478,17 @@
             ],
             "human_reviews": []
           }
+        ],
+        "base_ci_rechecks": [
+          {
+            "checked_at": "2026-11-09T15:11:43.288929+00:00",
+            "record": "ci-base-fixes-2026-11-09.json",
+            "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+            "main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+            "in_main": "absent",
+            "merge_tree": "fcbb7f3d20535f42d5053a90410d37a8b11cda6d",
+            "historical_ci_summary": "Historical pytest jobs were cancelled. Actionlint installation downloaded 92 bytes and gzip failed before lint ran. Current combined tree passes actionlint locally, and the current workflows job is path-gated."
+          }
         ]
       },
       "linked_items": [
@@ -103414,6 +103519,13 @@
           "recorded_at": "2026-11-07T12:50:44.742875+00:00",
           "observed_upstream_base": "06015506625a78b981ae0b34be40239fc1b389be",
           "conclusion": "Open overlapping proposal #1669. Reviewed current scope before selecting new work. Keep existing validated fork decision and coordinate through upstream review."
+        },
+        {
+          "recorded_at": "2026-11-09T15:11:43.288929+00:00",
+          "observed_upstream_base": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+          "reviewed_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+          "conclusion": "Current main still asserts against the live Grok price map. This test-only patch isolates the equal-price resolver contract with a synthetic catalog. Its shared pricing-test file merges cleanly with #1658.",
+          "record": "ci-base-fixes-2026-11-09.json"
         }
       ]
     },
