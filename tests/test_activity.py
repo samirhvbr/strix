@@ -96,12 +96,17 @@ def test_shows_what_was_said_and_called_but_not_the_task_or_system_guidance(tmp_
 
 
 def test_masks_credentials_and_makes_control_bytes_harmless(tmp_path: Path) -> None:
-    text = json.dumps(read_activity(_run(tmp_path, _session())))
+    window = read_activity(_run(tmp_path, _session()))
+    text = json.dumps(window)
 
     for secret in ("abc.def.ghi-123456", "sid=hunter2"):
         assert secret not in text
     assert "[REDACTED_SECRET]" in text
-    assert "\x1b" not in text
+    # Look at the rows, not at their JSON: `json.dumps` writes ESC as `\u001b`, so a check on the
+    # dump passes with or without the sanitizing.
+    rows = [row["text"] for row in window["events"]]
+    assert not any("\x1b" in row for row in rows)
+    assert "\\x1b[2Jbody" in rows[2]  # shown, not dropped: the person sees the target sent it
     # The header's value goes, not the rest of the command line: the request stays readable.
     assert "https://t.example/login" in text
 
@@ -163,3 +168,92 @@ def test_the_command_prints_one_json_line_and_says_nothing_private_when_it_fails
     captured = capsys.readouterr()
     assert captured.out == ""
     assert captured.err.strip() == '{"error":"activity_unavailable"}'
+
+
+def test_an_inline_image_is_named_and_never_embedded(tmp_path: Path) -> None:
+    blob = "data:image/png;base64," + "A" * 200
+    rows: list[tuple[str, dict[str, Any]]] = [
+        ("root", {"type": "function_call_output", "output": f"screenshot {blob} done"}),
+        ("root", {"type": "function_call_output", "output": [{"type": "input_image", "x": blob}]}),
+    ]
+
+    shown = [row["text"] for row in read_activity(_run(tmp_path, rows))["events"]]
+
+    assert shown == ["screenshot [image] done", "[image]"]
+
+
+def test_the_database_is_opened_read_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    run_dir = _run(tmp_path, _session())
+    opened: list[tuple[str, Any]] = []
+    real_connect = sqlite3.connect
+
+    def spy(database: Any, *args: Any, **kwargs: Any) -> sqlite3.Connection:
+        opened.append((str(database), kwargs.get("uri")))
+        return real_connect(database, *args, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", spy)
+    read_activity(run_dir)
+
+    assert len(opened) == 1
+    database, uri = opened[0]
+    assert uri is True and database.endswith("agents.db?mode=ro")
+
+
+def test_a_scan_keeps_writing_while_the_window_is_read(tmp_path: Path) -> None:
+    run_dir = _run(tmp_path, _session())
+    insert = (
+        "insert into agent_messages (id, session_id, message_data, created_at) "
+        "values (?, 'root', ?, '2026-11-05 10:01:00')"
+    )
+    writer = sqlite3.connect(runtime_state_dir(run_dir) / "agents.db")
+    try:
+        writer.execute("pragma journal_mode=wal")
+        writer.execute(insert, (100, json.dumps({"role": "assistant", "content": "written live"})))
+        writer.commit()
+
+        assert read_activity(run_dir)["events"][-1]["text"] == "written live"
+
+        # The reader took nothing the writer needs: it commits again right after a read.
+        writer.execute(insert, (101, json.dumps({"role": "assistant", "content": "and again"})))
+        writer.commit()
+        assert read_activity(run_dir, after=100)["events"][-1]["text"] == "and again"
+    finally:
+        writer.close()
+
+
+def test_after_a_compaction_the_recent_rows_come_again_under_new_ids(tmp_path: Path) -> None:
+    """The cursor is the stored row id and a compaction is the one writer that is not append-only.
+
+    `replace_session_items` (strix/core/sessions.py) deletes an agent's rows and inserts the
+    checkpoint and the recent rows again, with new ids, so a consumer that follows the cursor sees
+    the recent rows twice. The window states that limit (docs/PENTEST/activity-window.md); this
+    test pins it, so lifting it (a stable key and a consumer that drops repeats) changes it on
+    purpose.
+    """
+    task: tuple[str, dict[str, Any]] = ("root", {"role": "user", "content": "task"})
+    steps = [("root", {"role": "assistant", "content": f"step {n}"}) for n in range(1, 7)]
+    run_dir = _run(tmp_path, [task, *steps])
+    cursor = read_activity(run_dir)["last_id"]
+
+    checkpoint = {"role": "user", "content": "<conversation-checkpoint>steps 1 to 4</conversation>"}
+    recent = [item for _, item in steps[-2:]]
+    database = sqlite3.connect(runtime_state_dir(run_dir) / "agents.db")
+    try:
+        database.execute("delete from agent_messages where session_id = 'root'")
+        for new_id, item in enumerate([checkpoint, *recent], start=cursor + 1):
+            database.execute(
+                "insert into agent_messages (id, session_id, message_data, created_at) "
+                "values (?, 'root', ?, '2026-11-05 10:02:00')",
+                (new_id, json.dumps(item)),
+            )
+        database.commit()
+    finally:
+        database.close()
+
+    again = read_activity(run_dir, after=cursor)
+
+    # The checkpoint is the agent's first stored row now, so it is skipped like an opening task;
+    # the two recent rows were already shown and come with ids past the old cursor.
+    assert [row["text"] for row in again["events"]] == ["step 5", "step 6"]
+    assert all(row["id"] > cursor for row in again["events"])
+    assert again["last_id"] == cursor + 3

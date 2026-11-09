@@ -1,13 +1,16 @@
 # Version — SHVIA fork of Strix
 
-**Current version:** `1.2.49`
+**Current version:** `1.2.50`
 **Released upstream base:** Strix `1.7.0` + 64 commits (`6b7ae2eb`, verified ancestry).
 The previous release, 1.2.43, sat on `1.7.0` + 15 commits (`f7a32ae6`); its published notes
 name `62b4964` (+14), one README-only commit earlier, and are preserved.
 
 **Sandbox image:** the fork pins `ghcr.io/usestrix/strix-sandbox:1.3.1` in `RuntimeSettings.image` and
-`scripts/install.sh` (a test keeps them equal). It is upstream's own default, published for `linux/amd64` and
-`linux/arm64` (1.46 GB and 1.43 GB compressed in the registry manifests); the fork had held `1.3.0` from 1.2.44 to 1.2.47 while that tag was missing. Before moving a pin
+`scripts/install.sh` (a test keeps them equal). It was upstream's own default until upstream's `main` moved to
+`1.4.0` on 2026-11-04 (`cb581bf9`, the commit of #1625, which swaps Semgrep for Opengrep); the fork stays on
+`1.3.1` until it takes that change (still unimported, see [the review of 2026-10-30](docs/UPSTREAM_REVIEW_2026-10-30.md)).
+`1.3.1` is published for `linux/amd64` and `linux/arm64` (1.46 GB and 1.43 GB compressed in the registry
+manifests); the fork had held `1.3.0` from 1.2.44 to 1.2.47 while that tag was missing. Before moving a pin
 again, `docker manifest inspect` must find the tag; see [the continuity record](docs/upstream-tracking.md).
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one
