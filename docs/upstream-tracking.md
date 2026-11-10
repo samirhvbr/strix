@@ -1,6 +1,8 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest reliability review](UPSTREAM_REVIEW_2026-11-07.md),
+Start every review here, then read the [latest reliability review](UPSTREAM_REVIEW_2026-11-10.md),
+the [November 9 round](UPSTREAM_REVIEW_2026-11-09.md),
+the [November 7 round](UPSTREAM_REVIEW_2026-11-07.md),
 the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
 the [November 5 full round](UPSTREAM_REVIEW_2026-11-05.md),
 the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
@@ -14,9 +16,9 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Delivered fork | `master` and release tag `shvia-v1.2.47` at `895ab37d8178155db8b373a7e25a84a3c500d3c2`; release published 2026-11-02T19:01:33 UTC | Two binaries and `SHA256SUMS` are published. Metadata was checked; this round did not rebuild or digest-verify the assets. Existing [fork PR #53](https://github.com/samirhvbr/strix/pull/53) prepares 1.2.48/image 1.3.1 and remains open. |
-| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Reviewed upstream `06015506`, including the CI rewrite and an agent skill update. Current reliability patches were validated on upstream branches and await a separate fork import review. |
-| Contribution review | 2026-11-07: 633 known items rechecked, with 345 open upstream PRs and 218 open issues in the pre-publication inventory | Replay body whitespace, source archive cleanup, PDF code formatting and a test fixture teardown defect were reproduced. The round report records their fixes, checks and limits. |
+| Delivered fork | `master` and the peeled `shvia-v1.2.50` tag at `127cdb0f47a25fe495beec528a3c46db2eeae621`, published 2026-11-09T16:08:46 UTC | Two binaries and `SHA256SUMS` are published. The review verified metadata and tag ancestry. Fork #56 corrects activity-window behavior and its release record. |
+| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed upstream `e0594808`. The fork review branch includes the earlier #54 merge. Newly reviewed upstream patches await separate evaluation for import. |
+| Contribution review | 2026-11-10. Verified 686 of 689 known items and retained the prior metadata for three unavailable PRs. The pre-publication inventory has 354 open upstream PRs and 231 open issues. | Reproduced installer scratch leaks, invalid transcript JSON, uncertain steering delivery and unchecked top-up receipts. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -29,7 +31,8 @@ pytest jobs and later ended cancelled. Independent fixes #1657/#1658/#1660 plus 
 pass the complete Linux Python 3.12–3.14 diagnostic matrix (2,534 passed / 3 xfailed
 per version). Latest selected fork code is `4f992de7` on
 `feat/pr1654-ci-followup-20261105`; #1657/#1577 were already covered in the fork.
-The ledger reached 633 records after that targeted analysis. See the
+Fork #54 later merged that branch into `feat/upstream-contributions-20261105` at
+`b5cdcd6b`. The ledger reached 633 records after the November 5 analysis. See the
 [separate follow-up evidence](upstream-tracking/ci-1654-2026-11-05.json) for the
 new selected imports, validations and exact next actions.
 
@@ -116,24 +119,28 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image:** the 2026-11-05 full-round audit confirmed that images 1.3.1
-and 1.4.0 are published, resolving the publication part of
-[upstream issue #1628](https://github.com/usestrix/strix/issues/1628). The delivered
-fork still pins 1.3.0; existing [fork PR #53](https://github.com/samirhvbr/strix/pull/53)
-prepares the 1.3.1 transition. Publication, fork integration and released runtime
-validation remain separate; this CI follow-up did not change the pin or duplicate #53.
+**Sandbox image:** images 1.3.1 and 1.4.0 are published, resolving the publication
+part of [upstream issue #1628](https://github.com/usestrix/strix/issues/1628).
+The delivered fork pins 1.3.1 through [fork PR #53](https://github.com/samirhvbr/strix/pull/53).
+Current upstream source defaults to 1.4.0. The review branch retains its own source pin.
 
-The new fixes are [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
+The November 5 review carries [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
 branch. API-spec issue [#1632](https://github.com/usestrix/strix/issues/1632) awaits a maintainer contract;
 [#1633](https://github.com/usestrix/strix/issues/1633) has the proposal [#1635](https://github.com/usestrix/strix/pull/1635),
 carried on the review branch, which delivers environment values to the agent workspace and needs the owner's confirmation
 before a master delivery. Their evidence, exact source versions, local commits and validation limits are in the latest
-round and ledger.
+November 5 report and ledger.
 
-Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json)
-and the [November 7 inventory](upstream-tracking/round-2026-11-07.json).
-The latest published fork release is `shvia-v1.2.47` at `895ab37d`, with upstream
-package version 1.7.0. Fork PRs #53 and #55 track the proposed next deliveries.
-Selected review-branch imports are unreleased. A source commit, built
-wheel, remote CI, released binary and installed/runtime acceptance are separate evidence.
+The [November 10 inventory](upstream-tracking/round-2026-11-10.json) records the current
+release verification and CI status. [release-audit.json](upstream-tracking/release-audit.json)
+retains the earlier audit. The latest published fork release is `shvia-v1.2.50` at
+`127cdb0f`, with upstream package version 1.7.0. Selected review-branch imports are
+unreleased. A source commit, built wheel, remote CI, released binary and installed/runtime
+acceptance are separate evidence.
+
+The four upstream CI prerequisites (#1577, #1657, #1658 and #1660) remain open. The next
+recheck should confirm their presence in main before requesting fresh base-aware CI for
+#1708, #1710, #1712 and #1713. The latest report also records the #1401 withdrawal and
+retained fork implementation, #1714's proposed fix for #1709, the two new patches and
+the open steering and billing decisions.

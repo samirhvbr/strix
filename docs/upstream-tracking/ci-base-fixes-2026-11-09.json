@@ -1,0 +1,352 @@
+{
+  "checked_at": "2026-11-09T15:11:43.288929+00:00",
+  "scope": "Targeted review of upstream base fixes #1658, #1657, #1577 and #1660.",
+  "upstream_main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+  "upstream_permissions": {
+    "pull": true,
+    "push": false,
+    "maintain": false,
+    "admin": false
+  },
+  "upstream_rules_scope": "Public main ruleset lists pull-request, deletion and non-fast-forward rules. Classic protection endpoint returned 404 to the current account, so the complete enforced check policy was not established.",
+  "upstream_prs": {
+    "1658": {
+      "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+      "head_is_ancestor_of_main": false,
+      "in_main": "absent",
+      "merge_tree": "f943dbe6e3180b49067951da0651637d8dd47afd",
+      "conclusion": "Main still omits the resolved provider in both cost estimators. This patch removes the confirmed Copilot device-login wait. Three-way merge and joint cherry-pick are clean.",
+      "historical_ci_summary": "Python 3.12 completed with 20 failed, 2503 passed and 3 xfailed. Seven budget fixture failures, twelve runner telemetry fixture failures and one Grok price-catalog assertion remain on the old base. Python 3.13 and 3.14 also reported failure.",
+      "run_url": "https://github.com/usestrix/strix/actions/runs/42055312290",
+      "checked_at": "2026-11-09T15:11:43.288929+00:00",
+      "url": "https://github.com/usestrix/strix/pull/1658",
+      "state": "OPEN",
+      "branch_base_oid_returned_by_github": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "formal_reviews": 0,
+      "inline_threads": 0,
+      "bot_reviews": [
+        {
+          "author": "greptile-apps",
+          "score": 5,
+          "url": "https://github.com/usestrix/strix/pull/1658#issuecomment-6661969317"
+        }
+      ],
+      "relevant_historical_checks": [
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987786"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987801"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987879"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127345202760"
+        }
+      ]
+    },
+    "1657": {
+      "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+      "head_is_ancestor_of_main": false,
+      "in_main": "absent",
+      "merge_tree": "3ba0189b9bdd997e29464cb68466b6bc6b85865b",
+      "conclusion": "All three calls still omit skills in current main. Patch adds the required keyword across two budget-test files and fixes the seven observed failures. Merge applies cleanly.",
+      "historical_ci_summary": "Three historical pytest jobs were cancelled at the six-hour limit. Other checks passed except the aggregate.",
+      "run_url": "https://github.com/usestrix/strix/actions/runs/42054380267",
+      "checked_at": "2026-11-09T15:11:43.288929+00:00",
+      "url": "https://github.com/usestrix/strix/pull/1657",
+      "state": "OPEN",
+      "branch_base_oid_returned_by_github": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "formal_reviews": 0,
+      "inline_threads": 0,
+      "bot_reviews": [
+        {
+          "author": "greptile-apps",
+          "score": 5,
+          "url": "https://github.com/usestrix/strix/pull/1657#issuecomment-6661837499"
+        }
+      ],
+      "relevant_historical_checks": [
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338643076"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642848"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642680"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127542538318"
+        }
+      ]
+    },
+    "1577": {
+      "head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+      "head_is_ancestor_of_main": false,
+      "in_main": "partial",
+      "merge_tree": "bfdb5883d60bbdf0b7ac20e31deeb2a89267e043",
+      "conclusion": "Root-prompt telemetry fixture is already covered by d6f4bc5c from #1592. Four fixtures remain missing, and a three-way merge adds those four lines cleanly. The observed missing-telemetry failures affect twelve tests.",
+      "remaining_files": [
+        "tests/test_runner_interrupt.py",
+        "tests/test_runner_mcp.py",
+        "tests/test_runner_rate_limit.py",
+        "tests/test_runner_teardown.py"
+      ],
+      "already_present": {
+        "file": "tests/test_runner_root_prompt.py",
+        "commit": "d6f4bc5ced7118b713dcf280bd133cb76513f5a7"
+      },
+      "historical_ci_summary": "Three historical pytest jobs were cancelled at the six-hour limit. Other checks passed except the aggregate.",
+      "run_url": "https://github.com/usestrix/strix/actions/runs/39988365999",
+      "checked_at": "2026-11-09T15:11:43.288929+00:00",
+      "url": "https://github.com/usestrix/strix/pull/1577",
+      "state": "OPEN",
+      "branch_base_oid_returned_by_github": "14cc948c36e90517a774cf32bdfe5d8cd3605b62",
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "formal_reviews": 0,
+      "inline_threads": 0,
+      "bot_reviews": [
+        {
+          "author": "greptile-apps",
+          "score": 5,
+          "url": "https://github.com/usestrix/strix/pull/1577#issuecomment-6369878174"
+        }
+      ],
+      "relevant_historical_checks": [
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/39988365999/job/120533375254"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/39988365999/job/120533374866"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/39988365999/job/120533375050"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/39988365999/job/120691782330"
+        }
+      ]
+    },
+    "1660": {
+      "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+      "head_is_ancestor_of_main": false,
+      "in_main": "absent",
+      "merge_tree": "fcbb7f3d20535f42d5053a90410d37a8b11cda6d",
+      "conclusion": "Current main still asserts against the live Grok price map. This test-only patch isolates the equal-price resolver contract with a synthetic catalog. Its shared pricing-test file merges cleanly with #1658.",
+      "historical_ci_summary": "Historical pytest jobs were cancelled. Actionlint installation downloaded 92 bytes and gzip failed before lint ran. Current combined tree passes actionlint locally, and the current workflows job is path-gated.",
+      "run_url": "https://github.com/usestrix/strix/actions/runs/42057090513",
+      "actionlint_url": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326523",
+      "checked_at": "2026-11-09T15:11:43.288929+00:00",
+      "url": "https://github.com/usestrix/strix/pull/1660",
+      "state": "OPEN",
+      "branch_base_oid_returned_by_github": "09536cf1481731c790995bd8060db19a3b75ff48",
+      "mergeable": "MERGEABLE",
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "formal_reviews": 0,
+      "inline_threads": 0,
+      "bot_reviews": [
+        {
+          "author": "greptile-apps",
+          "score": 5,
+          "url": "https://github.com/usestrix/strix/pull/1660#issuecomment-6662221529"
+        }
+      ],
+      "relevant_historical_checks": [
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326774"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326441"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "CANCELLED",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326893"
+        },
+        {
+          "name": "workflows / actionlint",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326523"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "FAILURE",
+          "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127550898250"
+        }
+      ]
+    }
+  },
+  "diagnostic": {
+    "source_tree_sha": "e6c011d0f8deae9b2799749b0a2b5ce4b5daaccd",
+    "workflow_head_sha": "29a6a8cb4ea4949d14ce7eac1cc7f5a1ebf49d55",
+    "run_url": "https://github.com/samirhvbr/strix/actions/runs/42641120618",
+    "branch": "diagnostic/ci-base-fixes-20261109",
+    "cherry_picked_prs_in_order": [
+      1658,
+      1657,
+      1577,
+      1660
+    ],
+    "command": "timeout --signal=INT --kill-after=15s 7m uv run --frozen pytest -q -o faulthandler_timeout=120",
+    "local_checks": {
+      "focused_pytest": "71 passed",
+      "actionlint": "passed on the merged source tree and the diagnostic workflow",
+      "diff_check": "passed"
+    },
+    "result": {
+      "conclusion": "success",
+      "headSha": "29a6a8cb4ea4949d14ce7eac1cc7f5a1ebf49d55",
+      "jobs": [
+        {
+          "completedAt": "2026-11-09T15:10:44Z",
+          "conclusion": "success",
+          "databaseId": 129242189038,
+          "name": "Upstream base fixes (3.12)",
+          "startedAt": "2026-11-09T15:05:44Z",
+          "status": "completed",
+          "url": "https://github.com/samirhvbr/strix/actions/runs/42641120618/job/129242189038"
+        },
+        {
+          "completedAt": "2026-11-09T15:10:31Z",
+          "conclusion": "success",
+          "databaseId": 129242189366,
+          "name": "Upstream base fixes (3.14)",
+          "startedAt": "2026-11-09T15:05:43Z",
+          "status": "completed",
+          "url": "https://github.com/samirhvbr/strix/actions/runs/42641120618/job/129242189366"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/samirhvbr/strix/actions/runs/42641120618"
+    },
+    "pytest": {
+      "3.12": {
+        "passed": 2524,
+        "xfailed": 3,
+        "warnings": 106,
+        "seconds": 286.25,
+        "job_url": "https://github.com/samirhvbr/strix/actions/runs/42641120618/job/129242189038"
+      },
+      "3.14": {
+        "passed": 2524,
+        "xfailed": 3,
+        "warnings": 106,
+        "seconds": 273.39,
+        "job_url": "https://github.com/samirhvbr/strix/actions/runs/42641120618/job/129242189366"
+      }
+    },
+    "limits": "Combined current source plus four PR patches on Ubuntu. The diagnostic changes only the workflow, runs locked dependencies, and leaves the individual upstream PR checks separate."
+  },
+  "followup_condition": {
+    "pr_numbers": [
+      1708,
+      1710,
+      1712,
+      1713
+    ],
+    "trigger": "Recheck upstream integration/equivalence and new CI against a base with the fixes.",
+    "met": false,
+    "prior_record": "ci-1708-2026-11-09.json"
+  },
+  "next_resume": [
+    "Recheck the four base-fix heads and verify source equivalence on current upstream main. The upstream maintainers own integration.",
+    "Once main carries the fixes, refresh the merge refs for #1708, #1710, #1712 and #1713 and inspect fresh CI. A rerun of an old workflow keeps its original SHA and ref.",
+    "Confirm the Actions workflow starts on #1708 separately from its passing third-party checks.",
+    "Keep the diagnostic result, upstream CI, and fork synchronization checkpoint separate."
+  ],
+  "maintainer_review_requests": {
+    "verified_at": "2026-11-09T15:17:51.241613+00:00",
+    "validated_run": "https://github.com/samirhvbr/strix/actions/runs/42641120618",
+    "observed_main_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+    "requests": {
+      "1658": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1658#issuecomment-6743639428",
+        "posted_at": "2026-11-09T15:16:36Z",
+        "author": "samirhvbr",
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1657": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1657#issuecomment-6743639971",
+        "posted_at": "2026-11-09T15:16:37Z",
+        "author": "samirhvbr",
+        "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1577": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1577#issuecomment-6743640575",
+        "posted_at": "2026-11-09T15:16:39Z",
+        "author": "samirhvbr",
+        "head_sha": "d21e58bc6cc35b2478af50ce86b9500b3a9f2709",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      },
+      "1660": {
+        "comment_url": "https://github.com/usestrix/strix/pull/1660#issuecomment-6743641174",
+        "posted_at": "2026-11-09T15:16:40Z",
+        "author": "samirhvbr",
+        "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "state_at_verification": "OPEN",
+        "review_decision_at_verification": "REVIEW_REQUIRED"
+      }
+    }
+  }
+}
