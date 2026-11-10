@@ -36,10 +36,21 @@ def ledger_snapshot(
     )
     for item in tests:
         item["parent_test_id"] = parents.get(item["agent_id"])
+    # The model rows are summed here from the attempts, not read from the ``model_usage`` view:
+    # a ledger keeps the view it was created with, and the view never summed the cached input
+    # tokens. Since fork 1.2.53 a row carries them with ``unknown_cache_attempts`` (the calls that
+    # reported no cache figure), so a reader can tell a measured sum from a partial one; the same
+    # rule as ``unknown_token_attempts`` for the token counts.
     models = rows(
-        "SELECT test_id, agent_id, route, provider, model, cost_basis, attempt_count, "
-        "input_tokens, output_tokens, total_tokens, total_cost_usd, unknown_cost_attempts, "
-        "unknown_token_attempts, provider_duration_ms FROM model_usage "
+        "SELECT test_id, agent_id, route, provider, model, cost_basis, "
+        "COUNT(*) AS attempt_count, SUM(input_tokens) AS input_tokens, "
+        "SUM(output_tokens) AS output_tokens, SUM(cached_input_tokens) AS cached_input_tokens, "
+        "SUM(total_tokens) AS total_tokens, SUM(cost_usd) AS total_cost_usd, "
+        "SUM(CASE WHEN cost_usd IS NULL THEN 1 ELSE 0 END) AS unknown_cost_attempts, "
+        "SUM(CASE WHEN total_tokens IS NULL THEN 1 ELSE 0 END) AS unknown_token_attempts, "
+        "SUM(CASE WHEN cached_input_tokens IS NULL THEN 1 ELSE 0 END) AS unknown_cache_attempts, "
+        "SUM(duration_ms) AS provider_duration_ms FROM test_events "
+        "GROUP BY test_id, agent_id, route, provider, model, cost_basis "
         "ORDER BY agent_id, model, route, provider, cost_basis LIMIT ?"
     )
     events = rows(
