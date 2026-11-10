@@ -52,7 +52,7 @@ if [[ "${1:-}" == "pdf" ]]; then
   run="${1:-}"; [[ -n "$run" ]] || die "uso: strix-run pdf <run> [saida.pdf]  (veja: strix-run list)"
   rundir="$WORKDIR/strix_runs/$run"
   [[ -f "$rundir/run.json" ]] || die "run não encontrado: $rundir"
-  out="${2:-$rundir/strix-report-$run.pdf}"
+  out="${2:-$rundir/shvia-report-$run.pdf}"
   exec uv run --project "$REPO_DIR" python - "$rundir" "$out" <<'PYEOF'
 import sys
 from pathlib import Path
