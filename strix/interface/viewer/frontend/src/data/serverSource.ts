@@ -277,7 +277,7 @@ export async function sendReport(runName?: string | null): Promise<SendReportRes
     return {
       ok: true,
       password: String(data.password ?? ""),
-      filename: String(data.filename ?? "strix-report.pdf"),
+      filename: String(data.filename ?? "shvia-report.pdf"),
     };
   }
   return { ok: false, error: String(data.error ?? "unavailable") };

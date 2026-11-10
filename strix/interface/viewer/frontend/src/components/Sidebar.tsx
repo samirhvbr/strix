@@ -1,25 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  AlertTriangle,
-  Bot,
-  Users,
-  History,
-  Mail,
-  LogOut,
-  ChevronsUpDown,
-} from "lucide-react";
-import { LuGitPullRequestArrow } from "react-icons/lu";
-import { VscExtensions } from "react-icons/vsc";
-import { IoChatbubblesOutline } from "react-icons/io5";
+import { AlertTriangle, Bot, History, Mail, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ctaUrl, trackCta } from "@/lib/cta";
-import { UpgradeModal } from "@/components/UpgradeModal";
 import type { McpConnectionStatus } from "@/data/serverSource";
 import type { View } from "@/App";
 
 /**
- * Persistent left rail: a black rail with a right hairline border, an
- * account-switcher-style header, a single ungrouped list of h-9 nav rows (36px
+ * Persistent left rail: a black rail with a right hairline border, a
+ * ShvIA header, a single ungrouped list of h-9 nav rows (36px
  * icon slot, 14px label, rgba(255,255,255,0.12) active fill), a hairline
  * separator, and a user footer. Drag the right edge to resize; drag past the
  * collapse threshold to hide it, then click the left pull-zone to bring it back.
@@ -87,15 +74,7 @@ export default function Sidebar({
   });
   const [isResizing, setIsResizing] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [upgradeFeature, setUpgradeFeature] = useState<string | null>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
-
-  // Open the upgrade dialog for a platform feature, recording which feature
-  // drove the open (the dialog's own CTAs track the deeper conversion).
-  const openUpgrade = (slug: string, description: string) => {
-    trackCta(slug, "sidebar");
-    setUpgradeFeature(description);
-  };
 
   const persistWidth = useCallback((w: number) => {
     setWidth(w);
@@ -187,41 +166,19 @@ export default function Sidebar({
         )}
         style={{ width: collapsed ? 0 : width }}
       >
-        {/* Header — account-switcher stand-in (links out to Strix Cloud). */}
+        {/* Header: the ShvIA mark and name. Nothing here leaves the machine. */}
         <header className="relative flex flex-col gap-1 pt-1 min-w-[160px]">
           <div className="flex flex-row py-1 px-2">
             <div className="flex h-10 w-full flex-row items-center">
-              <a
-                href={ctaUrl("https://app.strix.ai", "logo")}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackCta("logo", "sidebar")}
-                className="flex flex-1 flex-row items-center gap-2 rounded-md py-2 pl-2.5 pr-1 min-w-0 transition-colors hover:bg-[rgba(255,255,255,0.06)]"
-                title="Open Strix Cloud"
-              >
-                <span
-                  className="flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500"
-                  style={{ width: 20, height: 20 }}
-                >
-                  <span className="text-[10px] font-semibold text-white">S</span>
-                </span>
+              <div className="flex flex-1 flex-row items-center gap-2 py-2 pl-2.5 pr-1 min-w-0">
+                <img src="./logo.png" alt="" className="h-6 w-6 flex-shrink-0 rounded-md" />
                 <span className="flex flex-1 flex-row items-center gap-2 min-w-0">
-                  <span className="truncate min-w-0 text-[14px] font-medium text-[#ededed]">Strix</span>
+                  <span className="truncate min-w-0 text-[14px] font-medium text-[#ededed]">ShvIA</span>
                   <span className="flex h-5 flex-shrink-0 items-center rounded px-2 text-[11px] font-medium text-[#888] bg-[rgba(255,255,255,0.08)]">
                     Local
                   </span>
                 </span>
-              </a>
-              <a
-                href={ctaUrl("https://app.strix.ai", "logo")}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackCta("logo", "sidebar")}
-                className="flex flex-none items-center rounded-md px-1.5 py-2 transition-colors hover:bg-[rgba(255,255,255,0.06)]"
-                aria-label="Open Strix Cloud"
-              >
-                <ChevronsUpDown className="h-4 w-4 text-[#666]" />
-              </a>
+              </div>
             </div>
           </div>
         </header>
@@ -269,48 +226,6 @@ export default function Sidebar({
                 onClick={onOpenEmail}
               />
             )}
-            <NavItem
-              icon={<IoChatbubblesOutline className="h-4 w-4" />}
-              label="Feedback & support"
-              active={view === "feedback"}
-              onClick={() => onSelectView("feedback")}
-            />
-
-            <hr className="mx-0 my-1 h-px w-full border-0 bg-[rgba(255,255,255,0.08)]" />
-
-            <NavItem
-              icon={<LuGitPullRequestArrow className="h-4 w-4" />}
-              label="PR Security Reviews"
-              active={false}
-              onClick={() =>
-                openUpgrade(
-                  "pr_reviews",
-                  "Strix reviews every pull request and flags exploitable changes before they merge."
-                )
-              }
-            />
-            <NavItem
-              icon={<VscExtensions className="h-4 w-4" />}
-              label="Integrations"
-              active={false}
-              onClick={() =>
-                openUpgrade(
-                  "integrations",
-                  "Sync findings to Jira, Linear, and Slack so fixes happen where your team already works."
-                )
-              }
-            />
-            <NavItem
-              icon={<Users className="h-4 w-4" />}
-              label="Members"
-              active={false}
-              onClick={() =>
-                openUpgrade(
-                  "members",
-                  "Invite your team, set roles, and share findings and run history across your org."
-                )
-              }
-            />
           </div>
         </nav>
 
@@ -337,12 +252,7 @@ export default function Sidebar({
               </button>
             ) : (
               <div className="flex items-center gap-2 rounded-md px-2.5 py-2">
-                <span
-                  className="flex flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-cyan-500"
-                  style={{ width: 20, height: 20 }}
-                >
-                  <span className="text-[9px] font-semibold text-white">S</span>
-                </span>
+                <img src="./logo.png" alt="" className="h-5 w-5 flex-shrink-0 rounded-[5px]" />
                 <span className="flex min-w-0 flex-1 flex-col text-left">
                   <span className="truncate text-[13px] font-medium text-[#ededed]">Local viewer</span>
                 </span>
@@ -386,13 +296,6 @@ export default function Sidebar({
 
       {/* Overlay during resize to prevent text selection. */}
       {isResizing && <div className="fixed inset-0 z-10 cursor-col-resize" />}
-
-      <UpgradeModal
-        open={upgradeFeature !== null}
-        description={upgradeFeature ?? ""}
-        source="sidebar"
-        onClose={() => setUpgradeFeature(null)}
-      />
     </>
   );
 }

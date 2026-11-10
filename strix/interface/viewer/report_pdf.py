@@ -1,14 +1,14 @@
 """Build and encrypt a branded PDF report for a run.
 
-The layout mirrors the Strix cloud pentest report (cover page, executive
-severity grid, per-finding detail with colored severity badges) but is rendered
-entirely locally with reportlab, so it ships without a browser or heavy system
-deps and keeps the report on the user's machine.
+The layout is a managed-service pentest report (cover page, executive severity
+grid, per-finding detail with colored severity badges) rendered entirely locally
+with reportlab, so it ships without a browser or heavy system deps and keeps the
+report on the user's machine. The cover carries the ShvIA mark and name.
 
 The PDF carries FULL finding detail, including proof-of-concept scripts, so it
 is encrypted end to end with AES-256. The password is generated locally with a
 CSPRNG, shown only to the local browser, and never leaves the machine except in
-the user's own hands. Strix cannot read the delivered report.
+the user's own hands. Nobody else can read the delivered report.
 """
 
 from __future__ import annotations
@@ -119,7 +119,18 @@ class _NumberedCanvas(pdfcanvas.Canvas):  # type: ignore[misc]  # reportlab base
 
 
 class _LogoMark(Flowable):  # type: ignore[misc]  # reportlab base is untyped
-    """The rounded-square Strix mark drawn inline (no raster asset to ship)."""
+    """The ShvIA shield mark drawn inline (no raster asset to ship).
+
+    Geometry is the 16 x 16 favicon of the SHVIA web app (`public/img/brand/favicon.svg`): a dark
+    rounded square, a shield split in a dark left half and a light right half, and the two blue
+    arcs of the mark. Points are written in that SVG's units (y down) and mapped to the canvas.
+    """
+
+    _DARK = colors.HexColor("#111317")
+    _SHIELD_DARK = colors.HexColor("#2A2D32")
+    _SHIELD_LIGHT = colors.HexColor("#F4F5F7")
+    _RIM = colors.HexColor("#BFC4CA")
+    _BLUE = colors.HexColor("#2350E6")
 
     def __init__(self, size: float = 30) -> None:
         super().__init__()
@@ -127,14 +138,74 @@ class _LogoMark(Flowable):  # type: ignore[misc]  # reportlab base is untyped
         self.width = size
         self.height = size
 
+    def _path(self, points: list[tuple[str, tuple[float, ...]]]) -> Any:
+        k = self.size / 16
+        path = self.canv.beginPath()
+        for op, coords in points:
+            xy = [v * k if i % 2 == 0 else (16 - v) * k for i, v in enumerate(coords)]
+            if op == "M":
+                path.moveTo(*xy)
+            elif op == "L":
+                path.lineTo(*xy)
+            elif op == "C":
+                path.curveTo(*xy)
+            else:
+                path.close()
+        return path
+
     def draw(self) -> None:
         c = self.canv
         s = self.size
-        c.setFillColor(_INK)
-        c.roundRect(0, 0, s, s, s * 0.28, fill=1, stroke=0)
-        c.setFillColor(colors.white)
-        c.setFont(_SANS_BOLD, s * 0.56)
-        c.drawCentredString(s / 2, s * 0.27, "S")
+        k = s / 16
+        c.setFillColor(self._DARK)
+        c.roundRect(0, 0, s, s, 3 * k, fill=1, stroke=0)
+
+        outline = [
+            ("M", (8, 2.2)),
+            ("C", (10, 3.3, 12, 3.7, 13.4, 3.7)),
+            ("L", (13.4, 7.8)),
+            ("C", (13.4, 10.6, 11.4, 12.6, 8, 13.8)),
+            ("C", (4.6, 12.6, 2.6, 10.6, 2.6, 7.8)),
+            ("L", (2.6, 3.7)),
+            ("C", (4, 3.7, 6, 3.3, 8, 2.2)),
+            ("Z", ()),
+        ]
+        c.setFillColor(self._SHIELD_LIGHT)
+        c.setStrokeColor(self._RIM)
+        c.setLineWidth(0.55 * k)
+        c.drawPath(self._path(outline), fill=1, stroke=1)
+
+        left = [
+            ("M", (8, 2.2)),
+            ("L", (8, 13.8)),
+            ("C", (4.6, 12.6, 2.6, 10.6, 2.6, 7.8)),
+            ("L", (2.6, 3.7)),
+            ("C", (4, 3.7, 6, 3.3, 8, 2.2)),
+            ("Z", ()),
+        ]
+        c.setFillColor(self._SHIELD_DARK)
+        c.drawPath(self._path(left), fill=1, stroke=0)
+
+        c.setStrokeColor(self._RIM)
+        c.setLineWidth(0.45 * k)
+        c.line(8 * k, 13 * k, 8 * k, 3 * k)
+
+        c.setStrokeColor(self._BLUE)
+        c.setLineWidth(0.8 * k)
+        c.setLineCap(1)
+        for arc in (
+            [
+                ("M", (7.8, 5.2)),
+                ("C", (6.3, 4.2, 4.8, 5.8, 5.8, 7.0)),
+                ("C", (4.7, 8.2, 6.2, 9.7, 7.6, 9.1)),
+            ],
+            [
+                ("M", (8.2, 5.4)),
+                ("C", (9.7, 4.4, 11.2, 6.0, 10.2, 7.2)),
+                ("C", (11.3, 8.4, 9.8, 9.9, 8.4, 9.3)),
+            ],
+        ):
+            c.drawPath(self._path(arc), fill=0, stroke=1)
 
 
 def _styles() -> dict[str, ParagraphStyle]:
@@ -357,7 +428,7 @@ def _cover(
     styles: dict[str, ParagraphStyle], record: dict[str, Any], run_name: str
 ) -> list[Flowable]:
     header = Table(
-        [[_LogoMark(30), Paragraph("Strix", styles["wordmark"])]],
+        [[_LogoMark(30), Paragraph("ShvIA", styles["wordmark"])]],
         colWidths=[38, _PAGE_W - 40 * mm - 38],
     )
     header.setStyle(
@@ -664,8 +735,8 @@ def generate_report_pdf(run_dir: Path) -> bytes:
     doc = SimpleDocTemplate(
         buffer,
         pagesize=A4,
-        title="Strix Security Report",
-        author="Strix",
+        title="ShvIA Pentest Report",
+        author="ShvIA",
         leftMargin=20 * mm,
         rightMargin=20 * mm,
         topMargin=22 * mm,
@@ -712,7 +783,7 @@ def build_encrypted_report(run_dir: Path) -> tuple[bytes, str, str]:
     pdf_bytes = generate_report_pdf(run_dir)
     password = generate_password()
     encrypted = encrypt_pdf(pdf_bytes, password)
-    filename = f"strix-report-{run_name}.pdf"
+    filename = f"shvia-report-{run_name}.pdf"
     return encrypted, password, filename
 
 

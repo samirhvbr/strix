@@ -297,7 +297,7 @@ def _make_handler(state: _ViewerState) -> type[BaseHTTPRequestHandler]:
                     HTTPStatus.OK,
                     generate_report_pdf(run_dir),
                     "application/pdf",
-                    filename=f"strix-report-{run_name}.pdf",
+                    filename=f"shvia-report-{run_name}.pdf",
                 )
             else:
                 self._send_json(HTTPStatus.NOT_FOUND, {"error": "unknown endpoint"})
