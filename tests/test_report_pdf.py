@@ -111,6 +111,23 @@ def test_pdf_shows_what_a_reader_needs_to_weigh_a_finding(tmp_path: Path) -> Non
         assert expected in text
 
 
+def test_pdf_keeps_the_indentation_of_a_poc_script(tmp_path: Path) -> None:
+    # A Paragraph collapses the whitespace at the start of each line, so a Python PoC came out of
+    # the PDF flush left and would not run as printed (report ai-shvia-org_f076, 2026-11-10).
+    run_dir = _make_run(tmp_path)
+    vulns = json.loads((run_dir / "vulnerabilities.json").read_text(encoding="utf-8"))
+    vulns[0]["poc_script_code"] = (
+        "```python\ndef probe(session):\n    if session:\n        return 1\n\treturn 0\n```"
+    )
+    vulns[0]["evidence"] = "HTTP/1.1 302 Found\n  Location: /painel"
+    (run_dir / "vulnerabilities.json").write_text(json.dumps(vulns), encoding="utf-8")
+
+    text = _pdf_text(generate_report_pdf(run_dir)).replace("\u00a0", " ")
+
+    assert "def probe(session):\n    if session:\n        return 1\n    return 0" in text
+    assert "HTTP/1.1 302 Found\n  Location: /painel" in text
+
+
 def test_pdf_leaves_out_the_trust_fields_a_finding_does_not_have(tmp_path: Path) -> None:
     text = " ".join(_pdf_text(generate_report_pdf(_make_run(tmp_path))).split())
 

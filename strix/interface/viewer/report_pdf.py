@@ -92,6 +92,27 @@ def _esc(value: Any) -> str:
     return html.escape(_normalize_text(value)).replace("\n", "<br/>")
 
 
+_LEADING_WS_RE = re.compile(r"^[ \t]+")
+
+
+def _esc_code(value: Any) -> str:
+    """Escape code for a Paragraph, keeping each line's indentation.
+
+    A Paragraph collapses the whitespace at the start of a line, so a Python PoC printed through
+    `_esc` lost its indentation and could not be run as printed. Leading spaces become
+    non-breaking ones (a tab counts as four); spaces inside a line stay ordinary so a long line
+    still wraps."""
+    lines = []
+    for line in _normalize_text(value).split("\n"):
+        match = _LEADING_WS_RE.match(line)
+        if match is None:
+            lines.append(html.escape(line))
+            continue
+        width = len(match.group(0).replace("\t", "    "))
+        lines.append("&nbsp;" * width + html.escape(line[match.end() :]))
+    return "<br/>".join(lines)
+
+
 class _NumberedCanvas(pdfcanvas.Canvas):  # type: ignore[misc]  # reportlab base is untyped
     """Two-pass canvas that prints 'Page X of Y' on every page after the cover."""
 
@@ -501,7 +522,7 @@ def _markdown_flowables(  # noqa: PLR0915 - cohesive block parser, splitting hur
                 code.append(lines[i])
                 i += 1
             i += 1  # closing fence
-            flow.append(Paragraph(_esc("\n".join(code)) or "&nbsp;", styles["code"]))
+            flow.append(Paragraph(_esc_code("\n".join(code)) or "&nbsp;", styles["code"]))
             continue
         if not stripped:
             flush_para()
@@ -555,7 +576,7 @@ def _field_block(
         return []
     flow: list[Flowable] = [Paragraph(label.upper(), styles["field_label"])]
     if code:
-        flow.append(Paragraph(_esc(value), styles["code"]))
+        flow.append(Paragraph(_esc_code(value), styles["code"]))
     else:
         flow.extend(_markdown_flowables(str(value), styles))
     return flow
