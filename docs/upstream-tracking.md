@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [native amd64 runtime follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
+Start every review here, then read the [native IPv6 and full Opengrep follow-up](UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md),
+the [native amd64 runtime follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
 the [validated sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
 the [latest reliability review](UPSTREAM_REVIEW_2026-11-12.md),
 the [November 10 round](UPSTREAM_REVIEW_2026-11-10.md),
@@ -134,6 +135,10 @@ including the controls before and after restarting the same sandbox. See the
 [dated acceptance report](UPSTREAM_SANDBOX_2026-11-12.md) for the exact image,
 source mappings, first Docker timeout and release-time limits; the new follow-up
 records the later amd64 result without rewriting those historical snapshots.
+The [next native extension](UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md)
+validated real IPv6 allow/deny traffic before and after restart, and the complete
+offline Opengrep bundle on seven synthetic files. Its results and resolved limitations
+are separate from the earlier release-time observations.
 
 The November 5 review carries [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review

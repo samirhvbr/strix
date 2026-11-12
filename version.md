@@ -14,6 +14,9 @@ hung on a same-container restart. The published compatibility image passed that
 restart, network policy, protected mounts, Caido and PTY checks on arm64 before its
 selection as the default. A subsequent native Linux/amd64 acceptance passed restart,
 network and mount checks before and after restart on the same published digest.
+The later [native IPv6 and full-bundle follow-up](docs/UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md)
+also passed real IPv6 allow/deny traffic and loaded the complete Opengrep bundle,
+applying 706 of 2,006 loaded rules to seven synthetic Python/YAML files without errors.
 Source and installer use the same immutable reference. See [the migration record](docs/UPSTREAM_SANDBOX_2026-11-12.md)
 and [native amd64 follow-up](docs/UPSTREAM_SANDBOX_AMD64_2026-11-12.md).
 

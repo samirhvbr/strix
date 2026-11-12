@@ -62,3 +62,7 @@ Version 1.2.54 remains released from `013fa614`; this follow-up adds test infras
 and documentation. The full upstream synchronization and broad-review inventory cursor
 remain unchanged. Current validations supersede the amd64-pending limitation while
 preserving prior per-item validation and release snapshots.
+
+A later [native IPv6 and full-bundle follow-up](UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md)
+closed the two coverage gaps stated above. The statements in this report remain the
+scope observed in run 43224996480; the new record preserves the later evidence separately.
