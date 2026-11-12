@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [validated sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
+Start every review here, then read the [native amd64 runtime follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
+the [validated sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
 the [latest reliability review](UPSTREAM_REVIEW_2026-11-12.md),
 the [November 10 round](UPSTREAM_REVIEW_2026-11-10.md),
 the [November 9 round](UPSTREAM_REVIEW_2026-11-09.md),
@@ -18,7 +19,7 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Fork source and release | Published `shvia-v1.2.54` from `013fa614` on 2026-11-12 at 12:02:03 UTC. Subsequent continuity commits change documentation and comments only. | Fork #63 passed all 15 checks. Four native binaries passed version smokes; downloaded binaries and `SHA256SUMS` passed integrity checks. |
+| Fork source and release | Published `shvia-v1.2.54` from `013fa614` on 2026-11-12 at 12:02:03 UTC. Subsequent continuity commits add documentation, comments and test infrastructure. | Fork #63 passed all 15 checks. Four native binaries passed version smokes; downloaded binaries and `SHA256SUMS` passed integrity checks. The same sandbox digest later passed native amd64 runtime acceptance. |
 | Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. TUI startup from #61, Opengrep and sandbox 1.4.1 were selectively delivered through #63; this does not advance the full synchronization. |
 | Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
@@ -127,9 +128,12 @@ Fork PR #53 previously delivered 1.3.1. Release 1.2.54 now pins the public 1.4.1
 compatibility derivative by immutable digest: the official parent plus the fork's
 existing NSS restart guard. The official 1.4.1 entrypoint failed same-container
 restart. The selected derivative passed restart, protected mounts and default-deny
-network controls on Linux/arm64 before the default changed. See the
+network controls on Linux/arm64 before the default changed. The same published digest
+subsequently passed the [native Linux/amd64 follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
+including the controls before and after restarting the same sandbox. See the
 [dated acceptance report](UPSTREAM_SANDBOX_2026-11-12.md) for the exact image,
-source mappings, first Docker timeout, Opengrep controls and amd64 runtime limit.
+source mappings, first Docker timeout and release-time limits; the new follow-up
+records the later amd64 result without rewriting those historical snapshots.
 
 The November 5 review carries [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review

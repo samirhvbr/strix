@@ -1554,7 +1554,7 @@
         }
       }
     ],
-    "last_incremental_update_at": "2026-11-12T12:02:55.964909+00:00",
+    "last_incremental_update_at": "2026-11-12T13:21:14.629956+00:00",
     "latest_known_recheck": {
       "at": "2026-11-12T09:23:04.826021+00:00",
       "record": "round-2026-11-12.json",
@@ -2467,7 +2467,49 @@
           ]
         }
       }
-    ]
+    ],
+    "runtime_acceptance_history": [
+      {
+        "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+        "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+        "kind": "targeted_runtime_acceptance",
+        "record": "sandbox-amd64-acceptance-2026-11-12.json",
+        "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+        "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+        "architectures_newly_tested": [
+          "linux/amd64"
+        ],
+        "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+        "runtime_passed": true,
+        "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+        "runtime_run_id": 43224996480,
+        "runtime_run_attempt": 1,
+        "full_upstream_sync_advanced": false,
+        "inventory_checkpoint_advanced": false,
+        "default_image_changed": false,
+        "release_changed": false
+      }
+    ],
+    "latest_runtime_acceptance": {
+      "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+      "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+      "kind": "targeted_runtime_acceptance",
+      "record": "sandbox-amd64-acceptance-2026-11-12.json",
+      "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+      "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "architectures_newly_tested": [
+        "linux/amd64"
+      ],
+      "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+      "runtime_passed": true,
+      "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+      "runtime_run_id": 43224996480,
+      "runtime_run_attempt": 1,
+      "full_upstream_sync_advanced": false,
+      "inventory_checkpoint_advanced": false,
+      "default_image_changed": false,
+      "release_changed": false
+    }
   },
   "records": [
     {
@@ -99735,7 +99777,7 @@
       },
       "validation": {
         "accepted": true,
-        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures. Subsequent native Linux/amd64 runtime acceptance passed for the same immutable published image; no application import, default-image change, version bump or new release occurred.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -99786,14 +99828,43 @@
             "name": "release artifact integrity and publication",
             "status": "passed",
             "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          },
+          {
+            "name": "published sandbox native Linux/amd64 runtime follow-up",
+            "status": "passed",
+            "scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+            "record": "sandbox-amd64-acceptance-2026-11-12.json",
+            "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480"
           }
         ],
         "limits": [
-          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
           "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
-        ]
+          "Release-time arm64-only evidence and prior failures remain unchanged in historical records; native Linux/amd64 runtime proof is a later targeted follow-up.",
+          "Native binary version smokes and bounded sandbox acceptance do not establish a live pentest, full interactive UI session, external-target behavior or production deployment.",
+          "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+          "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent."
+        ],
+        "runtime_followup": {
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+          "kind": "targeted_runtime_acceptance",
+          "record": "sandbox-amd64-acceptance-2026-11-12.json",
+          "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+          "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "architectures_newly_tested": [
+            "linux/amd64"
+          ],
+          "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+          "runtime_passed": true,
+          "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+          "runtime_run_id": 43224996480,
+          "runtime_run_attempt": 1,
+          "full_upstream_sync_advanced": false,
+          "inventory_checkpoint_advanced": false,
+          "default_image_changed": false,
+          "release_changed": false
+        }
       },
       "evidence": [
         {
@@ -100924,6 +100995,72 @@
               "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
               "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
               "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
+        },
+        {
+          "replaced_at": "2026-11-12T13:21:14.629956+00:00",
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              },
+              {
+                "name": "native binary workflow",
+                "status": "passed",
+                "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+              },
+              {
+                "name": "release artifact integrity and publication",
+                "status": "passed",
+                "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+              "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
             ]
           }
         }
@@ -103547,7 +103684,7 @@
       },
       "validation": {
         "accepted": true,
-        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures. Subsequent native Linux/amd64 runtime acceptance passed for the same immutable published image; no application import, default-image change, version bump or new release occurred.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -103598,14 +103735,43 @@
             "name": "release artifact integrity and publication",
             "status": "passed",
             "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          },
+          {
+            "name": "published sandbox native Linux/amd64 runtime follow-up",
+            "status": "passed",
+            "scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+            "record": "sandbox-amd64-acceptance-2026-11-12.json",
+            "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480"
           }
         ],
         "limits": [
-          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
           "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
-        ]
+          "Release-time arm64-only evidence and prior failures remain unchanged in historical records; native Linux/amd64 runtime proof is a later targeted follow-up.",
+          "Native binary version smokes and bounded sandbox acceptance do not establish a live pentest, full interactive UI session, external-target behavior or production deployment.",
+          "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+          "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent."
+        ],
+        "runtime_followup": {
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+          "kind": "targeted_runtime_acceptance",
+          "record": "sandbox-amd64-acceptance-2026-11-12.json",
+          "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+          "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "architectures_newly_tested": [
+            "linux/amd64"
+          ],
+          "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+          "runtime_passed": true,
+          "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+          "runtime_run_id": 43224996480,
+          "runtime_run_attempt": 1,
+          "full_upstream_sync_advanced": false,
+          "inventory_checkpoint_advanced": false,
+          "default_image_changed": false,
+          "release_changed": false
+        }
       },
       "evidence": [],
       "linked_items": [
@@ -104777,6 +104943,72 @@
               "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
               "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
               "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
+        },
+        {
+          "replaced_at": "2026-11-12T13:21:14.629956+00:00",
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              },
+              {
+                "name": "native binary workflow",
+                "status": "passed",
+                "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+              },
+              {
+                "name": "release artifact integrity and publication",
+                "status": "passed",
+                "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+              "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
             ]
           }
         }
@@ -119366,7 +119598,7 @@
       },
       "validation": {
         "accepted": true,
-        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures. Subsequent native Linux/amd64 runtime acceptance passed for the same immutable published image; no application import, default-image change, version bump or new release occurred.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -119417,14 +119649,43 @@
             "name": "release artifact integrity and publication",
             "status": "passed",
             "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          },
+          {
+            "name": "published sandbox native Linux/amd64 runtime follow-up",
+            "status": "passed",
+            "scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+            "record": "sandbox-amd64-acceptance-2026-11-12.json",
+            "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480"
           }
         ],
         "limits": [
-          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
           "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
-        ]
+          "Release-time arm64-only evidence and prior failures remain unchanged in historical records; native Linux/amd64 runtime proof is a later targeted follow-up.",
+          "Native binary version smokes and bounded sandbox acceptance do not establish a live pentest, full interactive UI session, external-target behavior or production deployment.",
+          "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+          "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent."
+        ],
+        "runtime_followup": {
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+          "kind": "targeted_runtime_acceptance",
+          "record": "sandbox-amd64-acceptance-2026-11-12.json",
+          "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+          "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "architectures_newly_tested": [
+            "linux/amd64"
+          ],
+          "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+          "runtime_passed": true,
+          "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+          "runtime_run_id": 43224996480,
+          "runtime_run_attempt": 1,
+          "full_upstream_sync_advanced": false,
+          "inventory_checkpoint_advanced": false,
+          "default_image_changed": false,
+          "release_changed": false
+        }
       },
       "linked_items": [
         "https://github.com/usestrix/strix/pull/1625",
@@ -120405,6 +120666,72 @@
               "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T13:21:14.629956+00:00",
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              },
+              {
+                "name": "native binary workflow",
+                "status": "passed",
+                "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+              },
+              {
+                "name": "release artifact integrity and publication",
+                "status": "passed",
+                "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+              "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -121322,7 +121649,7 @@
       },
       "validation": {
         "accepted": true,
-        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures. Subsequent native Linux/amd64 runtime acceptance passed for the same immutable published image; no application import, default-image change, version bump or new release occurred.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -121373,14 +121700,43 @@
             "name": "release artifact integrity and publication",
             "status": "passed",
             "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          },
+          {
+            "name": "published sandbox native Linux/amd64 runtime follow-up",
+            "status": "passed",
+            "scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+            "record": "sandbox-amd64-acceptance-2026-11-12.json",
+            "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480"
           }
         ],
         "limits": [
-          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
           "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
-        ]
+          "Release-time arm64-only evidence and prior failures remain unchanged in historical records; native Linux/amd64 runtime proof is a later targeted follow-up.",
+          "Native binary version smokes and bounded sandbox acceptance do not establish a live pentest, full interactive UI session, external-target behavior or production deployment.",
+          "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+          "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent."
+        ],
+        "runtime_followup": {
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+          "kind": "targeted_runtime_acceptance",
+          "record": "sandbox-amd64-acceptance-2026-11-12.json",
+          "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+          "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "architectures_newly_tested": [
+            "linux/amd64"
+          ],
+          "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+          "runtime_passed": true,
+          "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+          "runtime_run_id": 43224996480,
+          "runtime_run_attempt": 1,
+          "full_upstream_sync_advanced": false,
+          "inventory_checkpoint_advanced": false,
+          "default_image_changed": false,
+          "release_changed": false
+        }
       },
       "linked_items": [
         "https://github.com/usestrix/strix/pull/1647",
@@ -122788,6 +123144,72 @@
               "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T13:21:14.629956+00:00",
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              },
+              {
+                "name": "native binary workflow",
+                "status": "passed",
+                "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+              },
+              {
+                "name": "release artifact integrity and publication",
+                "status": "passed",
+                "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+              "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -123528,7 +123950,7 @@
       },
       "validation": {
         "accepted": true,
-        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures. Subsequent native Linux/amd64 runtime acceptance passed for the same immutable published image; no application import, default-image change, version bump or new release occurred.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -123579,14 +124001,43 @@
             "name": "release artifact integrity and publication",
             "status": "passed",
             "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          },
+          {
+            "name": "published sandbox native Linux/amd64 runtime follow-up",
+            "status": "passed",
+            "scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+            "record": "sandbox-amd64-acceptance-2026-11-12.json",
+            "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480"
           }
         ],
         "limits": [
-          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
           "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
-        ]
+          "Release-time arm64-only evidence and prior failures remain unchanged in historical records; native Linux/amd64 runtime proof is a later targeted follow-up.",
+          "Native binary version smokes and bounded sandbox acceptance do not establish a live pentest, full interactive UI session, external-target behavior or production deployment.",
+          "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+          "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent."
+        ],
+        "runtime_followup": {
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+          "kind": "targeted_runtime_acceptance",
+          "record": "sandbox-amd64-acceptance-2026-11-12.json",
+          "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+          "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "architectures_newly_tested": [
+            "linux/amd64"
+          ],
+          "workflow_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+          "runtime_passed": true,
+          "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+          "runtime_run_id": 43224996480,
+          "runtime_run_attempt": 1,
+          "full_upstream_sync_advanced": false,
+          "inventory_checkpoint_advanced": false,
+          "default_image_changed": false,
+          "release_changed": false
+        }
       },
       "evidence": [],
       "linked_items": [
@@ -123993,6 +124444,72 @@
           "replaced_at": "2026-11-12T12:02:55.964909+00:00",
           "event_id": "selective-startup-sandbox-released-2026-11-12",
           "validation": {}
+        },
+        {
+          "replaced_at": "2026-11-12T13:21:14.629956+00:00",
+          "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              },
+              {
+                "name": "native binary workflow",
+                "status": "passed",
+                "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+              },
+              {
+                "name": "release artifact integrity and publication",
+                "status": "passed",
+                "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+              "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+            ]
+          }
         }
       ]
     }

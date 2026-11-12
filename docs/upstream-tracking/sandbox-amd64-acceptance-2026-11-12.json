@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-11-12T13:21:14.629956+00:00",
+  "runtime_scope": "Native Linux/amd64 host, Docker daemon and container; exact published image/config and reviewed entrypoint. Same-container restart preserves both NSS certificates. Before and after restart: owned reachable-target negative control, IPv4 traffic denial and inspected IPv4/IPv6 firewall DROP defaults, capability drops, protected mounts against root with writable sibling control, Caido loopback/peer isolation and SDK PTY lifecycle. Opengrep 1.31.0 version command and effective non-root pentester identity verified. Owned containers and fixture directory removed. No live scan, real model, external target or release mutation.",
+  "runtime_passed": true,
+  "image_reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+  "architecture": "linux/amd64",
+  "runtime_source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+  "runtime_run_id": 43224996480,
+  "runtime_run_attempt": 1,
+  "workflow": {
+    "id": 43224996480,
+    "head_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+    "head_branch": "test/sandbox-amd64-20261112",
+    "event": "workflow_dispatch",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480",
+    "created_at": "2026-11-12T13:11:57Z",
+    "updated_at": "2026-11-12T13:19:29Z"
+  },
+  "runtime_job": {
+    "id": 131205797615,
+    "name": "sandbox-runtime / amd64",
+    "status": "completed",
+    "conclusion": "success",
+    "run_id": 43224996480,
+    "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797615",
+    "runner_name": "GitHub Actions 1000029754",
+    "runner_group_name": "GitHub Actions",
+    "labels": [
+      "ubuntu-22.04"
+    ],
+    "started_at": "2026-11-12T13:12:01Z",
+    "completed_at": "2026-11-12T13:14:10Z",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1,
+        "started_at": "2026-11-12T13:12:02Z",
+        "completed_at": "2026-11-12T13:12:03Z"
+      },
+      {
+        "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2,
+        "started_at": "2026-11-12T13:12:03Z",
+        "completed_at": "2026-11-12T13:12:04Z"
+      },
+      {
+        "name": "Require a native amd64 host and Docker daemon",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3,
+        "started_at": "2026-11-12T13:12:04Z",
+        "completed_at": "2026-11-12T13:12:05Z"
+      },
+      {
+        "name": "Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4,
+        "started_at": "2026-11-12T13:12:05Z",
+        "completed_at": "2026-11-12T13:12:13Z"
+      },
+      {
+        "name": "Run ./.github/actions/setup-python-env",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5,
+        "started_at": "2026-11-12T13:12:13Z",
+        "completed_at": "2026-11-12T13:12:18Z"
+      },
+      {
+        "name": "Pull the immutable image and build owned network fixtures",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6,
+        "started_at": "2026-11-12T13:12:18Z",
+        "completed_at": "2026-11-12T13:13:36Z"
+      },
+      {
+        "name": "Validate restart, network and mounts through the real fork backend",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7,
+        "started_at": "2026-11-12T13:13:36Z",
+        "completed_at": "2026-11-12T13:14:04Z"
+      },
+      {
+        "name": "Preserve runtime acceptance evidence",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8,
+        "started_at": "2026-11-12T13:14:04Z",
+        "completed_at": "2026-11-12T13:14:06Z"
+      },
+      {
+        "name": "Post Run ./.github/actions/setup-python-env",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14,
+        "started_at": "2026-11-12T13:14:06Z",
+        "completed_at": "2026-11-12T13:14:06Z"
+      },
+      {
+        "name": "Post Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15,
+        "started_at": "2026-11-12T13:14:06Z",
+        "completed_at": "2026-11-12T13:14:07Z"
+      },
+      {
+        "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 16,
+        "started_at": "2026-11-12T13:14:07Z",
+        "completed_at": "2026-11-12T13:14:07Z"
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 17,
+        "started_at": "2026-11-12T13:14:07Z",
+        "completed_at": "2026-11-12T13:14:07Z"
+      }
+    ]
+  },
+  "runtime_report": {
+    "run_id": "strix-runtime-acceptance-7f3d1d9e2268",
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "expected_amd64_manifest": "sha256:1465e11e35945996c729f9b731f52fb39280d1a9a299260bc63ab5a824af7604",
+    "expected_amd64_config": "sha256:e72efc9fe87c6fa1d1dc89786c418d8c7703a120f5b6e3ec42e8e7c6a34d51e1",
+    "checks": {
+      "docker_architecture": "x86_64",
+      "image_architecture": "amd64",
+      "official_parent_layers_plus_one": true,
+      "source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+      "owned_tcp_positive_control": true,
+      "backend_started_seconds": 0.673,
+      "entrypoint_ready_1": "31668f4c132e96de5a8885c4c3eba810788c364520b205da6308ae5f53f4b029",
+      "container_uname": "x86_64",
+      "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818",
+      "opengrep_version": "1.31.0",
+      "sandbox_effective_user": {
+        "uid": 1001,
+        "name": "pentester",
+        "home": "/home/pentester"
+      },
+      "before_restart_network": {
+        "counters": {
+          "ipv4": {
+            "packets": 1,
+            "bytes": 60
+          },
+          "ipv6": {
+            "packets": 0,
+            "bytes": 0
+          }
+        },
+        "cap_drop": [
+          "NET_ADMIN",
+          "NET_RAW",
+          "SYS_ADMIN"
+        ],
+        "peer_blocked": true
+      },
+      "before_restart_root_readonly_mounts_and_writable_control": true,
+      "before_restart_caido_guest_bootstrap": true,
+      "before_restart_pty_start_stdin_poll_exit": true,
+      "before_restart_cert_Testing_Root_CA": "79f29b3f5a86ccf853fdca036a832467543489d3bb15a2292a1732751545e70c",
+      "before_restart_cert_Strix_Runtime_Acceptance_Sentinel": "ff0ec81d96dd0f278bdd861b8c0e21e7f141694540eab425e43523a3d8c7ba95",
+      "entrypoint_ready_2": "31668f4c132e96de5a8885c4c3eba810788c364520b205da6308ae5f53f4b029",
+      "after_restart_cert_Testing_Root_CA": "79f29b3f5a86ccf853fdca036a832467543489d3bb15a2292a1732751545e70c",
+      "after_restart_cert_Strix_Runtime_Acceptance_Sentinel": "ff0ec81d96dd0f278bdd861b8c0e21e7f141694540eab425e43523a3d8c7ba95",
+      "same_container_restart": "31668f4c132e96de5a8885c4c3eba810788c364520b205da6308ae5f53f4b029",
+      "after_restart_network": {
+        "counters": {
+          "ipv4": {
+            "packets": 2,
+            "bytes": 120
+          },
+          "ipv6": {
+            "packets": 0,
+            "bytes": 0
+          }
+        },
+        "cap_drop": [
+          "NET_ADMIN",
+          "NET_RAW",
+          "SYS_ADMIN"
+        ],
+        "peer_blocked": true
+      },
+      "after_restart_root_readonly_mounts_and_writable_control": true,
+      "after_restart_caido_guest_bootstrap": true,
+      "after_restart_pty_start_stdin_poll_exit": true,
+      "acceptance_passed": true
+    },
+    "resources": {
+      "target": "1bd5feb09b30801dae797d37a70ff5e811ae1014922bb7e8763f8fb98197d9d6",
+      "sandbox": "31668f4c132e96de5a8885c4c3eba810788c364520b205da6308ae5f53f4b029",
+      "guard": "d04bd43ab931a82c96d7090e2bf8f7a77b4f0a4fe38b4a28b7740f7a597bdacd"
+    },
+    "passed": true,
+    "host": {
+      "system": "Linux",
+      "machine": "x86_64"
+    },
+    "image_id": "sha256:e72efc9fe87c6fa1d1dc89786c418d8c7703a120f5b6e3ec42e8e7c6a34d51e1",
+    "image_repo_digests": [
+      "ghcr.io/samirhvbr/strix-sandbox@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30"
+    ],
+    "policy_digest": "8c9de14f0ea002f303682d8a1d1bbe3a2e5fe8c54f5d4cecf22779ca95b68d40",
+    "fixture_directory": "/home/runner/work/_temp/strix-runtime-acceptance-7f3d1d9e2268-wowp7bed",
+    "cleanup_fixture_removed": true,
+    "cleanup_remaining_owned_ids": [],
+    "cleanup_errors": []
+  },
+  "workflow_artifact_evidence": {
+    "recorded_at": "2026-11-12T13:12:04.835889+00:00",
+    "source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+    "run_id": "43224996480",
+    "run_attempt": "1",
+    "repository": "samirhvbr/strix",
+    "host_system": "Linux",
+    "host_machine": "x86_64",
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "parent": "ghcr.io/usestrix/strix-sandbox@sha256:c8e70302ba4a69b678b4001c909b134d8d0b84625d7b23feed59ece02672c1d2"
+  },
+  "artifact_verification": {
+    "checked_at": "2026-11-12T13:14:59.282407+00:00",
+    "run_id": 43224996480,
+    "source_sha": "99d49d5843e9718372cfe59b3b9bf01d32c8bde8",
+    "run_attempt": 1,
+    "run_status": "in_progress",
+    "run_conclusion": null,
+    "job_id": 131205797615,
+    "job_conclusion": "success",
+    "job_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797615",
+    "artifact": {
+      "id": 13947941160,
+      "name": "sandbox-runtime-linux-amd64",
+      "size_in_bytes": 4154,
+      "digest": "sha256:890b548ce8e4d0d58554f1ae07c14bce561f7e32355da796db0e04147a3304b2",
+      "created_at": "2026-11-12T13:14:05Z",
+      "expires_at": "2026-12-12T13:14:04Z"
+    },
+    "downloaded_zip_bytes": 4154,
+    "downloaded_zip_sha256": "890b548ce8e4d0d58554f1ae07c14bce561f7e32355da796db0e04147a3304b2",
+    "artifact_digest_verified": true,
+    "files": [
+      {
+        "name": "pull.log",
+        "bytes": 7435,
+        "sha256": "40d3ee0d80d7c55c9230d13507821b9ea790d55f40c35d3d542c5618a66868ee"
+      },
+      {
+        "name": "result.json",
+        "bytes": 3620,
+        "sha256": "f037a265206eadc77804e92c74e722a63c307039c328ad2576c85ab5dd96fb95"
+      },
+      {
+        "name": "run.log",
+        "bytes": 2424,
+        "sha256": "984b420c77fe65cebb4857834009779662616fbfa86e6ef71e6e266576a4deeb"
+      },
+      {
+        "name": "workflow.json",
+        "bytes": 515,
+        "sha256": "f1d253545a2a25c4c2ae4a7c747e2f3b57edea331607b6e98ede476ba306184e"
+      }
+    ],
+    "workflow_evidence_matches_source": true,
+    "report_available": true,
+    "report_passed": true
+  },
+  "prior_attempts": [],
+  "input_files": {
+    "runtime_report": {
+      "filename": "result.json",
+      "sha256": "f037a265206eadc77804e92c74e722a63c307039c328ad2576c85ab5dd96fb95"
+    },
+    "workflow_evidence": {
+      "filename": "workflow.json",
+      "sha256": "f1d253545a2a25c4c2ae4a7c747e2f3b57edea331607b6e98ede476ba306184e"
+    },
+    "github_run": {
+      "filename": "completed-run.json",
+      "sha256": "c4f73b19d83a6be72bdb5d1c98bf507709c97e1a23c48ec46f59e1d688f36cc1"
+    },
+    "github_jobs": {
+      "filename": "completed-jobs.json",
+      "sha256": "a00d12c411c05d4e55dc3f78464190d1679cf3a970b1c46a946575ea4f1226b5"
+    },
+    "artifact_verification": {
+      "filename": "artifact-verification.json",
+      "sha256": "fcd8a5f7e5e63b583f774dddbf3b019c9b801d73c516a11edeabb65f0dc67d5b"
+    }
+  },
+  "input_envelope_sha256": "23afb699d9dc24a3444c6d965b1899302bd9d084f9680a56d22b58adbebed6f0",
+  "historical_records_preserved": [
+    "integration-released-2026-11-12.json",
+    "release-acceptance-2026-11-12.json",
+    "sandbox-acceptance-2026-11-12.json"
+  ],
+  "resolves_historical_pending": {
+    "record": "integration-released-2026-11-12.json",
+    "pending_text": "Native amd64 sandbox runtime acceptance remains outside this arm64 validation."
+  },
+  "limits": [
+    "This is a targeted runtime acceptance of the existing image, not a new release, application import or complete upstream synchronization.",
+    "No live model, external target, full interactive UI session or production deployment was tested.",
+    "The owned traffic probe exercised IPv4; IPv6 DROP rules were inspected, but no IPv6 traffic probe was executed.",
+    "No native amd64 full-rule-bundle scan is claimed; prior full-bundle proof remains scoped to the arm64 official parent.",
+    "Earlier arm64 startup timeout and full-bundle timing remain historical facts; this follow-up does not reclassify them."
+  ],
+  "source_ledger_commit": "a35f01b87cd20ee6e850fbe768b759aeb523d12e",
+  "record": "sandbox-amd64-acceptance-2026-11-12.json",
+  "kind": "targeted_runtime_acceptance",
+  "event_id": "published-sandbox-native-amd64-validation-2026-11-12",
+  "selected_items": [
+    "usestrix/strix#pr:1625",
+    "usestrix/strix#pr:1647",
+    "usestrix/strix#pr:1729",
+    "samirhvbr/strix#pr:61",
+    "samirhvbr/strix#pr:63"
+  ],
+  "new_ids": [],
+  "full_upstream_sync_advanced": false,
+  "inventory_checkpoint_advanced": false,
+  "default_image_changed": false,
+  "release_changed": false,
+  "fork_version": "1.2.54",
+  "release_checkpoint_preserved": {
+    "fork_ref": "refs/heads/master",
+    "fork_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+    "fork_version": "1.2.54",
+    "tag": "shvia-v1.2.54",
+    "upstream_effective_ancestor": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "release_published_at": "2026-11-12T12:02:03Z",
+    "release_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+    "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment."
+  },
+  "preservation": {
+    "known_ids_before": 721,
+    "known_ids_after": 721,
+    "untargeted_records_unchanged": 716,
+    "histories_append_only": true,
+    "counts_unchanged": true,
+    "implementation_and_release_snapshots_unchanged": true,
+    "full_sync_checkpoint_unchanged": true,
+    "inventory_cursor_unchanged": true
+  },
+  "counts": {
+    "total_records": 721,
+    "review_depth": {
+      "identified": 54,
+      "triage": 580,
+      "deep": 87
+    },
+    "fork_decisions": {
+      "pending": 251,
+      "incorporated_fully": 62,
+      "adapted": 25,
+      "already_covered": 103,
+      "deferred": 239,
+      "discarded": 40,
+      "incorporated_partially": 1
+    },
+    "implementation_phases": {
+      "unknown": 118,
+      "present_before_round": 54,
+      "integrated_review_branch": 55,
+      "decision_required": 122,
+      "deferred": 238,
+      "not_planned": 32,
+      "pending": 61,
+      "proposed_in_fork_review": 1,
+      "released": 5,
+      "delivered_in_fork": 3,
+      "merged_review_branch": 2,
+      "published_upstream_pending_fork_evaluation": 22,
+      "upstream_fix_proposed_pending_review": 2,
+      "awaiting_upstream_contract_decision": 4,
+      "merged_master": 2
+    }
+  },
+  "ci_summary": {
+    "total_jobs": 16,
+    "successful_jobs": 16,
+    "jobs": [
+      {
+        "id": 131205797067,
+        "name": "viewer / build",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797067"
+      },
+      {
+        "id": 131205797424,
+        "name": "python / ruff",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797424"
+      },
+      {
+        "id": 131205797615,
+        "name": "sandbox-runtime / amd64",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797615"
+      },
+      {
+        "id": 131205797721,
+        "name": "package / binary",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797721"
+      },
+      {
+        "id": 131205797760,
+        "name": "tui / go",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797760"
+      },
+      {
+        "id": 131205797781,
+        "name": "python / bandit",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797781"
+      },
+      {
+        "id": 131205797782,
+        "name": "package / wheel",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797782"
+      },
+      {
+        "id": 131205797897,
+        "name": "python / mypy",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797897"
+      },
+      {
+        "id": 131205797990,
+        "name": "workflows / zizmor",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205797990"
+      },
+      {
+        "id": 131205798029,
+        "name": "python / pytest (3.12)",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798029"
+      },
+      {
+        "id": 131205798032,
+        "name": "python / lock",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798032"
+      },
+      {
+        "id": 131205798044,
+        "name": "workflows / actionlint",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798044"
+      },
+      {
+        "id": 131205798122,
+        "name": "python / pytest (3.14)",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798122"
+      },
+      {
+        "id": 131205798297,
+        "name": "python / network-guard",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798297"
+      },
+      {
+        "id": 131205798513,
+        "name": "python / pytest (3.13)",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131205798513"
+      },
+      {
+        "id": 131209836265,
+        "name": "ci-passed",
+        "conclusion": "success",
+        "html_url": "https://github.com/samirhvbr/strix/actions/runs/43224996480/job/131209836265"
+      }
+    ]
+  }
+}

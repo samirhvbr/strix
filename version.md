@@ -12,9 +12,10 @@ It retains upstream's Opengrep 1.31.0, bundled offline rules and patched Go tool
 adds the fork's existing idempotent NSS initialization. The official 1.4.1 entrypoint
 hung on a same-container restart. The published compatibility image passed that
 restart, network policy, protected mounts, Caido and PTY checks on arm64 before its
-selection as the default. The registry also publishes an amd64 manifest. Native amd64
-runtime acceptance is pending. Source and installer use the same immutable reference.
-See [the migration record](docs/UPSTREAM_SANDBOX_2026-11-12.md).
+selection as the default. A subsequent native Linux/amd64 acceptance passed restart,
+network and mount checks before and after restart on the same published digest.
+Source and installer use the same immutable reference. See [the migration record](docs/UPSTREAM_SANDBOX_2026-11-12.md)
+and [native amd64 follow-up](docs/UPSTREAM_SANDBOX_AMD64_2026-11-12.md).
 
 
 > **Source of truth:** this file. [`.fork-version`](.fork-version) mirrors the version on one

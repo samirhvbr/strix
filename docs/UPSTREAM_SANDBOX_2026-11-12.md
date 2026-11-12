@@ -68,3 +68,8 @@ The full upstream synchronization checkpoint remains unchanged.
 The final continuity follow-up corrects outdated 1.3.1/Opengrep guidance in `CLAUDE.md`
 and comments beside the two image defaults. Python AST and non-comment installer lines
 remain equivalent to the release source; the published binary source and tag are unchanged.
+
+A subsequent [native Linux/amd64 acceptance](UPSTREAM_SANDBOX_AMD64_2026-11-12.md)
+passed restart, network and mount controls for the same published image. The arm64-only
+statements above describe the release-time evidence; current validation and the later
+proof are tracked separately without rewriting this history.
