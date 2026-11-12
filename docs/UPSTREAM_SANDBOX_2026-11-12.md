@@ -42,3 +42,29 @@ The full upstream integration checkpoint is 6b7ae2ebe4d47037a927aade23265ff4e4f2
 ## Master delivery
 
 [PR #63](https://github.com/samirhvbr/strix/pull/63) merged at 1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d. Its tree equals the validated head 026f3f54ad6976105a55608bff0451e89917203d. All 15 checks passed, including the complete Python 3.12, 3.13 and 3.14 suites. [CI run](https://github.com/samirhvbr/strix/actions/runs/43209192193)
+
+## Published release
+
+[SHVIA 1.2.54 (Strix 1.7.0)](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54)
+was published at 2026-11-12T12:02:03Z. The annotated tag `shvia-v1.2.54` resolves to
+013fa614ea4803e2e42b27e11f3b917ed002292e, which follows the master merge with delivery-record updates.
+The [native binary workflow](https://github.com/samirhvbr/strix/actions/runs/43211229408)
+succeeded on its first attempt. All four native builds, for macOS and Linux on arm64 and
+x86_64, passed their version smoke checks before upload.
+
+The four binaries and `SHA256SUMS` were downloaded and verified at
+2026-11-12T12:00:45.497976Z, while the release was still a draft. All four binary hashes matched
+`SHA256SUMS`, all five file hashes matched GitHub's asset digests, and Mach-O/ELF headers
+matched the named architectures. The publication snapshot retained the same asset IDs,
+sizes and digests. The macOS arm64 binary also matched the exact workflow artifact executed
+with an empty isolated HOME: `--fork-version` returned `1.2.54` and `--version` returned
+`strix 1.7.0`. See the [release acceptance record](upstream-tracking/release-acceptance-2026-11-12.json)
+for hashes, job links and the distinct verification and publication times.
+
+These native binary checks do not extend sandbox runtime acceptance to amd64. No live model,
+external target, Desktop signing/notarization or deployment was exercised by the release checks.
+The full upstream synchronization checkpoint remains unchanged.
+
+The final continuity follow-up corrects outdated 1.3.1/Opengrep guidance in `CLAUDE.md`
+and comments beside the two image defaults. Python AST and non-comment installer lines
+remain equivalent to the release source; the published binary source and tag are unchanged.

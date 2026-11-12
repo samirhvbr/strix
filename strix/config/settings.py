@@ -163,10 +163,9 @@ class ContextSettings(BaseSettings):
 class RuntimeSettings(BaseSettings):
     model_config = _BASE_CONFIG
 
-    # Fork pin: 1.3.1, published for amd64 and arm64 and taken in fork 1.2.48. Upstream's default
-    # has moved on to 1.4.0 (Opengrep, #1625), which the fork has not taken; move both this
-    # default and scripts/install.sh once `docker manifest inspect` finds the tag and the fork
-    # has the change.
+    # Fork 1.2.54: immutable 1.4.1 derivative with the existing NSS restart guard.
+    # Keep scripts/install.sh paired; replace only after registry, restart, network and
+    # mount acceptance. See docs/UPSTREAM_SANDBOX_2026-11-12.md for architecture limits.
     image: str = Field(
         default=(
             "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@"

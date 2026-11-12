@@ -18,8 +18,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Fork source and release | `master` declares 1.2.54 at `1a55f43e`. Latest release is `shvia-v1.2.50` at `127cdb0f`. | Fork #58 and #59 passed their recorded CI. Release metadata lists two binaries and `SHA256SUMS`. |
-| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. Fork #61 proposes the TUI startup backport on the review branch. |
+| Fork source and release | Published `shvia-v1.2.54` from `013fa614` on 2026-11-12 at 12:02:03 UTC. Subsequent continuity commits change documentation and comments only. | Fork #63 passed all 15 checks. Four native binaries passed version smokes; downloaded binaries and `SHA256SUMS` passed integrity checks. |
+| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. TUI startup from #61, Opengrep and sandbox 1.4.1 were selectively delivered through #63; this does not advance the full synchronization. |
 | Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
@@ -121,10 +121,15 @@ deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Ca
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image:** images 1.3.1 and 1.4.0 are published, resolving the publication
+**Sandbox image:** images 1.3.1 and 1.4.0 were published, resolving the publication
 part of [upstream issue #1628](https://github.com/usestrix/strix/issues/1628).
-The delivered fork pins 1.3.1 through [fork PR #53](https://github.com/samirhvbr/strix/pull/53).
-Current upstream source defaults to 1.4.0. The review branch retains its own source pin.
+Fork PR #53 previously delivered 1.3.1. Release 1.2.54 now pins the public 1.4.1
+compatibility derivative by immutable digest: the official parent plus the fork's
+existing NSS restart guard. The official 1.4.1 entrypoint failed same-container
+restart. The selected derivative passed restart, protected mounts and default-deny
+network controls on Linux/arm64 before the default changed. See the
+[dated acceptance report](UPSTREAM_SANDBOX_2026-11-12.md) for the exact image,
+source mappings, first Docker timeout, Opengrep controls and amd64 runtime limit.
 
 The November 5 review carries [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
@@ -135,15 +140,19 @@ before a master delivery. Their evidence, exact source versions, local commits a
 November 5 report and ledger.
 
 The [November 12 snapshot](upstream-tracking/round-2026-11-12.json) records
-release metadata, the tested fork TUI backport and image migration acceptance. The upstream
-tag v1.7.1 predates the TUI fix. The latest published fork release is 1.2.50, and
-`master` declares 1.2.52. [release-audit.json](upstream-tracking/release-audit.json)
+the earlier review and release observations; it is a historical snapshot. The upstream
+tag v1.7.1 predates the TUI fix. The subsequent
+[release continuation](upstream-tracking/integration-released-2026-11-12.json) records
+the delivered startup backport and paired image/Opengrep migration. The latest published
+fork release is [1.2.54](https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54),
+matching `.fork-version`. [release-audit.json](upstream-tracking/release-audit.json)
 retains the earlier audit.
 
 The upstream CI prerequisites #1577, #1657, #1658 and #1660 await review. After their
 fixes land in main, check fresh base-aware CI for #1708, #1710, #1712 and #1713.
-Recheck the #61 backport and the published contributions before changing their fork
-adoption records.
+The #61 backport is delivered and released; compare later upstream changes with the
+source SHAs carried here before applying another backport. The selected integration did
+not refresh other contributions or advance the inventory cursor.
 
 The selected integration follows [fork #62](https://github.com/samirhvbr/strix/pull/62).
 Its exact code SHA, source-to-fork mappings, image acceptance, limits and delivery state
@@ -151,4 +160,7 @@ are in [integration-2026-11-12.json](upstream-tracking/integration-2026-11-12.js
 
 [PR #63](https://github.com/samirhvbr/strix/pull/63) delivered the startup and sandbox integration
 to master after all 15 checks passed. The [delivery snapshot](upstream-tracking/integration-delivered-2026-11-12.json)
-records the merge and CI. The release build is a separate next step.
+records the merge and CI. The [release snapshot](upstream-tracking/integration-released-2026-11-12.json)
+and [asset verification](upstream-tracking/release-acceptance-2026-11-12.json) record
+the completed native builds, publication and checksums. Resume broader review from the
+unchanged inventory checkpoint; MCP callback/report compatibility remains pending.

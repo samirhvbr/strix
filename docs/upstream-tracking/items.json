@@ -659,7 +659,7 @@
         "not_planned": 32,
         "pending": 61,
         "proposed_in_fork_review": 1,
-        "delivered_to_master": 5,
+        "released": 5,
         "delivered_in_fork": 3,
         "merged_review_branch": 2,
         "published_upstream_pending_fork_evaluation": 22,
@@ -1554,7 +1554,7 @@
         }
       }
     ],
-    "last_incremental_update_at": "2026-11-12T11:37:33.977656+00:00",
+    "last_incremental_update_at": "2026-11-12T12:02:55.964909+00:00",
     "latest_known_recheck": {
       "at": "2026-11-12T09:23:04.826021+00:00",
       "record": "round-2026-11-12.json",
@@ -1922,6 +1922,50 @@
           },
           "inventory_count_basis": "Previous completed acquisition; this selective follow-up does not refresh open inventory counts"
         }
+      },
+      {
+        "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+        "event_id": "selective-startup-sandbox-released-2026-11-12",
+        "previous_counts": {
+          "total_records": 721,
+          "review_depth": {
+            "identified": 54,
+            "triage": 580,
+            "deep": 87
+          },
+          "fork_decisions": {
+            "pending": 251,
+            "incorporated_fully": 62,
+            "adapted": 25,
+            "already_covered": 103,
+            "deferred": 239,
+            "discarded": 40,
+            "incorporated_partially": 1
+          },
+          "implementation_phases": {
+            "unknown": 118,
+            "present_before_round": 54,
+            "integrated_review_branch": 55,
+            "decision_required": 122,
+            "deferred": 238,
+            "not_planned": 32,
+            "pending": 61,
+            "proposed_in_fork_review": 1,
+            "delivered_to_master": 5,
+            "delivered_in_fork": 3,
+            "merged_review_branch": 2,
+            "published_upstream_pending_fork_evaluation": 22,
+            "upstream_fix_proposed_pending_review": 2,
+            "awaiting_upstream_contract_decision": 4,
+            "merged_master": 2
+          },
+          "fork_catalog": 63,
+          "upstream_open_inventory": {
+            "pr": 357,
+            "issue": 235
+          },
+          "inventory_count_basis": "Previous completed acquisition; this selective follow-up does not refresh open inventory counts"
+        }
       }
     ],
     "selective_integration_history": [
@@ -2194,6 +2238,220 @@
           "Native amd64 runtime acceptance remains outside this arm64 validation."
         ],
         "record": "integration-delivered-2026-11-12.json",
+        "image_acceptance": {
+          "reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "registry_verified": true,
+          "registry_digest": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "registry_checked_at": "2026-11-12T11:13:58.779165+00:00",
+          "runtime_accepted": true,
+          "runtime_summary": "The published artifact retained every official parent layer plus one entrypoint layer. Anonymous index/manifest/config pulls succeeded. Same-container NSS restart, default-deny network, protected mounts, Caido and PTY passed; all owned containers removed.",
+          "architectures_tested": [
+            "linux/arm64"
+          ],
+          "limits": [
+            "linux/amd64 manifests/configs verified through anonymous registry reads; runtime not executed."
+          ]
+        }
+      },
+      {
+        "event_id": "selective-startup-sandbox-released-2026-11-12",
+        "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+        "kind": "selective_import_followup",
+        "stage": "released",
+        "source_ledger_commit": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+        "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+        "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+        "items": [
+          "usestrix/strix#pr:1647",
+          "usestrix/strix#pr:1625",
+          "usestrix/strix#pr:1729",
+          "samirhvbr/strix#pr:61",
+          "samirhvbr/strix#pr:62",
+          "samirhvbr/strix#pr:63"
+        ],
+        "incorporated_items": [
+          "usestrix/strix#pr:1647",
+          "usestrix/strix#pr:1625",
+          "usestrix/strix#pr:1729",
+          "samirhvbr/strix#pr:61",
+          "samirhvbr/strix#pr:63"
+        ],
+        "new_ids": [],
+        "effective_upstream_base_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "full_upstream_sync_advanced": false,
+        "inventory_checkpoint_advanced": false,
+        "master_delivery": {
+          "verified": true,
+          "method": "pull_request",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "merged_at": "2026-11-12T11:36:21Z",
+          "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "published_release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+        },
+        "validation": {
+          "accepted": true,
+          "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+          "checks": [
+            {
+              "name": "published image same-container restart",
+              "status": "passed",
+              "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+            },
+            {
+              "name": "published image guarded backend",
+              "status": "passed",
+              "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+            },
+            {
+              "name": "offline Opengrep and rule controls",
+              "status": "passed",
+              "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+            },
+            {
+              "name": "targeted source tests",
+              "status": "passed",
+              "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+            },
+            {
+              "name": "Ruff Mypy Bandit",
+              "status": "passed",
+              "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+            },
+            {
+              "name": "Pyright comparison",
+              "status": "baseline_failure",
+              "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+            },
+            {
+              "name": "workflow and restart script syntax",
+              "status": "passed",
+              "scope": "actionlint and sh -n."
+            },
+            {
+              "name": "full fork CI",
+              "status": "passed",
+              "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            },
+            {
+              "name": "native binary workflow",
+              "status": "passed",
+              "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+            },
+            {
+              "name": "release artifact integrity and publication",
+              "status": "passed",
+              "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+            }
+          ],
+          "limits": [
+            "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+            "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+            "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+            "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+          ]
+        },
+        "runtime_evidence": [
+          {
+            "name": "official restart negative control",
+            "status": "failed",
+            "image": "ghcr.io/usestrix/strix-sandbox:1.4.1",
+            "summary": "First entrypoint passed; the same container hung at certutil-N on restart, with and without the extra test certificate."
+          },
+          {
+            "name": "published registry and rootfs proof",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Anonymous200 index/amd64/arm64/configs with verified SHA256. Parent rootfs layers preserved plus one. Entrypoint SHA256cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818."
+          },
+          {
+            "name": "published NSS restart",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Same container891625fe299b reached readiness twice; defaultCA and synthetic sentinel preserved. Independent bounded shell recipe also passed."
+          },
+          {
+            "name": "published guarded runtime",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Default-deny reachable-target control, IPv4/IPv6 DROP, NET_ADMIN/NET_RAW/SYS_ADMIN drops, readonly protected mounts even forroot, writable sibling control, Caido loopback/peer isolation, real SDKPTY and cleanup passed."
+          },
+          {
+            "name": "published guarded initial attempt",
+            "status": "failed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Dockercontainer.start timed out after60seconds before entrypoint. Harness temp cleanup masked the first error; complete first traceback preserved. Repeat passed with unchanged gates/limits."
+          },
+          {
+            "name": "offline SAST",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Opengrep1.31.0 controls and full immutable parent rule bundle passed.2006rulesloaded706applied7files, JSONerrors[], three expected findings,169.247seconds."
+          }
+        ],
+        "pending": [
+          "Native amd64 sandbox runtime acceptance remains outside this arm64 validation.",
+          "Assess MCP callback consumers and reporting compatibility before importing #1717/#1701.",
+          "Next broad review resumes from the preserved inventory checkpoint and known-item history; this selective delivery did not advance it."
+        ],
+        "record": "integration-released-2026-11-12.json",
         "image_acceptance": {
           "reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
           "registry_verified": true,
@@ -99367,7 +99625,7 @@
       "review_depth": "deep",
       "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
       "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
-      "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+      "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
       "fork_decision": "adapted",
       "rationale": "Pair Opengrep image/tooling guidance with offline bundled rules while retaining fork CSPT guidance and paired default validation.",
       "assessment": {
@@ -99377,7 +99635,7 @@
         "maintenance": "Review the full proposal and current fork before adoption."
       },
       "implementation": {
-        "phase": "delivered_to_master",
+        "phase": "released",
         "source_reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
         "reviewed_repository": "usestrix/strix",
         "source_imported_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
@@ -99404,24 +99662,80 @@
             "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
           }
         ],
-        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
         "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
-        "validation_record": "integration-delivered-2026-11-12.json",
+        "validation_record": "integration-released-2026-11-12.json",
         "delivered_to_master": true,
-        "released": false,
+        "released": true,
         "delivery": {
           "verified": true,
           "method": "pull_request",
-          "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
           "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
           "merged_at": "2026-11-12T11:36:21Z",
           "pr_url": "https://github.com/samirhvbr/strix/pull/63",
-          "version": "1.2.54"
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
         }
       },
       "validation": {
         "accepted": true,
-        "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -99461,13 +99775,24 @@
           {
             "name": "full fork CI",
             "status": "passed",
-            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+          },
+          {
+            "name": "native binary workflow",
+            "status": "passed",
+            "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+          },
+          {
+            "name": "release artifact integrity and publication",
+            "status": "passed",
+            "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
         ]
       },
       "evidence": [
@@ -99969,6 +100294,310 @@
               "scope": "Selective source and compatibility review; no full upstream synchronization"
             }
           }
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "event": "selective_integration_validated",
+          "previous_snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+            "fork_decision": "adapted",
+            "rationale": "Pair Opengrep image/tooling guidance with offline bundled rules while retaining fork CSPT guidance and paired default validation.",
+            "assessment": {
+              "benefit": "Potential static-analysis coverage; usefulness depends on the image shipping a working tool and bounded integration.",
+              "risk": "Not validated against the current fork; proposal-specific integration and maintenance remain to assess.",
+              "effort": "Not estimated beyond targeted inspection.",
+              "maintenance": "Review the full proposal and current fork before adoption."
+            },
+            "implementation": {
+              "phase": "delivered_to_master",
+              "source_reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1625,
+              "fork_commits": [
+                "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+                "ac827485f0ca9967c6fd2521469c7a87867020f8",
+                "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+              ],
+              "adaptations": [
+                "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+                "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+                "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+                "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+              ],
+              "provenance_unknown_reason": null,
+              "source_commits": [
+                "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                }
+              ],
+              "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "validation_record": "integration-delivered-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": false,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          },
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
+            "fork_decision": "adapted",
+            "rationale": "Pair Opengrep image/tooling guidance with offline bundled rules while retaining fork CSPT guidance and paired default validation.",
+            "assessment": {
+              "benefit": "Potential static-analysis coverage; usefulness depends on the image shipping a working tool and bounded integration.",
+              "risk": "Not validated against the current fork; proposal-specific integration and maintenance remain to assess.",
+              "effort": "Not estimated beyond targeted inspection.",
+              "maintenance": "Review the full proposal and current fork before adoption."
+            },
+            "implementation": {
+              "phase": "released",
+              "source_reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1625,
+              "fork_commits": [
+                "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+                "ac827485f0ca9967c6fd2521469c7a87867020f8",
+                "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+              ],
+              "adaptations": [
+                "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+                "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+                "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+                "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+              ],
+              "provenance_unknown_reason": null,
+              "source_commits": [
+                "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                }
+              ],
+              "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "validation_record": "integration-released-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": true,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54",
+                "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+              },
+              "release": {
+                "verified": true,
+                "id": 442865758,
+                "version": "1.2.54",
+                "tag": "shvia-v1.2.54",
+                "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+                "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+                "published_at": "2026-11-12T12:02:03Z",
+                "assets": [
+                  {
+                    "id": 739314267,
+                    "name": "pentest-aarch64-apple-darwin",
+                    "size": 94847408,
+                    "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+                  },
+                  {
+                    "id": 739314263,
+                    "name": "pentest-aarch64-unknown-linux-gnu",
+                    "size": 115862120,
+                    "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314261,
+                    "name": "pentest-x86_64-apple-darwin",
+                    "size": 96380928,
+                    "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+                  },
+                  {
+                    "id": 739314271,
+                    "name": "pentest-x86_64-unknown-linux-gnu",
+                    "size": 118903248,
+                    "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314264,
+                    "name": "SHA256SUMS",
+                    "size": 388,
+                    "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+                  }
+                ],
+                "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+                "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+                "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                },
+                {
+                  "name": "native binary workflow",
+                  "status": "passed",
+                  "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+                },
+                {
+                  "name": "release artifact integrity and publication",
+                  "status": "passed",
+                  "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+                "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          }
         }
       ],
       "analyzed_version": {
@@ -100017,6 +100646,14 @@
           "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
           "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "adoption_confirmed": true
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "depth": "deep",
+          "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+          "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "adoption_confirmed": true
         }
       ],
       "rationale_history": [
@@ -100047,6 +100684,21 @@
           "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "review_depth": "deep",
           "review_checked_at": "2026-11-12T11:25:11.564763+00:00",
+          "analyzed_version": {
+            "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "reviewed_item_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+            "scope": "Selective source and compatibility review; no full upstream synchronization"
+          }
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+          "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "review_depth": "deep",
+          "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
           "analyzed_version": {
             "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
             "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -100108,6 +100760,53 @@
             "validation_record": "integration-2026-11-12.json",
             "delivered_to_master": false,
             "released": false
+          }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "implementation": {
+            "phase": "delivered_to_master",
+            "source_reviewed_sha": "4d793375e06650a1ff6fcab0a6bba62b542c8edf",
+            "reviewed_repository": "usestrix/strix",
+            "source_imported_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+            "source_repository": "usestrix/strix",
+            "source_pr": 1625,
+            "fork_commits": [
+              "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+              "ac827485f0ca9967c6fd2521469c7a87867020f8",
+              "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+            ],
+            "adaptations": [
+              "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+              "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+              "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+              "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+            ],
+            "provenance_unknown_reason": null,
+            "source_commits": [
+              "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+            ],
+            "source_to_fork": [
+              {
+                "source_sha": "cb581bf93dd3ed49a59782cebb6ad829857adfe4",
+                "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+              }
+            ],
+            "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+            "validation_record": "integration-delivered-2026-11-12.json",
+            "delivered_to_master": true,
+            "released": false,
+            "delivery": {
+              "verified": true,
+              "method": "pull_request",
+              "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merged_at": "2026-11-12T11:36:21Z",
+              "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+              "version": "1.2.54"
+            }
           }
         }
       ],
@@ -100172,6 +100871,61 @@
               "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -100206,6 +100960,22 @@
             "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
           ],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": true,
+          "candidate_source_commits": [
+            "cb581bf93dd3ed49a59782cebb6ad829857adfe4"
+          ],
+          "candidate_fork_commits": [
+            "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+            "ac827485f0ca9967c6fd2521469c7a87867020f8",
+            "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+          ],
+          "record": "integration-released-2026-11-12.json"
         }
       ]
     },
@@ -102655,7 +103425,7 @@
       "review_depth": "deep",
       "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
       "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
-      "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+      "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
       "fork_decision": "incorporated_fully",
       "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
       "assessment": {
@@ -102665,7 +103435,7 @@
         "maintenance": "Recheck changed heads and discussion before code adoption."
       },
       "implementation": {
-        "phase": "delivered_to_master",
+        "phase": "released",
         "source_reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
         "reviewed_repository": "usestrix/strix",
         "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
@@ -102704,24 +103474,80 @@
             "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
           }
         ],
-        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
         "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
-        "validation_record": "integration-delivered-2026-11-12.json",
+        "validation_record": "integration-released-2026-11-12.json",
         "delivered_to_master": true,
-        "released": false,
+        "released": true,
         "delivery": {
           "verified": true,
           "method": "pull_request",
-          "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
           "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
           "merged_at": "2026-11-12T11:36:21Z",
           "pr_url": "https://github.com/samirhvbr/strix/pull/63",
-          "version": "1.2.54"
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
         }
       },
       "validation": {
         "accepted": true,
-        "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -102761,13 +103587,24 @@
           {
             "name": "full fork CI",
             "status": "passed",
-            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+          },
+          {
+            "name": "native binary workflow",
+            "status": "passed",
+            "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+          },
+          {
+            "name": "release artifact integrity and publication",
+            "status": "passed",
+            "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
         ]
       },
       "evidence": [],
@@ -103240,6 +104077,334 @@
               "scope": "Selective source and compatibility review; no full upstream synchronization"
             }
           }
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "event": "selective_integration_validated",
+          "previous_snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
+            "assessment": {
+              "benefit": "Existing cold-go-run startup proposal for1191. Platform startup/early-exit behavior needs separate validation; do not duplicate.",
+              "risk": "Requires the recorded dedicated validation/maintainer decisions.",
+              "effort": "Not estimated beyond current triage.",
+              "maintenance": "Recheck changed heads and discussion before code adoption."
+            },
+            "implementation": {
+              "phase": "delivered_to_master",
+              "source_reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1647,
+              "fork_commits": [
+                "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+                "ac3c42b544a94574477cf7715b50a960250a0027"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null,
+              "candidate_source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "candidate_fork_commits": [
+                "b0598a23293bd7e2b35cf55b042033249d86186e",
+                "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+              ],
+              "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+              "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+              "candidate_adaptations": [
+                "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+              ],
+              "source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                  "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+                },
+                {
+                  "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                  "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+                }
+              ],
+              "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "validation_record": "integration-delivered-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": false,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          },
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
+            "assessment": {
+              "benefit": "Existing cold-go-run startup proposal for1191. Platform startup/early-exit behavior needs separate validation; do not duplicate.",
+              "risk": "Requires the recorded dedicated validation/maintainer decisions.",
+              "effort": "Not estimated beyond current triage.",
+              "maintenance": "Recheck changed heads and discussion before code adoption."
+            },
+            "implementation": {
+              "phase": "released",
+              "source_reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+              "reviewed_repository": "usestrix/strix",
+              "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1647,
+              "fork_commits": [
+                "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+                "ac3c42b544a94574477cf7715b50a960250a0027"
+              ],
+              "adaptations": [],
+              "provenance_unknown_reason": null,
+              "candidate_source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "candidate_fork_commits": [
+                "b0598a23293bd7e2b35cf55b042033249d86186e",
+                "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+              ],
+              "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+              "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+              "candidate_adaptations": [
+                "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+              ],
+              "source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                  "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+                },
+                {
+                  "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                  "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+                }
+              ],
+              "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "validation_record": "integration-released-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": true,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54",
+                "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+              },
+              "release": {
+                "verified": true,
+                "id": 442865758,
+                "version": "1.2.54",
+                "tag": "shvia-v1.2.54",
+                "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+                "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+                "published_at": "2026-11-12T12:02:03Z",
+                "assets": [
+                  {
+                    "id": 739314267,
+                    "name": "pentest-aarch64-apple-darwin",
+                    "size": 94847408,
+                    "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+                  },
+                  {
+                    "id": 739314263,
+                    "name": "pentest-aarch64-unknown-linux-gnu",
+                    "size": 115862120,
+                    "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314261,
+                    "name": "pentest-x86_64-apple-darwin",
+                    "size": 96380928,
+                    "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+                  },
+                  {
+                    "id": 739314271,
+                    "name": "pentest-x86_64-unknown-linux-gnu",
+                    "size": 118903248,
+                    "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314264,
+                    "name": "SHA256SUMS",
+                    "size": 388,
+                    "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+                  }
+                ],
+                "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+                "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+                "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                },
+                {
+                  "name": "native binary workflow",
+                  "status": "passed",
+                  "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+                },
+                {
+                  "name": "release artifact integrity and publication",
+                  "status": "passed",
+                  "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+                "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          }
         }
       ],
       "analyzed_version": {
@@ -103289,6 +104454,14 @@
           "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
           "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "adoption_confirmed": true
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "depth": "deep",
+          "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+          "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "adoption_confirmed": true
         }
       ],
       "review_history": [
@@ -103323,6 +104496,21 @@
           "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "review_depth": "deep",
           "review_checked_at": "2026-11-12T11:25:11.564763+00:00",
+          "analyzed_version": {
+            "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "reviewed_item_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+            "scope": "Selective source and compatibility review; no full upstream synchronization"
+          }
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+          "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "review_depth": "deep",
+          "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
           "analyzed_version": {
             "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
             "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -103416,6 +104604,65 @@
             "delivered_to_master": false,
             "released": false
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "implementation": {
+            "phase": "delivered_to_master",
+            "source_reviewed_sha": "a6a70f3ec8ba2ed0ac27bbfa463b2d5346f91374",
+            "reviewed_repository": "usestrix/strix",
+            "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "source_repository": "usestrix/strix",
+            "source_pr": 1647,
+            "fork_commits": [
+              "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+              "ac3c42b544a94574477cf7715b50a960250a0027"
+            ],
+            "adaptations": [],
+            "provenance_unknown_reason": null,
+            "candidate_source_commits": [
+              "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+              "01119158f8f50027591cbae73f37cf0a2fea644d"
+            ],
+            "candidate_fork_commits": [
+              "b0598a23293bd7e2b35cf55b042033249d86186e",
+              "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+            ],
+            "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+            "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+            "candidate_adaptations": [
+              "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+            ],
+            "source_commits": [
+              "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+              "01119158f8f50027591cbae73f37cf0a2fea644d"
+            ],
+            "source_to_fork": [
+              {
+                "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+              },
+              {
+                "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+              }
+            ],
+            "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+            "validation_record": "integration-delivered-2026-11-12.json",
+            "delivered_to_master": true,
+            "released": false,
+            "delivery": {
+              "verified": true,
+              "method": "pull_request",
+              "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merged_at": "2026-11-12T11:36:21Z",
+              "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+              "version": "1.2.54"
+            }
+          }
         }
       ],
       "validation_history": [
@@ -103477,6 +104724,61 @@
               "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -103511,6 +104813,22 @@
             "ac3c42b544a94574477cf7715b50a960250a0027"
           ],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": true,
+          "candidate_source_commits": [
+            "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+            "01119158f8f50027591cbae73f37cf0a2fea644d"
+          ],
+          "candidate_fork_commits": [
+            "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+            "ac3c42b544a94574477cf7715b50a960250a0027"
+          ],
+          "record": "integration-released-2026-11-12.json"
         }
       ]
     },
@@ -117937,13 +119255,13 @@
       },
       "review_depth": "deep",
       "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
-      "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+      "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
       "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
       "fork_decision": "adapted",
       "rationale": "Carry patched Go-tool builds and select sandbox 1.4.1 only after fork-specific runtime acceptance.",
       "assessment": {},
       "implementation": {
-        "phase": "delivered_to_master",
+        "phase": "released",
         "source_reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
         "source_imported_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
         "fork_commits": [
@@ -117974,25 +119292,81 @@
             "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
           }
         ],
-        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
         "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
         "provenance_unknown_reason": null,
-        "validation_record": "integration-delivered-2026-11-12.json",
+        "validation_record": "integration-released-2026-11-12.json",
         "delivered_to_master": true,
-        "released": false,
+        "released": true,
         "delivery": {
           "verified": true,
           "method": "pull_request",
-          "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
           "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
           "merged_at": "2026-11-12T11:36:21Z",
           "pr_url": "https://github.com/samirhvbr/strix/pull/63",
-          "version": "1.2.54"
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
         }
       },
       "validation": {
         "accepted": true,
-        "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -118032,13 +119406,24 @@
           {
             "name": "full fork CI",
             "status": "passed",
-            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+          },
+          {
+            "name": "native binary workflow",
+            "status": "passed",
+            "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+          },
+          {
+            "name": "release artifact integrity and publication",
+            "status": "passed",
+            "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
         ]
       },
       "linked_items": [
@@ -118410,6 +119795,310 @@
               "scope": "Selective source and compatibility review; no full upstream synchronization"
             }
           }
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "event": "selective_integration_validated",
+          "previous_snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+            "fork_decision": "adapted",
+            "rationale": "Carry patched Go-tool builds and select sandbox 1.4.1 only after fork-specific runtime acceptance.",
+            "assessment": {},
+            "implementation": {
+              "phase": "delivered_to_master",
+              "source_reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+              "source_imported_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+              "fork_commits": [
+                "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+                "ac827485f0ca9967c6fd2521469c7a87867020f8",
+                "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+              ],
+              "adaptations": [
+                "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+                "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+                "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+                "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+              ],
+              "reviewed_repository": "usestrix/strix",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1729,
+              "source_commits": [
+                "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+                "9798ecc404bff228629dba7b60879bc9a498d8fe"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                },
+                {
+                  "source_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                }
+              ],
+              "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "provenance_unknown_reason": null,
+              "validation_record": "integration-delivered-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": false,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          },
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+            "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+            "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
+            "fork_decision": "adapted",
+            "rationale": "Carry patched Go-tool builds and select sandbox 1.4.1 only after fork-specific runtime acceptance.",
+            "assessment": {},
+            "implementation": {
+              "phase": "released",
+              "source_reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+              "source_imported_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+              "fork_commits": [
+                "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+                "ac827485f0ca9967c6fd2521469c7a87867020f8",
+                "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+              ],
+              "adaptations": [
+                "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+                "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+                "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+                "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+              ],
+              "reviewed_repository": "usestrix/strix",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1729,
+              "source_commits": [
+                "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+                "9798ecc404bff228629dba7b60879bc9a498d8fe"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                },
+                {
+                  "source_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+                  "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+                }
+              ],
+              "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "provenance_unknown_reason": null,
+              "validation_record": "integration-released-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": true,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54",
+                "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+              },
+              "release": {
+                "verified": true,
+                "id": 442865758,
+                "version": "1.2.54",
+                "tag": "shvia-v1.2.54",
+                "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+                "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+                "published_at": "2026-11-12T12:02:03Z",
+                "assets": [
+                  {
+                    "id": 739314267,
+                    "name": "pentest-aarch64-apple-darwin",
+                    "size": 94847408,
+                    "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+                  },
+                  {
+                    "id": 739314263,
+                    "name": "pentest-aarch64-unknown-linux-gnu",
+                    "size": 115862120,
+                    "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314261,
+                    "name": "pentest-x86_64-apple-darwin",
+                    "size": 96380928,
+                    "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+                  },
+                  {
+                    "id": 739314271,
+                    "name": "pentest-x86_64-unknown-linux-gnu",
+                    "size": 118903248,
+                    "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314264,
+                    "name": "SHA256SUMS",
+                    "size": 388,
+                    "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+                  }
+                ],
+                "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+                "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+                "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                },
+                {
+                  "name": "native binary workflow",
+                  "status": "passed",
+                  "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+                },
+                {
+                  "name": "release artifact integrity and publication",
+                  "status": "passed",
+                  "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+                "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          }
         }
       ],
       "analyzed_version": {
@@ -118442,6 +120131,14 @@
           "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
           "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "adoption_confirmed": true
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "depth": "deep",
+          "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+          "scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "adoption_confirmed": true
         }
       ],
       "review_head_status": "matches_observed_head",
@@ -118465,6 +120162,21 @@
           "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
           "review_depth": "deep",
           "review_checked_at": "2026-11-12T11:25:11.564763+00:00",
+          "analyzed_version": {
+            "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "reviewed_item_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+            "scope": "Selective source and compatibility review; no full upstream synchronization"
+          }
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+          "review_scope": "Selected merge-commit diff, current fork call sites, discussion and integration constraints; validation belongs to the explicit stage below.",
+          "review_depth": "deep",
+          "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
           "analyzed_version": {
             "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
             "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -118528,6 +120240,58 @@
             "delivered_to_master": false,
             "released": false
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "implementation": {
+            "phase": "delivered_to_master",
+            "source_reviewed_sha": "6f31c0a2f58170f388ef35499a90f39eac5a45a1",
+            "source_imported_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+            "fork_commits": [
+              "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+              "ac827485f0ca9967c6fd2521469c7a87867020f8",
+              "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+            ],
+            "adaptations": [
+              "Preserve fork CSPT guidance and download/install behavior while moving the prompt and skills to Opengrep.",
+              "Select a minimal public compatibility image because official1.4.1 failed restart. The image starts from immutable parentc8e and restores the existing fork NSS guard.",
+              "Pin runtime and installer to the selected compatibility index only after actual published-artifact runtime gates passed.",
+              "Publish both architecture manifests through the fork workflow. Use manual dispatch for future builds."
+            ],
+            "reviewed_repository": "usestrix/strix",
+            "source_repository": "usestrix/strix",
+            "source_pr": 1729,
+            "source_commits": [
+              "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+              "9798ecc404bff228629dba7b60879bc9a498d8fe"
+            ],
+            "source_to_fork": [
+              {
+                "source_sha": "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+                "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+              },
+              {
+                "source_sha": "9798ecc404bff228629dba7b60879bc9a498d8fe",
+                "fork_sha": "160181c80128f9ccd12d4909a9acada25a0d5f0a"
+              }
+            ],
+            "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+            "provenance_unknown_reason": null,
+            "validation_record": "integration-delivered-2026-11-12.json",
+            "delivered_to_master": true,
+            "released": false,
+            "delivery": {
+              "verified": true,
+              "method": "pull_request",
+              "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merged_at": "2026-11-12T11:36:21Z",
+              "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+              "version": "1.2.54"
+            }
+          }
         }
       ],
       "validation_history": [
@@ -118586,6 +120350,61 @@
               "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -118622,6 +120441,23 @@
             "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
           ],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": true,
+          "candidate_source_commits": [
+            "48d93cd3d9bd6fd320f44dc4534fbcdb62005027",
+            "9798ecc404bff228629dba7b60879bc9a498d8fe"
+          ],
+          "candidate_fork_commits": [
+            "160181c80128f9ccd12d4909a9acada25a0d5f0a",
+            "ac827485f0ca9967c6fd2521469c7a87867020f8",
+            "db3b1803fa13839df3aa86eefe6cc24cd911a2da"
+          ],
+          "record": "integration-released-2026-11-12.json"
         }
       ]
     },
@@ -119368,13 +121204,13 @@
       },
       "review_depth": "deep",
       "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
-      "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+      "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
       "review_scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
       "fork_decision": "incorporated_fully",
       "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
       "assessment": {},
       "implementation": {
-        "phase": "delivered_to_master",
+        "phase": "released",
         "source_reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
         "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
         "fork_commits": [
@@ -119412,25 +121248,81 @@
             "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
           }
         ],
-        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
         "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
         "provenance_unknown_reason": null,
-        "validation_record": "integration-delivered-2026-11-12.json",
+        "validation_record": "integration-released-2026-11-12.json",
         "delivered_to_master": true,
-        "released": false,
+        "released": true,
         "delivery": {
           "verified": true,
           "method": "pull_request",
-          "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
           "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
           "merged_at": "2026-11-12T11:36:21Z",
           "pr_url": "https://github.com/samirhvbr/strix/pull/63",
-          "version": "1.2.54"
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
         }
       },
       "validation": {
         "accepted": true,
-        "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
         "checks": [
           {
             "name": "published image same-container restart",
@@ -119470,13 +121362,24 @@
           {
             "name": "full fork CI",
             "status": "passed",
-            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+          },
+          {
+            "name": "native binary workflow",
+            "status": "passed",
+            "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+          },
+          {
+            "name": "release artifact integrity and publication",
+            "status": "passed",
+            "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
         ]
       },
       "linked_items": [
@@ -120033,6 +121936,324 @@
               "scope": "Selective source and compatibility review; no full upstream synchronization"
             }
           }
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "event": "selective_integration_validated",
+          "previous_snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+            "review_scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
+            "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
+            "assessment": {},
+            "implementation": {
+              "phase": "delivered_to_master",
+              "source_reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+              "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "fork_commits": [
+                "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+                "ac3c42b544a94574477cf7715b50a960250a0027"
+              ],
+              "adaptations": [],
+              "candidate_source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "candidate_fork_commits": [
+                "b0598a23293bd7e2b35cf55b042033249d86186e",
+                "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+              ],
+              "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+              "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+              "candidate_adaptations": [
+                "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+              ],
+              "reviewed_repository": "samirhvbr/strix",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1647,
+              "source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                  "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+                },
+                {
+                  "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                  "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+                }
+              ],
+              "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "provenance_unknown_reason": null,
+              "validation_record": "integration-delivered-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": false,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          },
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+            "review_scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
+            "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Selectively carry cold Go-source TUI startup and Windows early-exit handling without merging the review branch.",
+            "assessment": {},
+            "implementation": {
+              "phase": "released",
+              "source_reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+              "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "fork_commits": [
+                "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+                "ac3c42b544a94574477cf7715b50a960250a0027"
+              ],
+              "adaptations": [],
+              "candidate_source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "candidate_fork_commits": [
+                "b0598a23293bd7e2b35cf55b042033249d86186e",
+                "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+              ],
+              "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+              "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+              "candidate_adaptations": [
+                "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+              ],
+              "reviewed_repository": "samirhvbr/strix",
+              "source_repository": "usestrix/strix",
+              "source_pr": 1647,
+              "source_commits": [
+                "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "01119158f8f50027591cbae73f37cf0a2fea644d"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                  "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+                },
+                {
+                  "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                  "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+                }
+              ],
+              "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "provenance_unknown_reason": null,
+              "validation_record": "integration-released-2026-11-12.json",
+              "delivered_to_master": true,
+              "released": true,
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54",
+                "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+              },
+              "release": {
+                "verified": true,
+                "id": 442865758,
+                "version": "1.2.54",
+                "tag": "shvia-v1.2.54",
+                "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+                "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+                "published_at": "2026-11-12T12:02:03Z",
+                "assets": [
+                  {
+                    "id": 739314267,
+                    "name": "pentest-aarch64-apple-darwin",
+                    "size": 94847408,
+                    "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+                  },
+                  {
+                    "id": 739314263,
+                    "name": "pentest-aarch64-unknown-linux-gnu",
+                    "size": 115862120,
+                    "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314261,
+                    "name": "pentest-x86_64-apple-darwin",
+                    "size": 96380928,
+                    "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+                  },
+                  {
+                    "id": 739314271,
+                    "name": "pentest-x86_64-unknown-linux-gnu",
+                    "size": 118903248,
+                    "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314264,
+                    "name": "SHA256SUMS",
+                    "size": 388,
+                    "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+                  }
+                ],
+                "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+                "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+                "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                },
+                {
+                  "name": "native binary workflow",
+                  "status": "passed",
+                  "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+                },
+                {
+                  "name": "release artifact integrity and publication",
+                  "status": "passed",
+                  "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+                "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          }
         }
       ],
       "analyzed_version": {
@@ -120061,6 +122282,14 @@
         {
           "recorded_at": "2026-11-12T11:37:33.977656+00:00",
           "event_id": "selective-startup-sandbox-delivered-2026-11-12",
+          "depth": "deep",
+          "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+          "scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
+          "adoption_confirmed": true
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
           "depth": "deep",
           "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
           "scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
@@ -120100,6 +122329,22 @@
           },
           "previous_state": "MERGED",
           "previous_last_checked": "2026-11-12T11:06:42.496331+00:00"
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "previous_source": {
+            "observed_head_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+            "base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+            "base_branch": "feat/upstream-contributions-20261105",
+            "merge_commit": "3a77ce533b037dc91de89b49ee811c6fc79736d3",
+            "draft": false,
+            "merged_at": "2026-11-12T09:43:52Z",
+            "closed_at": "2026-11-12T09:43:52Z",
+            "state_reason": null
+          },
+          "previous_state": "MERGED",
+          "previous_last_checked": "2026-11-12T11:06:42.496331+00:00"
         }
       ],
       "review_history": [
@@ -120122,6 +122367,21 @@
           "review_scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
           "review_depth": "deep",
           "review_checked_at": "2026-11-12T11:25:11.564763+00:00",
+          "analyzed_version": {
+            "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "reviewed_item_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+            "scope": "Selective source and compatibility review; no full upstream synchronization"
+          }
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+          "review_scope": "Review PR #61 merged only into the review base; the same two upstream commits are selected separately onto current master lineage.",
+          "review_depth": "deep",
+          "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
           "analyzed_version": {
             "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
             "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -120204,6 +122464,65 @@
             "validation_record": "integration-2026-11-12.json",
             "delivered_to_master": false,
             "released": false
+          }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "implementation": {
+            "phase": "delivered_to_master",
+            "source_reviewed_sha": "8344d850c74c5c3ef87b4d02315c6d0447be47dd",
+            "source_imported_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "fork_commits": [
+              "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+              "ac3c42b544a94574477cf7715b50a960250a0027"
+            ],
+            "adaptations": [],
+            "candidate_source_commits": [
+              "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+              "01119158f8f50027591cbae73f37cf0a2fea644d"
+            ],
+            "candidate_fork_commits": [
+              "b0598a23293bd7e2b35cf55b042033249d86186e",
+              "8344d850c74c5c3ef87b4d02315c6d0447be47dd"
+            ],
+            "candidate_fork_pr": "https://github.com/samirhvbr/strix/pull/61",
+            "candidate_base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+            "candidate_adaptations": [
+              "Clean cherry-picks. Existing fork shutdown and assessment behavior remains in the candidate tree."
+            ],
+            "reviewed_repository": "samirhvbr/strix",
+            "source_repository": "usestrix/strix",
+            "source_pr": 1647,
+            "source_commits": [
+              "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+              "01119158f8f50027591cbae73f37cf0a2fea644d"
+            ],
+            "source_to_fork": [
+              {
+                "source_sha": "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+                "fork_sha": "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e"
+              },
+              {
+                "source_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+                "fork_sha": "ac3c42b544a94574477cf7715b50a960250a0027"
+              }
+            ],
+            "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+            "provenance_unknown_reason": null,
+            "validation_record": "integration-delivered-2026-11-12.json",
+            "delivered_to_master": true,
+            "released": false,
+            "delivery": {
+              "verified": true,
+              "method": "pull_request",
+              "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+              "merged_at": "2026-11-12T11:36:21Z",
+              "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+              "version": "1.2.54"
+            }
           }
         }
       ],
@@ -120414,6 +122733,61 @@
               "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
             ]
           }
+        },
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "validation": {
+            "accepted": true,
+            "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+            "checks": [
+              {
+                "name": "published image same-container restart",
+                "status": "passed",
+                "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+              },
+              {
+                "name": "published image guarded backend",
+                "status": "passed",
+                "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+              },
+              {
+                "name": "offline Opengrep and rule controls",
+                "status": "passed",
+                "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+              },
+              {
+                "name": "targeted source tests",
+                "status": "passed",
+                "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+              },
+              {
+                "name": "Ruff Mypy Bandit",
+                "status": "passed",
+                "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+              },
+              {
+                "name": "Pyright comparison",
+                "status": "baseline_failure",
+                "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+              },
+              {
+                "name": "workflow and restart script syntax",
+                "status": "passed",
+                "scope": "actionlint and sh -n."
+              },
+              {
+                "name": "full fork CI",
+                "status": "passed",
+                "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+              }
+            ],
+            "limits": [
+              "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+              "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+              "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+            ]
+          }
         }
       ],
       "selective_integration_events": [
@@ -120448,6 +122822,22 @@
             "ac3c42b544a94574477cf7715b50a960250a0027"
           ],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": true,
+          "candidate_source_commits": [
+            "29fe9aaaa86a73168e2fd1d7ef24ea70bb01c1a7",
+            "01119158f8f50027591cbae73f37cf0a2fea644d"
+          ],
+          "candidate_fork_commits": [
+            "e9b6ef728bda0c5d7ea4b2072b5ab24176ccef5e",
+            "ac3c42b544a94574477cf7715b50a960250a0027"
+          ],
+          "record": "integration-released-2026-11-12.json"
         }
       ]
     },
@@ -120967,6 +123357,21 @@
           },
           "previous_state": "MERGED",
           "previous_last_checked": "2026-11-12T11:06:42.496331+00:00"
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "previous_source": {
+            "observed_head_sha": "91ebb1fbc19c12fa7b5bbdf6ba848465c10b2f6c",
+            "base_sha": "2d4af58c82038a51a5adb61613e04158b7a0120d",
+            "base_branch": "feat/upstream-contributions-20261105",
+            "merge_commit": "de8c7a4e63d75cb1d2b4195f293bcb5c6bf4027d",
+            "merged_at": "2026-11-12T10:09:15Z",
+            "closed_at": "2026-11-12T10:09:15Z",
+            "draft": false
+          },
+          "previous_state": "MERGED",
+          "previous_last_checked": "2026-11-12T11:06:42.496331+00:00"
         }
       ],
       "selective_integration_events": [
@@ -120989,6 +123394,16 @@
           "candidate_source_commits": [],
           "candidate_fork_commits": [],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": false,
+          "candidate_source_commits": [],
+          "candidate_fork_commits": [],
+          "record": "integration-released-2026-11-12.json"
         }
       ]
     },
@@ -121017,10 +123432,10 @@
       "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
       "review_scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
       "fork_decision": "incorporated_fully",
-      "rationale": "Merged into master at1a55f43e after15 passing checks. The merge tree matches the validated PR head.",
+      "rationale": "Merged into master after all15 checks passed, then published as1.2.54 from013fa614 with four native binary smokes and verified release checksums. Executable code matches tested026f3f54.",
       "assessment": {},
       "implementation": {
-        "phase": "delivered_to_master",
+        "phase": "released",
         "source_reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
         "source_imported_sha": "026f3f54ad6976105a55608bff0451e89917203d",
         "fork_commits": [
@@ -121029,11 +123444,150 @@
         "adaptations": [],
         "source_repository": "samirhvbr/strix",
         "source_pr": 63,
-        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
         "delivered_to_master": true,
-        "released": false
+        "released": true,
+        "reviewed_repository": "samirhvbr/strix",
+        "source_commits": [
+          "026f3f54ad6976105a55608bff0451e89917203d"
+        ],
+        "source_to_fork": [
+          {
+            "source_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+          }
+        ],
+        "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+        "provenance_unknown_reason": null,
+        "validation_record": "integration-released-2026-11-12.json",
+        "delivery": {
+          "verified": true,
+          "method": "pull_request",
+          "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "merged_at": "2026-11-12T11:36:21Z",
+          "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+          "version": "1.2.54",
+          "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+        },
+        "release": {
+          "verified": true,
+          "id": 442865758,
+          "version": "1.2.54",
+          "tag": "shvia-v1.2.54",
+          "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+          "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+          "published_at": "2026-11-12T12:02:03Z",
+          "assets": [
+            {
+              "id": 739314267,
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 94847408,
+              "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            },
+            {
+              "id": 739314263,
+              "name": "pentest-aarch64-unknown-linux-gnu",
+              "size": 115862120,
+              "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314261,
+              "name": "pentest-x86_64-apple-darwin",
+              "size": 96380928,
+              "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+            },
+            {
+              "id": 739314271,
+              "name": "pentest-x86_64-unknown-linux-gnu",
+              "size": 118903248,
+              "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+            },
+            {
+              "id": 739314264,
+              "name": "SHA256SUMS",
+              "size": 388,
+              "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+              "state": "uploaded",
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            }
+          ],
+          "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+          "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+          "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+        }
       },
-      "validation": {},
+      "validation": {
+        "accepted": true,
+        "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+        "checks": [
+          {
+            "name": "published image same-container restart",
+            "status": "passed",
+            "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+          },
+          {
+            "name": "published image guarded backend",
+            "status": "passed",
+            "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+          },
+          {
+            "name": "offline Opengrep and rule controls",
+            "status": "passed",
+            "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+          },
+          {
+            "name": "targeted source tests",
+            "status": "passed",
+            "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+          },
+          {
+            "name": "Ruff Mypy Bandit",
+            "status": "passed",
+            "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+          },
+          {
+            "name": "Pyright comparison",
+            "status": "baseline_failure",
+            "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+          },
+          {
+            "name": "workflow and restart script syntax",
+            "status": "passed",
+            "scope": "actionlint and sh -n."
+          },
+          {
+            "name": "full fork CI",
+            "status": "passed",
+            "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+          },
+          {
+            "name": "native binary workflow",
+            "status": "passed",
+            "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+          },
+          {
+            "name": "release artifact integrity and publication",
+            "status": "passed",
+            "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+          }
+        ],
+        "limits": [
+          "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+          "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+          "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+        ]
+      },
       "evidence": [],
       "linked_items": [
         "https://github.com/samirhvbr/strix/pull/61",
@@ -121101,6 +123655,214 @@
           "previous_decision": "pending",
           "decision": "incorporated_fully",
           "reason": "PR63 merged into master after all15 checks passed; merge tree equals validated026f3f54."
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "event": "selective_integration_validated",
+          "previous_snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "review_scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
+            "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Merged into master at1a55f43e after15 passing checks. The merge tree matches the validated PR head.",
+            "assessment": {},
+            "implementation": {
+              "phase": "delivered_to_master",
+              "source_reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "source_imported_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_commits": [
+                "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+              ],
+              "adaptations": [],
+              "source_repository": "samirhvbr/strix",
+              "source_pr": 63,
+              "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "delivered_to_master": true,
+              "released": false
+            },
+            "validation": {},
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          },
+          "snapshot": {
+            "review_depth": "deep",
+            "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "review_scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
+            "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
+            "fork_decision": "incorporated_fully",
+            "rationale": "Merged into master after all15 checks passed, then published as1.2.54 from013fa614 with four native binary smokes and verified release checksums. Executable code matches tested026f3f54.",
+            "assessment": {},
+            "implementation": {
+              "phase": "released",
+              "source_reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "source_imported_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "fork_commits": [
+                "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+              ],
+              "adaptations": [],
+              "source_repository": "samirhvbr/strix",
+              "source_pr": 63,
+              "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+              "delivered_to_master": true,
+              "released": true,
+              "reviewed_repository": "samirhvbr/strix",
+              "source_commits": [
+                "026f3f54ad6976105a55608bff0451e89917203d"
+              ],
+              "source_to_fork": [
+                {
+                  "source_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+                  "fork_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+                }
+              ],
+              "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+              "provenance_unknown_reason": null,
+              "validation_record": "integration-released-2026-11-12.json",
+              "delivery": {
+                "verified": true,
+                "method": "pull_request",
+                "master_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+                "merged_at": "2026-11-12T11:36:21Z",
+                "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+                "version": "1.2.54",
+                "source_scope": "PR merge1a55f43e plus documentation-only commitsf9bc6636 and013fa614. Executable source equals the tested PR head026f3f54."
+              },
+              "release": {
+                "verified": true,
+                "id": 442865758,
+                "version": "1.2.54",
+                "tag": "shvia-v1.2.54",
+                "tag_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+                "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+                "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+                "published_at": "2026-11-12T12:02:03Z",
+                "assets": [
+                  {
+                    "id": 739314267,
+                    "name": "pentest-aarch64-apple-darwin",
+                    "size": 94847408,
+                    "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+                  },
+                  {
+                    "id": 739314263,
+                    "name": "pentest-aarch64-unknown-linux-gnu",
+                    "size": 115862120,
+                    "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314261,
+                    "name": "pentest-x86_64-apple-darwin",
+                    "size": 96380928,
+                    "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
+                  },
+                  {
+                    "id": 739314271,
+                    "name": "pentest-x86_64-unknown-linux-gnu",
+                    "size": 118903248,
+                    "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
+                  },
+                  {
+                    "id": 739314264,
+                    "name": "SHA256SUMS",
+                    "size": 388,
+                    "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+                    "state": "uploaded",
+                    "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+                  }
+                ],
+                "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment.",
+                "build_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408",
+                "asset_acceptance_record": "release-acceptance-2026-11-12.json"
+              }
+            },
+            "validation": {
+              "accepted": true,
+              "summary": "Selected imports delivered to master and published as1.2.54. The immutable compatibility image passed arm64 restart/network/mount gates before default selection. All15 source CI checks, four native binary smokes and release asset checksums passed; Pyright retains the documented baseline failures.",
+              "checks": [
+                {
+                  "name": "published image same-container restart",
+                  "status": "passed",
+                  "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+                },
+                {
+                  "name": "published image guarded backend",
+                  "status": "passed",
+                  "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+                },
+                {
+                  "name": "offline Opengrep and rule controls",
+                  "status": "passed",
+                  "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+                },
+                {
+                  "name": "targeted source tests",
+                  "status": "passed",
+                  "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+                },
+                {
+                  "name": "Ruff Mypy Bandit",
+                  "status": "passed",
+                  "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+                },
+                {
+                  "name": "Pyright comparison",
+                  "status": "baseline_failure",
+                  "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+                },
+                {
+                  "name": "workflow and restart script syntax",
+                  "status": "passed",
+                  "scope": "actionlint and sh -n."
+                },
+                {
+                  "name": "full fork CI",
+                  "status": "passed",
+                  "scope": "All15 checks at026f3f54 succeeded. Python3.12,3.13,3.14 each:3822passed,12skipped,3xfailed. Release source013fa614 differs only in documentation. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+                },
+                {
+                  "name": "native binary workflow",
+                  "status": "passed",
+                  "scope": "All6 jobs including4 native --version/--fork-version smokes at013fa614. https://github.com/samirhvbr/strix/actions/runs/43211229408"
+                },
+                {
+                  "name": "release artifact integrity and publication",
+                  "status": "passed",
+                  "scope": "Four binaries plusSHA256SUMS downloaded and hashed.4binary checksums and5GitHub digests match; Mach-O/ELF headers match architecture. Published release442865758 is latest, not draft. macOSarm64 matches independently executed bytes."
+                }
+              ],
+              "limits": [
+                "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+                "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+                "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+                "Native binary smoke tests cover CLI version startup, not a live pentest or full UI session. Sandbox amd64 runtime remains untested despite amd64 native CLI smoke success."
+              ]
+            },
+            "revisit_conditions": [],
+            "analyzed_version": {
+              "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+              "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+              "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+              "reviewed_item_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+              "scope": "Selective source and compatibility review; no full upstream synchronization"
+            }
+          }
         }
       ],
       "source_observation_history": [
@@ -121110,6 +123872,21 @@
           "previous_source": {},
           "previous_state": null,
           "previous_last_checked": null
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "previous_source": {
+            "observed_head_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "base_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "base_branch": "master",
+            "merge_commit": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+            "merged_at": "2026-11-12T11:36:21Z",
+            "closed_at": "2026-11-12T11:36:21Z",
+            "draft": false
+          },
+          "previous_state": "MERGED",
+          "previous_last_checked": "2026-11-12T11:37:33.977656+00:00"
         }
       ],
       "review_history": [
@@ -121121,9 +123898,24 @@
           "review_depth": "identified",
           "review_checked_at": null,
           "analyzed_version": null
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+          "review_scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
+          "review_depth": "deep",
+          "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+          "analyzed_version": {
+            "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+            "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+            "observed_upstream_sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+            "reviewed_item_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "scope": "Selective source and compatibility review; no full upstream synchronization"
+          }
         }
       ],
-      "review_checked_at": "2026-11-12T11:37:33.977656+00:00",
+      "review_checked_at": "2026-11-12T12:02:55.964909+00:00",
       "analyzed_version": {
         "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
         "upstream_base_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
@@ -121140,6 +123932,14 @@
           "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
           "scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
           "adoption_confirmed": false
+        },
+        {
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "depth": "deep",
+          "reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+          "scope": "Merged after 15 checks passed, tree equivalent to the validated PR head.",
+          "adoption_confirmed": true
         }
       ],
       "selective_integration_events": [
@@ -121152,6 +123952,47 @@
           "candidate_source_commits": [],
           "candidate_fork_commits": [],
           "record": "integration-delivered-2026-11-12.json"
+        },
+        {
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "recorded_at": "2026-11-12T12:02:55.964909+00:00",
+          "stage": "released",
+          "validated_code_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+          "incorporation_confirmed": true,
+          "candidate_source_commits": [
+            "026f3f54ad6976105a55608bff0451e89917203d"
+          ],
+          "candidate_fork_commits": [
+            "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+          ],
+          "record": "integration-released-2026-11-12.json"
+        }
+      ],
+      "implementation_history": [
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "implementation": {
+            "phase": "delivered_to_master",
+            "source_reviewed_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "source_imported_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "fork_commits": [
+              "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+            ],
+            "adaptations": [],
+            "source_repository": "samirhvbr/strix",
+            "source_pr": 63,
+            "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+            "delivered_to_master": true,
+            "released": false
+          }
+        }
+      ],
+      "validation_history": [
+        {
+          "replaced_at": "2026-11-12T12:02:55.964909+00:00",
+          "event_id": "selective-startup-sandbox-released-2026-11-12",
+          "validation": {}
         }
       ]
     }

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "kind": "fork_release_acceptance",
+  "fork_version": "1.2.54",
+  "upstream_package_version": "1.7.0",
+  "tag": {
+    "name": "shvia-v1.2.54",
+    "type": "annotated",
+    "tag_object_sha": "9245b517e0645097333116d8abacf9638c6b6310",
+    "peeled_commit_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+    "ref_stable_during_download": true
+  },
+  "release": {
+    "id": 442865758,
+    "tag_name": "shvia-v1.2.54",
+    "name": "SHVIA 1.2.54 (Strix 1.7.0)",
+    "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-11-12T12:02:03Z"
+  },
+  "binary_workflow": {
+    "id": 43211229408,
+    "head_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+    "head_branch": "shvia-v1.2.54",
+    "event": "workflow_dispatch",
+    "run_attempt": 1,
+    "conclusion": "success",
+    "html_url": "https://github.com/samirhvbr/strix/actions/runs/43211229408"
+  },
+  "native_smoke_checks": [
+    {
+      "job": "build (macos-15-intel, x86_64-apple-darwin)",
+      "job_id": 131159127451,
+      "runner_name": "GitHub Actions 1000029656",
+      "conclusion": "success",
+      "url": "https://github.com/samirhvbr/strix/actions/runs/43211229408/job/131159127451",
+      "evidence": "The native smoke step succeeded; the pinned workflow requires --fork-version to match .fork-version before artifact upload."
+    },
+    {
+      "job": "build (ubuntu-22.04-arm, aarch64-unknown-linux-gnu)",
+      "job_id": 131159127503,
+      "runner_name": "GitHub Actions 1000029651",
+      "conclusion": "success",
+      "url": "https://github.com/samirhvbr/strix/actions/runs/43211229408/job/131159127503",
+      "evidence": "The native smoke step succeeded; the pinned workflow requires --fork-version to match .fork-version before artifact upload."
+    },
+    {
+      "job": "build (macos-latest, aarch64-apple-darwin)",
+      "job_id": 131159127572,
+      "runner_name": "GitHub Actions 1000029653",
+      "conclusion": "success",
+      "url": "https://github.com/samirhvbr/strix/actions/runs/43211229408/job/131159127572",
+      "evidence": "The native smoke step succeeded; the pinned workflow requires --fork-version to match .fork-version before artifact upload."
+    },
+    {
+      "job": "build (ubuntu-22.04, x86_64-unknown-linux-gnu)",
+      "job_id": 131159127614,
+      "runner_name": "GitHub Actions 1000029654",
+      "conclusion": "success",
+      "url": "https://github.com/samirhvbr/strix/actions/runs/43211229408/job/131159127614",
+      "evidence": "The native smoke step succeeded; the pinned workflow requires --fork-version to match .fork-version before artifact upload."
+    }
+  ],
+  "byte_verification": {
+    "checked_at": "2026-11-12T12:00:45.497976+00:00",
+    "release_was_draft": true,
+    "publication_confirmed_at_check": false,
+    "all_five_assets_verified": true,
+    "four_binaries_match_sha256sums": true,
+    "all_assets_match_github_digests": true,
+    "asset_metadata_unchanged_in_published_snapshot": true,
+    "downloaded_binaries_executed_by_verifier": false,
+    "assets": [
+      {
+        "id": 739314267,
+        "name": "pentest-aarch64-apple-darwin",
+        "size": 94847408,
+        "measured_sha256": "7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+        "github_digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+        "github_digest_matches": true,
+        "executable_header_architecture": "aarch64-apple-darwin",
+        "matches_coordinator_native_tested_artifact": true,
+        "sha256sums_matches": true
+      },
+      {
+        "id": 739314263,
+        "name": "pentest-aarch64-unknown-linux-gnu",
+        "size": 115862120,
+        "measured_sha256": "8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+        "github_digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
+        "github_digest_matches": true,
+        "executable_header_architecture": "aarch64-unknown-linux-gnu",
+        "matches_coordinator_native_tested_artifact": null,
+        "sha256sums_matches": true
+      },
+      {
+        "id": 739314261,
+        "name": "pentest-x86_64-apple-darwin",
+        "size": 96380928,
+        "measured_sha256": "d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+        "github_digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
+        "github_digest_matches": true,
+        "executable_header_architecture": "x86_64-apple-darwin",
+        "matches_coordinator_native_tested_artifact": null,
+        "sha256sums_matches": true
+      },
+      {
+        "id": 739314271,
+        "name": "pentest-x86_64-unknown-linux-gnu",
+        "size": 118903248,
+        "measured_sha256": "4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+        "github_digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
+        "github_digest_matches": true,
+        "executable_header_architecture": "x86_64-unknown-linux-gnu",
+        "matches_coordinator_native_tested_artifact": null,
+        "sha256sums_matches": true
+      },
+      {
+        "id": 739314264,
+        "name": "SHA256SUMS",
+        "size": 388,
+        "measured_sha256": "782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+        "github_digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
+        "github_digest_matches": true,
+        "executable_header_architecture": null,
+        "matches_coordinator_native_tested_artifact": null
+      }
+    ]
+  },
+  "additional_native_mac_arm64_check": {
+    "artifact": "pentest-aarch64-apple-darwin",
+    "run_id": 43211229408,
+    "source_sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+    "fork_version": "1.2.54",
+    "upstream_version_output": "strix 1.7.0",
+    "sha256": "7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
+    "environment": "Empty isolated HOME on native macOS arm64.",
+    "published_binary_matches_tested_workflow_artifact": true
+  },
+  "publication_confirmed": true,
+  "limits": [
+    "Downloaded bytes were verified while the release was still a draft; the later publication snapshot retains the same asset IDs, sizes and digests.",
+    "Each native workflow smoke checks version output; the independent downloaded-byte verification did not execute binaries.",
+    "Native sandbox runtime acceptance remains limited to Linux arm64. Native binary smokes do not establish sandbox runtime acceptance for amd64.",
+    "No live models, external targets, Desktop bundle signing or notarization, or deployment were tested by these release checks.",
+    "This release contains selective upstream imports and does not advance the full upstream synchronization checkpoint."
+  ]
+}

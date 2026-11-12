@@ -4,8 +4,8 @@ set -euo pipefail
 
 APP=strix
 REPO="usestrix/strix"
-# Fork pin: 1.3.1, published and taken in fork 1.2.48 (upstream's default is 1.4.0, which the fork has
-# not taken). Keep in step with strix/config/settings.py.
+# Fork 1.2.54: validated 1.4.1 derivative with the NSS restart guard. Keep the immutable
+# pin paired with strix/config/settings.py; see docs/UPSTREAM_SANDBOX_2026-11-12.md.
 STRIX_IMAGE="ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30"
 
 MUTED='\033[0;2m'
