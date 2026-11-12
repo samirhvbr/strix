@@ -69,6 +69,7 @@ Additional commands:
   strix history RUN_DIR    Export bounded stopped-run accounting offline as JSON
   strix activity RUN_DIR   Read a short, redacted window of what the agents are doing as JSON
   strix report-export RUN_DIR  Export report content for explicit authorized sharing
+  strix report-pdf RUN_DIR --output FILE  Write the run's PDF report to a new file, offline
   strix retest RUN_DIR ... Retest one approved private-read case without a model
   strix completions SHELL  Generate zsh, bash, or fish tab completion
 """
@@ -481,6 +482,11 @@ def main() -> None:
         from strix.interface.report_export import run_report_export
 
         sys.exit(run_report_export(sys.argv[2:]))
+
+    if len(sys.argv) > 1 and sys.argv[1] == "report-pdf":
+        from strix.interface.pdf_export import run_pdf_export
+
+        sys.exit(run_pdf_export(sys.argv[2:]))
 
     if len(sys.argv) > 1 and sys.argv[1] == "history":
         from strix.interface.history_export import run_history_export
