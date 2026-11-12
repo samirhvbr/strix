@@ -382,3 +382,46 @@ def test_a_cut_snapshot_keeps_the_most_recent_events_and_incidents_in_order(
     assert [item["occurred_at"] for item in snapshot["incidents"]] == [
         (first + timedelta(seconds=number + 1)).isoformat() for number in range(dropped, count)
     ]
+
+
+def test_snapshot_model_rows_carry_the_cache_and_how_many_calls_did_not_report_it(
+    ledger: TestLedger, tmp_path: Path
+) -> None:
+    ledger.record_llm_event(event())
+    ledger.record_llm_event(event(call_id="attempt-2", cached_input_tokens=30))
+    # A provider that reports no cache figure: unknown, not zero, and counted apart.
+    ledger.record_llm_event(event(call_id="attempt-3", model="model-b", cached_input_tokens=None))
+    ledger.record_llm_event(event(call_id="root-1", agent_id="root", cached_input_tokens=0))
+    rows_by_key = {(row["agent_id"], row["model"]): row for row in ledger.snapshot()["models"]}
+    child_a = rows_by_key[("child", "model-a")]
+    assert (child_a["attempt_count"], child_a["input_tokens"], child_a["output_tokens"]) == (
+        2,
+        200,
+        40,
+    )
+    assert (child_a["cached_input_tokens"], child_a["unknown_cache_attempts"]) == (80, 0)
+    child_b = rows_by_key[("child", "model-b")]
+    assert (child_b["cached_input_tokens"], child_b["unknown_cache_attempts"]) == (None, 1)
+    root = rows_by_key[("root", "model-a")]
+    assert (root["test_id"], root["cached_input_tokens"], root["unknown_cache_attempts"]) == (
+        None,
+        0,
+        0,
+    )
+    # The other figures are the ones the view gives, so nothing a reader had changes.
+    view = {
+        (r["agent_id"], r["model"]): r for r in rows(tmp_path / "test_telemetry.db", "model_usage")
+    }
+    for key, row in rows_by_key.items():
+        assert {k: row[k] for k in view[key]} == view[key]
+
+
+def test_snapshot_reads_the_cache_from_a_ledger_whose_view_predates_it(
+    ledger: TestLedger, tmp_path: Path
+) -> None:
+    # Every ledger written before fork 1.2.53 has this view; drop it to prove the reader needs none.
+    ledger.record_llm_event(event())
+    with sqlite3.connect(tmp_path / "test_telemetry.db") as connection:
+        connection.execute("DROP VIEW model_usage")
+    (row,) = ledger.snapshot()["models"]
+    assert (row["cached_input_tokens"], row["unknown_cache_attempts"]) == (50, 0)
