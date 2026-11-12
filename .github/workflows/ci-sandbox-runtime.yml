@@ -1,0 +1,93 @@
+name: Sandbox runtime acceptance
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  amd64:
+    if: github.repository == 'samirhvbr/strix'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      STRIX_ACCEPTANCE_IMAGE: ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30
+      STRIX_ACCEPTANCE_PARENT: ghcr.io/usestrix/strix-sandbox@sha256:c8e70302ba4a69b678b4001c909b134d8d0b84625d7b23feed59ece02672c1d2
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Require a native amd64 host and Docker daemon
+        run: |
+          mkdir -p "$RUNNER_TEMP/sandbox-runtime-acceptance"
+          python3 - <<'PY'
+          import datetime
+          import json
+          import os
+          import pathlib
+          import platform
+
+          evidence = {
+              "recorded_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "source_sha": os.environ["GITHUB_SHA"],
+              "run_id": os.environ["GITHUB_RUN_ID"],
+              "run_attempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "repository": os.environ["GITHUB_REPOSITORY"],
+              "host_system": platform.system(),
+              "host_machine": platform.machine(),
+              "image": os.environ["STRIX_ACCEPTANCE_IMAGE"],
+              "parent": os.environ["STRIX_ACCEPTANCE_PARENT"],
+          }
+          path = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sandbox-runtime-acceptance/workflow.json"
+          path.write_text(json.dumps(evidence, indent=2) + "\n")
+          PY
+          test "$(uname -m)" = x86_64
+          case "$(docker info --format '{{.Architecture}}')" in
+            amd64|x86_64) ;;
+            *) echo 'Expected a native amd64 Docker daemon'; exit 1 ;;
+          esac
+
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+        with:
+          go-version-file: strix/interface/tui/go.mod
+          cache-dependency-path: strix/interface/tui/go.sum
+
+      - uses: ./.github/actions/setup-python-env
+
+      - name: Pull the immutable image and build owned network fixtures
+        timeout-minutes: 10
+        run: |
+          set -o pipefail
+          docker pull --platform linux/amd64 "$STRIX_ACCEPTANCE_IMAGE" 2>&1 | tee "$RUNNER_TEMP/sandbox-runtime-acceptance/pull.log"
+          docker pull --platform linux/amd64 "$STRIX_ACCEPTANCE_PARENT" 2>&1 | tee -a "$RUNNER_TEMP/sandbox-runtime-acceptance/pull.log"
+          docker build --platform linux/amd64 -f containers/network-guard.Dockerfile -t shvia-strix-network-guard:1 .
+          docker build --platform linux/amd64 -f tests/fixtures/network-sandbox.Dockerfile -t shvia-strix-network-fixture:1 .
+
+      - name: Validate restart, network and mounts through the real fork backend
+        timeout-minutes: 12
+        run: |
+          mkdir -p "$RUNNER_TEMP/sandbox-runtime-acceptance" "$RUNNER_TEMP/sandbox-runtime-home"
+          set -o pipefail
+          timeout --signal=TERM --kill-after=30s 600s env -i \
+            PATH="$PATH" HOME="$RUNNER_TEMP/sandbox-runtime-home" TMPDIR="$RUNNER_TEMP" \
+            PYTHONPATH="$GITHUB_WORKSPACE" PYTHONUNBUFFERED=1 \
+            LITELLM_MODE=PRODUCTION LITELLM_LOCAL_MODEL_COST_MAP=True \
+            STRIX_TELEMETRY=false STRIX_NO_UPDATE_CHECK=1 \
+            AWS_EC2_METADATA_DISABLED=true OPENAI_AGENTS_DISABLE_TRACING=1 \
+            DOCKER_HOST=unix:///var/run/docker.sock \
+            .venv/bin/python scripts/sandbox_runtime_acceptance.py \
+              --expected-architecture amd64 \
+              --report "$RUNNER_TEMP/sandbox-runtime-acceptance/result.json" \
+            2>&1 | tee "$RUNNER_TEMP/sandbox-runtime-acceptance/run.log"
+
+      - name: Preserve runtime acceptance evidence
+        if: always()
+        timeout-minutes: 3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sandbox-runtime-linux-amd64
+          path: ${{ runner.temp }}/sandbox-runtime-acceptance/
+          if-no-files-found: error
+          retention-days: 30

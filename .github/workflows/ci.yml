@@ -6,6 +6,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      sandbox_runtime_acceptance:
+        description: Test the pinned sandbox on native Linux amd64 with owned fixtures.
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -29,6 +34,10 @@ jobs:
 
   workflows:
     uses: ./.github/workflows/ci-workflows.yml
+
+  sandbox-runtime:
+    if: github.event_name == 'workflow_dispatch' && inputs.sandbox_runtime_acceptance && github.repository == 'samirhvbr/strix'
+    uses: ./.github/workflows/ci-sandbox-runtime.yml
 
   ci-passed:
     name: ci-passed
