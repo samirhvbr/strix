@@ -38,3 +38,7 @@ sh docs/upstream-tracking/sandbox-restart-2026-11-12.sh
 ~~~
 
 The full upstream integration checkpoint is 6b7ae2ebe4d47037a927aade23265ff4e4f27e84. The selected sources and adaptations above are recorded independently in the per-item ledger.
+
+## Master delivery
+
+[PR #63](https://github.com/samirhvbr/strix/pull/63) merged at 1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d. Its tree equals the validated head 026f3f54ad6976105a55608bff0451e89917203d. All 15 checks passed, including the complete Python 3.12, 3.13 and 3.14 suites. [CI run](https://github.com/samirhvbr/strix/actions/runs/43209192193)

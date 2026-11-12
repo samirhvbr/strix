@@ -18,7 +18,7 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Fork source and release | `master` declares 1.2.52 at `41bf5b96`. Latest release is `shvia-v1.2.50` at `127cdb0f`. | Fork #58 and #59 passed their recorded CI. Release metadata lists two binaries and `SHA256SUMS`. |
+| Fork source and release | `master` declares 1.2.54 at `1a55f43e`. Latest release is `shvia-v1.2.50` at `127cdb0f`. | Fork #58 and #59 passed their recorded CI. Release metadata lists two binaries and `SHA256SUMS`. |
 | Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. Fork #61 proposes the TUI startup backport on the review branch. |
 | Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
@@ -148,3 +148,7 @@ adoption records.
 The selected integration follows [fork #62](https://github.com/samirhvbr/strix/pull/62).
 Its exact code SHA, source-to-fork mappings, image acceptance, limits and delivery state
 are in [integration-2026-11-12.json](upstream-tracking/integration-2026-11-12.json).
+
+[PR #63](https://github.com/samirhvbr/strix/pull/63) delivered the startup and sandbox integration
+to master after all 15 checks passed. The [delivery snapshot](upstream-tracking/integration-delivered-2026-11-12.json)
+records the merge and CI. The release build is a separate next step.

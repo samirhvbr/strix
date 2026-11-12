@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-12T11:25:11.564763+00:00",
+  "updated_at": "2026-11-12T11:37:33.977656+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -272,6 +272,154 @@
             "linux/amd64 manifests/configs verified through anonymous registry reads; runtime not executed."
           ]
         }
+      },
+      {
+        "event_id": "selective-startup-sandbox-delivered-2026-11-12",
+        "recorded_at": "2026-11-12T11:37:33.977656+00:00",
+        "kind": "selective_import_followup",
+        "stage": "merged_to_master",
+        "source_ledger_commit": "026f3f54ad6976105a55608bff0451e89917203d",
+        "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+        "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+        "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "items": [
+          "usestrix/strix#pr:1647",
+          "usestrix/strix#pr:1625",
+          "usestrix/strix#pr:1729",
+          "samirhvbr/strix#pr:61",
+          "samirhvbr/strix#pr:62",
+          "samirhvbr/strix#pr:63"
+        ],
+        "incorporated_items": [
+          "usestrix/strix#pr:1647",
+          "usestrix/strix#pr:1625",
+          "usestrix/strix#pr:1729",
+          "samirhvbr/strix#pr:61"
+        ],
+        "new_ids": [
+          "samirhvbr/strix#pr:63"
+        ],
+        "effective_upstream_base_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "full_upstream_sync_advanced": false,
+        "inventory_checkpoint_advanced": false,
+        "master_delivery": {
+          "verified": true,
+          "method": "pull_request",
+          "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+          "merged_at": "2026-11-12T11:36:21Z",
+          "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+          "version": "1.2.54"
+        },
+        "published_release": null,
+        "validation": {
+          "accepted": true,
+          "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+          "checks": [
+            {
+              "name": "published image same-container restart",
+              "status": "passed",
+              "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+            },
+            {
+              "name": "published image guarded backend",
+              "status": "passed",
+              "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+            },
+            {
+              "name": "offline Opengrep and rule controls",
+              "status": "passed",
+              "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+            },
+            {
+              "name": "targeted source tests",
+              "status": "passed",
+              "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+            },
+            {
+              "name": "Ruff Mypy Bandit",
+              "status": "passed",
+              "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+            },
+            {
+              "name": "Pyright comparison",
+              "status": "baseline_failure",
+              "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+            },
+            {
+              "name": "workflow and restart script syntax",
+              "status": "passed",
+              "scope": "actionlint and sh -n."
+            },
+            {
+              "name": "full fork CI",
+              "status": "passed",
+              "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
+            }
+          ],
+          "limits": [
+            "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+            "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+            "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
+          ]
+        },
+        "runtime_evidence": [
+          {
+            "name": "official restart negative control",
+            "status": "failed",
+            "image": "ghcr.io/usestrix/strix-sandbox:1.4.1",
+            "summary": "First entrypoint passed; the same container hung at certutil-N on restart, with and without the extra test certificate."
+          },
+          {
+            "name": "published registry and rootfs proof",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Anonymous200 index/amd64/arm64/configs with verified SHA256. Parent rootfs layers preserved plus one. Entrypoint SHA256cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818."
+          },
+          {
+            "name": "published NSS restart",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Same container891625fe299b reached readiness twice; defaultCA and synthetic sentinel preserved. Independent bounded shell recipe also passed."
+          },
+          {
+            "name": "published guarded runtime",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Default-deny reachable-target control, IPv4/IPv6 DROP, NET_ADMIN/NET_RAW/SYS_ADMIN drops, readonly protected mounts even forroot, writable sibling control, Caido loopback/peer isolation, real SDKPTY and cleanup passed."
+          },
+          {
+            "name": "published guarded initial attempt",
+            "status": "failed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Dockercontainer.start timed out after60seconds before entrypoint. Harness temp cleanup masked the first error; complete first traceback preserved. Repeat passed with unchanged gates/limits."
+          },
+          {
+            "name": "offline SAST",
+            "status": "passed",
+            "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+            "summary": "Opengrep1.31.0 controls and full immutable parent rule bundle passed.2006rulesloaded706applied7files, JSONerrors[], three expected findings,169.247seconds."
+          }
+        ],
+        "pending": [
+          "Publish and verify the version1.2.54 release binaries.",
+          "Native amd64 runtime acceptance remains outside this arm64 validation."
+        ],
+        "record": "integration-delivered-2026-11-12.json",
+        "image_acceptance": {
+          "reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "registry_verified": true,
+          "registry_digest": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+          "registry_checked_at": "2026-11-12T11:13:58.779165+00:00",
+          "runtime_accepted": true,
+          "runtime_summary": "The published artifact retained every official parent layer plus one entrypoint layer. Anonymous index/manifest/config pulls succeeded. Same-container NSS restart, default-deny network, protected mounts, Caido and PTY passed; all owned containers removed.",
+          "architectures_tested": [
+            "linux/arm64"
+          ],
+          "limits": [
+            "linux/amd64 manifests/configs verified through anonymous registry reads; runtime not executed."
+          ]
+        }
       }
     ],
     "in_progress": null,
@@ -319,8 +467,8 @@
     "last_selected_patch_validation": {
       "branch": "feat/sandbox-1.4.1-opengrep-20261112",
       "base_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
-      "validated_code_sha": "db3b1803fa13839df3aa86eefe6cc24cd911a2da",
-      "validated_at": "2026-11-12T11:25:11.564763+00:00",
+      "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+      "validated_at": "2026-11-12T11:37:33.977656+00:00",
       "status": "selective_imports_validated_with_explicit_limits",
       "source_items": [
         "usestrix/strix#pr:1647",
@@ -366,19 +514,23 @@
             "name": "workflow and restart script syntax",
             "status": "passed",
             "scope": "actionlint and sh -n."
+          },
+          {
+            "name": "full fork CI",
+            "status": "passed",
+            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
         ]
       },
       "effective_integrated_upstream_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
-      "delivered_to_master": false,
+      "delivered_to_master": true,
       "released": false,
-      "record": "integration-2026-11-12.json"
+      "record": "integration-delivered-2026-11-12.json"
     },
     "observed_upstream_history": [
       {
@@ -411,9 +563,9 @@
       }
     ],
     "last_observed_fork_master": {
-      "sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
-      "version": "1.2.53",
-      "observed_at": "2026-11-12T11:06:42.496331+00:00",
+      "sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+      "version": "1.2.54",
+      "observed_at": "2026-11-12T11:36:21Z",
       "ref": "refs/heads/master",
       "release_observation": {
         "assets": [
@@ -472,23 +624,88 @@
         "validated_at": "2026-11-05T15:54:10.766347+00:00",
         "record": "ci-1654-2026-11-05.json",
         "status": "focused_checks_complete_with_existing_pyright_limit"
+      },
+      {
+        "branch": "feat/sandbox-1.4.1-opengrep-20261112",
+        "base_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+        "validated_code_sha": "db3b1803fa13839df3aa86eefe6cc24cd911a2da",
+        "validated_at": "2026-11-12T11:25:11.564763+00:00",
+        "status": "selective_imports_validated_with_explicit_limits",
+        "source_items": [
+          "usestrix/strix#pr:1647",
+          "usestrix/strix#pr:1625",
+          "usestrix/strix#pr:1729",
+          "samirhvbr/strix#pr:61"
+        ],
+        "validation": {
+          "accepted": true,
+          "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+          "checks": [
+            {
+              "name": "published image same-container restart",
+              "status": "passed",
+              "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+            },
+            {
+              "name": "published image guarded backend",
+              "status": "passed",
+              "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+            },
+            {
+              "name": "offline Opengrep and rule controls",
+              "status": "passed",
+              "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+            },
+            {
+              "name": "targeted source tests",
+              "status": "passed",
+              "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+            },
+            {
+              "name": "Ruff Mypy Bandit",
+              "status": "passed",
+              "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+            },
+            {
+              "name": "Pyright comparison",
+              "status": "baseline_failure",
+              "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+            },
+            {
+              "name": "workflow and restart script syntax",
+              "status": "passed",
+              "scope": "actionlint and sh -n."
+            }
+          ],
+          "limits": [
+            "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+            "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+            "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+            "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
+          ]
+        },
+        "effective_integrated_upstream_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+        "delivered_to_master": false,
+        "released": false,
+        "record": "integration-2026-11-12.json"
       }
     ],
     "latest_selective_integration": {
-      "event_id": "selective-startup-sandbox-2026-11-12",
-      "recorded_at": "2026-11-12T11:25:11.564763+00:00",
+      "event_id": "selective-startup-sandbox-delivered-2026-11-12",
+      "recorded_at": "2026-11-12T11:37:33.977656+00:00",
       "kind": "selective_import_followup",
-      "stage": "validated_review_branch",
-      "source_ledger_commit": "de8c7a4e63d75cb1d2b4195f293bcb5c6bf4027d",
+      "stage": "merged_to_master",
+      "source_ledger_commit": "026f3f54ad6976105a55608bff0451e89917203d",
       "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
       "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
-      "validated_code_sha": "db3b1803fa13839df3aa86eefe6cc24cd911a2da",
+      "validated_code_sha": "026f3f54ad6976105a55608bff0451e89917203d",
       "items": [
         "usestrix/strix#pr:1647",
         "usestrix/strix#pr:1625",
         "usestrix/strix#pr:1729",
         "samirhvbr/strix#pr:61",
-        "samirhvbr/strix#pr:62"
+        "samirhvbr/strix#pr:62",
+        "samirhvbr/strix#pr:63"
       ],
       "incorporated_items": [
         "usestrix/strix#pr:1647",
@@ -497,12 +714,20 @@
         "samirhvbr/strix#pr:61"
       ],
       "new_ids": [
-        "samirhvbr/strix#pr:62"
+        "samirhvbr/strix#pr:63"
       ],
       "effective_upstream_base_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
       "full_upstream_sync_advanced": false,
       "inventory_checkpoint_advanced": false,
-      "master_delivery": null,
+      "master_delivery": {
+        "verified": true,
+        "method": "pull_request",
+        "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+        "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+        "merged_at": "2026-11-12T11:36:21Z",
+        "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+        "version": "1.2.54"
+      },
       "published_release": null,
       "validation": {
         "accepted": true,
@@ -542,13 +767,17 @@
             "name": "workflow and restart script syntax",
             "status": "passed",
             "scope": "actionlint and sh -n."
+          },
+          {
+            "name": "full fork CI",
+            "status": "passed",
+            "scope": "15 checks at026f3f54, including complete pytest on3.12,3.13,3.14. https://github.com/samirhvbr/strix/actions/runs/43209192193"
           }
         ],
         "limits": [
           "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
           "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
-          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
-          "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
+          "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline."
         ]
       },
       "runtime_evidence": [
@@ -590,11 +819,10 @@
         }
       ],
       "pending": [
-        "Observe the full fork CI for the final candidate and merge PR#63 into master.",
-        "Record the actual master merge and release metadata after delivery.",
+        "Publish and verify the version1.2.54 release binaries.",
         "Native amd64 runtime acceptance remains outside this arm64 validation."
       ],
-      "record": "integration-2026-11-12.json",
+      "record": "integration-delivered-2026-11-12.json",
       "image_acceptance": {
         "reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
         "registry_verified": true,
@@ -627,8 +855,34 @@
           "tag_name": "shvia-v1.2.50",
           "peeled_tag_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
         }
+      },
+      {
+        "sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+        "version": "1.2.53",
+        "observed_at": "2026-11-12T11:06:42.496331+00:00",
+        "ref": "refs/heads/master",
+        "release_observation": {
+          "assets": [
+            "pentest-aarch64-apple-darwin",
+            "pentest-x86_64-unknown-linux-gnu",
+            "SHA256SUMS"
+          ],
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.50",
+          "published_at": "2026-11-09T16:08:46Z",
+          "tag_name": "shvia-v1.2.50",
+          "peeled_tag_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
+        }
       }
-    ]
+    ],
+    "last_master_delivery": {
+      "verified": true,
+      "method": "pull_request",
+      "master_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+      "merge_sha": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d",
+      "merged_at": "2026-11-12T11:36:21Z",
+      "pr_url": "https://github.com/samirhvbr/strix/pull/63",
+      "version": "1.2.54"
+    }
   },
   "contribution_review": {
     "round": "2026-11-12",
@@ -638,7 +892,7 @@
     "inventory_method": "Individual known-ID GraphQL batches, paginated open catalogs, and an all-state update query with 48 hours of overlap.",
     "state": "inventory_rechecked_with_unavailable_records_selected_fixes_published",
     "coverage": {
-      "total_records": 720,
+      "total_records": 721,
       "upstream_open_inventory": {
         "pr": 357,
         "issue": 235
@@ -646,7 +900,7 @@
       "review_depth": {
         "identified": 54,
         "triage": 580,
-        "deep": 86
+        "deep": 87
       }
     },
     "known_items_checked": {
@@ -1298,10 +1552,10 @@
     ],
     "last_attempted_inventory_at": "2026-11-12T09:23:04.826021+00:00",
     "latest_selective_integration": {
-      "event_id": "selective-startup-sandbox-2026-11-12",
-      "at": "2026-11-12T11:25:11.564763+00:00",
-      "stage": "validated_review_branch",
-      "record": "integration-2026-11-12.json",
+      "event_id": "selective-startup-sandbox-delivered-2026-11-12",
+      "at": "2026-11-12T11:37:33.977656+00:00",
+      "stage": "merged_to_master",
+      "record": "integration-delivered-2026-11-12.json",
       "inventory_checkpoint_advanced": false
     }
   },
