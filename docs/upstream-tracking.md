@@ -1,6 +1,13 @@
 # Upstream continuity record
 
-Start every review here, then read the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
+Start every review here, then read the [validated sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
+the [latest reliability review](UPSTREAM_REVIEW_2026-11-12.md),
+the [November 10 round](UPSTREAM_REVIEW_2026-11-10.md),
+the [November 9 round](UPSTREAM_REVIEW_2026-11-09.md),
+the [November 7 round](UPSTREAM_REVIEW_2026-11-07.md),
+the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
+the [November 5 full round](UPSTREAM_REVIEW_2026-11-05.md),
+the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
 the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md), the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.
@@ -11,15 +18,25 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Delivered fork | Release `shvia-v1.2.44` (Latest, published 2026-10-30T21:13:42 UTC), tag at `8dab158fe6fce88da4f13f83a9bfc6c1f19660d5`; `master` one documentation commit ahead | Delivery PR [#45](https://github.com/samirhvbr/strix/pull/45) merged and released on 2026-10-30; the tag is lightweight and the Release has no assets. The `main` mirror equals `upstream/main` (`6b7ae2eb`). |
-| Upstream code synchronization | `usestrix/strix:main` at `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Fork code `41be416c96a1cc9dd9518907c7daaf0737a0420c` on `feat/upstream-sync-contributions-20261029`: 120 focused tests pass after #1635 and its cleanup follow-up; last full suite there remains at `3154805d` (3590 passed, 12 skipped, 3 xfailed). The delivery branch `feat/upstream-sync-delivery-20261029` (fork 1.2.44, merged to `master` in #45) carries that code plus the sandbox pin and #1627; its own full-suite result is in the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md). Existing Pyright limits remain. |
-| Contribution review | 2026-10-30 follow-up and delivery consolidation: all 597 records kept, 325 open PRs and 208 open issues triaged | 16 existing authored PRs reviewed, 81 targeted feedback tests pass; #1631, #1634 and #1635 are carried; #1627 was added by the delivery pass. |
+| Fork source and release | `master` declares 1.2.52 at `41bf5b96`. Latest release is `shvia-v1.2.50` at `127cdb0f`. | Fork #58 and #59 passed their recorded CI. Release metadata lists two binaries and `SHA256SUMS`. |
+| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. Fork #61 proposes the TUI startup backport on the review branch. |
+| Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
 checkpoint only after its corresponding checks finish. A fetch, inventory refresh or code
 review must never advance the integration checkpoint. A full suite passing does not turn a
 failed type-check or blocked remote workflow green.
+
+**Targeted follow-up, 2026-11-05:** the original #1654 CI had three blocked
+pytest jobs and later ended cancelled. Independent fixes #1657/#1658/#1660 plus existing #1577 and #1654
+pass the complete Linux Python 3.12–3.14 diagnostic matrix (2,534 passed / 3 xfailed
+per version). Latest selected fork code is `4f992de7` on
+`feat/pr1654-ci-followup-20261105`; #1657/#1577 were already covered in the fork.
+Fork #54 later merged that branch into `feat/upstream-contributions-20261105` at
+`b5cdcd6b`. The ledger reached 633 records after the November 5 analysis. See the
+[separate follow-up evidence](upstream-tracking/ci-1654-2026-11-05.json) for the
+new selected imports, validations and exact next actions.
 
 ## Resume a round
 
@@ -98,29 +115,36 @@ real scan data or raw environment dumps in this public ledger.
 
 ## Current limits and next work
 
-See the latest round for priorities: manual-price accounting on model-switch resume (#1622),
+The [November 5 round](UPSTREAM_REVIEW_2026-11-05.md) carries pending work on
+manual-price accounting on model-switch resume (#1622),
 deferred PTY capabilities (#1623), transactional report writes (#1117/#1108), Caido deadline
 adaptation (#1053), and SARIF identity migration (#1590). These have separate risks; they
 are not rejected proposals. The remaining triage-depth records are not a completed code audit.
 
-**Sandbox image (reproduced 2026-10-30, resolved 2026-11-04 by moving the pin):** the synchronized source defaulted to
-`ghcr.io/usestrix/strix-sandbox:1.3.1` while that tag was not published (404; 1.3.0 answered 200), so the fork held
-`1.3.0`. [Upstream issue #1628](https://github.com/usestrix/strix/issues/1628) asked for publication. The tag exists now
-(`linux/amd64` and `linux/arm64`; index digest `sha256:78df914f…`), and fork 1.2.48 pins it in
-`RuntimeSettings.image` and `scripts/install.sh` (a test keeps them equal). Checked on 2026-11-04: pulled the amd64 image
-and started it through the engine's own Docker backend (`libbrotli1` 1.2.0-4.1, trufflehog 3.99.2, Caido 0.56.0 listening
-on 48080); the arm64 image, a real scan and the Caido certificate path were not run. On a sync conflict in those lines
-keep the newest tag `docker manifest inspect` finds.
+**Sandbox image:** images 1.3.1 and 1.4.0 are published, resolving the publication
+part of [upstream issue #1628](https://github.com/usestrix/strix/issues/1628).
+The delivered fork pins 1.3.1 through [fork PR #53](https://github.com/samirhvbr/strix/pull/53).
+Current upstream source defaults to 1.4.0. The review branch retains its own source pin.
 
-The new fixes are [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
+The November 5 review carries [#1631](https://github.com/usestrix/strix/pull/1631) (Git source archive deduplication) and
 [#1634](https://github.com/usestrix/strix/pull/1634) (validated report dedupe decisions), carried on the review
 branch. API-spec issue [#1632](https://github.com/usestrix/strix/issues/1632) awaits a maintainer contract;
 [#1633](https://github.com/usestrix/strix/issues/1633) has the proposal [#1635](https://github.com/usestrix/strix/pull/1635),
 carried on the review branch, which delivers environment values to the agent workspace and needs the owner's confirmation
 before a master delivery. Their evidence, exact source versions, local commits and validation limits are in the latest
-round and ledger.
+November 5 report and ledger.
 
-Version/release verification is recorded in [release-audit.json](upstream-tracking/release-audit.json).
-The release is still 1.2.43, with upstream package version 1.7.0 by policy. Existing published
-binaries predate this integration. A source commit, built wheel, remote CI, released binary
-and installed/runtime acceptance are separate evidence.
+The [November 12 snapshot](upstream-tracking/round-2026-11-12.json) records
+release metadata, the tested fork TUI backport and image migration acceptance. The upstream
+tag v1.7.1 predates the TUI fix. The latest published fork release is 1.2.50, and
+`master` declares 1.2.52. [release-audit.json](upstream-tracking/release-audit.json)
+retains the earlier audit.
+
+The upstream CI prerequisites #1577, #1657, #1658 and #1660 await review. After their
+fixes land in main, check fresh base-aware CI for #1708, #1710, #1712 and #1713.
+Recheck the #61 backport and the published contributions before changing their fork
+adoption records.
+
+The selected integration follows [fork #62](https://github.com/samirhvbr/strix/pull/62).
+Its exact code SHA, source-to-fork mappings, image acceptance, limits and delivery state
+are in [integration-2026-11-12.json](upstream-tracking/integration-2026-11-12.json).

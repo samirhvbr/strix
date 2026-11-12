@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "event_id": "selective-startup-sandbox-2026-11-12",
+  "recorded_at": "2026-11-12T11:25:11.564763+00:00",
+  "kind": "selective_import_followup",
+  "stage": "validated_review_branch",
+  "source_ledger_commit": "de8c7a4e63d75cb1d2b4195f293bcb5c6bf4027d",
+  "fork_baseline_sha": "5483b42b6c1dbdec5854f45616255895d3a1fd13",
+  "fork_branch": "feat/sandbox-1.4.1-opengrep-20261112",
+  "validated_code_sha": "db3b1803fa13839df3aa86eefe6cc24cd911a2da",
+  "items": [
+    "usestrix/strix#pr:1647",
+    "usestrix/strix#pr:1625",
+    "usestrix/strix#pr:1729",
+    "samirhvbr/strix#pr:61",
+    "samirhvbr/strix#pr:62"
+  ],
+  "incorporated_items": [
+    "usestrix/strix#pr:1647",
+    "usestrix/strix#pr:1625",
+    "usestrix/strix#pr:1729",
+    "samirhvbr/strix#pr:61"
+  ],
+  "new_ids": [
+    "samirhvbr/strix#pr:62"
+  ],
+  "effective_upstream_base_sha_unchanged": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+  "full_upstream_sync_advanced": false,
+  "inventory_checkpoint_advanced": false,
+  "master_delivery": null,
+  "published_release": null,
+  "validation": {
+    "accepted": true,
+    "summary": "Published arm64 compatibility image passed same-container restart and real fork guarded runtime before selection as default. Local source and quality checks completed with stated Pyright baseline.",
+    "checks": [
+      {
+        "name": "published image same-container restart",
+        "status": "passed",
+        "scope": "The selected immutable digest reached readiness twice, preserving default and synthetic CAs."
+      },
+      {
+        "name": "published image guarded backend",
+        "status": "passed",
+        "scope": "Real network positive/negative controls, both firewall families, dropped capabilities, readonly metadata/run/source mounts, Caido, PTY and cleanup. Same limits on repeat after the recorded Docker startup timeout."
+      },
+      {
+        "name": "offline Opengrep and rule controls",
+        "status": "passed",
+        "scope": "Seven synthetic source files. Positive/negative Python and Actions cases. Full parent bundle loaded 2006 rules and applied706, errors[], correct paths,169.247seconds. Derived engine/rule layers match parent."
+      },
+      {
+        "name": "targeted source tests",
+        "status": "passed",
+        "scope": "150 configuration/runtime and115 CSPT/credential/inference cases. 3 installer/default tests repeated after final pin."
+      },
+      {
+        "name": "Ruff Mypy Bandit",
+        "status": "passed",
+        "scope": "Whole-source formatting/lint,179-file Mypy and Bandit."
+      },
+      {
+        "name": "Pyright comparison",
+        "status": "baseline_failure",
+        "scope": "1287 diagnostics on master5483b42b and candidate,0added/0removed. make check-all stops at that baseline."
+      },
+      {
+        "name": "workflow and restart script syntax",
+        "status": "passed",
+        "scope": "actionlint and sh -n."
+      }
+    ],
+    "limits": [
+      "Runtime executed Linux/arm64 on Docker Desktop. amd64 registry metadata verified; native amd64 runtime remains untested.",
+      "One published guarded container.start timed out at60seconds before entrypoint. Repeat passed unchanged limits. Cause of the initial timeout is unestablished.",
+      "Full rule bundle needed169.247seconds after the60second observation bound. No performance regression baseline.",
+      "Remote fork CI will run on the final candidate. No live model, managed service, external target or production data was exercised."
+    ]
+  },
+  "runtime_evidence": [
+    {
+      "name": "official restart negative control",
+      "status": "failed",
+      "image": "ghcr.io/usestrix/strix-sandbox:1.4.1",
+      "summary": "First entrypoint passed; the same container hung at certutil-N on restart, with and without the extra test certificate."
+    },
+    {
+      "name": "published registry and rootfs proof",
+      "status": "passed",
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "summary": "Anonymous200 index/amd64/arm64/configs with verified SHA256. Parent rootfs layers preserved plus one. Entrypoint SHA256cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818."
+    },
+    {
+      "name": "published NSS restart",
+      "status": "passed",
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "summary": "Same container891625fe299b reached readiness twice; defaultCA and synthetic sentinel preserved. Independent bounded shell recipe also passed."
+    },
+    {
+      "name": "published guarded runtime",
+      "status": "passed",
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "summary": "Default-deny reachable-target control, IPv4/IPv6 DROP, NET_ADMIN/NET_RAW/SYS_ADMIN drops, readonly protected mounts even forroot, writable sibling control, Caido loopback/peer isolation, real SDKPTY and cleanup passed."
+    },
+    {
+      "name": "published guarded initial attempt",
+      "status": "failed",
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "summary": "Dockercontainer.start timed out after60seconds before entrypoint. Harness temp cleanup masked the first error; complete first traceback preserved. Repeat passed with unchanged gates/limits."
+    },
+    {
+      "name": "offline SAST",
+      "status": "passed",
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "summary": "Opengrep1.31.0 controls and full immutable parent rule bundle passed.2006rulesloaded706applied7files, JSONerrors[], three expected findings,169.247seconds."
+    }
+  ],
+  "pending": [
+    "Observe the full fork CI for the final candidate and merge PR#63 into master.",
+    "Record the actual master merge and release metadata after delivery.",
+    "Native amd64 runtime acceptance remains outside this arm64 validation."
+  ],
+  "record": "integration-2026-11-12.json",
+  "image_acceptance": {
+    "reference": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "registry_verified": true,
+    "registry_digest": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "registry_checked_at": "2026-11-12T11:13:58.779165+00:00",
+    "runtime_accepted": true,
+    "runtime_summary": "The published artifact retained every official parent layer plus one entrypoint layer. Anonymous index/manifest/config pulls succeeded. Same-container NSS restart, default-deny network, protected mounts, Caido and PTY passed; all owned containers removed.",
+    "architectures_tested": [
+      "linux/arm64"
+    ],
+    "limits": [
+      "linux/amd64 manifests/configs verified through anonymous registry reads; runtime not executed."
+    ]
+  },
+  "counts": {
+    "total_records": 720,
+    "review_depth": {
+      "identified": 54,
+      "triage": 580,
+      "deep": 86
+    },
+    "fork_decisions": {
+      "pending": 251,
+      "incorporated_fully": 61,
+      "adapted": 25,
+      "already_covered": 103,
+      "deferred": 239,
+      "discarded": 40,
+      "incorporated_partially": 1
+    },
+    "implementation_phases": {
+      "unknown": 118,
+      "present_before_round": 54,
+      "integrated_review_branch": 59,
+      "decision_required": 122,
+      "deferred": 238,
+      "not_planned": 32,
+      "pending": 61,
+      "proposed_in_fork_review": 1,
+      "delivered_in_fork": 3,
+      "merged_review_branch": 2,
+      "published_upstream_pending_fork_evaluation": 22,
+      "upstream_fix_proposed_pending_review": 2,
+      "awaiting_upstream_contract_decision": 4,
+      "merged_master": 2
+    },
+    "fork_catalog": 62,
+    "upstream_open_inventory": {
+      "pr": 357,
+      "issue": 235
+    },
+    "inventory_count_basis": "Previous completed acquisition; this selective follow-up does not refresh open inventory counts"
+  },
+  "preservation": {
+    "original_known_ids": 719,
+    "preserved_known_ids": 719,
+    "untargeted_records_unchanged": 715,
+    "historical_lists_preserved": true,
+    "full_sync_checkpoint_unchanged": true,
+    "inventory_checkpoint_unchanged": true,
+    "published_release_unchanged": true
+  },
+  "input_sha256": "da90b145941b437df1645a0d6dce45fb4eac4691bb1c05dece9b27474d9af1b2"
+}

@@ -1,0 +1,593 @@
+{
+  "verified_before_default_selection": true,
+  "source_code_sha": "ac827485f0ca9967c6fd2521469c7a87867020f8",
+  "registry": {
+    "checked_at": "2026-11-12T11:13:58.779165+00:00",
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca",
+    "authentication": "Anonymous registry pull token; no GitHub OAuth, PAT, Docker config, or user credentials loaded",
+    "proxy_environment_used": false,
+    "index": {
+      "http_status": 200,
+      "sha256": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "size": 1609
+    },
+    "platforms": [
+      {
+        "platform": {
+          "architecture": "amd64",
+          "os": "linux"
+        },
+        "manifest": {
+          "http_status": 200,
+          "sha256": "sha256:1465e11e35945996c729f9b731f52fb39280d1a9a299260bc63ab5a824af7604",
+          "size": 8294
+        },
+        "config": {
+          "http_status": 200,
+          "sha256": "sha256:e72efc9fe87c6fa1d1dc89786c418d8c7703a120f5b6e3ec42e8e7c6a34d51e1",
+          "size": 34063
+        },
+        "config_architecture": "amd64",
+        "config_os": "linux",
+        "source": "https://github.com/samirhvbr/strix",
+        "description": "Strix sandbox 1.4.1 with idempotent NSS initialization",
+        "entrypoint": [
+          "docker-entrypoint.sh"
+        ],
+        "layer_count": 42,
+        "final_layer": {
+          "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+          "digest": "sha256:b834877c8046b3eb88588f98034aca14369d3bdb77f2d4453fffc4c558f73f14",
+          "size": 2157
+        }
+      },
+      {
+        "platform": {
+          "architecture": "arm64",
+          "os": "linux"
+        },
+        "manifest": {
+          "http_status": 200,
+          "sha256": "sha256:ff088cd0eb4a4da33c9108413e01f1a758812294152a19cc4669e6859512887b",
+          "size": 8294
+        },
+        "config": {
+          "http_status": 200,
+          "sha256": "sha256:d4f375b1fc6a3c772f44461e69c45c65fdfcfdea0557f6fd9dfd9b52995732d4",
+          "size": 34060
+        },
+        "config_architecture": "arm64",
+        "config_os": "linux",
+        "source": "https://github.com/samirhvbr/strix",
+        "description": "Strix sandbox 1.4.1 with idempotent NSS initialization",
+        "entrypoint": [
+          "docker-entrypoint.sh"
+        ],
+        "layer_count": 42,
+        "final_layer": {
+          "mediaType": "application/vnd.oci.image.layer.v1.tar+gzip",
+          "digest": "sha256:a1447d4e04d43c9d8c0c7e4d724b68b11d030c38afe64b2f5e1b9d2008f4c46a",
+          "size": 2158
+        }
+      }
+    ],
+    "attestation_manifests": [
+      {
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "manifest": {
+          "http_status": 200,
+          "sha256": "sha256:9dc0ccef130f9406de202a563076e8892887adcb59ffe71fe781fc3570167cd4",
+          "size": 838
+        },
+        "config": {
+          "http_status": 200,
+          "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "size": 2
+        }
+      },
+      {
+        "platform": {
+          "architecture": "unknown",
+          "os": "unknown"
+        },
+        "manifest": {
+          "http_status": 200,
+          "sha256": "sha256:c8c11cae84c354b41dc13571f38f28f45c652315389506d878fed2f924c4ade7",
+          "size": 838
+        },
+        "config": {
+          "http_status": 200,
+          "sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "size": 2
+        }
+      }
+    ],
+    "limits": [
+      "Only manifest and configuration metadata was fetched. Filesystem layers were not downloaded, containers were not started, and this is not a runtime acceptance test."
+    ],
+    "anonymous_metadata_access_verified": true,
+    "publication_workflow": {
+      "id": 43207006843,
+      "head_sha": "ac827485f0ca9967c6fd2521469c7a87867020f8",
+      "status": "completed",
+      "conclusion": "success",
+      "html_url": "https://github.com/samirhvbr/strix/actions/runs/43207006843",
+      "created_at": "2026-11-12T11:11:38Z",
+      "updated_at": "2026-11-12T11:13:05Z"
+    },
+    "source_association_scope": "The OCI source label was read from each image configuration. GitHub package repository association itself was not established through REST."
+  },
+  "artifact_proof": {
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca",
+    "image_id": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "architecture": "arm64",
+    "parent": "ghcr.io/usestrix/strix-sandbox:1.4.1",
+    "parent_id": "sha256:c8e70302ba4a69b678b4001c909b134d8d0b84625d7b23feed59ece02672c1d2",
+    "parent_layers_preserved": true,
+    "additional_layers": 1,
+    "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818",
+    "repo_digests": [
+      "ghcr.io/samirhvbr/strix-sandbox@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30"
+    ],
+    "source_label": "https://github.com/samirhvbr/strix"
+  },
+  "published_guarded_runtime": {
+    "run_id": "strix-image-acceptance-b84df5c98240",
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "checks": {
+      "owned_tcp_positive_control": true,
+      "backend_started_seconds": 7.892,
+      "guard_policy_digest": "27a787771e043b41c424caa398272ba7463618b5524f625553500276b443ce4e",
+      "first_entrypoint_reached_ready": true,
+      "image_entrypoint_mentions_nss_database_guard": true,
+      "image_entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818",
+      "derived_rootfs_preserves_official_parent_layers_plus_one": true,
+      "default_deny_blocks_owned_reachable_target": true,
+      "both_firewall_families_default_deny": true,
+      "denied_packet_counters": {
+        "ipv4": {
+          "packets": 1,
+          "bytes": 60
+        },
+        "ipv6": {
+          "packets": 0,
+          "bytes": 0
+        }
+      },
+      "fork_capability_drops": [
+        "NET_ADMIN",
+        "NET_RAW",
+        "SYS_ADMIN"
+      ],
+      "root_cannot_write_readonly_metadata_or_run_mounts": true,
+      "sibling_write_positive_control": true,
+      "caido_real_guest_bootstrap_loopback": true,
+      "peer_cannot_reach_control_port": true,
+      "real_sdk_pty_start_stdin_poll_exit": true
+    },
+    "resources": {
+      "target": "1bba41e27e5103b243a80e1ec32f2aa2d1d917783454cee128a13b8817dad879",
+      "sandbox": "13a980832243fb5ceca58db962d886cb27bc33c2a962a639f4ce1086d4d524f6",
+      "guard": "dcde64f24bf23f59fa5e62236bd1d811a788655079d9e509cd9accfbf57d25b1"
+    },
+    "passed": true,
+    "image_id": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "image_repo_digests": [
+      "ghcr.io/samirhvbr/strix-sandbox@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30"
+    ],
+    "architecture": "arm64",
+    "source_sha": "ac827485f0ca9967c6fd2521469c7a87867020f8",
+    "policy_digest": "27a787771e043b41c424caa398272ba7463618b5524f625553500276b443ce4e",
+    "cleanup_remaining_owned_ids": []
+  },
+  "published_restart": {
+    "name": "strix-persistence-smoke-20261112-ddccc109",
+    "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "scope": "synthetic local source only, network none, no host mounts or published ports",
+    "checks": {
+      "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818  /usr/local/bin/docker-entrypoint.sh",
+      "isolated_image_entrypoint": {
+        "network": "none",
+        "mounts": [],
+        "ports": {}
+      },
+      "first_start": {
+        "ready_count": 1,
+        "running": true,
+        "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf"
+      },
+      "synthetic_files": [
+        "rules/marker.yaml",
+        "src/clean.py",
+        "src/positive.py",
+        "workflows/branch.yml",
+        "workflows/local.yml",
+        "workflows/other-owner.yml",
+        "workflows/sha.yml",
+        "workflows/tag.yml"
+      ],
+      "nss_before_restart": {
+        "testing_root_present": true,
+        "synthetic_sentinel_present": true
+      },
+      "same_container_restart": {
+        "ready_count": 2,
+        "running": true,
+        "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf"
+      },
+      "nss_after_restart": {
+        "testing_root_present": true,
+        "synthetic_sentinel_present": true
+      }
+    },
+    "passed": true,
+    "image_id": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+    "architecture": "arm64",
+    "image_entrypoint": [
+      "docker-entrypoint.sh"
+    ],
+    "image_user": "pentester",
+    "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf",
+    "cleanup": {
+      "container_removed": true,
+      "image_kept": true,
+      "host_mounts_used": false
+    }
+  },
+  "offline_opengrep": {
+    "status": "official_restart_blocked; local_derivative_and_published_arm64_restart_passed",
+    "image": "ghcr.io/usestrix/strix-sandbox@sha256:c8e70302ba4a69b678b4001c909b134d8d0b84625d7b23feed59ece02672c1d2",
+    "platform_executed": "linux/arm64 Docker Desktop on macOS",
+    "limits": [
+      "No amd64 execution",
+      "No user source scanned, no host mounts, no published ports, no credentials",
+      "network none: only loopback Caido startup; no remote scanner/registry/provider/target",
+      "No LLM session or interactive TUI acceptance",
+      "Full rule bundle first attempt reached60s bound; clean bounded repeat passed169.247s; no performance regression comparison",
+      "Published artifact same-container restart/NSS accepted on arm64 only; final rootfs-layer comparison and remaining acceptance gates belong to parent"
+    ],
+    "opengrep_version": "1.31.0",
+    "custom_rule": {
+      "exit_code": 0,
+      "selected_results": [
+        {
+          "check_id": "rules.strix-offline-marker",
+          "path": "src/positive.py",
+          "line": 1
+        }
+      ],
+      "all_results_count": 1,
+      "scanned_paths": [
+        "src/clean.py",
+        "src/positive.py"
+      ],
+      "errors": [],
+      "version": "1.31.0"
+    },
+    "github_action_controls": {
+      "exit_code": 0,
+      "selected_results": [
+        {
+          "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+          "path": "workflows/branch.yml",
+          "line": 7
+        },
+        {
+          "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+          "path": "workflows/tag.yml",
+          "line": 7
+        }
+      ],
+      "all_results_count": 2,
+      "scanned_paths": [
+        "workflows/branch.yml",
+        "workflows/local.yml",
+        "workflows/other-owner.yml",
+        "workflows/sha.yml",
+        "workflows/tag.yml"
+      ],
+      "errors": [],
+      "version": "1.31.0"
+    },
+    "full_bundle": {
+      "exit_code": 0,
+      "selected_results": [
+        {
+          "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+          "path": "workflows/branch.yml",
+          "line": 7
+        },
+        {
+          "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+          "path": "workflows/tag.yml",
+          "line": 7
+        }
+      ],
+      "all_results_count": 3,
+      "scanned_paths": [
+        "src/clean.py",
+        "src/positive.py",
+        "workflows/branch.yml",
+        "workflows/local.yml",
+        "workflows/other-owner.yml",
+        "workflows/sha.yml",
+        "workflows/tag.yml"
+      ],
+      "errors": [],
+      "version": "1.31.0"
+    },
+    "full_bundle_process": {
+      "exit_code": 0,
+      "elapsed_seconds": 169.247,
+      "command": [
+        "timeout",
+        "180",
+        "opengrep",
+        "--json",
+        "--disable-version-check",
+        "--no-git-ignore",
+        "--strict",
+        "--config",
+        "/opt/opengrep-rules",
+        "--taint-intrafile",
+        "src",
+        "workflows"
+      ]
+    },
+    "full_bundle_rules": {
+      "loaded": 2006,
+      "applied": 706,
+      "yaml_files": 1933,
+      "yaml_bytes": 2707524,
+      "targets": 7
+    },
+    "full_bundle_additional_finding": "Expected community third-party-action-not-pinned-to-commit-sha at workflows/other-owner.yml; this remains negative for Strix GitHub-owned-action rule",
+    "original_restart": {
+      "same_container_id": "e7c17b677a3f5ab890a571be835c32f1b35489ce19532d37df5674d30a310224",
+      "ready_count": 1,
+      "stage": "Adding CA to browser trust store",
+      "observed_process": {
+        "pid": 43,
+        "command": "certutil",
+        "elapsed_seconds": 28
+      },
+      "stderr_tail": "Invalid password.  Try again.\nError opening input terminal for read",
+      "bounded_stop": "stopped deliberately after repeat error observed to contain unbounded logs",
+      "note": "Docker full-log retrieval timed out after25s because of error loop; bounded tail captured separately. Container explicitly removed."
+    },
+    "original_nss_before": {
+      "testing_root_present": true,
+      "synthetic_sentinel_present": true
+    },
+    "cleanup": [
+      {
+        "attempt": "focused-and60s-bundle",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      },
+      {
+        "attempt": "full-bundle180s",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      },
+      {
+        "attempt": "original-restart",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      },
+      {
+        "attempt": "original-standard-restart",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      },
+      {
+        "attempt": "local-derivative-restart-and-controls",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      },
+      {
+        "attempt": "published-artifact-restart",
+        "container_removed": true,
+        "image_kept": true,
+        "host_mounts_used": false
+      }
+    ],
+    "probe_adjustments": [
+      "First probe included unsupported legacy --metrics=off; CLIhelp confirmed unavailable; removed from subsequent commands. network none provided offline isolation.",
+      "NSS error loop flooded Docker logs; bounded tail saved and container deliberately stopped/removed. Derivative harness uses bounded log tails."
+    ],
+    "derivative": {
+      "image": "shvia-strix-sandbox:1.4.1-nss",
+      "image_id": "sha256:08c154a8a9d5fd212646596e3bc999170cd8d5aaaec34f1ac6d65a03c50d741d",
+      "architecture": "arm64",
+      "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818  /usr/local/bin/docker-entrypoint.sh",
+      "checks": {
+        "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818  /usr/local/bin/docker-entrypoint.sh",
+        "isolated_image_entrypoint": {
+          "network": "none",
+          "mounts": [],
+          "ports": {}
+        },
+        "first_start": {
+          "ready_count": 1,
+          "running": true,
+          "container_id": "f7de01d6dc9041f8d1c4ee1065ae1b99a9b009c427347691d1d7520dcb76d700"
+        },
+        "synthetic_files": [
+          "rules/marker.yaml",
+          "src/clean.py",
+          "src/positive.py",
+          "workflows/branch.yml",
+          "workflows/local.yml",
+          "workflows/other-owner.yml",
+          "workflows/sha.yml",
+          "workflows/tag.yml"
+        ],
+        "nss_before_restart": {
+          "testing_root_present": true,
+          "synthetic_sentinel_present": true
+        },
+        "same_container_restart": {
+          "ready_count": 2,
+          "running": true,
+          "container_id": "f7de01d6dc9041f8d1c4ee1065ae1b99a9b009c427347691d1d7520dcb76d700"
+        },
+        "nss_after_restart": {
+          "testing_root_present": true,
+          "synthetic_sentinel_present": true
+        },
+        "opengrep_version": "1.31.0",
+        "custom_python_rule": {
+          "exit_code": 0,
+          "selected_results": [
+            {
+              "check_id": "rules.strix-offline-marker",
+              "path": "src/positive.py",
+              "line": 1
+            }
+          ],
+          "all_results_count": 1,
+          "scanned_paths": [
+            "src/clean.py",
+            "src/positive.py"
+          ],
+          "errors": [],
+          "version": "1.31.0"
+        },
+        "bundled_github_action_rule": {
+          "exit_code": 0,
+          "selected_results": [
+            {
+              "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+              "path": "workflows/branch.yml",
+              "line": 7
+            },
+            {
+              "check_id": "opt.opengrep-rules.strix.github-owned-action-not-pinned-to-commit-sha",
+              "path": "workflows/tag.yml",
+              "line": 7
+            }
+          ],
+          "all_results_count": 2,
+          "scanned_paths": [
+            "workflows/branch.yml",
+            "workflows/local.yml",
+            "workflows/other-owner.yml",
+            "workflows/sha.yml",
+            "workflows/tag.yml"
+          ],
+          "errors": [],
+          "version": "1.31.0"
+        }
+      },
+      "passed": true
+    },
+    "original_standard_restart": {
+      "first_start": {
+        "ready_count": 1,
+        "running": true,
+        "container_id": "76edbc82615bfa162328513fd196b46e00813acdf1875a61b545bc13129c24c9"
+      },
+      "same_container_restart": {
+        "ready_count": 0,
+        "state": {
+          "Status": "running",
+          "Running": true,
+          "Paused": false,
+          "Restarting": false,
+          "OOMKilled": false,
+          "Dead": false,
+          "Pid": 67429,
+          "ExitCode": 0,
+          "Error": "",
+          "StartedAt": "2026-11-12T11:10:28.001311091Z",
+          "FinishedAt": "2026-11-12T11:10:27.348565549Z"
+        },
+        "error": "NSS certutil password error loop detected"
+      },
+      "nss_before": {
+        "testing_root_present": true,
+        "synthetic_sentinel_present": false
+      },
+      "entrypoint_sha256": "d088257a30b39b352ad7a0db16ad8e4b59d608616efb5873b12c0a9a5a1add70  /usr/local/bin/docker-entrypoint.sh",
+      "bounded_tail_note": "ready_count in failure tail may be0 because repeated stderr displaced earlier startup lines; separate first_start check passed. No second readiness was observed."
+    },
+    "published_restart": {
+      "image": "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "image_id": "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30",
+      "architecture": "arm64",
+      "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf",
+      "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818  /usr/local/bin/docker-entrypoint.sh",
+      "checks": {
+        "entrypoint_sha256": "cbdb5ca54544c2f7989a4981133e5faa5bfe4f65ee15d67e106082e95029b818  /usr/local/bin/docker-entrypoint.sh",
+        "isolated_image_entrypoint": {
+          "network": "none",
+          "mounts": [],
+          "ports": {}
+        },
+        "first_start": {
+          "ready_count": 1,
+          "running": true,
+          "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf"
+        },
+        "synthetic_files": [
+          "rules/marker.yaml",
+          "src/clean.py",
+          "src/positive.py",
+          "workflows/branch.yml",
+          "workflows/local.yml",
+          "workflows/other-owner.yml",
+          "workflows/sha.yml",
+          "workflows/tag.yml"
+        ],
+        "nss_before_restart": {
+          "testing_root_present": true,
+          "synthetic_sentinel_present": true
+        },
+        "same_container_restart": {
+          "ready_count": 2,
+          "running": true,
+          "container_id": "891625fe299b3d2bc4f13b8c43224d81000d2d9b7712a7440a1eff6f245a1ecf"
+        },
+        "nss_after_restart": {
+          "testing_root_present": true,
+          "synthetic_sentinel_present": true
+        }
+      },
+      "passed": true,
+      "evidence_dir": "/tmp/strix-integration-20261112/image-offline-persistence/published-restart",
+      "compact_reproducer": {
+        "script": "/tmp/strix-integration-20261112/image-offline-persistence/published-restart/reproduce.sh",
+        "exit_code": 0,
+        "container_id": "9ddf9e7d1e174b86fc64f92b72da935316ddf26e6c5be3f13220538a589da2a0",
+        "readiness": "PID1 sleep after both original entrypoint executions",
+        "nss_before_and_after": [
+          "Testing Root CA",
+          "Strix Offline Restart Fixture"
+        ],
+        "log": "/tmp/strix-integration-20261112/image-offline-persistence/published-restart/reproduce.log"
+      }
+    }
+  },
+  "first_published_guarded_attempt": {
+    "result": "failed",
+    "operation": "Docker container.start",
+    "timeout_seconds": 60,
+    "entrypoint_started": false,
+    "cause": "unestablished",
+    "harness_cleanup_error": "Temporary directory cleanup masked the first Docker exception. Original traceback retained during investigation.",
+    "recovery": "Repeated with unchanged limits and all gates passed."
+  },
+  "limitations": [
+    "Runtime executed Linux/arm64. amd64 registry metadata verified.",
+    "Full rule bundle validated on immutable official parent; published rootfs preserves those layers and adds only the entrypoint."
+  ]
+}
