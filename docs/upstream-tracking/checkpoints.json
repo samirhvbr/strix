@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-10T10:52:31.495389+00:00",
+  "updated_at": "2026-11-12T09:40:45.161075+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -175,10 +175,10 @@
     ],
     "last_observed_upstream": {
       "ref": "refs/heads/main",
-      "sha": "e05948080bdccd2af47c922f70503005c17747b4",
-      "observed_at": "2026-11-10T10:52:31.495389+00:00",
+      "sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
+      "observed_at": "2026-11-12T09:40:45.161075+00:00",
       "integrated": false,
-      "record": "round-2026-11-10.json"
+      "record": "round-2026-11-12.json"
     },
     "last_selected_patch_validation": {
       "branch": "feat/pr1654-ci-followup-20261105",
@@ -246,45 +246,68 @@
         "observed_at": "2026-11-09T10:21:19.465135+00:00",
         "integrated": false,
         "record": "round-2026-11-09.json"
+      },
+      {
+        "ref": "refs/heads/main",
+        "sha": "e05948080bdccd2af47c922f70503005c17747b4",
+        "observed_at": "2026-11-10T10:52:31.495389+00:00",
+        "integrated": false,
+        "record": "round-2026-11-10.json"
       }
-    ]
+    ],
+    "last_observed_fork_master": {
+      "ref": "refs/heads/master",
+      "sha": "41bf5b96fcda67c3d80804a593c4d69dee41452b",
+      "version": "1.2.52",
+      "observed_at": "2026-11-12T09:40:45.161075+00:00",
+      "release_observation": {
+        "assets": [
+          "pentest-aarch64-apple-darwin",
+          "pentest-x86_64-unknown-linux-gnu",
+          "SHA256SUMS"
+        ],
+        "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.50",
+        "published_at": "2026-11-09T16:08:46Z",
+        "tag_name": "shvia-v1.2.50",
+        "peeled_tag_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
+      }
+    }
   },
   "contribution_review": {
-    "round": "2026-11-10",
-    "report": "../UPSTREAM_REVIEW_2026-11-10.md",
+    "round": "2026-11-12",
+    "report": "../UPSTREAM_REVIEW_2026-11-12.md",
     "ledger": "items.json",
     "last_completed_inventory_at": "2026-11-09T09:55:23.656519+00:00",
     "inventory_method": "Individual known-ID GraphQL batches, paginated open catalogs, and an all-state update query with 48 hours of overlap.",
     "state": "inventory_rechecked_with_unavailable_records_selected_fixes_published",
     "coverage": {
-      "total_records": 705,
+      "total_records": 719,
       "upstream_open_inventory": {
-        "pr": 354,
-        "issue": 231
+        "pr": 357,
+        "issue": 235
       },
       "review_depth": {
-        "identified": 52,
-        "triage": 576,
-        "deep": 77
+        "identified": 53,
+        "triage": 581,
+        "deep": 85
       }
     },
     "known_items_checked": {
-      "count": 686,
-      "attempted": 689,
+      "count": 702,
+      "attempted": 705,
       "missing": 3,
       "unavailable_ids": [
         "usestrix/strix#pr:1067",
         "usestrix/strix#pr:1294",
         "usestrix/strix#pr:1338"
       ],
-      "changed_any_field": 18
+      "changed_any_field": 19
     },
     "selected_new_or_updated_prs": [
-      1726,
-      1728
+      1738
     ],
     "next_discovery": {
-      "since_inclusive": "2026-11-08T10:38:21.801481+00:00",
+      "since_inclusive": "2026-11-10T09:23:04.826021+00:00",
       "overlap_hours": 48,
       "include_closed_and_merged": true,
       "recheck_all_ledger_ids_first": true,
@@ -292,11 +315,18 @@
     },
     "partial_work": {
       "code_integrations_pending": [
-        "Assess synchronization with observed main e0594808 independently of the published patches.",
-        "Review the new patches for fork applicability after upstream feedback."
+        "Review and validate fork #61 before integrating the backport.",
+        "Validate the paired 1.4.1 and Opengrep migration with the fork runtime guards.",
+        "Assess MCP callback consumers and reporting compatibility before importing #1717/#1701."
       ],
       "deep_review_pending": "Catalog and targeted overlap reviews are not complete acceptance reviews. Remaining identified/triage-depth items keep their individual pending/deferred decisions and revisit conditions.",
       "priority_queue": [
+        "usestrix/strix#pr:1647",
+        "usestrix/strix#pr:1729",
+        "usestrix/strix#pr:1738",
+        "usestrix/strix#issue:1735",
+        "usestrix/strix#issue:1736",
+        "usestrix/strix#issue:1737",
         "usestrix/strix#pr:1726",
         "usestrix/strix#pr:1728",
         "usestrix/strix#pr:1714",
@@ -325,7 +355,6 @@
         "usestrix/strix#pr:1638",
         "usestrix/strix#pr:1639",
         "usestrix/strix#pr:1648",
-        "usestrix/strix#pr:1647",
         "usestrix/strix#pr:1642",
         "usestrix/strix#issue:1645",
         "usestrix/strix#issue:1646",
@@ -349,12 +378,11 @@
       ]
     },
     "decisions_required": [
-      "Recheck all IDs including the unavailable three, then query all-state updates since 2026-11-08T10:38:21.801481+00:00 with pagination and 48-hour overlap.",
-      "Watch #1577/#1657/#1658/#1660 for replies and fixes in main. Once present, compare equivalent fixtures and request fresh base-aware CI on #1708/#1710/#1712/#1713; retain earlier results.",
-      "Recheck #1714 against #1709 and review its merge result and #1101 before any fork import.",
-      "Check new upstream PRs and policy issues for review, CI, head changes and maintainer contract decisions. Fork source imports remain pending.",
-      "Compare #1701/#1717 merge trees with the fork reporting and MCP contracts before any synchronization.",
-      "Follow the sanitized sandbox readiness reproduction on #1704 and preserve #1680 scope."
+      "Recheck all IDs and query all-state updates since 2026-11-10T09:23:04.826021+00:00 with pagination and 48-hour overlap.",
+      "Confirm #1577/#1657/#1658/#1660 in main and then observe fresh base-aware CI on #1708/#1710/#1712/#1713.",
+      "Recheck #61 CI and compare the final fork integration commit against both upstream startup commits.",
+      "Watch #1733 and #1714 for validated fixes and reassess open contract decisions.",
+      "Track the 1.4.1/Opengrep acceptance and the difference between fork master version and published artifacts."
     ],
     "second_pass": {
       "recorded_at": "2026-10-29T21:04:34.141249+00:00",
@@ -761,21 +789,48 @@
           1702,
           1703
         ]
+      },
+      {
+        "round": "2026-11-10",
+        "report": "../UPSTREAM_REVIEW_2026-11-10.md",
+        "state": "inventory_rechecked_with_unavailable_records_selected_fixes_published",
+        "coverage": {
+          "total_records": 705,
+          "upstream_open_inventory": {
+            "pr": 354,
+            "issue": 231
+          },
+          "review_depth": {
+            "identified": 52,
+            "triage": 576,
+            "deep": 77
+          }
+        },
+        "completed_at": "2026-11-10T10:52:31.495389+00:00",
+        "last_completed_inventory_at": "2026-11-09T09:55:23.656519+00:00",
+        "last_attempted_inventory_at": "2026-11-10T10:38:21.801481+00:00",
+        "followup_record": "round-2026-11-10.json",
+        "next_discovery": {
+          "since_inclusive": "2026-11-08T10:38:21.801481+00:00",
+          "overlap_hours": 48,
+          "include_closed_and_merged": true,
+          "recheck_all_ledger_ids_first": true,
+          "number_watermark": null
+        }
       }
     ],
-    "completed_at": "2026-11-10T10:52:31.495389+00:00",
+    "completed_at": "2026-11-12T09:40:45.161075+00:00",
     "published_issues": [
-      1723,
-      1727,
-      1724,
-      1725
+      1735,
+      1736,
+      1737
     ],
     "newly_triaged_prs": [
       1716,
       1719
     ],
     "in_progress": null,
-    "followup_record": "round-2026-11-10.json",
+    "followup_record": "round-2026-11-12.json",
     "latest_pr_feedback_at": "2026-11-05T14:18:35.457672+00:00",
     "delivery_consolidation_2026_10_30": {
       "recorded_at": "2026-10-30T19:09:33.904111+00:00",
@@ -817,16 +872,12 @@
       "summary": "Greptile5/5; no change requested."
     },
     "latest_targeted_followup": {
-      "checked_at": "2026-11-10T10:52:31.495389+00:00",
-      "record": "round-2026-11-10.json",
-      "report": "../UPSTREAM_REVIEW_2026-11-10.md#ci-carryover",
-      "scope": "Four base fixes and four dependent upstream PRs rechecked on observed main e0594808.",
+      "checked_at": "2026-11-12T09:40:45.161075+00:00",
+      "record": "round-2026-11-12.json",
+      "report": "../UPSTREAM_REVIEW_2026-11-12.md#upstream-ci",
+      "scope": "Four CI prerequisites and their dependent PRs on current main.",
       "maintainer_replies_observed": false,
-      "upstream_integration_pending": true,
-      "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57",
-      "next_resume": [
-        "Watch #1577/#1657/#1658/#1660 for replies and fixes in main. Once present, compare equivalent fixtures and request fresh base-aware CI on #1708/#1710/#1712/#1713; retain earlier results."
-      ]
+      "upstream_integration_pending": true
     },
     "targeted_followup_history": [
       {
@@ -872,30 +923,39 @@
         "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57",
         "maintainer_review_requests_verified_at": "2026-11-09T15:17:51.241613+00:00",
         "upstream_integration_pending": true
+      },
+      {
+        "checked_at": "2026-11-10T10:52:31.495389+00:00",
+        "record": "round-2026-11-10.json",
+        "report": "../UPSTREAM_REVIEW_2026-11-10.md#ci-carryover",
+        "scope": "Four base fixes and four dependent upstream PRs rechecked on observed main e0594808.",
+        "maintainer_replies_observed": false,
+        "upstream_integration_pending": true,
+        "fork_pull_request": "https://github.com/samirhvbr/strix/pull/57",
+        "next_resume": [
+          "Watch #1577/#1657/#1658/#1660 for replies and fixes in main. Once present, compare equivalent fixtures and request fresh base-aware CI on #1708/#1710/#1712/#1713; retain earlier results."
+        ]
       }
     ],
-    "last_attempted_inventory_at": "2026-11-10T10:38:21.801481+00:00"
+    "last_attempted_inventory_at": "2026-11-12T09:23:04.826021+00:00"
   },
   "version_release_audit": "release-audit.json",
   "publication_scope": {
-    "round": "2026-11-10",
+    "round": "2026-11-12",
     "upstream_issues": [
-      1723,
-      1727,
-      1724,
-      1725
+      1735,
+      1736,
+      1737
     ],
     "upstream_prs": [
-      1726,
-      1728
+      1738
     ],
-    "fork_tracking_branch": "docs/upstream-review-20261109",
+    "fork_tracking_branch": "docs/upstream-review-20261112",
     "fork_tracking_base": "feat/upstream-contributions-20261105",
-    "fork_tracking_pr": "https://github.com/samirhvbr/strix/pull/57",
-    "fork_code_imports": [],
-    "master_changed_by_this_round": false,
-    "version_bumped_by_this_round": false,
-    "release_created_by_this_round": false
+    "fork_backport_prs": [
+      "https://github.com/samirhvbr/strix/pull/61"
+    ],
+    "fork_code_imports_into_review_base": []
   },
   "publication_history": [
     {
@@ -985,6 +1045,26 @@
       "fork_tracking_branch": "docs/upstream-review-20261109",
       "fork_tracking_base": "feat/upstream-contributions-20261105",
       "fork_code_imports": []
+    },
+    {
+      "round": "2026-11-10",
+      "upstream_issues": [
+        1723,
+        1727,
+        1724,
+        1725
+      ],
+      "upstream_prs": [
+        1726,
+        1728
+      ],
+      "fork_tracking_branch": "docs/upstream-review-20261109",
+      "fork_tracking_base": "feat/upstream-contributions-20261105",
+      "fork_tracking_pr": "https://github.com/samirhvbr/strix/pull/57",
+      "fork_code_imports": [],
+      "master_changed_by_this_round": false,
+      "version_bumped_by_this_round": false,
+      "release_created_by_this_round": false
     }
   ]
 }
