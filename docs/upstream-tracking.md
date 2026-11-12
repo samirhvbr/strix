@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [latest reliability review](UPSTREAM_REVIEW_2026-11-10.md),
+Start every review here, then read the [latest reliability review](UPSTREAM_REVIEW_2026-11-12.md),
+the [November 10 round](UPSTREAM_REVIEW_2026-11-10.md),
 the [November 9 round](UPSTREAM_REVIEW_2026-11-09.md),
 the [November 7 round](UPSTREAM_REVIEW_2026-11-07.md),
 the [PR #1654 CI follow-up](UPSTREAM_CI_1654_2026-11-05.md),
@@ -16,9 +17,9 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Delivered fork | `master` and the peeled `shvia-v1.2.50` tag at `127cdb0f47a25fe495beec528a3c46db2eeae621`, published 2026-11-09T16:08:46 UTC | Two binaries and `SHA256SUMS` are published. The review verified metadata and tag ancestry. Fork #56 corrects activity-window behavior and its release record. |
-| Upstream code synchronization | Effective integrated upstream remains `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed upstream `e0594808`. The fork review branch includes the earlier #54 merge. Newly reviewed upstream patches await separate evaluation for import. |
-| Contribution review | 2026-11-10. Verified 686 of 689 known items and retained the prior metadata for three unavailable PRs. The pre-publication inventory has 354 open upstream PRs and 231 open issues. | Reproduced installer scratch leaks, invalid transcript JSON, uncertain steering delivery and unchecked top-up receipts. |
+| Fork source and release | `master` declares 1.2.52 at `41bf5b96`. Latest release is `shvia-v1.2.50` at `127cdb0f`. | Fork #58 and #59 passed their recorded CI. Release metadata lists two binaries and `SHA256SUMS`. |
+| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. Fork #61 proposes the TUI startup backport on the review branch. |
+| Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
@@ -132,15 +133,13 @@ carried on the review branch, which delivers environment values to the agent wor
 before a master delivery. Their evidence, exact source versions, local commits and validation limits are in the latest
 November 5 report and ledger.
 
-The [November 10 inventory](upstream-tracking/round-2026-11-10.json) records the current
-release verification and CI status. [release-audit.json](upstream-tracking/release-audit.json)
-retains the earlier audit. The latest published fork release is `shvia-v1.2.50` at
-`127cdb0f`, with upstream package version 1.7.0. Selected review-branch imports are
-unreleased. A source commit, built wheel, remote CI, released binary and installed/runtime
-acceptance are separate evidence.
+The [November 12 snapshot](upstream-tracking/round-2026-11-12.json) records
+release metadata, the tested fork TUI backport and image migration acceptance. The upstream
+tag v1.7.1 predates the TUI fix. The latest published fork release is 1.2.50, and
+`master` declares 1.2.52. [release-audit.json](upstream-tracking/release-audit.json)
+retains the earlier audit.
 
-The four upstream CI prerequisites (#1577, #1657, #1658 and #1660) remain open. The next
-recheck should confirm their presence in main before requesting fresh base-aware CI for
-#1708, #1710, #1712 and #1713. The latest report also records the #1401 withdrawal and
-retained fork implementation, #1714's proposed fix for #1709, the two new patches and
-the open steering and billing decisions.
+The upstream CI prerequisites #1577, #1657, #1658 and #1660 await review. After their
+fixes land in main, check fresh base-aware CI for #1708, #1710, #1712 and #1713.
+Recheck the #61 backport and the published contributions before changing their fork
+adoption records.
