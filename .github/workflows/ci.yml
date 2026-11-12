@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       sandbox_runtime_acceptance:
-        description: Test the pinned sandbox on native Linux amd64 with owned fixtures.
+        description: Test the pinned sandbox, IPv6 traffic and full Opengrep bundle on native amd64.
         type: boolean
         default: false
 

@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import hashlib
+import ipaddress
 import json
 import os
 import platform
@@ -84,7 +85,11 @@ class Acceptance:
         self.sandbox: Any = None
         self.guard: Any = None
         self.target: Any = None
+        self.ipv6_network: Any = None
+        self.ipv6_peer: Any = None
         self.target_ip = ""
+        self.target_ipv6 = ""
+        self.guard_ipv6 = ""
         self.policy_digest = ""
         self.fixture: Path | None = None
         self.owned_ids: set[str] = set()
@@ -194,36 +199,15 @@ with socket.socket() as sock:
             protect_run_mounts,
         )
 
-        server = """
-import socket, time
-sock = socket.socket()
-sock.bind(('0.0.0.0', 18080))
-sock.listen(20)
-print('READY', flush=True)
-while True:
-    connection, _ = sock.accept()
-    connection.close()
-"""
-        self.target = self.docker.containers.create(
-            FIXTURE_IMAGE,
-            ["python3", "-u", "-c", server],
-            name=self.run_id + "-target",
-            network_mode="bridge",
-            labels={"strix-owned-acceptance": self.run_id},
+        await self.start_network_fixture()
+        policy = NetworkPolicy.model_validate(
+            {
+                "hosts": {self.run_id + ".invalid": self.target_ip},
+                "destinations": [
+                    {"address": self.target_ipv6, "protocol": "tcp", "ports": [18080]}
+                ],
+            }
         )
-        self.own("target", self.target)
-        self.target.start()
-        deadline = time.monotonic() + 15
-        while b"READY" not in self.target.logs(tail=5):
-            require(time.monotonic() < deadline, "Owned TCP fixture did not start")
-            await asyncio.sleep(0.1)
-        self.target.reload()
-        self.target_ip = self.target.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
-        require(
-            self.connects(self.target, self.target_ip, 18080), "Owned TCP positive control failed"
-        )
-        self.record("owned_tcp_positive_control")
-        policy = NetworkPolicy(hosts={self.run_id + ".invalid": self.target_ip})
         self.policy_digest = policy.digest
         self.data["policy_digest"] = policy.digest
         self.fixture = Path(tempfile.mkdtemp(prefix=self.run_id + "-"))
@@ -273,9 +257,110 @@ while True:
         self.own("guard", self.guard)
         self.sandbox.rename(self.run_id + "-sandbox")
         self.guard.rename(self.run_id + "-guard")
+        self.ipv6_network.connect(self.guard, ipv6_address=self.guard_ipv6)
         self.record("backend_started_seconds", round(time.monotonic() - started, 3))
         await self.ready(1)
         self.check_runtime()
+
+    async def start_network_fixture(self) -> None:
+        from docker.types import IPAMConfig, IPAMPool
+
+        unique = uuid.uuid4().hex
+        subnet = ipaddress.IPv6Network(
+            f"fd{unique[:2]}:{unique[2:6]}:{unique[6:10]}:{unique[10:14]}::/64"
+        )
+        self.target_ipv6 = str(subnet.network_address + 10)
+        self.guard_ipv6 = str(subnet.network_address + 30)
+        self.ipv6_network = self.docker.networks.create(
+            self.run_id + "-ipv6",
+            driver="bridge",
+            internal=True,
+            enable_ipv6=True,
+            ipam=IPAMConfig(pool_configs=[IPAMPool(subnet=str(subnet))]),
+            labels={"strix-owned-acceptance": self.run_id},
+        )
+        self.data["owned_network_id"] = self.ipv6_network.id
+        self.record(
+            "ipv6_fixture",
+            {
+                "network_id": self.ipv6_network.id,
+                "subnet": str(subnet),
+                "internal": True,
+                "target": self.target_ipv6,
+                "guard": self.guard_ipv6,
+                "allowed_port": 18080,
+                "denied_port": 18081,
+            },
+        )
+        server = """
+import select, socket
+listeners = []
+for family, address, port in [(socket.AF_INET, '0.0.0.0', 18080),
+                              (socket.AF_INET6, '::', 18080),
+                              (socket.AF_INET6, '::', 18081)]:
+    sock = socket.socket(family, socket.SOCK_STREAM)
+    if family == socket.AF_INET6:
+        sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+    sock.bind((address, port))
+    sock.listen(20)
+    listeners.append(sock)
+print('READY', flush=True)
+while True:
+    ready, _, _ = select.select(listeners, [], [])
+    for listener in ready:
+        connection, _ = listener.accept()
+        with connection:
+            try:
+                connection.sendall(b'owned-ipv6-fixture')
+            except OSError:
+                pass
+"""
+        self.target = self.docker.containers.create(
+            FIXTURE_IMAGE,
+            ["python3", "-u", "-c", server],
+            name=self.run_id + "-target",
+            network_mode="bridge",
+            labels={"strix-owned-acceptance": self.run_id},
+        )
+        self.own("target", self.target)
+        self.ipv6_network.connect(self.target, ipv6_address=self.target_ipv6)
+        self.target.start()
+        deadline = time.monotonic() + 15
+        while b"READY" not in self.target.logs(tail=5):
+            require(time.monotonic() < deadline, "Owned TCP fixture did not start")
+            await asyncio.sleep(0.1)
+        self.target.reload()
+        self.target_ip = self.target.attrs["NetworkSettings"]["Networks"]["bridge"]["IPAddress"]
+        require(
+            self.connects(self.target, self.target_ip, 18080), "Owned TCP positive control failed"
+        )
+        self.record("owned_tcp_positive_control")
+        self.ipv6_peer = self.docker.containers.create(
+            FIXTURE_IMAGE,
+            ["sleep", "infinity"],
+            name=self.run_id + "-ipv6-peer",
+            network_mode=self.ipv6_network.name,
+            labels={"strix-owned-acceptance": self.run_id},
+        )
+        self.own("ipv6_peer", self.ipv6_peer)
+        self.ipv6_peer.start()
+        self.ipv6_peer.reload()
+        peer_ip = self.ipv6_peer.attrs["NetworkSettings"]["Networks"][self.ipv6_network.name][
+            "GlobalIPv6Address"
+        ]
+        require(
+            ipaddress.IPv6Address(peer_ip) in subnet,
+            "IPv6 peer address is outside the owned network",
+        )
+        self.data["checks"]["ipv6_fixture"]["peer"] = peer_ip
+        self.save()
+        self.ipv6_network.reload()
+        config = self.ipv6_network.attrs["IPAM"]["Config"]
+        require(
+            {ipaddress.ip_network(item["Subnet"]).version for item in config} == {4, 6},
+            "Owned fixture network is not dual stack",
+        )
+        require(self.ipv6_network.attrs["Internal"], "Fixture network must be internal")
 
     def check_runtime(self) -> None:
         machine = self.execute(self.sandbox, ["uname", "-m"]).output.decode().strip()
@@ -385,6 +470,86 @@ while True:
         require(counters["ipv4"]["packets"] >= 1, "No denied packets were counted")
         self.record(
             phase + "_network", {"counters": counters, "cap_drop": caps, "peer_blocked": True}
+        )
+        self.ipv6_traffic(phase)
+
+    def ipv6_round_trip(self, container: Any, port: int) -> dict[str, Any]:
+        code = """
+import json, socket, sys
+with socket.socket(socket.AF_INET6, socket.SOCK_STREAM) as sock:
+    sock.settimeout(1)
+    try:
+        sock.connect((sys.argv[1], int(sys.argv[2])))
+        payload = b''
+        while len(payload) < len(b'owned-ipv6-fixture'):
+            chunk = sock.recv(64)
+            if not chunk:
+                break
+            payload += chunk
+        result = {'connected': True, 'payload': payload.decode('ascii'),
+                  'local': sock.getsockname()[0], 'peer': sock.getpeername()[0]}
+    except OSError as exc:
+        result = {'connected': False, 'error': type(exc).__name__, 'errno': exc.errno,
+                  'local': sock.getsockname()[0]}
+    print(json.dumps(result))
+"""
+        result = self.execute(container, ["python3", "-c", code, self.target_ipv6, str(port)])
+        parsed: dict[str, Any] = json.loads(result.output)
+        return parsed
+
+    def ipv6_traffic(self, phase: str) -> None:
+        controls: dict[str, Any] = {}
+        for port in (18080, 18081):
+            result = self.ipv6_round_trip(self.ipv6_peer, port)
+            require(
+                result.get("payload") == "owned-ipv6-fixture",
+                f"Independent IPv6 control failed on port {port}: {result}",
+            )
+            require(
+                result.get("peer") == self.target_ipv6,
+                "Control did not reach the literal IPv6 target",
+            )
+            controls[str(port)] = result
+        allowed = self.ipv6_round_trip(self.sandbox, 18080)
+        require(
+            allowed.get("payload") == "owned-ipv6-fixture",
+            f"Authorized IPv6 traffic failed: {allowed}",
+        )
+        require(
+            allowed.get("local") == self.guard_ipv6,
+            "IPv6 traffic did not use the guarded namespace",
+        )
+        route = (
+            self.execute(self.sandbox, ["ip", "-6", "route", "get", self.target_ipv6])
+            .output.decode()
+            .strip()
+        )
+        before = self.client.network_guard.denied_packets()["ipv6"]
+        denied = self.ipv6_round_trip(self.sandbox, 18081)
+        after = self.client.network_guard.denied_packets()["ipv6"]
+        require(
+            denied.get("connected") is False and denied.get("error") == "TimeoutError",
+            f"Expected an IPv6 firewall timeout, not a routing/service error: {denied}",
+        )
+        require(
+            denied.get("local") == self.guard_ipv6,
+            "Denied probe did not use the IPv6 guard address",
+        )
+        require(
+            after["packets"] > before["packets"] and after["bytes"] > before["bytes"],
+            "Denied IPv6 probe did not increment DROP counters",
+        )
+        self.record(
+            phase + "_ipv6",
+            {
+                "positive_controls": controls,
+                "authorized": allowed,
+                "denied": denied,
+                "guard_route": route,
+                "drop_before": before,
+                "drop_after": after,
+                "drop_delta": {key: after[key] - before[key] for key in ("packets", "bytes")},
+            },
         )
 
     async def services(self, phase: str) -> None:
@@ -565,6 +730,18 @@ while True:
         self.data["cleanup_fixture_removed"] = not self.fixture.exists()
         require(not self.fixture.exists(), "Owned fixture directory remains")
 
+    def clean_networks(self, errors: list[str]) -> None:
+        try:
+            network_filter = {"label": "strix-owned-acceptance=" + self.run_id}
+            for network in self.docker.networks.list(filters=network_filter):
+                network.remove()
+            self.data["cleanup_remaining_owned_network_ids"] = [
+                network.id for network in self.docker.networks.list(filters=network_filter)
+            ]
+            require(not self.data["cleanup_remaining_owned_network_ids"], "Owned networks remain")
+        except Exception as exc:  # noqa: BLE001 -- Network cleanup must not hide the first error.
+            errors.append(f"Owned network: {exc}")
+
     async def cleanup(self) -> None:
         errors: list[str] = []
         if self.caido is not None:
@@ -600,8 +777,8 @@ while True:
                 require(not self.data["cleanup_remaining_owned_ids"], "Owned containers remain")
             except Exception as exc:  # noqa: BLE001 -- Report cleanup separately from the first error.
                 errors.append(f"Owned resources: {exc}")
-            finally:
-                self.docker.close()
+            self.clean_networks(errors)
+            self.docker.close()
         self.data["cleanup_errors"] = errors
         if errors:
             self.data["passed"] = False
