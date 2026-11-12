@@ -1,3 +1,5 @@
 # Keep the upstream tools and add the fork's idempotent NSS initialization.
 FROM ghcr.io/usestrix/strix-sandbox@sha256:c8e70302ba4a69b678b4001c909b134d8d0b84625d7b23feed59ece02672c1d2
 COPY --chmod=755 containers/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+LABEL org.opencontainers.image.source="https://github.com/samirhvbr/strix" \
+      org.opencontainers.image.description="Strix sandbox 1.4.1 with idempotent NSS initialization"
