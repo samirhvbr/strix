@@ -1,6 +1,7 @@
 # Upstream continuity record
 
-Start every review here, then read the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
+Start every review here, then read the [sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
+the [delivery consolidation](UPSTREAM_DELIVERY_2026-10-30.md),
 the [latest follow-up](UPSTREAM_FOLLOWUP_2026-10-30.md), the [preceding round](UPSTREAM_REVIEW_2026-10-30.md)
 and the [per-item ledger](upstream-tracking/items.json). This is the fork's continuity
 record; `FORK.md` remains the delivery changelog and `version.md` remains the version policy.

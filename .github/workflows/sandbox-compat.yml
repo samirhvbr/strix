@@ -2,13 +2,6 @@ name: Sandbox compatibility image
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - feat/sandbox-1.4.1-opengrep-20261112
-    paths:
-      - .github/workflows/sandbox-compat.yml
-      - containers/Dockerfile.sandbox-compat
-      - containers/docker-entrypoint.sh
 
 permissions:
   contents: read

@@ -168,7 +168,10 @@ class RuntimeSettings(BaseSettings):
     # default and scripts/install.sh once `docker manifest inspect` finds the tag and the fork
     # has the change.
     image: str = Field(
-        default="ghcr.io/usestrix/strix-sandbox:1.3.1",
+        default=(
+            "ghcr.io/samirhvbr/strix-sandbox:1.4.1-shvia-ac827485f0ca@"
+            "sha256:c8d87cdefe834c9e7829fc571ceba84b57c0a583f4f0e61c3ef749f01c894f30"
+        ),
         alias="STRIX_IMAGE",
     )
     backend: str = Field(default="docker", alias="STRIX_RUNTIME_BACKEND")
