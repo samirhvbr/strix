@@ -1,0 +1,47 @@
+name: Sandbox compatibility image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - feat/sandbox-1.4.1-opengrep-20261112
+    paths:
+      - .github/workflows/sandbox-compat.yml
+      - containers/Dockerfile.sandbox-compat
+      - containers/docker-entrypoint.sh
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    if: github.repository == 'samirhvbr/strix'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Build both architectures from the pinned upstream image
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          export DOCKER_CONFIG="${RUNNER_TEMP}/sandbox-registry"
+          mkdir -p "${DOCKER_CONFIG}"
+          trap 'docker logout ghcr.io >/dev/null 2>&1 || true' EXIT
+          printf '%s' "${GH_TOKEN}" | docker login ghcr.io --username "${GITHUB_ACTOR}" --password-stdin
+          docker buildx create --name strix-sandbox-builder --driver docker-container --use
+          image="ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/strix-sandbox:1.4.1-shvia-${GITHUB_SHA:0:12}"
+          docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            --file containers/Dockerfile.sandbox-compat \
+            --tag "${image}" \
+            --metadata-file "${RUNNER_TEMP}/sandbox-image.json" \
+            --push .
+          digest="$(jq -r '."containerimage.digest"' "${RUNNER_TEMP}/sandbox-image.json")"
+          test "${digest}" != null
+          printf '%s@%s\n' "${image}" "${digest}" >> "${GITHUB_STEP_SUMMARY}"
