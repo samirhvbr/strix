@@ -2838,11 +2838,11 @@
       "sha": "b34b160e23bd050659daf9cdd921034d5305000f",
       "benefit": "Recover from malformed Retry-After headers without leaving the MCP retry supervisor sleeping indefinitely.",
       "scope": "Shared classifier/recorder parser rejects non-finite numeric conversion and uses the existing finite fallback backoff.",
-      "limits": "Synthetic HTTP and recorded cancellation. Full Python suite, whole-project Mypy and real MCP transport outside completed validation. Wider MCP suite hit the 10 ms discovery assertion also reproduced on unchanged main.",
+      "limits": "Synthetic HTTP and recorded cancellation. Full Python suite and real MCP transport outside completed validation. Wider MCP suite hit the 10 ms discovery assertion also reproduced on unchanged main.",
       "tests": [
         "16 failures and 14 controls on unchanged main. All 30 new cases and 77 resilience/auth tests passed on the fix.",
         "All seven synthetic HTTP cases recover in two requests. Four non-finite cases previously stalled after the first.",
-        "Global Ruff and Bandit, focused Mypy and diff check passed. Pyright retains all 945 pre-existing diagnostics."
+        "Global Ruff and Bandit, Mypy across 137 source files and diff check passed. Pyright retains all 945 pre-existing diagnostics."
       ]
     },
     {
