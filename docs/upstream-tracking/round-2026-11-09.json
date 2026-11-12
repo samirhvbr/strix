@@ -1,0 +1,1694 @@
+{
+  "checked_at": "2026-11-09T10:21:19.465135+00:00",
+  "inventory_at": "2026-11-09T09:55:23.656519+00:00",
+  "observed_upstream_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+  "effective_integrated_upstream_sha": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+  "fork_master_sha": "a9fd40e5383b2c255d6372233eda5652fbea8d6e",
+  "fork_tracking_base_sha": "b5cdcd6b1879fae4c12a1e4e3e0f12352e622974",
+  "inventory": {
+    "known_rechecked": 663,
+    "known_missing": 0,
+    "known_metadata_changes": {
+      "usestrix/strix#pr:1579": {
+        "head": [
+          "0f69631f34dbdad6ca72248028342d422e58a903",
+          "ba18d48cea9a3eaaeba5b56c0a160d512f38b7c9"
+        ],
+        "updated_at": [
+          "2026-10-23T18:52:14Z",
+          "2026-11-08T22:48:11Z"
+        ]
+      },
+      "samirhvbr/strix#pr:53": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "updated_at": [
+          "2026-11-05T15:06:41Z",
+          "2026-11-07T15:16:18Z"
+        ]
+      },
+      "usestrix/strix#pr:1672": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updated_at": [
+          "2026-11-07T09:25:46Z",
+          "2026-11-08T04:24:56Z"
+        ]
+      },
+      "usestrix/strix#pr:1669": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updated_at": [
+          "2026-11-07T05:26:09Z",
+          "2026-11-08T04:25:41Z"
+        ]
+      },
+      "usestrix/strix#pr:1668": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updated_at": [
+          "2026-11-07T04:08:01Z",
+          "2026-11-08T04:25:29Z"
+        ]
+      },
+      "usestrix/strix#pr:1666": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "head": [
+          "f52fdb3b85ceec37aeaad3ad0a2bf799de60f122",
+          "da2d8231c104ff9be301f9a4332aa2434d758761"
+        ],
+        "updated_at": [
+          "2026-11-07T04:28:12Z",
+          "2026-11-07T18:32:37Z"
+        ]
+      },
+      "usestrix/strix#pr:1665": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updated_at": [
+          "2026-11-07T08:59:38Z",
+          "2026-11-08T04:25:07Z"
+        ]
+      },
+      "usestrix/strix#pr:1664": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "head": [
+          "57d138a1dd1508027b0e5596ae0b2f38f3627b43",
+          "14328c496e0ef4c10948291d055d287a61c54fb0"
+        ],
+        "updated_at": [
+          "2026-11-06T16:10:20Z",
+          "2026-11-08T04:25:18Z"
+        ]
+      },
+      "samirhvbr/strix#pr:55": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "updated_at": [
+          "2026-11-06T17:12:16Z",
+          "2026-11-07T15:16:34Z"
+        ]
+      },
+      "samirhvbr/strix#pr:54": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "head": [
+          "e6d2a32b80df43ae6ccebb06593308c3ab69bd2b",
+          "027304baa299750f4738c5ee28a84e9cd28f2a01"
+        ],
+        "updated_at": [
+          "2026-11-05T15:58:40Z",
+          "2026-11-07T15:16:05Z"
+        ]
+      },
+      "usestrix/strix#pr:1686": {
+        "updated_at": [
+          "2026-11-07T12:25:34Z",
+          "2026-11-07T12:27:43Z"
+        ]
+      },
+      "usestrix/strix#pr:1688": {
+        "updated_at": [
+          "2026-11-07T12:43:09Z",
+          "2026-11-07T12:45:12Z"
+        ]
+      }
+    },
+    "open_prs": 352,
+    "open_issues": 225,
+    "overlap_items": 61,
+    "total_records": 689,
+    "review_depth": {
+      "identified": 49,
+      "triage": 573,
+      "deep": 67
+    }
+  },
+  "overlap_since": "2026-11-05T12:12:03Z",
+  "discussions_enabled": false,
+  "new_ids": [
+    "samirhvbr/strix#pr:56",
+    "usestrix/strix#issue:1695",
+    "usestrix/strix#issue:1697",
+    "usestrix/strix#issue:1704",
+    "usestrix/strix#issue:1705",
+    "usestrix/strix#issue:1706",
+    "usestrix/strix#issue:1707",
+    "usestrix/strix#issue:1709",
+    "usestrix/strix#issue:1711",
+    "usestrix/strix#pr:1689",
+    "usestrix/strix#pr:1690",
+    "usestrix/strix#pr:1691",
+    "usestrix/strix#pr:1692",
+    "usestrix/strix#pr:1693",
+    "usestrix/strix#pr:1694",
+    "usestrix/strix#pr:1696",
+    "usestrix/strix#pr:1698",
+    "usestrix/strix#pr:1699",
+    "usestrix/strix#pr:1700",
+    "usestrix/strix#pr:1701",
+    "usestrix/strix#pr:1702",
+    "usestrix/strix#pr:1703",
+    "usestrix/strix#pr:1708",
+    "usestrix/strix#pr:1710",
+    "usestrix/strix#pr:1712",
+    "usestrix/strix#pr:1713"
+  ],
+  "upstream_ci": {
+    "main": {
+      "conclusion": "cancelled",
+      "headSha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+      "jobs": [
+        {
+          "completedAt": "2026-11-08T00:54:04Z",
+          "conclusion": "success",
+          "databaseId": 128582067292,
+          "name": "tui",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067292"
+        },
+        {
+          "completedAt": "2026-11-08T01:08:14Z",
+          "conclusion": "cancelled",
+          "databaseId": 128582067396,
+          "name": "pytest (3.14)",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067396"
+        },
+        {
+          "completedAt": "2026-11-08T00:53:26Z",
+          "conclusion": "success",
+          "databaseId": 128582067403,
+          "name": "wheel",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067403"
+        },
+        {
+          "completedAt": "2026-11-08T01:08:13Z",
+          "conclusion": "cancelled",
+          "databaseId": 128582067413,
+          "name": "pytest (3.12)",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067413"
+        },
+        {
+          "completedAt": "2026-11-08T00:53:51Z",
+          "conclusion": "success",
+          "databaseId": 128582067442,
+          "name": "lint",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067442"
+        },
+        {
+          "completedAt": "2026-11-08T00:53:14Z",
+          "conclusion": "success",
+          "databaseId": 128582067551,
+          "name": "viewer",
+          "startedAt": "2026-11-08T00:52:58Z",
+          "status": "completed",
+          "url": "https://github.com/usestrix/strix/actions/runs/42431780800/job/128582067551"
+        }
+      ],
+      "status": "completed",
+      "updatedAt": "2026-11-08T01:08:14Z",
+      "url": "https://github.com/usestrix/strix/actions/runs/42431780800"
+    },
+    "continuing_prs": {
+      "1654": {
+        "head_sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "python / lock",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664535"
+          },
+          {
+            "name": "python / ruff",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664438"
+          },
+          {
+            "name": "python / mypy",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664644"
+          },
+          {
+            "name": "python / bandit",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664784"
+          },
+          {
+            "name": "python / pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664600"
+          },
+          {
+            "name": "python / pytest (3.13)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664604"
+          },
+          {
+            "name": "python / pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664027"
+          },
+          {
+            "name": "tui / go",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664201"
+          },
+          {
+            "name": "viewer / build",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664326"
+          },
+          {
+            "name": "package / wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664315"
+          },
+          {
+            "name": "package / binary",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664419"
+          },
+          {
+            "name": "workflows / actionlint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292664026"
+          },
+          {
+            "name": "workflows / zizmor",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127292663671"
+          },
+          {
+            "name": "ci-passed",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42041347484/job/127499911735"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1654"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=55a68d0e-9b3f-4832-8dc1-1164c49eca1e"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1657": {
+        "head_sha": "072a51786fb7575b341459edb586054aa6fdd981",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "python / lock",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338643000"
+          },
+          {
+            "name": "python / ruff",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642865"
+          },
+          {
+            "name": "python / mypy",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642953"
+          },
+          {
+            "name": "python / bandit",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338643376"
+          },
+          {
+            "name": "python / pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338643076"
+          },
+          {
+            "name": "python / pytest (3.13)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642848"
+          },
+          {
+            "name": "python / pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642680"
+          },
+          {
+            "name": "tui / go",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642648"
+          },
+          {
+            "name": "viewer / build",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642333"
+          },
+          {
+            "name": "package / wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642612"
+          },
+          {
+            "name": "package / binary",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642707"
+          },
+          {
+            "name": "workflows / actionlint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642890"
+          },
+          {
+            "name": "workflows / zizmor",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127338642678"
+          },
+          {
+            "name": "ci-passed",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42054380267/job/127542538318"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1657"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=0f2635a3-5dcf-4ec9-9dba-a4c825738c04"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1658": {
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "python / lock",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987572"
+          },
+          {
+            "name": "python / ruff",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987664"
+          },
+          {
+            "name": "python / mypy",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987883"
+          },
+          {
+            "name": "python / bandit",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987607"
+          },
+          {
+            "name": "python / pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987786"
+          },
+          {
+            "name": "python / pytest (3.13)",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987801"
+          },
+          {
+            "name": "python / pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987879"
+          },
+          {
+            "name": "tui / go",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987213"
+          },
+          {
+            "name": "viewer / build",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987980"
+          },
+          {
+            "name": "package / wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341988896"
+          },
+          {
+            "name": "package / binary",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987768"
+          },
+          {
+            "name": "workflows / actionlint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987909"
+          },
+          {
+            "name": "workflows / zizmor",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127341987649"
+          },
+          {
+            "name": "ci-passed",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42055312290/job/127345202760"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1658"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=23864384-ba11-49ec-b29a-bc680c63813c"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1660": {
+        "head_sha": "23271d8a5d39409498b25891b55cc032a58671cc",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "python / lock",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326547"
+          },
+          {
+            "name": "python / ruff",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326303"
+          },
+          {
+            "name": "python / mypy",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326515"
+          },
+          {
+            "name": "python / bandit",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326420"
+          },
+          {
+            "name": "python / pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326774"
+          },
+          {
+            "name": "python / pytest (3.13)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326441"
+          },
+          {
+            "name": "python / pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326893"
+          },
+          {
+            "name": "tui / go",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326436"
+          },
+          {
+            "name": "viewer / build",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348325819"
+          },
+          {
+            "name": "package / wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326408"
+          },
+          {
+            "name": "package / binary",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326566"
+          },
+          {
+            "name": "workflows / actionlint",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326523"
+          },
+          {
+            "name": "workflows / zizmor",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127348326702"
+          },
+          {
+            "name": "ci-passed",
+            "status": "COMPLETED",
+            "conclusion": "FAILURE",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42057090513/job/127550898250"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1660"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=45562f80-895d-49f4-8d6b-56f510e418de"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1684": {
+        "head_sha": "ddf609fb1441a421291adb1c86dfe8ff1d2e1b14",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674374"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674377"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674340"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674196"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674337"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372274115/job/128402674399"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1684"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=d4f8133e-53cb-4ecb-bf3f-dae779856e8e"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1685": {
+        "head_sha": "f4d4e69a42335fe738a093ae1335a6519198cb16",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701683"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701709"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701773"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701502"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701649"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372283033/job/128402701698"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1685"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=6eea32f5-77fa-4b58-a798-13e38f32dc1e"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1686": {
+        "head_sha": "298aedc71cb7e0a3b74ff828521d1f822cbc5a1e",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123159"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123236"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123035"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123219"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123171"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42372427716/job/128403123127"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1686"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=6451751e-f05b-400a-bede-16e0a0683257"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1688": {
+        "head_sha": "4ad4161b35bda226b5c4ac2a7dfeb5722e384677",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406933136"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406933135"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "COMPLETED",
+            "conclusion": "CANCELLED",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406933074"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406933061"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406933314"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42373722946/job/128406932830"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1688"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=bcd7424f-f8c1-48ee-ad07-a74e66727726"
+          }
+        ],
+        "human_reviews": []
+      }
+    },
+    "new_prs": {
+      "1708": {
+        "head_sha": "040614cf7abca58ddaa493430d97f39806900642",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [],
+        "human_reviews": []
+      },
+      "1710": {
+        "head_sha": "151eacbb3569aa908ce51dc2f63c6b9af9808d0b",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098845475"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098845267"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098845215"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098845171"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098845422"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599090477/job/129098844888"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1712": {
+        "head_sha": "0964106b66d43225d754ab439f72f5c010f9c4b3",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "binary",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523254/job/129100252160"
+          },
+          {
+            "name": "lint",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252785"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252668"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252693"
+          },
+          {
+            "name": "tui",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252772"
+          },
+          {
+            "name": "viewer",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252588"
+          },
+          {
+            "name": "wheel",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42599523253/job/129100252338"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1712"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "COMPLETED",
+            "conclusion": "SUCCESS",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=3628feab-5541-474e-b08b-1b280d9237a0"
+          }
+        ],
+        "human_reviews": []
+      },
+      "1713": {
+        "head_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+        "state": "OPEN",
+        "merge_state": "BLOCKED",
+        "review_decision": "REVIEW_REQUIRED",
+        "jobs": [
+          {
+            "name": "binary",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153217/job/129102316689"
+          },
+          {
+            "name": "lint",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316805"
+          },
+          {
+            "name": "pytest (3.12)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316948"
+          },
+          {
+            "name": "pytest (3.14)",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316825"
+          },
+          {
+            "name": "tui",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316479"
+          },
+          {
+            "name": "viewer",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316861"
+          },
+          {
+            "name": "wheel",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://github.com/usestrix/strix/actions/runs/42600153315/job/129102316924"
+          },
+          {
+            "name": "Greptile Review",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://app.greptile.com/-/switch-tenant?tenant=strix-org-3&next=%2Fusestrix%2Fstrix%2Fpull%2F1713"
+          },
+          {
+            "name": "strix/supply-chain",
+            "status": "IN_PROGRESS",
+            "conclusion": "",
+            "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain"
+          }
+        ],
+        "human_reviews": []
+      }
+    }
+  },
+  "fork_ci": {
+    "53": {
+      "head_sha": "9e1af83447392f389771160d2de8040c60cb89c1",
+      "state": "MERGED",
+      "merge_state": "UNKNOWN",
+      "review_decision": "",
+      "jobs": [
+        {
+          "name": "python / lock",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946630"
+        },
+        {
+          "name": "python / ruff",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946602"
+        },
+        {
+          "name": "python / mypy",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946446"
+        },
+        {
+          "name": "python / bandit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946430"
+        },
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946838"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946703"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946248"
+        },
+        {
+          "name": "python / network-guard",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946794"
+        },
+        {
+          "name": "tui / go",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946000"
+        },
+        {
+          "name": "viewer / build",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328945569"
+        },
+        {
+          "name": "package / wheel",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946146"
+        },
+        {
+          "name": "package / binary",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946090"
+        },
+        {
+          "name": "workflows / actionlint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946254"
+        },
+        {
+          "name": "workflows / zizmor",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127328946260"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42051633205/job/127333719325"
+        }
+      ],
+      "human_reviews": []
+    },
+    "54": {
+      "head_sha": "027304baa299750f4738c5ee28a84e9cd28f2a01",
+      "state": "MERGED",
+      "merge_state": "UNKNOWN",
+      "review_decision": "",
+      "jobs": [
+        {
+          "name": "python / lock",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581607"
+        },
+        {
+          "name": "python / ruff",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581782"
+        },
+        {
+          "name": "python / mypy",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581702"
+        },
+        {
+          "name": "python / bandit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581734"
+        },
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581711"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581874"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581710"
+        },
+        {
+          "name": "python / network-guard",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581720"
+        },
+        {
+          "name": "tui / go",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581649"
+        },
+        {
+          "name": "viewer / build",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581494"
+        },
+        {
+          "name": "package / wheel",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581715"
+        },
+        {
+          "name": "package / binary",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581633"
+        },
+        {
+          "name": "workflows / actionlint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581598"
+        },
+        {
+          "name": "workflows / zizmor",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128408581668"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42374283488/job/128410102569"
+        }
+      ],
+      "human_reviews": []
+    },
+    "55": {
+      "head_sha": "a1b8ec391d919ff00007bb7fa4299e3312111507",
+      "state": "MERGED",
+      "merge_state": "UNKNOWN",
+      "review_decision": "",
+      "jobs": [
+        {
+          "name": "python / lock",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095615"
+        },
+        {
+          "name": "python / ruff",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095594"
+        },
+        {
+          "name": "python / mypy",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095789"
+        },
+        {
+          "name": "python / bandit",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095603"
+        },
+        {
+          "name": "python / pytest (3.12)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095462"
+        },
+        {
+          "name": "python / pytest (3.13)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095641"
+        },
+        {
+          "name": "python / pytest (3.14)",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095922"
+        },
+        {
+          "name": "python / network-guard",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095941"
+        },
+        {
+          "name": "tui / go",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095142"
+        },
+        {
+          "name": "viewer / build",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095575"
+        },
+        {
+          "name": "package / wheel",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095688"
+        },
+        {
+          "name": "package / binary",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095741"
+        },
+        {
+          "name": "workflows / actionlint",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095584"
+        },
+        {
+          "name": "workflows / zizmor",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128035095680"
+        },
+        {
+          "name": "ci-passed",
+          "status": "COMPLETED",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://github.com/samirhvbr/strix/actions/runs/42259410538/job/128039242262"
+        }
+      ],
+      "human_reviews": []
+    }
+  },
+  "publications": [
+    {
+      "issue": 1705,
+      "pr": 1708,
+      "sha": "040614cf7abca58ddaa493430d97f39806900642",
+      "benefit": "Print Python thread stacks before a hung CI pytest job is cancelled.",
+      "scope": "One workflow command option, scoped to hosted pytest.",
+      "tests": "Exact command dumped a stack at 120 seconds and the synthetic 121-second test then passed. actionlint 1.7.12 and zizmor 1.22.0 passed.",
+      "limits": "No run for this head was visible at the recorded remote check. The underlying runner stall is still unresolved."
+    },
+    {
+      "issue": 1707,
+      "pr": 1710,
+      "sha": "151eacbb3569aa908ce51dc2f63c6b9af9808d0b",
+      "benefit": "Reject NaN and Infinity before source preparation, uploads or scan requests.",
+      "scope": "Seven-line finite JSON preflight on the merged body, reusing the usage error. Actual transport recovery remains intact.",
+      "tests": "Fifteen baseline failures and six finite controls. All 21 regressions and 369 Cloud/local-source tests pass with real Requests preparation and synthetic send.",
+      "limits": "Hosted upload, scan, billing and provider services were outside validation."
+    },
+    {
+      "issue": 1706,
+      "pr": 1712,
+      "sha": "0964106b66d43225d754ab439f72f5c010f9c4b3",
+      "benefit": "Restore transcripts in local directories whose names contain URI-significant characters.",
+      "scope": "Escape native path bytes before adding mode=ro, avoiding a URI authority for UNC paths.",
+      "tests": "Ten failing baseline path/history cases and four passing controls. All 78 focused tests passed, covering viewer, TUI, committed WAL data, relative paths and Windows drive/UNC spelling on the SQLite parser.",
+      "limits": "Tests ran on macOS; Windows spellings were simulated. No live scan or Windows runtime."
+    },
+    {
+      "issue": 1711,
+      "pr": 1713,
+      "sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+      "benefit": "Keep the TUI responsive when a command write and backend collection replay are backpressured.",
+      "scope": "Split frame-write serialization from pending-request state. Keep exact-match failure cleanup and frame integrity.",
+      "tests": "Two focused regressions fail and one passes on main; all three pass after. The real macOS Unix socket and Python backend reproduce one failure and one passing control on main, then both pass. Go race suite passes with 1.27.3. Go 1.24.0 tests, vet and build pass.",
+      "limits": "Local synthetic history and message delivery only. Linux and Windows transports and live terminal scans remain unverified."
+    }
+  ],
+  "issue_only": [
+    {
+      "issue": 1709,
+      "benefit": "Report interactive setup silently omitting subsequent target additions before starting.",
+      "scope": "Related #1101 changes the start-payload contract. Maintainers select that route or a bounded alternative.",
+      "limits": "Synthetic Go client and IPC timing only. Repeated -t workaround verified by code path.",
+      "tests": "Real Go setup sequence with delayed first acknowledgement sends one of two targets and still sends setup.start.",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1101"
+      ]
+    }
+  ],
+  "assessments": {
+    "usestrix/strix#pr:1664": {
+      "note": "Author closed as a duplicate of #1654. The viewer regression from #1692 moved to #1664 before both closed. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "14328c496e0ef4c10948291d055d287a61c54fb0",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1654"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1665": {
+      "note": "Author closed as a duplicate of #1658. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "02902877c6195ccc45b7fe755611e7622cd289df",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1658"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1668": {
+      "note": "Author closed as a duplicate of #1657. Separate import unnecessary.",
+      "decision": "already_covered",
+      "sha": "1ca4aba566e703c386da0d8fd4e1ba680113c53e",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1657"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1669": {
+      "note": "Author closed as a duplicate of #1660. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "77f281e45d8e176ebf7e34d9cde2e4b442725161",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1660"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1672": {
+      "note": "Author closed as a duplicate of #1635. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "ef87257a2724d2fe68275dbccfd527b2d1384930",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1635"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1692": {
+      "note": "Author closed as a duplicate of #1664. The viewer regression from #1692 moved to #1664 before both closed. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "c5c41c003e9124bc971dc6783640d71a212102d8",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1664"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1693": {
+      "note": "Author closed as a duplicate of #1613. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "027f4f09f134e0032ee898361c8e0cfddb12aada",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1613"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1694": {
+      "note": "Author closed as a duplicate of #1615. Separate import unnecessary.",
+      "decision": "discarded",
+      "sha": "4bd59bc9b9da79267f4a387587f134b999546142",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1615"
+      ],
+      "revisit": "Compare behavior after the original proposal is merged or replaced."
+    },
+    "usestrix/strix#pr:1666": {
+      "note": "Author closed at their operator’s request. Large independent attack-path engine outside focused reliability scope.",
+      "decision": "discarded",
+      "sha": "da2d8231c104ff9be301f9a4332aa2434d758761"
+    },
+    "usestrix/strix#pr:1579": {
+      "note": "Author reports ba18d48c changes a Claude Code response schema description to avoid a protected-reasoning refusal on Opus 5.5. PR is DIRTY. Provider behavior was not independently exercised.",
+      "sha": "ba18d48cea9a3eaaeba5b56c0a160d512f38b7c9",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1579#issuecomment-6728231368"
+      ]
+    },
+    "usestrix/strix#pr:1654": {
+      "note": "Competing #1664 closed in favor of this original. Head is unchanged and original pytest jobs remain cancelled. The earlier adapted fork source remains pinned.",
+      "sha": "b6ac4037b8c6e18507d6cb476ebe775a594795b4",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1664",
+        "https://github.com/usestrix/strix/pull/1692"
+      ]
+    },
+    "usestrix/strix#pr:1688": {
+      "note": "Both exact-head pytest jobs ended cancelled. The 3.12 log stopped after a 74 percent line with no current-test stack. The local fixture proof does not determine the remote cause.",
+      "sha": "4ad4161b35bda226b5c4ac2a7dfeb5722e384677",
+      "related": [
+        "https://github.com/usestrix/strix/actions/runs/42373722946",
+        "https://github.com/usestrix/strix/pull/1708"
+      ]
+    },
+    "usestrix/strix#pr:1690": {
+      "note": "Merged at 215482eb. Removes dead links in the agent-browser skill, the only delta on main since the previous audit.",
+      "sha": "0c785eba666928492f2297b23c5023d4c59acee1"
+    },
+    "usestrix/strix#issue:1704": {
+      "note": "Post-login sandbox readiness report. #1053 and fork #47 address the earlier guest-login retry deadline. This round did not establish the post-login cause on a running container.",
+      "related": [
+        "https://github.com/usestrix/strix/pull/1053",
+        "https://github.com/samirhvbr/strix/pull/47"
+      ]
+    },
+    "usestrix/strix#pr:1702": {
+      "note": "Active idempotent NSS CA setup proposal.",
+      "sha": "bf46edd921b0b1612803d584ffaf7b0a28beae18",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1498"
+      ]
+    },
+    "usestrix/strix#pr:1698": {
+      "note": "Active correction for blank sandbox log-size env var.",
+      "sha": "69a8acdf451625014e6fa98af2c742dc129f6018",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1697"
+      ]
+    },
+    "usestrix/strix#pr:1703": {
+      "note": "Active report revision revalidation proposal, distinct from transcript reading.",
+      "sha": "3986bdae96a0a7077ad4e372454a8db67b756e36"
+    },
+    "usestrix/strix#pr:1696": {
+      "note": "Active non-object chat-completion argument fix.",
+      "sha": "1bc1213250cf2f536e1a65bc1bbba25e33cc6edb",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1695"
+      ]
+    },
+    "usestrix/strix#pr:1311": {
+      "note": "Controlled SQLite insertion failure and cancellation preserves two rows with its session-only diff and on released fork source a9fd40e5, across image-budget and full-history rewrites. Unchanged main exposes and retains zero. Full draft patch no longer applies to execution.py.",
+      "sha": "dbd078b3ec47b48bfe1087e9017a6cc511ff2c47",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1310"
+      ]
+    },
+    "usestrix/strix#pr:1101": {
+      "note": "Current DIRTY head replaces interactive add-target commands with a single setup.start payload. It addresses the reproduced pending-key collision as part of a wider scope contract. Evidence filed in #1709.",
+      "sha": "6cd6ec64339f18e83b55a7125a8aa8e042591e9b",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1709"
+      ]
+    },
+    "usestrix/strix#pr:1680": {
+      "note": "Invalid UTF-8 in platform_cli.read_record blocks local logout and three other command paths. This pending broad state/auth reader patch omits that location. Reassess after scope selection.",
+      "sha": "0f477dd4d7b9af2c0e78fd816e12ea80a8bdb045",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1679"
+      ]
+    },
+    "samirhvbr/strix#pr:53": {
+      "note": "Merged into master. Image 1.3.1 is delivered in 1.2.49 ancestry. Exact-head pytest matrix passed.",
+      "decision": "incorporated_fully",
+      "sha": "9e1af83447392f389771160d2de8040c60cb89c1"
+    },
+    "samirhvbr/strix#pr:54": {
+      "note": "Merged at b5cdcd6b into feat/upstream-contributions-20261105. Exact-head pytest matrix passed. Review-branch code is separate from master release.",
+      "decision": "incorporated_fully",
+      "sha": "027304baa299750f4738c5ee28a84e9cd28f2a01"
+    },
+    "samirhvbr/strix#pr:55": {
+      "note": "Merged into master at a9fd40e5 and released as shvia-v1.2.49. Exact-head pytest matrix passed.",
+      "decision": "incorporated_fully",
+      "sha": "a1b8ec391d919ff00007bb7fa4299e3312111507"
+    },
+    "samirhvbr/strix#pr:56": {
+      "note": "Open fork 1.2.50 delivery proposal for activity masking and the 1.2.48 record.",
+      "sha": "75ff0e585dab21524e0100b94d51cc137deb5ceb"
+    },
+    "usestrix/strix#pr:1253": {
+      "note": "Active model stream teardown PR already addresses deterministic inner-stream closure on cancellation. A second patch would duplicate this scope.",
+      "sha": "6a73d47427e3a00e879d8f070c576b9ae8e9b092",
+      "related": [
+        "https://github.com/usestrix/strix/issues/1106"
+      ]
+    }
+  },
+  "validation": {
+    "released_source_session_atomicity": {
+      "sha": "a9fd40e5383b2c255d6372233eda5652fbea8d6e",
+      "base_main": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+      "original_rows": 2,
+      "main_rows_during_and_after": 0,
+      "release_source_rows_during_and_after": 2,
+      "paths": [
+        "enforce_image_budget",
+        "replace_session_items"
+      ]
+    },
+    "combined_python": {
+      "sha": "4c6e8ba9f328d067f72764b056fa9cf089b3488b",
+      "command": "pytest -q -o faulthandler_timeout=75",
+      "previous_diagnostic_sha": "12829a1fb85930a97c73824e4fd0cebb59eda444",
+      "additional_source": {
+        "observed_main": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
+        "pr_numbers": [
+          1708,
+          1710,
+          1712
+        ]
+      },
+      "python": "3.12.14 on macOS arm64, frozen lock with isolated HOME and bundled LiteLLM catalog",
+      "passed": 2592,
+      "xfailed": 3,
+      "failed": 0,
+      "warnings": 106,
+      "seconds": 309.22
+    },
+    "python_gates": {
+      "ruff": "254 files passed format/lint",
+      "mypy": "136 files passed",
+      "bandit": "0 findings",
+      "uv_lock": "120 packages, check passed",
+      "pyright": {
+        "before": 941,
+        "after": 941,
+        "added": 0,
+        "removed": 0
+      },
+      "make_check_all": "Stops at the unchanged Pyright baseline. Bandit run separately."
+    },
+    "tui": {
+      "source_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+      "before": "2 failed, 1 passed focused; the valid 4096-character probe blocks on a default macOS Unix socket and the 100-character control completes.",
+      "after": "3 passed focused; both real-socket probes complete with the unchanged Python backend.",
+      "go_1_27_3": "Race suite, vet, format and diff checks passed.",
+      "go_1_24_0": "All package tests, vet and sidecar build passed on exact changed files."
+    },
+    "ci_1708": "No check suite or Actions run reported for the exact head at recheck. No hosted stack trace yet."
+  },
+  "fork_release": {
+    "assets": [
+      "pentest-aarch64-apple-darwin",
+      "pentest-x86_64-unknown-linux-gnu",
+      "SHA256SUMS"
+    ],
+    "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.49",
+    "published_at": "2026-11-07T16:33:07Z",
+    "tag_name": "shvia-v1.2.49",
+    "tag_commit": "a9fd40e5383b2c255d6372233eda5652fbea8d6e"
+  },
+  "upstream_release": {
+    "assets": [
+      "strix-1.7.0-linux-arm64.tar.gz",
+      "strix-1.7.0-linux-x86_64.tar.gz",
+      "strix-1.7.0-macos-arm64.tar.gz",
+      "strix-1.7.0-macos-x86_64.tar.gz",
+      "strix-1.7.0-windows-x86_64.zip",
+      "strix_agent-1.7.0-py3-none-macosx_11_0_arm64.whl",
+      "strix_agent-1.7.0-py3-none-macosx_11_0_x86_64.whl",
+      "strix_agent-1.7.0-py3-none-manylinux_2_17_aarch64.whl",
+      "strix_agent-1.7.0-py3-none-manylinux_2_17_x86_64.whl",
+      "strix_agent-1.7.0-py3-none-win_amd64.whl"
+    ],
+    "html_url": "https://github.com/usestrix/strix/releases/tag/v1.7.0",
+    "published_at": "2026-10-05T02:39:14Z",
+    "tag_name": "v1.7.0"
+  },
+  "next_review": [
+    "Recheck all known IDs and rediscover updates with 48 hours of overlap.",
+    "Inspect the first #1708 traceback if upstream launches that workflow. Recheck the other exact-head CI outcomes.",
+    "Follow the maintainer-selected setup solution and rerun the delayed-ack reproduction.",
+    "Keep source synchronization, fork review imports and released versions separate."
+  ]
+}
