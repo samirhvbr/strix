@@ -118,7 +118,17 @@ def export_history(run_directory: Path) -> dict[str, Any]:
         record = json.loads(_read(directory / "run.json", RUN_RECORD_LIMIT))
         if record.get("run_id") != directory.name:
             raise ValueError("History belongs to a different run")
-        catalog = json.loads(_read(state / "test_catalog.json", 4 * 1024 * 1024))
+        # The engine writes the catalog with the run's first test, so a run that stopped
+        # before one has none. Its history is still its runtime and its ledger, with no
+        # test to hang an agent on. Until 1.2.56 the missing file failed the export, so
+        # such a run never reached the site and the Desktop asked again forever
+        # (2026-11-17: seven runs of 29-30/10 on the owner's Mac, every 40 s).
+        catalog_path = state / "test_catalog.json"
+        catalog = (
+            json.loads(_read(catalog_path, 4 * 1024 * 1024))
+            if os.path.lexists(catalog_path)
+            else {"tests": {}}
+        )
         parents = {agent: unit.get("parent_test_id") for agent, unit in catalog["tests"].items()}
         # A killed WAL writer may leave uncheckpointed committed frames. Copy both files
         # while holding its actual lease; SQLite can create SHM only in this private copy.

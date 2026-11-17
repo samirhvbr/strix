@@ -167,3 +167,24 @@ async def test_a_long_runs_record_past_the_old_bound_still_exports_its_history(t
         ledger.close()
     assert export_history(run)["runtime"]["status"] == "running"
     await executor.close()
+
+
+@pytest.mark.asyncio
+async def test_a_run_that_stopped_before_its_first_test_still_exports_its_history(tmp_path):
+    """No test, no catalog file: the history is the runtime and the ledger (2026-11-17)."""
+    run, executor = fixture_run(tmp_path)
+    record(run)
+    state = run / ".state"
+    with controller_lease(state):
+        ledger = TestLedger(
+            state / "test_telemetry.db",
+            scan_id="scan",
+            catalog=TestCatalog(),
+            owns_agent=lambda _: True,
+        )
+        ledger.close()
+    assert not (state / "test_catalog.json").exists()
+    data = export_history(run)
+    assert data["telemetry"]["tests"] == []
+    assert data["runtime"]["status"] == "running"
+    await executor.close()
