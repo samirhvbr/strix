@@ -143,3 +143,27 @@ async def test_history_rejects_linked_or_cross_run_records(tmp_path):
     path.symlink_to(state / "original.db")
     assert run_history_export([str(run)]) == 1
     await executor.close()
+
+
+@pytest.mark.asyncio
+async def test_a_long_runs_record_past_the_old_bound_still_exports_its_history(tmp_path):
+    """A long run's record passes the old 4 MiB (2026-11-11: 2.18 MB in 46 minutes)."""
+    run, executor = fixture_run(tmp_path)
+    record(run)
+    path = run / "run.json"
+    data = json.loads(path.read_text())
+    data["tool_calls"] = [{"tool": "browser", "duration_ms": 1200}] * 120_000
+    path.write_text(json.dumps(data))
+    path.chmod(0o600)
+    assert path.stat().st_size > 4 * 1024 * 1024
+    state = run / ".state"
+    catalog = TestCatalog()
+    catalog.set_snapshot_path(state / "test_catalog.json")
+    with controller_lease(state):
+        ledger = TestLedger(
+            state / "test_telemetry.db", scan_id="scan", catalog=catalog, owns_agent=lambda _: True
+        )
+        ledger.sync_test(catalog.register(agent_id="child", name="task"))
+        ledger.close()
+    assert export_history(run)["runtime"]["status"] == "running"
+    await executor.close()

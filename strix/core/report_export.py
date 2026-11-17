@@ -10,7 +10,7 @@ import json
 import re
 from typing import TYPE_CHECKING, Any, cast
 
-from strix.core.history_export import _read, stopped_assessment
+from strix.core.history_export import RUN_RECORD_LIMIT, _read, stopped_assessment
 
 
 if TYPE_CHECKING:
@@ -161,7 +161,7 @@ def _catalog_section(value: Any) -> dict[str, Any] | None:
 
 def export_report(run_directory: Path) -> dict[str, Any]:
     with stopped_assessment(run_directory) as (directory, policy, context):
-        record = json.loads(_read(directory / "run.json", 2 * 1024 * 1024))
+        record = json.loads(_read(directory / "run.json", RUN_RECORD_LIMIT))
         if record.get("run_id") != directory.name:
             raise ValueError("Report belongs to another run")
         findings_path = directory / "vulnerabilities.json"
