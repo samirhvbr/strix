@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "targeted_own_pr_followup",
+  "state": "in_progress",
+  "recorded_at": "2026-11-18T10:54:22.413749+00:00",
+  "source_ledger_commit": "0f69075f38d62398015a2abb37ccaf8f0b81a413",
+  "observed_upstream_main_sha": "1152d53579d5b3af37ada8c798f197ab093b99c6",
+  "scope": "All31 open upstream PRs authored by samirhvbr, plus related prerequisite1577 and overlap1742/issue1767. Broad upstream inventory not refreshed.",
+  "completed": [
+    "Read previous ledger and current repository guidance.",
+    "Refreshed all31 open PR heads, CI runs, feedback and code compatibility.",
+    "Reviewed CI timeout/approval/download failures and current main.",
+    "Updated upstream PR1469 to c2a48b70765b8ae4558217a2c2605251440db797 with a dependency race fixture adapted to current schema."
+  ],
+  "pending": [
+    "Observe new upstream1469 CI conclusion.",
+    "Observe combined current-upstream diagnostic44289647242 without test exclusions.",
+    "Append per-item observations and decisions, preserving imported SHAs and validation history."
+  ],
+  "diagnostic": {
+    "sha": "f5658da4a54ea81312c7e74d83fb201e7644d9f5",
+    "url": "https://github.com/samirhvbr/strix/actions/runs/44289647242",
+    "state": "in_progress"
+  },
+  "full_upstream_sync_advanced": false,
+  "inventory_checkpoint_advanced": false,
+  "fork_application_version": "1.2.56",
+  "fork_latest_observed_release": "shvia-v1.2.55",
+  "new_prs_or_issues_opened": []
+}

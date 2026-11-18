@@ -1,5 +1,8 @@
 # Upstream continuity record
 
+**Targeted PR follow-up in progress:** [November 18, 2026](UPSTREAM_PR_FOLLOWUP_2026-11-18.md).
+The previous completed inventory and code synchronization remain unchanged.
+
 Start every review here, then read the [native IPv6 and full Opengrep follow-up](UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md),
 the [native amd64 runtime follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
 the [validated sandbox and TUI integration](UPSTREAM_SANDBOX_2026-11-12.md),
