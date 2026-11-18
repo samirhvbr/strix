@@ -25,6 +25,15 @@ if TYPE_CHECKING:
     from strix.core.assessment_context import AssessmentContext
 
 
+# How much of the engine's own run record (run.json) an export reads. The record keeps
+# what grows with the run: the owner's run of 2026-11-11 wrote 2.18 MB of it in 46
+# minutes. This history read it with a 4 MiB bound and the report export with 2 MiB, so a
+# long run stopped sending both to the site while the run itself was sound. The record is
+# still read whole, so the bound is on the time and memory of one short process; it is
+# the bound the Desktop puts on the same file since its 1.42.9.
+RUN_RECORD_LIMIT = 64 * 1024 * 1024
+
+
 def _read(path: Path, limit: int) -> bytes:
     descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC | os.O_NONBLOCK)
     with os.fdopen(descriptor, "rb") as stream:
@@ -106,10 +115,20 @@ def stopped_assessment(
 def export_history(run_directory: Path) -> dict[str, Any]:
     with stopped_assessment(run_directory) as (directory, policy, context):
         state = directory / ".state"
-        record = json.loads(_read(directory / "run.json", 4 * 1024 * 1024))
+        record = json.loads(_read(directory / "run.json", RUN_RECORD_LIMIT))
         if record.get("run_id") != directory.name:
             raise ValueError("History belongs to a different run")
-        catalog = json.loads(_read(state / "test_catalog.json", 4 * 1024 * 1024))
+        # The engine writes the catalog with the run's first test, so a run that stopped
+        # before one has none. Its history is still its runtime and its ledger, with no
+        # test to hang an agent on. Until 1.2.56 the missing file failed the export, so
+        # such a run never reached the site and the Desktop asked again forever
+        # (2026-11-17: seven runs of 29-30/10 on the owner's Mac, every 40 s).
+        catalog_path = state / "test_catalog.json"
+        catalog = (
+            json.loads(_read(catalog_path, 4 * 1024 * 1024))
+            if os.path.lexists(catalog_path)
+            else {"tests": {}}
+        )
         parents = {agent: unit.get("parent_test_id") for agent, unit in catalog["tests"].items()}
         # A killed WAL writer may leave uncheckpointed committed frames. Copy both files
         # while holding its actual lease; SQLite can create SHM only in this private copy.

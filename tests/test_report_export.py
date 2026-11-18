@@ -292,3 +292,17 @@ async def test_secrets_inside_catalog_text_are_redacted_like_the_rest(tmp_path):
 
     assert "synthetic-private-catalog" not in serialized
     assert "[REDACTED_SECRET]" in serialized
+
+
+@pytest.mark.asyncio
+async def test_a_long_runs_record_past_the_old_bound_still_exports_its_report(tmp_path):
+    """A long run's record passes the old 2 MiB (2026-11-11: 2.18 MB in 46 minutes)."""
+    run, executor = fixture_run(tmp_path)
+    with controller_lease(run / ".state"):
+        pass
+    calls = [{"tool": "browser", "duration_ms": 1200}] * 120_000
+    summary = {"executive_summary": "Long run."}
+    write(run / "run.json", {"run_id": run.name, "scan_results": summary, "tool_calls": calls})
+    assert (run / "run.json").stat().st_size > 4 * 1024 * 1024
+    assert export_report(run)["scan_results"]["executive_summary"] == "Long run."
+    await executor.close()
