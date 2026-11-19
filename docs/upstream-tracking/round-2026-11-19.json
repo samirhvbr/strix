@@ -1,0 +1,2227 @@
+{
+  "schema_version": 1,
+  "kind": "operational_reliability_followup",
+  "recorded_at": "2026-11-19T10:42:46.463530+00:00",
+  "base_ledger_commit": "2d305e05",
+  "observed_upstream_main_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+  "prior_round": "pr-followup-2026-11-18.json",
+  "known_recheck": {
+    "record": "round-2026-11-19.json",
+    "checked_at": "2026-11-19T10:42:46.463530+00:00",
+    "observed_upstream_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+    "report": "../UPSTREAM_REVIEW_2026-11-19.md",
+    "scope": "Metadata by ID, paginated discovery and selected operational reviews",
+    "known_verified": 720,
+    "known_unavailable": [
+      "usestrix/strix#pr:1067",
+      "usestrix/strix#pr:1294",
+      "usestrix/strix#pr:1338"
+    ],
+    "new_items": 46,
+    "publications": [
+      "usestrix/strix#pr:1784",
+      "usestrix/strix#issue:1785",
+      "usestrix/strix#pr:1786"
+    ]
+  },
+  "metadata_changes": [
+    {
+      "id": "usestrix/strix#issue:1150",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-08-23T13:32:50Z",
+        "head_sha": null,
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-15T18:02:58Z",
+        "head_sha": null,
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1174",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-29T10:07:23Z",
+        "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:04Z",
+        "head_sha": "2872fc3234157c23dfad3ebf1eba2c4d954df4fb",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1285",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-09T13:34:10Z",
+        "head_sha": "bdb92ad1617eb64b124180af825b3ccc5abe564c",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:43Z",
+        "head_sha": "69ac820ca02486c92b9ab3d80bae453b1f60afd9",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1296",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-12T07:09:12Z",
+        "head_sha": "f21c5cf5addcd526c3a8a6dbe4f7b41270227dc1",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:38Z",
+        "head_sha": "ffaf13c289993dfc8fb3d63d8eca81ff595169e7",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1297",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-12T07:57:32Z",
+        "head_sha": "6bb668ec2a31c62fce59d1e22336e9c66d251986",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:34Z",
+        "head_sha": "dc808c8f367ea00f1f111fee3ca395ed9a91cecb",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1300",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-15T12:21:57Z",
+        "head_sha": "721cf756261a2ff62e33d4d71cda40bebe215eec",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:29Z",
+        "head_sha": "77a3c89613b639633c11e3e81d3ab15f407f3897",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1301",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-14T10:49:44Z",
+        "head_sha": "336d86af4b85252d0adabd579a3f9e37f293804a",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T12:10:17Z",
+        "head_sha": "79b00fb8ada8b0a26751cd6a90904d8b79607025",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1307",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-13T17:24:13Z",
+        "head_sha": "80b8336073ceddb2f04fad6b0bae080f08b47faa",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:25Z",
+        "head_sha": "cc4002f2c94a1277d555e36152112cc9668692e9",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1319",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-16T05:43:51Z",
+        "head_sha": "c2a5ce669ce6c99043773045040b78ff4fb07ec1",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T07:53:20Z",
+        "head_sha": "79326cb4087effd47152942b39e63f8cd84de8d2",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1358",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-09-23T07:21:26Z",
+        "head_sha": "d1eda1a70be59a47ba2f22c2184d2e27e7b7f0da",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-13T16:42:42Z",
+        "head_sha": "d1eda1a70be59a47ba2f22c2184d2e27e7b7f0da",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1425",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T06:54:42Z",
+        "head_sha": "dc705dd6999e1a4effa6e1790e43cad52238adf6",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T06:54:38Z",
+        "head_sha": "695990a6154948f5aa3698a9071907e06e875bc7",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1469",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T10:48:14Z",
+        "head_sha": "c2a48b70765b8ae4558217a2c2605251440db797",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:08Z",
+        "head_sha": "c2a48b70765b8ae4558217a2c2605251440db797",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1470",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-16T20:59:04Z",
+        "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:12Z",
+        "head_sha": "b9c1c0d0b331b8f3826e93bd4749f40c6e52262f",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1511",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-13T09:59:09Z",
+        "head_sha": "e1a4d9ba1a4d0ddd1a43155c5867e78031231b89",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T04:21:46Z",
+        "head_sha": "fdfc2cdc9611b299ef08df7d88b9b4fb9da515ae",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1542",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-24T06:11:58Z",
+        "head_sha": "8b9a6bd41dbdf86df329dbea1ff239446cce912c",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-13T06:22:40Z",
+        "head_sha": "84aed059d3b309bb6856b405224810e4249167a0",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1600",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T06:59:00Z",
+        "head_sha": "b21c45be7cf6116a1c893736491adfad40a7de76",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T06:54:59Z",
+        "head_sha": "8a6762646cf6fa2371ca5ec5c44c10cfff0228de",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1614",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-28T22:45:22Z",
+        "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:15Z",
+        "head_sha": "f13c192ff724932d54eb9a11d28fb999557f1ee1",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1621",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-15T15:31:05Z",
+        "head_sha": "badf61f8fdf06552536d13b8ba203ae9c8732266",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:43:42Z",
+        "head_sha": "9462580b97d092bcf8cca62eb79c4d023e47dfc7",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1635",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-10-30T16:29:01Z",
+        "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:18Z",
+        "head_sha": "5f65feb9c501daf8eb7cead1f68372e8fe392b06",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1658",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-09T15:16:36Z",
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T12:44:30Z",
+        "head_sha": "d48174ebee11b9cdd62359ae0594c8bbfe26c2dd",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1680",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-11T04:15:26Z",
+        "head_sha": "4584afc6fabfe09b96d7ff8d4f800316c8e146c4",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:16:06Z",
+        "head_sha": "4584afc6fabfe09b96d7ff8d4f800316c8e146c4",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1678",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-07T09:27:30Z",
+        "head_sha": "124c6d1c388af714072d7b52bf0f8b7bb09e02fc",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:16:15Z",
+        "head_sha": "124c6d1c388af714072d7b52bf0f8b7bb09e02fc",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1676",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-07T08:20:46Z",
+        "head_sha": "e0bc2f75ea55db0555d5e2c667f25f7ec270fd1e",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-17T22:22:09Z",
+        "head_sha": "e0bc2f75ea55db0555d5e2c667f25f7ec270fd1e",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1674",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-07T09:23:47Z",
+        "head_sha": "5700c1de3a60e167a41440cc99c0a9e44b60f82b",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:16:35Z",
+        "head_sha": "5700c1de3a60e167a41440cc99c0a9e44b60f82b",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1671",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-11T04:16:45Z",
+        "head_sha": "bafa5fa6c8f52e0c1064fa342b35140c396d968f",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:17:16Z",
+        "head_sha": "bafa5fa6c8f52e0c1064fa342b35140c396d968f",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1670",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-11T04:15:49Z",
+        "head_sha": "6b88d77f92dd997e7725fd3305e702f879454c59",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:17:25Z",
+        "head_sha": "6b88d77f92dd997e7725fd3305e702f879454c59",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1668",
+      "previous": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-08T04:25:29Z",
+        "head_sha": "1ca4aba566e703c386da0d8fd4e1ba680113c53e",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-15T01:14:04Z",
+        "head_sha": "1ca4aba566e703c386da0d8fd4e1ba680113c53e",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1664",
+      "previous": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-08T04:25:18Z",
+        "head_sha": "14328c496e0ef4c10948291d055d287a61c54fb0",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-15T15:24:22Z",
+        "head_sha": "14328c496e0ef4c10948291d055d287a61c54fb0",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1663",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-06T09:59:40Z",
+        "head_sha": "db152275a6db4c42744cedd030d0db9194f68d3c",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-18T04:04:09Z",
+        "head_sha": "db152275a6db4c42744cedd030d0db9194f68d3c",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1703",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-09T06:11:01Z",
+        "head_sha": "3986bdae96a0a7077ad4e372454a8db67b756e36",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:08:37Z",
+        "head_sha": "3986bdae96a0a7077ad4e372454a8db67b756e36",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1702",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T01:44:37Z",
+        "head_sha": "bf46edd921b0b1612803d584ffaf7b0a28beae18",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:08:32Z",
+        "head_sha": "bf46edd921b0b1612803d584ffaf7b0a28beae18",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1691",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-11T04:15:34Z",
+        "head_sha": "18377a82a2b832ecc8f7ad30c760fefa603e7a6c",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:14:25Z",
+        "head_sha": "18377a82a2b832ecc8f7ad30c760fefa603e7a6c",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1689",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-08T00:37:24Z",
+        "head_sha": "5a6bc5c447a05f3972463ea3a784caffbf2f20b4",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-16T17:14:35Z",
+        "head_sha": "5a6bc5c447a05f3972463ea3a784caffbf2f20b4",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:56",
+      "previous": {
+        "state": "MERGED",
+        "updated_at": "2026-11-09T13:06:51Z",
+        "head_sha": "75ff0e585dab21524e0100b94d51cc137deb5ceb",
+        "merge_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-15T22:26:15Z",
+        "head_sha": "75ff0e585dab21524e0100b94d51cc137deb5ceb",
+        "merge_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1722",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T21:19:42Z",
+        "head_sha": "f2334be8c0f33ead35d1249af7ab34142482e9da",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "CLOSED",
+        "updated_at": "2026-11-17T06:57:47Z",
+        "head_sha": "f2334be8c0f33ead35d1249af7ab34142482e9da",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1721",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T06:55:29Z",
+        "head_sha": "6e566a7d616479ac27c512545ad0d1e9a265b8ae",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-17T06:55:27Z",
+        "head_sha": "8d2d25e1d6bcda908dcd74990556344b4443a254",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1731",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T22:02:31Z",
+        "head_sha": "1d91aa2c7d9346e949c5cc4e8400430ba60c2b0d",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-19T04:56:58Z",
+        "head_sha": "6b8942e823c0dd10b1711acdecdaec077ee0b46e",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:60",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-10T23:40:27Z",
+        "head_sha": "8b0d00b92d11c491740dd9c1f585ae2f8bf1f2dd",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-15T22:26:14Z",
+        "head_sha": "2597e98a4d9b3eec46d22e03fbbfb69143b3e166",
+        "merge_commit": "5483b42b6c1dbdec5854f45616255895d3a1fd13"
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:59",
+      "previous": {
+        "state": "MERGED",
+        "updated_at": "2026-11-10T23:02:37Z",
+        "head_sha": "9248748dc8e7c637f7abfc04a8bcba50bb766ca7",
+        "merge_commit": "41bf5b96fcda67c3d80804a593c4d69dee41452b"
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-15T22:26:15Z",
+        "head_sha": "9248748dc8e7c637f7abfc04a8bcba50bb766ca7",
+        "merge_commit": "41bf5b96fcda67c3d80804a593c4d69dee41452b"
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:58",
+      "previous": {
+        "state": "MERGED",
+        "updated_at": "2026-11-10T22:52:43Z",
+        "head_sha": "4ee88d9239a9464bb97134f073fe479ae14ee7c3",
+        "merge_commit": "cc65c49990db6bc9b13710b022d12446e5e4249a"
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-15T22:26:14Z",
+        "head_sha": "4ee88d9239a9464bb97134f073fe479ae14ee7c3",
+        "merge_commit": "cc65c49990db6bc9b13710b022d12446e5e4249a"
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1735",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": "2026-11-12T09:29:00Z",
+        "head_sha": null,
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-13T08:45:37Z",
+        "head_sha": null,
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:62",
+      "previous": {
+        "state": "MERGED",
+        "updated_at": "2026-11-12T10:09:15Z",
+        "head_sha": "91ebb1fbc19c12fa7b5bbdf6ba848465c10b2f6c",
+        "merge_commit": "de8c7a4e63d75cb1d2b4195f293bcb5c6bf4027d"
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-12T13:59:51Z",
+        "head_sha": "91ebb1fbc19c12fa7b5bbdf6ba848465c10b2f6c",
+        "merge_commit": "de8c7a4e63d75cb1d2b4195f293bcb5c6bf4027d"
+      }
+    },
+    {
+      "id": "samirhvbr/strix#pr:63",
+      "previous": {
+        "state": "MERGED",
+        "updated_at": "2026-11-12T11:36:21Z",
+        "head_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "merge_commit": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+      },
+      "observed": {
+        "state": "MERGED",
+        "updated_at": "2026-11-15T22:26:14Z",
+        "head_sha": "026f3f54ad6976105a55608bff0451e89917203d",
+        "merge_commit": "1a55f43ec5b3199d2ebf7c2a71d8bfa6f196af3d"
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1742",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": null,
+        "head_sha": "e41f97481052b82153c2a9fc0009e8f8ce009515",
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-13T00:37:57Z",
+        "head_sha": "e41f97481052b82153c2a9fc0009e8f8ce009515",
+        "merge_commit": null
+      }
+    },
+    {
+      "id": "usestrix/strix#issue:1767",
+      "previous": {
+        "state": "OPEN",
+        "updated_at": null,
+        "head_sha": null,
+        "merge_commit": null
+      },
+      "observed": {
+        "state": "OPEN",
+        "updated_at": "2026-11-16T21:31:47Z",
+        "head_sha": null,
+        "merge_commit": null
+      }
+    }
+  ],
+  "new_catalog_ids": [
+    "usestrix/strix#issue:1753",
+    "usestrix/strix#issue:1754",
+    "usestrix/strix#issue:1755",
+    "usestrix/strix#issue:1756",
+    "usestrix/strix#issue:1757",
+    "usestrix/strix#issue:1758",
+    "usestrix/strix#issue:1759",
+    "usestrix/strix#issue:1760",
+    "usestrix/strix#issue:1761",
+    "usestrix/strix#issue:1762",
+    "usestrix/strix#issue:1766",
+    "usestrix/strix#issue:1768",
+    "usestrix/strix#issue:1769",
+    "usestrix/strix#issue:1773",
+    "usestrix/strix#issue:1774",
+    "usestrix/strix#issue:1785",
+    "usestrix/strix#pr:1739",
+    "usestrix/strix#pr:1740",
+    "usestrix/strix#pr:1741",
+    "usestrix/strix#pr:1743",
+    "usestrix/strix#pr:1744",
+    "usestrix/strix#pr:1745",
+    "usestrix/strix#pr:1746",
+    "usestrix/strix#pr:1747",
+    "usestrix/strix#pr:1748",
+    "usestrix/strix#pr:1749",
+    "usestrix/strix#pr:1750",
+    "usestrix/strix#pr:1751",
+    "usestrix/strix#pr:1752",
+    "usestrix/strix#pr:1763",
+    "usestrix/strix#pr:1764",
+    "usestrix/strix#pr:1765",
+    "usestrix/strix#pr:1770",
+    "usestrix/strix#pr:1771",
+    "usestrix/strix#pr:1772",
+    "usestrix/strix#pr:1775",
+    "usestrix/strix#pr:1776",
+    "usestrix/strix#pr:1777",
+    "usestrix/strix#pr:1778",
+    "usestrix/strix#pr:1779",
+    "usestrix/strix#pr:1780",
+    "usestrix/strix#pr:1781",
+    "usestrix/strix#pr:1782",
+    "usestrix/strix#pr:1783",
+    "usestrix/strix#pr:1784",
+    "usestrix/strix#pr:1786"
+  ],
+  "closures": {
+    "1358": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-13T16:42:42Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "ummon-v"
+        }
+      ],
+      "closure_notes": [],
+      "comment_count": 1
+    },
+    "1680": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:47:51Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1680#issuecomment-6921284330",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 4
+    },
+    "1678": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:48:00Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1678#issuecomment-6921288513",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 3
+    },
+    "1676": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:48:11Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1676#issuecomment-6921293071",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 2
+    },
+    "1674": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:48:20Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1674#issuecomment-6921297296",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 3
+    },
+    "1671": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:49:00Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1671#issuecomment-6921315085",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 2
+    },
+    "1670": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:49:10Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1670#issuecomment-6921319382",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 3
+    },
+    "1703": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T17:08:37Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "hakarrr"
+        }
+      ],
+      "closure_notes": [],
+      "comment_count": 2
+    },
+    "1702": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T17:08:33Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "hakarrr"
+        }
+      ],
+      "closure_notes": [],
+      "comment_count": 2
+    },
+    "1691": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:46:10Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1691#issuecomment-6921240379",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 3
+    },
+    "1689": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-16T15:46:20Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "lxcxjxhx"
+        }
+      ],
+      "closure_notes": [
+        {
+          "url": "https://github.com/usestrix/strix/pull/1689#issuecomment-6921244741",
+          "user": "lxcxjxhx",
+          "note": "Closing this as stale: it has been open a week with no review, so I am clearing my own backlog instead of leaving it in your queue. Nothing needed from you — I can re-submit if it is ever useful. Thanks for the repo."
+        }
+      ],
+      "comment_count": 2
+    },
+    "1722": {
+      "events": [
+        {
+          "event": "closed",
+          "created_at": "2026-11-17T06:57:44Z",
+          "commit_id": null,
+          "state_reason": null,
+          "actor": "dependabot[bot]"
+        }
+      ],
+      "closure_notes": [],
+      "comment_count": 2
+    }
+  },
+  "inventory": {
+    "open_entries": 610,
+    "open_pull_entries": 364,
+    "updated_entries": 110,
+    "updated_since": "2026-11-10T00:00:00Z",
+    "state": "all",
+    "targeted_only": true,
+    "next_discovery_preserved": true
+  },
+  "counts": {
+    "total_records": 769,
+    "review_depth": {
+      "identified": 96,
+      "triage": 584,
+      "deep": 89
+    },
+    "fork_decisions": {
+      "pending": 297,
+      "incorporated_fully": 62,
+      "adapted": 25,
+      "already_covered": 103,
+      "deferred": 241,
+      "discarded": 40,
+      "incorporated_partially": 1
+    },
+    "implementation_phases": {
+      "unknown": 118,
+      "present_before_round": 54,
+      "integrated_review_branch": 55,
+      "decision_required": 122,
+      "deferred": 240,
+      "not_planned": 32,
+      "pending": 104,
+      "proposed_in_fork_review": 1,
+      "released": 5,
+      "delivered_in_fork": 3,
+      "merged_review_branch": 2,
+      "published_upstream_pending_fork_evaluation": 22,
+      "upstream_fix_proposed_pending_review": 5,
+      "awaiting_upstream_contract_decision": 4,
+      "merged_master": 2
+    },
+    "fork_catalog": 63,
+    "upstream_open_inventory": {
+      "pr": 366,
+      "issue": 247
+    },
+    "inventory_count_basis": "Paginated open inventory with subsequently verified publications."
+  },
+  "fork_master_at_start": "0f69075f38d62398015a2abb37ccaf8f0b81a413",
+  "fork_version": "1.2.56",
+  "latest_fork_release": {
+    "tag": "shvia-v1.2.55",
+    "source_sha": "02d6a1a7d44053f3c295b2167da19118dfa4f567",
+    "url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.55"
+  },
+  "upstream_tag_checked": {
+    "tag": "v1.7.1",
+    "sha": "685bbc8138d35fc9fe378ac37ec0d9198b9c46a3",
+    "scope": "The affected build and viewer paths match the reviewed main revision."
+  },
+  "contribution_rules": {
+    "path": "CONTRIBUTING.md",
+    "issue_template": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "discussions_enabled": false,
+    "security_policy": "No SECURITY.md published on the GitHub policy page."
+  },
+  "published": [
+    {
+      "kind": "pr",
+      "raw": "pr-1784.json",
+      "scope": "Stop packaging when the standalone binary fails its smoke test.",
+      "assessment": {
+        "benefit": "Prevent a success status and release archive for an unusable executable.",
+        "effort": "One shell path and parameterized regressions.",
+        "limits": "Pyright retains 953 source diagnostics. ShellCheck retains SC2012. Stub build tools and simulated Windows packaging."
+      },
+      "links": [
+        "usestrix/strix#issue:1533",
+        "usestrix/strix#pr:1532"
+      ],
+      "validation": {
+        "before": "Two regression cases fail on base because the wrapper exits 0 after the stub exits 7.",
+        "after": "Six build/installer tests pass. Ruff, Bash syntax, Mypy, Bandit, lockfile and diff checks pass.",
+        "limitations": "Pyright retains 953 source diagnostics. ShellCheck retains SC2012. Stub build tools and simulated Windows packaging."
+      },
+      "ledger_id": "usestrix/strix#pr:1784",
+      "number": 1784,
+      "url": "https://github.com/usestrix/strix/pull/1784"
+    },
+    {
+      "kind": "issue",
+      "raw": "issue-1785.json",
+      "scope": "Report local history failure when one run record disappears.",
+      "assessment": {
+        "benefit": "Explain why a disappearing file can hide otherwise healthy history.",
+        "effort": "Two synthetic fixtures and deterministic file removal.",
+        "limits": "Static local data."
+      },
+      "links": [
+        "usestrix/strix#pr:1786"
+      ],
+      "validation": {
+        "before": "Both default-run selection and history listing raise FileNotFoundError.",
+        "after": "Correction proposed in #1786.",
+        "limitations": "Static local data."
+      },
+      "ledger_id": "usestrix/strix#issue:1785",
+      "number": 1785,
+      "url": "https://github.com/usestrix/strix/issues/1785"
+    },
+    {
+      "kind": "pr",
+      "raw": "pr-1786.json",
+      "scope": "Keep local history and default run selection working during concurrent record removal.",
+      "assessment": {
+        "benefit": "Healthy records remain listed when a neighboring file disappears.",
+        "effort": "One metadata iterator and two focused regressions.",
+        "limits": "Normalized Pyright diagnostics match 953 existing errors. A file removed after collection may appear for that refresh. Local synthetic data."
+      },
+      "links": [
+        "usestrix/strix#issue:1785"
+      ],
+      "validation": {
+        "before": "Both cases fail with FileNotFoundError on the pinned base.",
+        "after": "68 viewer and PDF tests pass. The reviewer follow-up covers missing metadata before stat and preserves visitation of a healthy sibling. Ruff, focused Mypy, Bandit and diff checks pass.",
+        "limitations": "Normalized Pyright diagnostics match 953 existing errors. A file removed after collection may appear for that refresh. Local synthetic data."
+      },
+      "ledger_id": "usestrix/strix#pr:1786",
+      "number": 1786,
+      "url": "https://github.com/usestrix/strix/pull/1786"
+    }
+  ],
+  "targeted_reviews": {
+    "usestrix/strix#pr:1621": {
+      "conclusion": "The later test-only commit drops persisted workspace paths to verify recomputation. Both upstream pytest jobs timed out. The November 18 combined run preceded this commit.",
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1621#issuecomment-6978905630",
+        "https://github.com/usestrix/strix/actions/runs/44306658847"
+      ],
+      "reviewed_sha": "9462580b97d092bcf8cca62eb79c4d023e47dfc7"
+    },
+    "usestrix/strix#pr:1532": {
+      "conclusion": "Open modernization proposal. Its reviewed diff retains the false-success smoke test that #1784 addresses.",
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1532"
+      ],
+      "reviewed_sha": "3002b455ee96df9c302d3df6e64f5d036cdb1158"
+    },
+    "usestrix/strix#issue:1533": {
+      "conclusion": "Open broader build reliability proposal. Referenced by #1784 as related work.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1657": {
+      "conclusion": "This fix covers three fixture calls. #1771 duplicates only the budget-pause change.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1658": {
+      "conclusion": "Latest author follow-up already links joint validation and discusses alternative #1742.",
+      "evidence": [
+        "https://github.com/usestrix/strix/pull/1658#issuecomment-6978924599"
+      ]
+    },
+    "usestrix/strix#pr:1660": {
+      "conclusion": "Open deterministic catalog fix. #1742 overlaps the failure with a different test strategy.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1708": {
+      "conclusion": "Open diagnostics proposal. Main has the 15-minute limit from #1662. The diagnostics flag remains separate.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1742": {
+      "conclusion": "Open alternative for several base failures. Only the coverage mapping was selected in the November 18 diagnostic.",
+      "evidence": []
+    },
+    "usestrix/strix#issue:1767": {
+      "conclusion": "Current main reproduced the missing coverage phrase failure. Twenty other coverage tests passed. #1742 proposes a mapping.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1771": {
+      "conclusion": "Open, narrower overlap with #1657. The latter also covers two lifecycle calls.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1117": {
+      "conclusion": "Open, awaiting qualified review. Existing work covers the reported need.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1506": {
+      "conclusion": "Open proposal covers atomic report replacement and temporary-file cleanup. #1044 and #946 also overlap.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1680": {
+      "conclusion": "The author closed the earlier proposal for inactivity.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1358": {
+      "conclusion": "Closed without merge. No reason was stated in the observed discussion. Retain the fork carry and its exact provenance pending comparison.",
+      "evidence": []
+    },
+    "usestrix/strix#pr:1469": {
+      "conclusion": "Head c2a48b70 passed lint, TUI, viewer and wheel upstream. Both Python jobs reached 15 minutes.",
+      "evidence": [
+        "https://github.com/usestrix/strix/actions/runs/44288778569"
+      ]
+    }
+  },
+  "viewer_review_followup": {
+    "initial_head": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+    "validated_head": "156e2574afde946bdb1227801b21896db6200242",
+    "review_url": "https://github.com/usestrix/strix/pull/1786#discussion_r4627504093",
+    "result": "68 viewer and PDF tests passed. Added both entry-point controls for disappearance before stat."
+  },
+  "current_main_ci": {
+    "url": "https://github.com/usestrix/strix/actions/runs/44436137677",
+    "conclusion": "cancelled",
+    "pytest": "Both versions reached the 15-minute limit."
+  },
+  "publication_ci_observations": {
+    "build-ci": {
+      "conclusion": "",
+      "headSha": "7c2a6374443f1434cce8305694304c65479f43f4",
+      "jobs": [
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "databaseId": 135501069182,
+          "name": "pytest (3.14)",
+          "startedAt": "2026-11-19T10:34:57Z",
+          "status": "in_progress",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:34:59Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:05Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-19T10:34:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Run uv run --frozen pytest -q",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:05Z",
+              "status": "in_progress"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 7,
+              "startedAt": "0001-01-01T00:00:00Z",
+              "status": "pending"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 8,
+              "startedAt": "0001-01-01T00:00:00Z",
+              "status": "pending"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069182"
+        },
+        {
+          "completedAt": "2026-11-19T10:35:16Z",
+          "conclusion": "success",
+          "databaseId": 135501069417,
+          "name": "viewer",
+          "startedAt": "2026-11-19T10:34:57Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:00Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:03Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+              "number": 3,
+              "startedAt": "2026-11-19T10:35:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:07Z",
+              "conclusion": "success",
+              "name": "Run npm ci --no-audit --no-fund",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:03Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:12Z",
+              "conclusion": "success",
+              "name": "Run npm run build",
+              "number": 5,
+              "startedAt": "2026-11-19T10:35:07Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:12Z",
+              "conclusion": "success",
+              "name": "Committed viewer bundle matches the build",
+              "number": 6,
+              "startedAt": "2026-11-19T10:35:12Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:12Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+              "number": 11,
+              "startedAt": "2026-11-19T10:35:12Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:12Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 12,
+              "startedAt": "2026-11-19T10:35:12Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:12Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-11-19T10:35:12Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069417"
+        },
+        {
+          "completedAt": "2026-11-19T10:35:41Z",
+          "conclusion": "success",
+          "databaseId": 135501069440,
+          "name": "tui",
+          "startedAt": "2026-11-19T10:34:56Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:34:59Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:08Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 3,
+              "startedAt": "2026-11-19T10:34:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:08Z",
+              "conclusion": "success",
+              "name": "Run test -z \"$(gofmt -l .)\"",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:16Z",
+              "conclusion": "success",
+              "name": "Run go vet ./...",
+              "number": 5,
+              "startedAt": "2026-11-19T10:35:08Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:16Z",
+              "conclusion": "success",
+              "name": "Run CGO_ENABLED=0 go build -trimpath -o /dev/null ./cmd/strix-tui",
+              "number": 6,
+              "startedAt": "2026-11-19T10:35:16Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:37Z",
+              "conclusion": "success",
+              "name": "Run go test -race ./...",
+              "number": 7,
+              "startedAt": "2026-11-19T10:35:16Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:38Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 13,
+              "startedAt": "2026-11-19T10:35:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:38Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 14,
+              "startedAt": "2026-11-19T10:35:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:38Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 15,
+              "startedAt": "2026-11-19T10:35:38Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069440"
+        },
+        {
+          "completedAt": "2026-11-19T10:35:52Z",
+          "conclusion": "success",
+          "databaseId": 135501069498,
+          "name": "lint",
+          "startedAt": "2026-11-19T10:34:57Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:00Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:06Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-19T10:35:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:06Z",
+              "conclusion": "success",
+              "name": "Run uv lock --check",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:06Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen ruff check .",
+              "number": 5,
+              "startedAt": "2026-11-19T10:35:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:06Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen ruff format --check .",
+              "number": 6,
+              "startedAt": "2026-11-19T10:35:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:45Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen mypy strix/",
+              "number": 7,
+              "startedAt": "2026-11-19T10:35:06Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:49Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen bandit -r strix/ -c pyproject.toml",
+              "number": 8,
+              "startedAt": "2026-11-19T10:35:45Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:49Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 15,
+              "startedAt": "2026-11-19T10:35:49Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:49Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 16,
+              "startedAt": "2026-11-19T10:35:49Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:49Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 17,
+              "startedAt": "2026-11-19T10:35:49Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069498"
+        },
+        {
+          "completedAt": "0001-01-01T00:00:00Z",
+          "conclusion": "",
+          "databaseId": 135501069520,
+          "name": "pytest (3.12)",
+          "startedAt": "2026-11-19T10:34:57Z",
+          "status": "in_progress",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:34:59Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:04Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-19T10:34:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Run uv run --frozen pytest -q",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:04Z",
+              "status": "in_progress"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 7,
+              "startedAt": "0001-01-01T00:00:00Z",
+              "status": "pending"
+            },
+            {
+              "completedAt": "0001-01-01T00:00:00Z",
+              "conclusion": "",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 8,
+              "startedAt": "0001-01-01T00:00:00Z",
+              "status": "pending"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069520"
+        },
+        {
+          "completedAt": "2026-11-19T10:35:27Z",
+          "conclusion": "success",
+          "databaseId": 135501069539,
+          "name": "wheel",
+          "startedAt": "2026-11-19T10:34:57Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-19T10:34:58Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:00Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-19T10:34:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:09Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 3,
+              "startedAt": "2026-11-19T10:35:00Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:16Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 4,
+              "startedAt": "2026-11-19T10:35:09Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:17Z",
+              "conclusion": "success",
+              "name": "Run uv build --wheel",
+              "number": 5,
+              "startedAt": "2026-11-19T10:35:16Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:17Z",
+              "conclusion": "success",
+              "name": "Wheel ships the TUI sidecar and the viewer bundle",
+              "number": 6,
+              "startedAt": "2026-11-19T10:35:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:21Z",
+              "conclusion": "success",
+              "name": "Install into a clean environment and run the CLI",
+              "number": 7,
+              "startedAt": "2026-11-19T10:35:17Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:22Z",
+              "conclusion": "success",
+              "name": "Vertex AI and Bedrock dependencies install with the wheel",
+              "number": 8,
+              "startedAt": "2026-11-19T10:35:21Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:22Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 14,
+              "startedAt": "2026-11-19T10:35:22Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:22Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 15,
+              "startedAt": "2026-11-19T10:35:22Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:22Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 16,
+              "startedAt": "2026-11-19T10:35:22Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-19T10:35:22Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 17,
+              "startedAt": "2026-11-19T10:35:22Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069539"
+        }
+      ],
+      "status": "in_progress",
+      "url": "https://github.com/usestrix/strix/actions/runs/44506990928"
+    },
+    "viewer-ci": {
+      "headRefOid": "156e2574afde946bdb1227801b21896db6200242",
+      "statusCheckRollup": [
+        {
+          "__typename": "CheckRun",
+          "completedAt": "2026-11-19T10:42:36Z",
+          "conclusion": "SUCCESS",
+          "detailsUrl": "https://app.strix.ai/repositories/ff3b0937-0eee-4391-bd46-dde7349df9ed?tab=supply-chain&supply_chain_job_id=fbe3577f-1665-46fe-9ced-a30b8c2596d8",
+          "name": "strix/supply-chain",
+          "startedAt": "2026-11-19T10:42:31Z",
+          "status": "COMPLETED",
+          "workflowName": ""
+        }
+      ],
+      "url": "https://github.com/usestrix/strix/pull/1786"
+    },
+    "current-1621-ci": {
+      "conclusion": "cancelled",
+      "headSha": "9462580b97d092bcf8cca62eb79c4d023e47dfc7",
+      "jobs": [
+        {
+          "completedAt": "2026-11-18T12:44:01Z",
+          "conclusion": "success",
+          "databaseId": 134809870720,
+          "name": "wheel",
+          "startedAt": "2026-11-18T12:43:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:38Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:52Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:53Z",
+              "conclusion": "success",
+              "name": "Run uv build --wheel",
+              "number": 5,
+              "startedAt": "2026-11-18T12:43:52Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:53Z",
+              "conclusion": "success",
+              "name": "Wheel ships the TUI sidecar and the viewer bundle",
+              "number": 6,
+              "startedAt": "2026-11-18T12:43:53Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:56Z",
+              "conclusion": "success",
+              "name": "Install into a clean environment and run the CLI",
+              "number": 7,
+              "startedAt": "2026-11-18T12:43:53Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:57Z",
+              "conclusion": "success",
+              "name": "Vertex AI and Bedrock dependencies install with the wheel",
+              "number": 8,
+              "startedAt": "2026-11-18T12:43:56Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:57Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 14,
+              "startedAt": "2026-11-18T12:43:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:58Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 15,
+              "startedAt": "2026-11-18T12:43:57Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:58Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 16,
+              "startedAt": "2026-11-18T12:43:58Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:58Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 17,
+              "startedAt": "2026-11-18T12:43:58Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809870720"
+        },
+        {
+          "completedAt": "2026-11-18T12:44:36Z",
+          "conclusion": "success",
+          "databaseId": 134809871003,
+          "name": "tui",
+          "startedAt": "2026-11-18T12:43:35Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:38Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:47Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:47Z",
+              "conclusion": "success",
+              "name": "Run test -z \"$(gofmt -l .)\"",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:59Z",
+              "conclusion": "success",
+              "name": "Run go vet ./...",
+              "number": 5,
+              "startedAt": "2026-11-18T12:43:47Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:59Z",
+              "conclusion": "success",
+              "name": "Run CGO_ENABLED=0 go build -trimpath -o /dev/null ./cmd/strix-tui",
+              "number": 6,
+              "startedAt": "2026-11-18T12:43:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:33Z",
+              "conclusion": "success",
+              "name": "Run go test -race ./...",
+              "number": 7,
+              "startedAt": "2026-11-18T12:43:59Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:33Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00",
+              "number": 13,
+              "startedAt": "2026-11-18T12:44:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:34Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 14,
+              "startedAt": "2026-11-18T12:44:33Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:34Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 15,
+              "startedAt": "2026-11-18T12:44:34Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809871003"
+        },
+        {
+          "completedAt": "2026-11-18T12:44:25Z",
+          "conclusion": "success",
+          "databaseId": 134809871011,
+          "name": "lint",
+          "startedAt": "2026-11-18T12:43:35Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:38Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:41Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:42Z",
+              "conclusion": "success",
+              "name": "Run uv lock --check",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:42Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen ruff check .",
+              "number": 5,
+              "startedAt": "2026-11-18T12:43:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:42Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen ruff format --check .",
+              "number": 6,
+              "startedAt": "2026-11-18T12:43:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:19Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen mypy strix/",
+              "number": 7,
+              "startedAt": "2026-11-18T12:43:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:23Z",
+              "conclusion": "success",
+              "name": "Run uv run --frozen bandit -r strix/ -c pyproject.toml",
+              "number": 8,
+              "startedAt": "2026-11-18T12:44:19Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:23Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 15,
+              "startedAt": "2026-11-18T12:44:23Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:23Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 16,
+              "startedAt": "2026-11-18T12:44:23Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:44:23Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 17,
+              "startedAt": "2026-11-18T12:44:23Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809871011"
+        },
+        {
+          "completedAt": "2026-11-18T12:43:51Z",
+          "conclusion": "success",
+          "databaseId": 134809871033,
+          "name": "viewer",
+          "startedAt": "2026-11-18T12:43:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:38Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:41Z",
+              "conclusion": "success",
+              "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:38Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:44Z",
+              "conclusion": "success",
+              "name": "Run npm ci --no-audit --no-fund",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:41Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Run npm run build",
+              "number": 5,
+              "startedAt": "2026-11-18T12:43:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Committed viewer bundle matches the build",
+              "number": 6,
+              "startedAt": "2026-11-18T12:43:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+              "number": 11,
+              "startedAt": "2026-11-18T12:43:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 12,
+              "startedAt": "2026-11-18T12:43:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:48Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 13,
+              "startedAt": "2026-11-18T12:43:48Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809871033"
+        },
+        {
+          "completedAt": "2026-11-18T12:58:50Z",
+          "conclusion": "cancelled",
+          "databaseId": 134809871122,
+          "name": "pytest (3.14)",
+          "startedAt": "2026-11-18T12:43:35Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:36Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:36Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:42Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "cancelled",
+              "name": "Run uv run --frozen pytest -q",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:42Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 7,
+              "startedAt": "2026-11-18T12:58:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 8,
+              "startedAt": "2026-11-18T12:58:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 9,
+              "startedAt": "2026-11-18T12:58:48Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809871122"
+        },
+        {
+          "completedAt": "2026-11-18T12:58:52Z",
+          "conclusion": "cancelled",
+          "databaseId": 134809871180,
+          "name": "pytest (3.12)",
+          "startedAt": "2026-11-18T12:43:36Z",
+          "status": "completed",
+          "steps": [
+            {
+              "completedAt": "2026-11-18T12:43:37Z",
+              "conclusion": "success",
+              "name": "Set up job",
+              "number": 1,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:39Z",
+              "conclusion": "success",
+              "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 2,
+              "startedAt": "2026-11-18T12:43:37Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:43:44Z",
+              "conclusion": "success",
+              "name": "Run ./.github/actions/setup-python-env",
+              "number": 3,
+              "startedAt": "2026-11-18T12:43:39Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "cancelled",
+              "name": "Run uv run --frozen pytest -q",
+              "number": 4,
+              "startedAt": "2026-11-18T12:43:44Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:48Z",
+              "conclusion": "success",
+              "name": "Post Run ./.github/actions/setup-python-env",
+              "number": 7,
+              "startedAt": "2026-11-18T12:58:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:49Z",
+              "conclusion": "success",
+              "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+              "number": 8,
+              "startedAt": "2026-11-18T12:58:48Z",
+              "status": "completed"
+            },
+            {
+              "completedAt": "2026-11-18T12:58:49Z",
+              "conclusion": "success",
+              "name": "Complete job",
+              "number": 9,
+              "startedAt": "2026-11-18T12:58:49Z",
+              "status": "completed"
+            }
+          ],
+          "url": "https://github.com/usestrix/strix/actions/runs/44306658847/job/134809871180"
+        }
+      ],
+      "status": "completed",
+      "url": "https://github.com/usestrix/strix/actions/runs/44306658847"
+    }
+  },
+  "pending": [
+    "Recheck upstream Actions and review feedback on #1784 and #1786.",
+    "Reassess #1657, #1658, #1660, #1708 and #1742 independently of the diagnostic.",
+    "Review changed heads and cataloged items before new fork imports.",
+    "Retry the three inaccessible known PRs."
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-19T10:28:33.099001+00:00",
+  "updated_at": "2026-11-19T10:42:46.463530+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -2096,13 +2096,53 @@
         "release_changed": false
       }
     ],
-    "last_attempted_inventory_at": "2026-11-12T09:23:04.826021+00:00",
+    "last_attempted_inventory_at": "2026-11-19T10:32:19.331901+00:00",
     "latest_selective_integration": {
       "event_id": "selective-startup-sandbox-released-2026-11-12",
       "at": "2026-11-12T12:02:55.964909+00:00",
       "stage": "released",
       "record": "integration-released-2026-11-12.json",
       "inventory_checkpoint_advanced": false
+    },
+    "operational_review_history": [
+      {
+        "record": "round-2026-11-19.json",
+        "checked_at": "2026-11-19T10:42:46.463530+00:00",
+        "observed_upstream_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+        "report": "../UPSTREAM_REVIEW_2026-11-19.md",
+        "scope": "Metadata by ID, paginated discovery and selected operational reviews",
+        "known_verified": 720,
+        "known_unavailable": [
+          "usestrix/strix#pr:1067",
+          "usestrix/strix#pr:1294",
+          "usestrix/strix#pr:1338"
+        ],
+        "new_items": 46,
+        "publications": [
+          "usestrix/strix#pr:1784",
+          "usestrix/strix#issue:1785",
+          "usestrix/strix#pr:1786"
+        ]
+      }
+    ],
+    "latest_operational_review": {
+      "record": "round-2026-11-19.json",
+      "checked_at": "2026-11-19T10:42:46.463530+00:00",
+      "observed_upstream_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "report": "../UPSTREAM_REVIEW_2026-11-19.md",
+      "scope": "Metadata by ID, paginated discovery and selected operational reviews",
+      "known_verified": 720,
+      "known_unavailable": [
+        "usestrix/strix#pr:1067",
+        "usestrix/strix#pr:1294",
+        "usestrix/strix#pr:1338"
+      ],
+      "new_items": 46,
+      "publications": [
+        "usestrix/strix#pr:1784",
+        "usestrix/strix#issue:1785",
+        "usestrix/strix#pr:1786"
+      ]
     }
   },
   "version_release_audit": "release-audit.json",
