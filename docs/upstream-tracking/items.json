@@ -1554,7 +1554,7 @@
         }
       }
     ],
-    "last_incremental_update_at": "2026-11-19T10:42:46.463530+00:00",
+    "last_incremental_update_at": "2026-11-19T11:51:15.532031+00:00",
     "latest_known_recheck": {
       "at": "2026-11-12T09:23:04.826021+00:00",
       "record": "round-2026-11-12.json",
@@ -1852,6 +1852,24 @@
         "joint_diagnostic_run_id": 44289647242,
         "joint_diagnostic_conclusion": "success",
         "individual_upstream_ci_separate": true,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false,
+        "release_changed": false
+      },
+      {
+        "event_id": "targeted-ci-1784-1786-2026-11-19",
+        "checked_at": "2026-11-19T11:51:15.532031+00:00",
+        "record": "ci-1784-1786-2026-11-19.json",
+        "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
+        "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
+        "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
+        "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+        "known_ids_rechecked": [
+          "usestrix/strix#pr:1784",
+          "usestrix/strix#pr:1786",
+          "usestrix/strix#issue:1785"
+        ],
+        "current_ledger_records": 769,
         "inventory_checkpoint_advanced": false,
         "full_upstream_sync_advanced": false,
         "release_changed": false
@@ -2652,24 +2670,19 @@
       ]
     },
     "latest_targeted_followup": {
-      "event_id": "targeted-own-pr-followup-2026-11-18",
-      "checked_at": "2026-11-19T10:28:33.099001+00:00",
-      "record": "pr-followup-2026-11-18.json",
-      "report": "../UPSTREAM_PR_FOLLOWUP_2026-11-18.md",
-      "scope": "31 owned open PRs plus merged1577 and two related records; no broad inventory or source synchronization.",
-      "source_ledger_commit": "2eaff155f6353019bcea5f77b07b3d63aade6ec7",
-      "upstream_observed_sha": "1152d53579d5b3af37ada8c798f197ab093b99c6",
-      "known_ids_before": 721,
-      "known_ids_after": 723,
-      "observed_existing_ids": 32,
-      "new_ids": [
-        "usestrix/strix#pr:1742",
-        "usestrix/strix#issue:1767"
+      "event_id": "targeted-ci-1784-1786-2026-11-19",
+      "checked_at": "2026-11-19T11:51:15.532031+00:00",
+      "record": "ci-1784-1786-2026-11-19.json",
+      "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
+      "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
+      "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
+      "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "known_ids_rechecked": [
+        "usestrix/strix#pr:1784",
+        "usestrix/strix#pr:1786",
+        "usestrix/strix#issue:1785"
       ],
-      "joint_diagnostic_source_sha": "f5658da4a54ea81312c7e74d83fb201e7644d9f5",
-      "joint_diagnostic_run_id": 44289647242,
-      "joint_diagnostic_conclusion": "success",
-      "individual_upstream_ci_separate": true,
+      "current_ledger_records": 769,
       "inventory_checkpoint_advanced": false,
       "full_upstream_sync_advanced": false,
       "release_changed": false
@@ -136030,11 +136043,19 @@
           "event": "upstream_publication",
           "decision": "pending",
           "record": "round-2026-11-19.json"
+        },
+        {
+          "recorded_at": "2026-11-19T11:51:15.532031+00:00",
+          "event": "feedback_rechecked",
+          "decision_preserved": true,
+          "source_changes": false,
+          "conclusion": "Linked issue remains open without comments. The proposed resolution is #1786.",
+          "evidence_record": "ci-1784-1786-2026-11-19.json"
         }
       ],
       "updated_at": "2026-11-19T10:35:49Z",
-      "last_checked": "2026-11-19T10:42:46.463530+00:00",
-      "last_checked_basis": "Paginated inventory or publication verification",
+      "last_checked": "2026-11-19T11:51:15.532031+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and workflow follow-up",
       "review_checked_at": "2026-11-19T10:42:46.463530+00:00",
       "review_scope": "Report local history failure when one run record disappears.",
       "assessment": {
@@ -137055,7 +137076,18 @@
       "validation": {
         "before": "Two regression cases fail on base because the wrapper exits 0 after the stub exits 7.",
         "after": "Six build/installer tests pass. Ruff, Bash syntax, Mypy, Bandit, lockfile and diff checks pass.",
-        "limitations": "Pyright retains 953 source diagnostics. ShellCheck retains SC2012. Stub build tools and simulated Windows packaging."
+        "limitations": "Pyright retains 953 source diagnostics. ShellCheck retains SC2012. Stub build tools and simulated Windows packaging.",
+        "upstream_ci": {
+          "checked_at": "2026-11-19T11:51:15.532031+00:00",
+          "record": "ci-1784-1786-2026-11-19.json",
+          "head_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+          "state": "completed_with_pytest_timeouts",
+          "workflow_runs": [
+            44506990928,
+            44506990952
+          ],
+          "baseline_run": 44436137677
+        }
       },
       "decision_history": [
         {
@@ -137063,11 +137095,19 @@
           "event": "upstream_publication",
           "decision": "pending",
           "record": "round-2026-11-19.json"
+        },
+        {
+          "recorded_at": "2026-11-19T11:51:15.532031+00:00",
+          "event": "feedback_rechecked",
+          "decision_preserved": true,
+          "source_changes": false,
+          "conclusion": "Current-head pytest jobs reached the same 15-minute limit as the pinned main run. Other current-head checks passed. No new patch change was indicated.",
+          "evidence_record": "ci-1784-1786-2026-11-19.json"
         }
       ],
       "updated_at": "2026-11-19T10:36:40Z",
-      "last_checked": "2026-11-19T10:42:46.463530+00:00",
-      "last_checked_basis": "Paginated inventory or publication verification",
+      "last_checked": "2026-11-19T11:51:15.532031+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and workflow follow-up",
       "review_head_status": "matches_observed_head",
       "review_checked_at": "2026-11-19T10:42:46.463530+00:00",
       "review_scope": "Stop packaging when the standalone binary fails its smoke test.",
@@ -137083,6 +137123,18 @@
       "linked_items": [
         "usestrix/strix#issue:1533",
         "usestrix/strix#pr:1532"
+      ],
+      "latest_feedback": {
+        "human_responses": 0,
+        "automated_summary_url": "https://github.com/usestrix/strix/pull/1784#issuecomment-7006652418",
+        "automated_review_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+        "summary": "Greptile rated the current head 5/5 with no findings.",
+        "inline_threads": [],
+        "checked_at": "2026-11-19T11:51:15.532031+00:00",
+        "record": "ci-1784-1786-2026-11-19.json"
+      },
+      "revisit_conditions": [
+        "New maintainer feedback, upstream base or head changes, or a passing full pytest matrix."
       ]
     },
     {
@@ -137117,7 +137169,17 @@
       "validation": {
         "before": "Both cases fail with FileNotFoundError on the pinned base.",
         "after": "68 viewer and PDF tests pass. The reviewer follow-up covers missing metadata before stat and preserves visitation of a healthy sibling. Ruff, focused Mypy, Bandit and diff checks pass.",
-        "limitations": "Normalized Pyright diagnostics match 953 existing errors. A file removed after collection may appear for that refresh. Local synthetic data."
+        "limitations": "Normalized Pyright diagnostics match 953 existing errors. A file removed after collection may appear for that refresh. Local synthetic data.",
+        "upstream_ci": {
+          "checked_at": "2026-11-19T11:51:15.532031+00:00",
+          "record": "ci-1784-1786-2026-11-19.json",
+          "head_sha": "156e2574afde946bdb1227801b21896db6200242",
+          "state": "completed_with_pytest_timeouts",
+          "workflow_runs": [
+            44508151053
+          ],
+          "baseline_run": 44436137677
+        }
       },
       "decision_history": [
         {
@@ -137125,11 +137187,19 @@
           "event": "upstream_publication",
           "decision": "pending",
           "record": "round-2026-11-19.json"
+        },
+        {
+          "recorded_at": "2026-11-19T11:51:15.532031+00:00",
+          "event": "feedback_rechecked",
+          "decision_preserved": true,
+          "source_changes": false,
+          "conclusion": "Current-head pytest jobs reached the same 15-minute limit as the pinned main run. Other current-head checks passed. No new patch change was indicated.",
+          "evidence_record": "ci-1784-1786-2026-11-19.json"
         }
       ],
       "updated_at": "2026-11-19T10:42:41Z",
-      "last_checked": "2026-11-19T10:42:46.463530+00:00",
-      "last_checked_basis": "Paginated inventory or publication verification",
+      "last_checked": "2026-11-19T11:51:15.532031+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and workflow follow-up",
       "review_head_status": "matches_observed_head",
       "review_checked_at": "2026-11-19T10:42:46.463530+00:00",
       "review_scope": "Keep local history and default run selection working during concurrent record removal.",
@@ -137144,6 +137214,27 @@
       },
       "linked_items": [
         "usestrix/strix#issue:1785"
+      ],
+      "latest_feedback": {
+        "human_responses": 0,
+        "automated_summary_url": "https://github.com/usestrix/strix/pull/1786#issuecomment-7006729501",
+        "automated_review_sha": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+        "summary": "Greptile rated the earlier head 5/5 and requested a before-stat regression. The PR description records the follow-up and its validation.",
+        "inline_threads": [
+          {
+            "url": "https://github.com/usestrix/strix/pull/1786#discussion_r4627504093",
+            "original_sha": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+            "resolved": false,
+            "outdated": true,
+            "addressed_by": "156e2574afde946bdb1227801b21896db6200242",
+            "response": "The tests remove the first record before the metadata lookup and verify that both entry points retain the healthy record visited next."
+          }
+        ],
+        "checked_at": "2026-11-19T11:51:15.532031+00:00",
+        "record": "ci-1784-1786-2026-11-19.json"
+      },
+      "revisit_conditions": [
+        "New maintainer feedback, upstream base or head changes, or a passing full pytest matrix."
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-19T10:42:46.463530+00:00",
+  "updated_at": "2026-11-19T11:51:15.532031+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -1981,24 +1981,19 @@
       "summary": "Greptile5/5; no change requested."
     },
     "latest_targeted_followup": {
-      "event_id": "targeted-own-pr-followup-2026-11-18",
-      "checked_at": "2026-11-19T10:28:33.099001+00:00",
-      "record": "pr-followup-2026-11-18.json",
-      "report": "../UPSTREAM_PR_FOLLOWUP_2026-11-18.md",
-      "scope": "31 owned open PRs plus merged1577 and two related records; no broad inventory or source synchronization.",
-      "source_ledger_commit": "2eaff155f6353019bcea5f77b07b3d63aade6ec7",
-      "upstream_observed_sha": "1152d53579d5b3af37ada8c798f197ab093b99c6",
-      "known_ids_before": 721,
-      "known_ids_after": 723,
-      "observed_existing_ids": 32,
-      "new_ids": [
-        "usestrix/strix#pr:1742",
-        "usestrix/strix#issue:1767"
+      "event_id": "targeted-ci-1784-1786-2026-11-19",
+      "checked_at": "2026-11-19T11:51:15.532031+00:00",
+      "record": "ci-1784-1786-2026-11-19.json",
+      "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
+      "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
+      "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
+      "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "known_ids_rechecked": [
+        "usestrix/strix#pr:1784",
+        "usestrix/strix#pr:1786",
+        "usestrix/strix#issue:1785"
       ],
-      "joint_diagnostic_source_sha": "f5658da4a54ea81312c7e74d83fb201e7644d9f5",
-      "joint_diagnostic_run_id": 44289647242,
-      "joint_diagnostic_conclusion": "success",
-      "individual_upstream_ci_separate": true,
+      "current_ledger_records": 769,
       "inventory_checkpoint_advanced": false,
       "full_upstream_sync_advanced": false,
       "release_changed": false
@@ -2091,6 +2086,24 @@
         "joint_diagnostic_run_id": 44289647242,
         "joint_diagnostic_conclusion": "success",
         "individual_upstream_ci_separate": true,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false,
+        "release_changed": false
+      },
+      {
+        "event_id": "targeted-ci-1784-1786-2026-11-19",
+        "checked_at": "2026-11-19T11:51:15.532031+00:00",
+        "record": "ci-1784-1786-2026-11-19.json",
+        "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
+        "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
+        "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
+        "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+        "known_ids_rechecked": [
+          "usestrix/strix#pr:1784",
+          "usestrix/strix#pr:1786",
+          "usestrix/strix#issue:1785"
+        ],
+        "current_ledger_records": 769,
         "inventory_checkpoint_advanced": false,
         "full_upstream_sync_advanced": false,
         "release_changed": false

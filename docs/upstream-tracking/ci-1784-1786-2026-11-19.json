@@ -1,0 +1,320 @@
+{
+  "schema_version": 1,
+  "kind": "targeted_ci_and_review_followup",
+  "event_id": "targeted-ci-1784-1786-2026-11-19",
+  "checked_at": "2026-11-19T11:51:15.532031+00:00",
+  "record": "ci-1784-1786-2026-11-19.json",
+  "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
+  "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
+  "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
+  "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+  "known_ids_rechecked": [
+    "usestrix/strix#pr:1784",
+    "usestrix/strix#pr:1786",
+    "usestrix/strix#issue:1785"
+  ],
+  "current_ledger_records": 769,
+  "inventory_checkpoint_advanced": false,
+  "full_upstream_sync_advanced": false,
+  "release_changed": false,
+  "previous_review": "round-2026-11-19.json",
+  "baseline_workflow": {
+    "conclusion": "cancelled",
+    "event": "push",
+    "head_branch": "main",
+    "head_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+    "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677",
+    "id": 44436137677,
+    "name": "CI",
+    "run_attempt": 1,
+    "status": "completed",
+    "updated_at": "2026-11-19T01:35:39Z",
+    "jobs": [
+      {
+        "completed_at": "2026-11-19T01:20:43Z",
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265385522",
+        "id": 135265385522,
+        "name": "viewer"
+      },
+      {
+        "completed_at": "2026-11-19T01:21:10Z",
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265385714",
+        "id": 135265385714,
+        "name": "tui"
+      },
+      {
+        "completed_at": "2026-11-19T01:21:14Z",
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265385855",
+        "id": 135265385855,
+        "name": "lint"
+      },
+      {
+        "completed_at": "2026-11-19T01:35:38Z",
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265385891",
+        "id": 135265385891,
+        "name": "pytest (3.12)",
+        "timeout_seconds": 900,
+        "failure_annotations": [
+          "The job has exceeded the maximum execution time of 15m0s",
+          "The operation was canceled."
+        ]
+      },
+      {
+        "completed_at": "2026-11-19T01:35:38Z",
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265385954",
+        "id": 135265385954,
+        "name": "pytest (3.14)",
+        "timeout_seconds": 900,
+        "failure_annotations": [
+          "The job has exceeded the maximum execution time of 15m0s",
+          "The operation was canceled."
+        ]
+      },
+      {
+        "completed_at": "2026-11-19T01:20:52Z",
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/44436137677/job/135265386077",
+        "id": 135265386077,
+        "name": "wheel"
+      }
+    ]
+  },
+  "pull_requests": [
+    {
+      "id": "usestrix/strix#pr:1784",
+      "url": "https://github.com/usestrix/strix/pull/1784",
+      "head_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+      "base_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "upstream_state": "OPEN",
+      "draft": false,
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "updated_at": "2026-11-19T10:36:40Z",
+      "merge_commit": null,
+      "workflows": [
+        {
+          "conclusion": "cancelled",
+          "event": "pull_request",
+          "head_branch": "fix/build-smoke-failure-20261119",
+          "head_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928",
+          "id": 44506990928,
+          "name": "CI",
+          "run_attempt": 1,
+          "status": "completed",
+          "updated_at": "2026-11-19T10:50:13Z",
+          "jobs": [
+            {
+              "completed_at": "2026-11-19T10:50:12Z",
+              "conclusion": "cancelled",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069182",
+              "id": 135501069182,
+              "name": "pytest (3.14)",
+              "timeout_seconds": 900,
+              "failure_annotations": [
+                "The job has exceeded the maximum execution time of 15m0s",
+                "The operation was canceled."
+              ]
+            },
+            {
+              "completed_at": "2026-11-19T10:35:16Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069417",
+              "id": 135501069417,
+              "name": "viewer"
+            },
+            {
+              "completed_at": "2026-11-19T10:35:41Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069440",
+              "id": 135501069440,
+              "name": "tui"
+            },
+            {
+              "completed_at": "2026-11-19T10:35:52Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069498",
+              "id": 135501069498,
+              "name": "lint"
+            },
+            {
+              "completed_at": "2026-11-19T10:50:12Z",
+              "conclusion": "cancelled",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069520",
+              "id": 135501069520,
+              "name": "pytest (3.12)",
+              "timeout_seconds": 900,
+              "failure_annotations": [
+                "The job has exceeded the maximum execution time of 15m0s",
+                "The operation was canceled."
+              ]
+            },
+            {
+              "completed_at": "2026-11-19T10:35:27Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990928/job/135501069539",
+              "id": 135501069539,
+              "name": "wheel"
+            }
+          ]
+        },
+        {
+          "conclusion": "success",
+          "event": "pull_request",
+          "head_branch": "fix/build-smoke-failure-20261119",
+          "head_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/44506990952",
+          "id": 44506990952,
+          "name": "Binary",
+          "run_attempt": 1,
+          "status": "completed",
+          "updated_at": "2026-11-19T10:37:39Z",
+          "jobs": [
+            {
+              "completed_at": "2026-11-19T10:37:38Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44506990952/job/135501068739",
+              "id": 135501068739,
+              "name": "binary"
+            }
+          ]
+        }
+      ],
+      "feedback": {
+        "human_responses": 0,
+        "automated_summary_url": "https://github.com/usestrix/strix/pull/1784#issuecomment-7006652418",
+        "automated_review_sha": "7c2a6374443f1434cce8305694304c65479f43f4",
+        "summary": "Greptile rated the current head 5/5 with no findings.",
+        "inline_threads": []
+      },
+      "other_checks": {
+        "Greptile Review": "success",
+        "strix/supply-chain": "success"
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1786",
+      "url": "https://github.com/usestrix/strix/pull/1786",
+      "head_sha": "156e2574afde946bdb1227801b21896db6200242",
+      "base_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "upstream_state": "OPEN",
+      "draft": false,
+      "merge_state": "BLOCKED",
+      "review_decision": "REVIEW_REQUIRED",
+      "updated_at": "2026-11-19T10:42:41Z",
+      "merge_commit": null,
+      "workflows": [
+        {
+          "conclusion": "cancelled",
+          "event": "pull_request",
+          "head_branch": "fix/viewer-history-disappearing-run-20261119",
+          "head_sha": "156e2574afde946bdb1227801b21896db6200242",
+          "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053",
+          "id": 44508151053,
+          "name": "CI",
+          "run_attempt": 1,
+          "status": "completed",
+          "updated_at": "2026-11-19T10:58:06Z",
+          "jobs": [
+            {
+              "completed_at": "2026-11-19T10:43:05Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505194727",
+              "id": 135505194727,
+              "name": "viewer"
+            },
+            {
+              "completed_at": "2026-11-19T10:58:05Z",
+              "conclusion": "cancelled",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505195146",
+              "id": 135505195146,
+              "name": "pytest (3.12)",
+              "timeout_seconds": 900,
+              "failure_annotations": [
+                "The job has exceeded the maximum execution time of 15m0s",
+                "The operation was canceled."
+              ]
+            },
+            {
+              "completed_at": "2026-11-19T10:58:05Z",
+              "conclusion": "cancelled",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505195162",
+              "id": 135505195162,
+              "name": "pytest (3.14)",
+              "timeout_seconds": 900,
+              "failure_annotations": [
+                "The job has exceeded the maximum execution time of 15m0s",
+                "The operation was canceled."
+              ]
+            },
+            {
+              "completed_at": "2026-11-19T10:43:14Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505195243",
+              "id": 135505195243,
+              "name": "wheel"
+            },
+            {
+              "completed_at": "2026-11-19T10:43:30Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505195344",
+              "id": 135505195344,
+              "name": "lint"
+            },
+            {
+              "completed_at": "2026-11-19T10:43:51Z",
+              "conclusion": "success",
+              "html_url": "https://github.com/usestrix/strix/actions/runs/44508151053/job/135505195405",
+              "id": 135505195405,
+              "name": "tui"
+            }
+          ]
+        }
+      ],
+      "feedback": {
+        "human_responses": 0,
+        "automated_summary_url": "https://github.com/usestrix/strix/pull/1786#issuecomment-7006729501",
+        "automated_review_sha": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+        "summary": "Greptile rated the earlier head 5/5 and requested a before-stat regression. The PR description records the follow-up and its validation.",
+        "inline_threads": [
+          {
+            "url": "https://github.com/usestrix/strix/pull/1786#discussion_r4627504093",
+            "original_sha": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+            "resolved": false,
+            "outdated": true,
+            "addressed_by": "156e2574afde946bdb1227801b21896db6200242",
+            "response": "The tests remove the first record before the metadata lookup and verify that both entry points retain the healthy record visited next."
+          }
+        ]
+      },
+      "other_checks": {
+        "strix/supply-chain": "success"
+      },
+      "superseded_ci": {
+        "head_sha": "70c4ca6ad19af7a29a37bfed5b471102dc5bbdbf",
+        "run_id": 44507497693
+      }
+    }
+  ],
+  "related_issue": {
+    "id": "usestrix/strix#issue:1785",
+    "url": "https://github.com/usestrix/strix/issues/1785",
+    "upstream_state": "OPEN",
+    "updated_at": "2026-11-19T10:35:49Z",
+    "human_responses": 0,
+    "linked_solution": "usestrix/strix#pr:1786"
+  },
+  "previous_local_validation": {
+    "build_and_installer_tests": 6,
+    "viewer_and_pdf_tests": 68,
+    "record": "round-2026-11-19.json"
+  },
+  "assessment": "All six pytest jobs reached the runner limit, including the pinned base jobs. These runs establish a shared timeout symptom. The full suite result and a common underlying cause are undetermined. The completed focused jobs and the review evidence do not indicate a patch-specific correction.",
+  "fork_application_code_changed": false,
+  "resume": "Recheck both PR heads, reviews and CI after a new upstream base or pytest reliability fix is available. Follow #1785 through #1786. Resume broad discovery from the existing completed inventory checkpoint."
+}
