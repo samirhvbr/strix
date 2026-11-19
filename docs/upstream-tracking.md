@@ -1,7 +1,6 @@
 # Upstream continuity record
 
-**Targeted PR follow-up in progress:** [November 18, 2026](UPSTREAM_PR_FOLLOWUP_2026-11-18.md).
-The previous completed inventory and code synchronization remain unchanged.
+**Recent PR follow-up:** [November 18, 2026](UPSTREAM_PR_FOLLOWUP_2026-11-18.md).
 
 Start every review here, then read the [native IPv6 and full Opengrep follow-up](UPSTREAM_SANDBOX_AMD64_IPV6_OPENGREP_2026-11-12.md),
 the [native amd64 runtime follow-up](UPSTREAM_SANDBOX_AMD64_2026-11-12.md),
@@ -23,8 +22,8 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Fork source and release | Published `shvia-v1.2.54` from `013fa614` on 2026-11-12 at 12:02:03 UTC. Subsequent continuity commits add documentation, comments and test infrastructure. | Fork #63 passed all 15 checks. Four native binaries passed version smokes; downloaded binaries and `SHA256SUMS` passed integrity checks. The same sandbox digest later passed native amd64 runtime acceptance. |
-| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Observed main `01119158` and upstream release v1.7.1. TUI startup from #61, Opengrep and sandbox 1.4.1 were selectively delivered through #63; this does not advance the full synchronization. |
+| Fork source and release | Latest observed published release is `shvia-v1.2.55` at `02d6a1a7`. Fork source `0f69075f` declares 1.2.56. | Release observations and code synchronization have independent checkpoints. |
+| Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Upstream release v1.7.1 was observed separately. TUI startup from #61, Opengrep and sandbox 1.4.1 were selectively delivered through #63; this does not advance the full synchronization. |
 | Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | Reviewed sandbox migration, MCP retry, terminal input and dependency finding identity. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
@@ -160,8 +159,9 @@ fork release is [1.2.54](https://github.com/samirhvbr/strix/releases/tag/shvia-v
 matching `.fork-version`. [release-audit.json](upstream-tracking/release-audit.json)
 retains the earlier audit.
 
-The upstream CI prerequisites #1577, #1657, #1658 and #1660 await review. After their
-fixes land in main, check fresh base-aware CI for #1708, #1710, #1712 and #1713.
+Upstream merged #1577. The November 18 [PR follow-up](UPSTREAM_PR_FOLLOWUP_2026-11-18.md)
+records the remaining CI prerequisites and the successful combined diagnostic.
+Recheck #1708, #1710, #1712 and #1713 after the remaining prerequisites land.
 The #61 backport is delivered and released; compare later upstream changes with the
 source SHAs carried here before applying another backport. The selected integration did
 not refresh other contributions or advance the inventory cursor.

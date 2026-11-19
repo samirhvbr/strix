@@ -1,28 +1,38 @@
 # Open upstream PR follow-up, November 18, 2026
 
-Status: in progress. This targeted follow-up covers all 31 open upstream PRs by
-`samirhvbr`. The broad inventory and full synchronization are unchanged.
-Pinned upstream main: `1152d53579d5b3af37ada8c798f197ab093b99c6`.
+This review covers all 31 open upstream PRs by `samirhvbr` observed at the start
+of the round. The reviewed base was upstream `1152d535`. See the
+[per-item results](upstream-tracking/pr-followup-2026-11-18.json).
 
-The initial CI audit separates pending/expired approval, pytest timeouts also
-observed on main, inherited test failures and an actionlint download failure.
-PR #1577 merged at `fe3b30ea`; #1657, #1658 and #1660 remain pending upstream.
+| Initial CI status | PRs |
+| --- | ---: |
+| Awaiting maintainer approval | 12 |
+| Approval expired before jobs ran | 3 |
+| Pytest timed out | 13 |
+| Inherited test failures (#1658) | 1 |
+| Actionlint download failed and pytest timed out (#1660) | 1 |
+| No Actions run on the reviewed head (#1708) | 1 |
 
-PR #1469 was updated without rewriting history to `c2a48b70765b8ae4558217a2c2605251440db797`.
-Its dependency race fixture now supplies the reachability verdict and explicit
-synthetic call path required by current upstream. Two failures pass after adaptation.
-The new upstream CI is being observed separately.
+[PR #1469](https://github.com/usestrix/strix/pull/1469) was updated to `c2a48b70`
+with a fixture adjustment for the upstream dependency report schema. Two tests
+failed before the adjustment. All five race tests passed afterward. In the
+expanded suite, 212 passed and the one failure matched the existing coverage
+issue [#1767](https://github.com/usestrix/strix/issues/1767). Pyright reported
+the same 945 diagnostics as the base. The [individual upstream run](https://github.com/usestrix/strix/actions/runs/44288778569)
+passed lint, TUI, viewer and wheel. Both Python jobs reached the 15-minute limit.
 
-Local combined verification of 13 runtime PRs passed 425 tests and the Go race suite.
-The #1469 reporting suite passed 212 tests and exposed one independent base failure
-already reported in #1767 and covered by the open proposal #1742.
+[PR #1577](https://github.com/usestrix/strix/pull/1577) merged at `fe3b30ea`.
+The fork already has equivalent runner fixtures. PRs #1657, #1658 and #1660
+remain open. [PR #1742](https://github.com/usestrix/strix/pull/1742) also covers
+several base failures, including the missing coverage mapping in #1767.
 
-A [separate combined diagnostic](https://github.com/samirhvbr/strix/actions/runs/44289647242)
-at `f5658da4` now tests the 31 heads on current main, with only the missing coverage
-mapping from #1742. It uses no provider-test exclusion or process-isolation workaround.
-Two integration conflicts were explicitly reconciled and are recorded in provenance.
-Neither local result nor this combined workflow is individual upstream PR CI.
+The [combined fork diagnostic](https://github.com/samirhvbr/strix/actions/runs/44289647242)
+passed all six jobs at `f5658da4`. Python 3.12 and 3.14 each reported 2,845 passed
+and three expected failures. Its tree combines the 31 reviewed heads, including
+the updated #1469, and the ten-line coverage mapping from #1742. The record
+lists both composition conflict resolutions. The suite ran both Python jobs
+without provider test exclusions. These results apply to the diagnostic tree.
 
-Next: observe both running workflows and complete the per-item ledger update.
-Preserve imported SHAs, previous histories, code-sync and inventory cursors.
-See the [progress record](upstream-tracking/pr-followup-2026-11-18.json).
+The initial CI statuses, reviewed heads, newer #1469 status, source provenance,
+and completed checks are recorded separately from fork adoption. The November 19
+follow-up records later GitHub observations.
