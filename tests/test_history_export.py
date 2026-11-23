@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -10,11 +11,16 @@ import time
 
 import pytest
 
+from strix.core.assessment import bind_assessment_policy
+from strix.core.assessment_context import bind_context
+from strix.core.assessment_review import NO_CONTEXT_SHA256, load_review_scope
+from strix.core.evidence_ledger import EvidenceError
 from strix.core.history_export import export_history
 from strix.core.run_lease import controller_lease
 from strix.core.test_catalog import TestCatalog
 from strix.interface.history_export import run_history_export
 from strix.telemetry.test_ledger import TestLedger
+from tests.test_assessment_context import config
 from tests.test_assessment_review import fixture_run, snapshot_files
 
 
@@ -188,3 +194,59 @@ async def test_a_run_that_stopped_before_its_first_test_still_exports_its_histor
     assert data["telemetry"]["tests"] == []
     assert data["runtime"]["status"] == "running"
     await executor.close()
+
+
+def scope_only_run(tmp_path):
+    """A run the site's «Executar» starts: the approved policy and no identity context."""
+    run = tmp_path / "scan"
+    state = run / ".state"
+    state.mkdir(parents=True, mode=0o700)
+    policy, _ = config(8080)
+    bind_assessment_policy(state, "scan", policy, resuming=False)
+    assert bind_context(state, "scan", policy, None, resuming=False) is None
+    assert json.loads((state / "assessment-context.json").read_text())["context"] is None
+    return run
+
+
+def test_a_scope_only_run_exports_its_history_with_the_digest_of_no_context(tmp_path, capsys):
+    """Every «Executar» run stayed RUNNING on the site: its history never exported (2026-11-17)."""
+    run = scope_only_run(tmp_path)
+    record(run)
+    state = run / ".state"
+    catalog = TestCatalog()
+    catalog.set_snapshot_path(state / "test_catalog.json")
+    with controller_lease(state):
+        ledger = TestLedger(
+            state / "test_telemetry.db", scan_id="scan", catalog=catalog, owns_agent=lambda _: True
+        )
+        ledger.sync_test(catalog.register(agent_id="child", name="PRIVATE TASK"))
+        ledger.close()
+    before = snapshot_files(run)
+    data = export_history(run)
+    assert data["assessment_id"] == "assessment"
+    assert data["context_sha256"] == hashlib.sha256(b"null").hexdigest() == NO_CONTEXT_SHA256
+    assert len(data["telemetry"]["tests"]) == 1
+    assert snapshot_files(run) == before, "the export writes nothing"
+    assert run_history_export([str(run)]) == 0
+    assert "PRIVATE" not in capsys.readouterr().out
+    # Review and retest judge identity cases: a run with no context still has none to judge.
+    with pytest.raises(EvidenceError, match="context required"):
+        load_review_scope(run)
+
+
+def test_a_scope_only_run_holding_identity_evidence_is_refused(tmp_path, capsys):
+    run = scope_only_run(tmp_path)
+    record(run)
+    state = run / ".state"
+    with controller_lease(state):
+        TestLedger(
+            state / "test_telemetry.db",
+            scan_id="scan",
+            catalog=TestCatalog(),
+            owns_agent=lambda _: True,
+        ).close()
+    (state / "evidence.db").write_bytes(b"")
+    with pytest.raises(EvidenceError, match="identity context is missing"):
+        export_history(run)
+    assert run_history_export([str(run)]) == 1
+    assert capsys.readouterr().err == '{"error":"assessment_history_unavailable"}\n'

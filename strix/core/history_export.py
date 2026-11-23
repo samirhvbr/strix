@@ -14,7 +14,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from strix.core.assessment_review import load_review_scope
+from strix.core.assessment_review import context_sha256, load_export_scope
 from strix.telemetry.read_snapshot import ledger_snapshot
 
 
@@ -87,13 +87,13 @@ def _runtime(record: dict[str, Any]) -> dict[str, Any]:
 @contextmanager
 def stopped_assessment(
     directory: Path,
-) -> Iterator[tuple[Path, AssessmentPolicy, AssessmentContext]]:
+) -> Iterator[tuple[Path, AssessmentPolicy, AssessmentContext | None]]:
     if os.name != "posix":
         raise ValueError("Private history export requires POSIX")
     import fcntl  # noqa: PLC0415 -- POSIX-only ownership.
 
     directory = directory.absolute()
-    policy, context = load_review_scope(directory)
+    policy, context = load_export_scope(directory)
     state = directory / ".state"
     # Existing ownership only: never create a lock, migrate a database or recover a writer.
     lock = os.open(state / "controller.lock", os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
@@ -160,7 +160,7 @@ def export_history(run_directory: Path) -> dict[str, Any]:
             "version": 1,
             "source": "native_metadata_v1",
             "assessment_id": policy.assessment_id,
-            "context_sha256": context.digest,
+            "context_sha256": context_sha256(context),
             "scan_id": directory.name,
             "runtime": _runtime(record),
             "telemetry": telemetry,

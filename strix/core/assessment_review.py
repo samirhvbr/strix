@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import os
 import re
 import stat
 from datetime import UTC, datetime
@@ -145,8 +147,13 @@ def _regular(path: Path) -> None:
         raise EvidenceError("Review requires regular local records")
 
 
-def load_review_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentContext]:
-    """Read and validate the existing immutable scope without creating state."""
+# The digest of an approved context is the sha256 of its canonical JSON. A scope-only
+# assessment (the site's quick authorization, engine 1.2.41) is approved with no context,
+# and its binding keeps `context: null`; the same formula over that value is this constant.
+NO_CONTEXT_SHA256 = hashlib.sha256(b"null").hexdigest()
+
+
+def _load_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentContext | None]:
     directory = directory.absolute()
     # Reject directory aliases as well as linked files; the OS account is the trust boundary.
     if any(path.is_symlink() for path in (directory, *directory.parents)):
@@ -170,10 +177,41 @@ def load_review_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentCont
         raise EvidenceError("Invalid review scope binding")
     policy = parse_assessment_policy(policy_record["policy"])
     context = parse_context(context_record["context"])
-    if policy is None or context is None or context_record["policy_sha256"] != policy.digest:
+    if policy is None or context_record["policy_sha256"] != policy.digest:
         raise EvidenceError("Controlled assessment context required for review")
-    context.validate_scope(policy)
+    if context is not None:
+        context.validate_scope(policy)
     return policy, context
+
+
+def load_review_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentContext]:
+    """Read and validate the existing immutable scope without creating state."""
+    policy, context = _load_scope(directory)
+    # Evidence review and retest judge identity cases, which only a context defines.
+    if context is None:
+        raise EvidenceError("Controlled assessment context required for review")
+    return policy, context
+
+
+def load_export_scope(directory: Path) -> tuple[AssessmentPolicy, AssessmentContext | None]:
+    """The scope of a stopped run for the history and report exports.
+
+    The same checks as review, except that a scope-only run (no identity context) is
+    accepted: its records are still bound to the approved policy, and it never holds
+    identity evidence (`bind_context` refuses one that does). Until 1.2.57 the exports
+    required the context, so no run started from the site's «Executar» ever reached it:
+    the Desktop asked again every pass and «Meus testes» kept every one RUNNING
+    (measured on 2026-11-17 on three runs of 06/11 to 11/11).
+    """
+    policy, context = _load_scope(directory)
+    if context is None and os.path.lexists(directory.absolute() / ".state" / "evidence.db"):
+        raise EvidenceError("Required assessment identity context is missing")
+    return policy, context
+
+
+def context_sha256(context: AssessmentContext | None) -> str:
+    """The context digest an export carries: the context's own, or NO_CONTEXT_SHA256."""
+    return context.digest if context is not None else NO_CONTEXT_SHA256
 
 
 def review_assessment(directory: Path) -> dict[str, Any]:
