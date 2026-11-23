@@ -10,6 +10,7 @@ import json
 import re
 from typing import TYPE_CHECKING, Any, cast
 
+from strix.core.assessment_review import context_sha256
 from strix.core.history_export import RUN_RECORD_LIMIT, _read, stopped_assessment
 
 
@@ -197,7 +198,7 @@ def export_report(run_directory: Path) -> dict[str, Any]:
             "version": 1,
             "source": "native_report_v1",
             "assessment_id": policy.assessment_id,
-            "context_sha256": context.digest,
+            "context_sha256": context_sha256(context),
             "scan_id": directory.name,
             "scan_results": {key: results.get(key) for key in SECTIONS},
             "findings": selected if findings is not None else None,

@@ -8,11 +8,13 @@ from pathlib import Path
 
 import pytest
 
+from strix.core.assessment_review import NO_CONTEXT_SHA256
 from strix.core.history_export import stopped_assessment
 from strix.core.report_export import export_report
 from strix.core.run_lease import controller_lease
 from strix.interface.report_export import run_report_export
 from tests.test_assessment_review import fixture_run, snapshot_files
+from tests.test_history_export import scope_only_run
 
 
 pytestmark = pytest.mark.skipif(os.name != "posix", reason="private POSIX report")
@@ -306,3 +308,18 @@ async def test_a_long_runs_record_past_the_old_bound_still_exports_its_report(tm
     assert (run / "run.json").stat().st_size > 4 * 1024 * 1024
     assert export_report(run)["scan_results"]["executive_summary"] == "Long run."
     await executor.close()
+
+
+def test_a_scope_only_run_exports_its_report_with_the_digest_of_no_context(tmp_path, capsys):
+    """The report of an «Executar» run reaches the site too: the same digest as its history."""
+    run = scope_only_run(tmp_path)
+    with controller_lease(run / ".state"):
+        pass
+    summary = {"executive_summary": "No confirmed vulnerability."}
+    write(run / "run.json", {"run_id": run.name, "scan_results": summary})
+    data = export_report(run)
+    assert data["assessment_id"] == "assessment"
+    assert data["context_sha256"] == NO_CONTEXT_SHA256
+    assert data["scan_results"]["executive_summary"] == "No confirmed vulnerability."
+    assert run_report_export([str(run)]) == 0
+    assert json.loads(capsys.readouterr().out)["context_sha256"] == NO_CONTEXT_SHA256
