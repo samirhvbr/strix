@@ -810,12 +810,22 @@ class ReportState:
                 raise ValueError("Network policy cannot change on resume; start a new run")
             config["network_policy"] = saved_policy
         self.scan_config = config
-        self.run_record["status"] = "running"
-        self.run_record["end_time"] = None
-        self.run_record.pop("scan_results", None)
-        self.end_time = None
-        self.scan_results = None
-        self.final_scan_result = None
+        # A run that already completed keeps its result until a new finish_scan replaces
+        # it. Until 1.2.58 every resume reopened the record here, before any new work:
+        # status back to "running", end time and scan results dropped. A resume that only
+        # looked, or died, then left a finished run "running" with no result for good,
+        # and its PDF incomplete (money-shvia-org_6af7: finished at 23:16 UTC on
+        # 2026-11-23, resumed the next morning, that resume ended two seconds later).
+        # Cleanup already leaves a completed record as it is.
+        if self.run_record.get("status") != "completed":
+            self.run_record["status"] = "running"
+            self.run_record["end_time"] = None
+            self.run_record.pop("scan_results", None)
+            self.end_time = None
+            self.scan_results = None
+            self.final_scan_result = None
+        else:
+            logger.info("Resuming a completed run: its result stays until a new finish_scan")
         self.run_record.update(
             {
                 "targets_info": config.get("targets", []),
