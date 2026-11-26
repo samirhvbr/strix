@@ -2,7 +2,8 @@
 
 **Latest operational review** [November 26, 2026](UPSTREAM_REVIEW_2026-11-26.md).
 
-**Latest targeted follow-up** [CI and review for #1784 and #1786](UPSTREAM_CI_1784_1786_2026-11-19.md).
+**Latest targeted follow-up** [CI and feedback for #1840, #1838 and #1839](UPSTREAM_FOLLOWUP_1840_2026-11-26.md).
+See the [previous CI follow-up for #1784 and #1786](UPSTREAM_CI_1784_1786_2026-11-19.md).
 The [November 19 operational review](UPSTREAM_REVIEW_2026-11-19.md) records publication and inventory coverage.
 See the [November 18 CI follow-up](UPSTREAM_PR_FOLLOWUP_2026-11-18.md) for the preceding 31-PR diagnostic.
 

@@ -635,14 +635,14 @@
       "Preserved source_triage is historical input evidence. Current top-level overrides take precedence over stale triage claims."
     ],
     "counts": {
-      "total_records": 822,
+      "total_records": 823,
       "review_depth": {
         "identified": 143,
-        "triage": 587,
+        "triage": 588,
         "deep": 92
       },
       "fork_decisions": {
-        "pending": 350,
+        "pending": 351,
         "incorporated_fully": 62,
         "adapted": 25,
         "already_covered": 103,
@@ -663,7 +663,7 @@
         "delivered_in_fork": 3,
         "merged_review_branch": 2,
         "published_upstream_pending_fork_evaluation": 22,
-        "upstream_fix_proposed_pending_review": 7,
+        "upstream_fix_proposed_pending_review": 8,
         "awaiting_upstream_contract_decision": 6,
         "merged_master": 2
       },
@@ -1554,7 +1554,7 @@
         }
       }
     ],
-    "last_incremental_update_at": "2026-11-26T12:03:01.689838+00:00",
+    "last_incremental_update_at": "2026-11-26T14:55:06.168118+00:00",
     "latest_known_recheck": {
       "at": "2026-11-12T09:23:04.826021+00:00",
       "record": "round-2026-11-12.json",
@@ -1873,6 +1873,27 @@
         "inventory_checkpoint_advanced": false,
         "full_upstream_sync_advanced": false,
         "release_changed": false
+      },
+      {
+        "event_id": "targeted-ci-1840-2026-11-26",
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "report": "../UPSTREAM_FOLLOWUP_1840_2026-11-26.md",
+        "scope": "Current-head CI and review feedback for #1840, issue responses, and scoped diff inspection of linked #1841.",
+        "source_ledger_commit": "ed6ab21f8ba5e1daa1e7e391d57ddb540130c602",
+        "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "known_ids_rechecked": [
+          "usestrix/strix#pr:1840",
+          "usestrix/strix#issue:1837",
+          "usestrix/strix#issue:1838",
+          "usestrix/strix#issue:1839"
+        ],
+        "new_ids": [
+          "usestrix/strix#pr:1841"
+        ],
+        "current_ledger_records": 823,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false
       }
     ],
     "counts_history": [
@@ -2138,6 +2159,50 @@
             "issue": 247
           },
           "inventory_count_basis": "Paginated open inventory with subsequently verified publications."
+        }
+      },
+      {
+        "recorded_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "previous_counts": {
+          "total_records": 822,
+          "review_depth": {
+            "identified": 143,
+            "triage": 587,
+            "deep": 92
+          },
+          "fork_decisions": {
+            "pending": 350,
+            "incorporated_fully": 62,
+            "adapted": 25,
+            "already_covered": 103,
+            "deferred": 241,
+            "discarded": 40,
+            "incorporated_partially": 1
+          },
+          "implementation_phases": {
+            "unknown": 118,
+            "present_before_round": 54,
+            "integrated_review_branch": 55,
+            "decision_required": 122,
+            "deferred": 240,
+            "not_planned": 32,
+            "pending": 153,
+            "proposed_in_fork_review": 1,
+            "released": 5,
+            "delivered_in_fork": 3,
+            "merged_review_branch": 2,
+            "published_upstream_pending_fork_evaluation": 22,
+            "upstream_fix_proposed_pending_review": 7,
+            "awaiting_upstream_contract_decision": 6,
+            "merged_master": 2
+          },
+          "fork_catalog": 63,
+          "upstream_open_inventory": {
+            "issue": 263,
+            "pr": 386
+          },
+          "inventory_count_basis": "Paginated open inventory with the four verified publications."
         }
       }
     ],
@@ -2714,22 +2779,25 @@
       ]
     },
     "latest_targeted_followup": {
-      "event_id": "targeted-ci-1784-1786-2026-11-19",
-      "checked_at": "2026-11-19T11:51:15.532031+00:00",
-      "record": "ci-1784-1786-2026-11-19.json",
-      "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
-      "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
-      "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
-      "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "event_id": "targeted-ci-1840-2026-11-26",
+      "checked_at": "2026-11-26T14:55:06.168118+00:00",
+      "record": "ci-1840-2026-11-26.json",
+      "report": "../UPSTREAM_FOLLOWUP_1840_2026-11-26.md",
+      "scope": "Current-head CI and review feedback for #1840, issue responses, and scoped diff inspection of linked #1841.",
+      "source_ledger_commit": "ed6ab21f8ba5e1daa1e7e391d57ddb540130c602",
+      "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
       "known_ids_rechecked": [
-        "usestrix/strix#pr:1784",
-        "usestrix/strix#pr:1786",
-        "usestrix/strix#issue:1785"
+        "usestrix/strix#pr:1840",
+        "usestrix/strix#issue:1837",
+        "usestrix/strix#issue:1838",
+        "usestrix/strix#issue:1839"
       ],
-      "current_ledger_records": 769,
+      "new_ids": [
+        "usestrix/strix#pr:1841"
+      ],
+      "current_ledger_records": 823,
       "inventory_checkpoint_advanced": false,
-      "full_upstream_sync_advanced": false,
-      "release_changed": false
+      "full_upstream_sync_advanced": false
     },
     "latest_operational_review": {
       "record": "round-2026-11-26.json",
@@ -141001,8 +141069,8 @@
         }
       ],
       "updated_at": "2026-11-26T11:56:39Z",
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
+      "last_checked": "2026-11-26T14:55:06.168118+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
       "review_checked_at": "2026-11-26T12:03:01.689838+00:00",
       "review_scope": "Document data sent by the viewer relay and usage telemetry. The code from main was checked using synthetic inputs and the proposed docs are in #1840.",
       "analyzed_version": {
@@ -141016,9 +141084,15 @@
         "Maintainer feedback, merge, a relevant head change, or a fresh exact-base validation."
       ],
       "latest_recheck": {
-        "record": "round-2026-11-26.json",
-        "at": "2026-11-26T12:03:01.689838+00:00",
+        "at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
         "result": "available"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "direct_comments": 0,
+        "linked_solution": "usestrix/strix#pr:1840"
       }
     },
     {
@@ -141058,22 +141132,31 @@
         }
       ],
       "updated_at": "2026-11-26T11:57:15Z",
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
+      "last_checked": "2026-11-26T14:55:06.168118+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
       "review_checked_at": "2026-11-26T12:03:01.689838+00:00",
       "review_scope": "A macOS ARM64 wheel can bundle a Linux ARM64 Go sidecar. Both real builds succeeded, with different executable headers. Await the upstream native versus cross-build contract.",
       "analyzed_version": {
         "upstream_base_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
         "reviewed_item_sha": null
       },
-      "linked_items": [],
+      "linked_items": [
+        "usestrix/strix#pr:1841"
+      ],
       "revisit_conditions": [
         "Maintainer feedback, merge, a relevant head change, or a fresh exact-base validation."
       ],
       "latest_recheck": {
-        "record": "round-2026-11-26.json",
-        "at": "2026-11-26T12:03:01.689838+00:00",
+        "at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
         "result": "available"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "maintainer_responses": 0,
+        "direct_comments": 0,
+        "community_proposal": "usestrix/strix#pr:1841"
       }
     },
     {
@@ -141112,9 +141195,9 @@
           "record": "round-2026-11-26.json"
         }
       ],
-      "updated_at": "2026-11-26T11:57:49Z",
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
+      "updated_at": "2026-11-26T14:36:03Z",
+      "last_checked": "2026-11-26T14:55:06.168118+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
       "review_checked_at": "2026-11-26T12:03:01.689838+00:00",
       "review_scope": "Ruff and Mypy pass on unchanged main, and make check-all exits 2 at 968 Pyright diagnostics. The upstream CI lint job passes without Pyright. Await maintainer direction on contributor checks.",
       "analyzed_version": {
@@ -141129,9 +141212,37 @@
         "Maintainer feedback, merge, a relevant head change, or a fresh exact-base validation."
       ],
       "latest_recheck": {
-        "record": "round-2026-11-26.json",
-        "at": "2026-11-26T12:03:01.689838+00:00",
+        "at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
         "result": "available"
+      },
+      "observation_history": [
+        {
+          "at": "2026-11-26T14:55:06.168118+00:00",
+          "record": "ci-1840-2026-11-26.json",
+          "previous": {
+            "state": "OPEN",
+            "updated_at": "2026-11-26T11:57:49Z"
+          },
+          "observed": {
+            "state": "OPEN",
+            "updated_at": "2026-11-26T14:36:03Z"
+          }
+        }
+      ],
+      "latest_feedback": {
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "maintainer_responses": 0,
+        "independent_reproduction": {
+          "author": "ecryptoguru",
+          "author_association": "NONE",
+          "created_at": "2026-11-26T14:36:03Z",
+          "html_url": "https://github.com/usestrix/strix/issues/1839#issuecomment-7195053186",
+          "updated_at": "2026-11-26T14:36:03Z",
+          "pyright_error_count": 968
+        },
+        "pending": "Maintainer direction on advisory Pyright versus requiring no new diagnostics."
       }
     },
     {
@@ -141164,7 +141275,15 @@
       },
       "validation": {
         "summary": "Clarify selected-run disk reads, email verification, feedback and report relay requests, and telemetry. Documentation only. 11 viewer auth tests, stub request assertions, docs link and diff checks passed.",
-        "record": "round-2026-11-26.json"
+        "record": "round-2026-11-26.json",
+        "upstream_ci": {
+          "checked_at": "2026-11-26T14:55:06.168118+00:00",
+          "record": "ci-1840-2026-11-26.json",
+          "head_sha": "f37744a662f14f8d2610a4f459575c4fc8deffe9",
+          "state": "completed_with_pytest_timeouts",
+          "workflow_run": 45815799641,
+          "exact_base_workflow_run": 45671540630
+        }
       },
       "decision_history": [
         {
@@ -141174,9 +141293,9 @@
           "record": "round-2026-11-26.json"
         }
       ],
-      "updated_at": "2026-11-26T12:01:27Z",
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
+      "updated_at": "2026-11-26T12:03:41Z",
+      "last_checked": "2026-11-26T14:55:06.168118+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
       "review_checked_at": "2026-11-26T12:03:01.689838+00:00",
       "review_scope": "Clarify selected-run disk reads, email verification, feedback and report relay requests, and telemetry. Documentation only. 11 viewer auth tests, stub request assertions, docs link and diff checks passed.",
       "analyzed_version": {
@@ -141190,10 +141309,107 @@
         "Maintainer feedback, merge, a relevant head change, or a fresh exact-base validation."
       ],
       "latest_recheck": {
-        "record": "round-2026-11-26.json",
-        "at": "2026-11-26T12:03:01.689838+00:00",
+        "at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
         "result": "available"
+      },
+      "observation_history": [
+        {
+          "at": "2026-11-26T14:55:06.168118+00:00",
+          "record": "ci-1840-2026-11-26.json",
+          "previous": {
+            "state": "OPEN",
+            "updated_at": "2026-11-26T12:01:27Z"
+          },
+          "observed": {
+            "state": "OPEN",
+            "updated_at": "2026-11-26T12:03:41Z"
+          }
+        }
+      ],
+      "latest_feedback": {
+        "maintainer_responses": 0,
+        "arcanist": {
+          "reviewed_sha": "f37744a662f14f8d2610a4f459575c4fc8deffe9",
+          "result": "clear",
+          "url": "https://github.com/usestrix/strix/pull/1840#pullrequestreview-6073811976"
+        },
+        "greptile": {
+          "reviewed_sha": "3f5560a3ed5e43786eea3711099939f3f789b3e8",
+          "addressed_by": "f37744a662f14f8d2610a4f459575c4fc8deffe9",
+          "url": "https://github.com/usestrix/strix/pull/1840#discussion_r4708058059",
+          "resolved": false,
+          "outdated": true,
+          "change": "Clarify telemetry at viewer startup, including --no-open."
+        },
+        "mintlify": {
+          "conclusion": "neutral",
+          "reason": "Fork preview requires approval by someone with upstream write access.",
+          "url": "https://github.com/usestrix/strix/pull/1840#issuecomment-7191410049"
+        },
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json"
       }
+    },
+    {
+      "id": "usestrix/strix#pr:1841",
+      "repository": "usestrix/strix",
+      "kind": "pr",
+      "number": 1841,
+      "title": "Native wheel can contain a TUI sidecar for a different OS",
+      "url": "https://github.com/usestrix/strix/pull/1841",
+      "upstream_state": "OPEN",
+      "fork_pr_state": null,
+      "source": {
+        "observed_head_sha": "0793caec378152305d47f1155d9808c720df5c0b",
+        "base_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "base_branch": "main",
+        "draft": false,
+        "closed_at": null,
+        "merged_at": null,
+        "merge_commit": null
+      },
+      "reviewed_sha": "0793caec378152305d47f1155d9808c720df5c0b",
+      "review_depth": "triage",
+      "fork_decision": "pending",
+      "rationale": "Community proposal for #1838. Confirm the native build contract and validation before adoption.",
+      "implementation": {
+        "phase": "upstream_fix_proposed_pending_review",
+        "source_reviewed_sha": "0793caec378152305d47f1155d9808c720df5c0b",
+        "source_imported_sha": null,
+        "fork_commits": []
+      },
+      "validation": {
+        "record": "ci-1840-2026-11-26.json",
+        "summary": "Scoped diff inspection. Author reports no automated test run. Both Actions workflows require approval and have zero jobs.",
+        "limits": [
+          "No independent build or test of this patch."
+        ]
+      },
+      "decision_history": [
+        {
+          "recorded_at": "2026-11-26T14:55:06.168118+00:00",
+          "event": "cataloged",
+          "decision": "pending",
+          "record": "ci-1840-2026-11-26.json"
+        }
+      ],
+      "updated_at": "2026-11-26T12:57:47Z",
+      "last_checked": "2026-11-26T14:55:06.168118+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
+      "review_checked_at": "2026-11-26T14:55:06.168118+00:00",
+      "review_scope": "Go target/wheel tag check and test validation status.",
+      "analyzed_version": {
+        "upstream_base_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "reviewed_item_sha": "0793caec378152305d47f1155d9808c720df5c0b"
+      },
+      "review_head_status": "matches_observed_head",
+      "linked_items": [
+        "usestrix/strix#issue:1838"
+      ],
+      "revisit_conditions": [
+        "Maintainer direction on the build contract, a newer head, or validated Actions runs."
+      ]
     }
   ]
 }

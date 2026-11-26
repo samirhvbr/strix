@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-26T12:03:01.689838+00:00",
+  "updated_at": "2026-11-26T14:55:06.168118+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -1989,22 +1989,25 @@
       "summary": "Greptile5/5; no change requested."
     },
     "latest_targeted_followup": {
-      "event_id": "targeted-ci-1784-1786-2026-11-19",
-      "checked_at": "2026-11-19T11:51:15.532031+00:00",
-      "record": "ci-1784-1786-2026-11-19.json",
-      "report": "../UPSTREAM_CI_1784_1786_2026-11-19.md",
-      "scope": "Current-head CI and review feedback for #1784 and #1786, plus the state of linked issue #1785.",
-      "source_ledger_commit": "8d3853ac835fb8e0e9a15cdab103e3e1393cac8a",
-      "upstream_observed_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
+      "event_id": "targeted-ci-1840-2026-11-26",
+      "checked_at": "2026-11-26T14:55:06.168118+00:00",
+      "record": "ci-1840-2026-11-26.json",
+      "report": "../UPSTREAM_FOLLOWUP_1840_2026-11-26.md",
+      "scope": "Current-head CI and review feedback for #1840, issue responses, and scoped diff inspection of linked #1841.",
+      "source_ledger_commit": "ed6ab21f8ba5e1daa1e7e391d57ddb540130c602",
+      "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
       "known_ids_rechecked": [
-        "usestrix/strix#pr:1784",
-        "usestrix/strix#pr:1786",
-        "usestrix/strix#issue:1785"
+        "usestrix/strix#pr:1840",
+        "usestrix/strix#issue:1837",
+        "usestrix/strix#issue:1838",
+        "usestrix/strix#issue:1839"
       ],
-      "current_ledger_records": 769,
+      "new_ids": [
+        "usestrix/strix#pr:1841"
+      ],
+      "current_ledger_records": 823,
       "inventory_checkpoint_advanced": false,
-      "full_upstream_sync_advanced": false,
-      "release_changed": false
+      "full_upstream_sync_advanced": false
     },
     "targeted_followup_history": [
       {
@@ -2115,6 +2118,27 @@
         "inventory_checkpoint_advanced": false,
         "full_upstream_sync_advanced": false,
         "release_changed": false
+      },
+      {
+        "event_id": "targeted-ci-1840-2026-11-26",
+        "checked_at": "2026-11-26T14:55:06.168118+00:00",
+        "record": "ci-1840-2026-11-26.json",
+        "report": "../UPSTREAM_FOLLOWUP_1840_2026-11-26.md",
+        "scope": "Current-head CI and review feedback for #1840, issue responses, and scoped diff inspection of linked #1841.",
+        "source_ledger_commit": "ed6ab21f8ba5e1daa1e7e391d57ddb540130c602",
+        "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "known_ids_rechecked": [
+          "usestrix/strix#pr:1840",
+          "usestrix/strix#issue:1837",
+          "usestrix/strix#issue:1838",
+          "usestrix/strix#issue:1839"
+        ],
+        "new_ids": [
+          "usestrix/strix#pr:1841"
+        ],
+        "current_ledger_records": 823,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false
       }
     ],
     "last_attempted_inventory_at": "2026-11-26T11:54:38.351507+00:00",
