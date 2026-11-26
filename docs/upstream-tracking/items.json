@@ -1554,7 +1554,7 @@
         }
       }
     ],
-    "last_incremental_update_at": "2026-11-26T14:55:06.168118+00:00",
+    "last_incremental_update_at": "2026-11-26T20:23:19.789862+00:00",
     "latest_known_recheck": {
       "at": "2026-11-12T09:23:04.826021+00:00",
       "record": "round-2026-11-12.json",
@@ -1890,6 +1890,22 @@
         ],
         "new_ids": [
           "usestrix/strix#pr:1841"
+        ],
+        "current_ledger_records": 823,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false
+      },
+      {
+        "event_id": "targeted-review-1713-2026-11-26",
+        "checked_at": "2026-11-26T20:23:19.789862+00:00",
+        "record": "items.json",
+        "report": "../UPSTREAM_REVIEW_2026-11-26.md#follow-up-on-pr-1713",
+        "scope": "Arcanist review on #1713, its exact-head CI, and linked issue #1711.",
+        "source_ledger_commit": "e0493727bd6caac28cb94061a36aa202cb68dbd0",
+        "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "known_ids_rechecked": [
+          "usestrix/strix#pr:1713",
+          "usestrix/strix#issue:1711"
         ],
         "current_ledger_records": 823,
         "inventory_checkpoint_advanced": false,
@@ -2779,21 +2795,16 @@
       ]
     },
     "latest_targeted_followup": {
-      "event_id": "targeted-ci-1840-2026-11-26",
-      "checked_at": "2026-11-26T14:55:06.168118+00:00",
-      "record": "ci-1840-2026-11-26.json",
-      "report": "../UPSTREAM_FOLLOWUP_1840_2026-11-26.md",
-      "scope": "Current-head CI and review feedback for #1840, issue responses, and scoped diff inspection of linked #1841.",
-      "source_ledger_commit": "ed6ab21f8ba5e1daa1e7e391d57ddb540130c602",
+      "event_id": "targeted-review-1713-2026-11-26",
+      "checked_at": "2026-11-26T20:23:19.789862+00:00",
+      "record": "items.json",
+      "report": "../UPSTREAM_REVIEW_2026-11-26.md#follow-up-on-pr-1713",
+      "scope": "Arcanist review on #1713, its exact-head CI, and linked issue #1711.",
+      "source_ledger_commit": "e0493727bd6caac28cb94061a36aa202cb68dbd0",
       "upstream_observed_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
       "known_ids_rechecked": [
-        "usestrix/strix#pr:1840",
-        "usestrix/strix#issue:1837",
-        "usestrix/strix#issue:1838",
-        "usestrix/strix#issue:1839"
-      ],
-      "new_ids": [
-        "usestrix/strix#pr:1841"
+        "usestrix/strix#pr:1713",
+        "usestrix/strix#issue:1711"
       ],
       "current_ledger_records": 823,
       "inventory_checkpoint_advanced": false,
@@ -125589,8 +125600,8 @@
       "url": "https://github.com/usestrix/strix/issues/1711",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
+      "last_checked": "2026-11-26T20:23:19.789862+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
       "updated_at": "2026-11-09T10:13:22Z",
       "source": {
         "observed_head_sha": null,
@@ -125664,11 +125675,14 @@
         }
       ],
       "latest_recheck": {
-        "at": "2026-11-12T09:23:04.826021+00:00",
-        "status": "verified",
-        "verified_changes": {},
-        "scope": "State, head and merge metadata.",
-        "decision_preserved": true
+        "at": "2026-11-26T20:23:19.789862+00:00",
+        "event": "targeted-review-1713-2026-11-26",
+        "result": "available"
+      },
+      "latest_feedback": {
+        "checked_at": "2026-11-26T20:23:19.789862+00:00",
+        "direct_comments": 0,
+        "linked_solution": "usestrix/strix#pr:1713"
       }
     },
     {
@@ -125680,9 +125694,9 @@
       "url": "https://github.com/usestrix/strix/pull/1713",
       "upstream_state": "OPEN",
       "fork_pr_state": null,
-      "last_checked": "2026-11-26T12:03:01.689838+00:00",
-      "last_checked_basis": "GitHub by-ID metadata",
-      "updated_at": "2026-11-23T00:42:08Z",
+      "last_checked": "2026-11-26T20:23:19.789862+00:00",
+      "last_checked_basis": "Targeted GitHub discussion and CI recheck",
+      "updated_at": "2026-11-26T20:13:13Z",
       "source": {
         "observed_head_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
         "base_sha": "215482eb2204cd30ac6b87520e3f5c6511e2e2e8",
@@ -126304,7 +126318,25 @@
             },
             "historical_audit_matches_current_head": true
           }
-        ]
+        ],
+        "latest_exact_head_ci": {
+          "checked_at": "2026-11-26T20:23:19.789862+00:00",
+          "head_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+          "ci_run": 42600153315,
+          "binary_run": 42600153217,
+          "passed_jobs": [
+            "binary",
+            "lint",
+            "tui",
+            "viewer",
+            "wheel"
+          ],
+          "pytest": {
+            "3.12": "timeout",
+            "3.14": "timeout",
+            "timeout_seconds": 900
+          }
+        }
       },
       "linked_items": [
         "https://github.com/usestrix/strix/issues/1711"
@@ -126391,11 +126423,9 @@
       ],
       "review_head_status": "matches_observed_head",
       "latest_recheck": {
-        "at": "2026-11-19T10:28:33.099001+00:00",
-        "status": "verified_targeted",
-        "scope": "Per-ID state/head/base/review and CI; implementation and release unchanged.",
-        "record": "pr-followup-2026-11-18.json",
-        "decision_preserved": true
+        "at": "2026-11-26T20:23:19.789862+00:00",
+        "event": "targeted-review-1713-2026-11-26",
+        "result": "available"
       },
       "observation_history": [
         {
@@ -126553,8 +126583,29 @@
             "merge_commit": null,
             "updated_at": "2026-11-23T00:42:08Z"
           }
+        },
+        {
+          "at": "2026-11-26T20:23:19.789862+00:00",
+          "event": "targeted-review-1713-2026-11-26",
+          "head_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+          "previous_updated_at": "2026-11-23T00:42:08Z",
+          "observed_updated_at": "2026-11-26T20:13:13Z",
+          "review_url": "https://github.com/usestrix/strix/pull/1713#pullrequestreview-6080012235"
         }
-      ]
+      ],
+      "latest_feedback": {
+        "checked_at": "2026-11-26T20:23:19.789862+00:00",
+        "reviewed_sha": "5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73",
+        "author": "arcanist[bot]",
+        "review_state": "COMMENTED",
+        "verdict": "clear",
+        "review_url": "https://github.com/usestrix/strix/pull/1713#pullrequestreview-6080012235",
+        "summary_url": "https://github.com/usestrix/strix/pull/1713#issuecomment-7202427661",
+        "inline_comments": 0,
+        "maintainer_responses": 0,
+        "review_decision": "REVIEW_REQUIRED",
+        "assessment": "The review did not request changes. Its impact notes describe hypothetical failure modes."
+      }
     },
     {
       "id": "usestrix/strix#pr:1722",

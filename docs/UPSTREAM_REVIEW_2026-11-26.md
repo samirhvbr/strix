@@ -64,3 +64,19 @@ and the retained [inventory and synchronization checkpoints](upstream-tracking/c
 First check the four publications, the pending pytest fixes and any moves in
 known items. The code synchronization milestone remains pinned to the last
 validated integration.
+
+## Follow-up on PR #1713
+
+Arcanist reviewed the current head `5fb5ca8bfe2ae1ba48265ccb0f53bd16312a6a73`
+and recorded a clear verdict without inline findings. Its impact notes
+describe possible regressions and the checks used to rule them out.
+GitHub still requires human review. The linked #1711 remains open.
+[Review](https://github.com/usestrix/strix/pull/1713#pullrequestreview-6080012235) ·
+[Review summary](https://github.com/usestrix/strix/pull/1713#issuecomment-7202427661) ·
+[Issue #1711](https://github.com/usestrix/strix/issues/1711)
+
+The same-head CI still shows successful lint, TUI, viewer, and wheel jobs
+and 15-minute timeouts for both pytest versions. Binary passed in its
+separate workflow. Follow a new head, a new CI run, or human review.
+[CI](https://github.com/usestrix/strix/actions/runs/42600153315) ·
+[Binary](https://github.com/usestrix/strix/actions/runs/42600153217)
