@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-19T11:51:15.532031+00:00",
+  "updated_at": "2026-11-26T12:03:01.689838+00:00",
   "repositories": {
     "fork": "https://github.com/samirhvbr/strix",
     "upstream": "https://github.com/usestrix/strix"
@@ -683,10 +683,10 @@
     ],
     "last_observed_upstream": {
       "ref": "refs/heads/main",
-      "sha": "01119158f8f50027591cbae73f37cf0a2fea644d",
-      "observed_at": "2026-11-12T09:40:45.161075+00:00",
+      "sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+      "observed_at": "2026-11-26T12:03:01.689838+00:00",
       "integrated": false,
-      "record": "round-2026-11-12.json"
+      "record": "round-2026-11-26.json"
     },
     "last_selected_patch_validation": {
       "branch": "feat/sandbox-1.4.1-opengrep-20261112",
@@ -796,61 +796,41 @@
         "observed_at": "2026-11-10T10:52:31.495389+00:00",
         "integrated": false,
         "record": "round-2026-11-10.json"
+      },
+      {
+        "ref": "refs/heads/main",
+        "sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "observed_at": "2026-11-26T12:03:01.689838+00:00",
+        "integrated": false,
+        "record": "round-2026-11-26.json"
       }
     ],
     "last_observed_fork_master": {
-      "sha": "013fa614ea4803e2e42b27e11f3b917ed002292e",
-      "version": "1.2.54",
-      "observed_at": "2026-11-12T12:02:55.964909+00:00",
+      "sha": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
       "ref": "refs/heads/master",
+      "version": "1.2.58",
+      "observed_at": "2026-11-26T12:03:01.689838+00:00",
+      "record": "round-2026-11-26.json",
       "release_observation": {
-        "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.54",
-        "published_at": "2026-11-12T12:02:03Z",
-        "tag_name": "shvia-v1.2.54",
-        "peeled_tag_commit": "013fa614ea4803e2e42b27e11f3b917ed002292e",
+        "tag_name": "shvia-v1.2.58",
+        "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.58",
+        "published_at": "2026-11-24T19:39:14Z",
+        "peeled_tag_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
         "assets": [
           {
-            "id": 739314267,
+            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/pentest-aarch64-apple-darwin",
+            "digest": "sha256:6891a2acf0f1a0235b3103a0bd00b43efe5039e2327d896e8ce016f98601514f",
             "name": "pentest-aarch64-apple-darwin",
-            "size": 94847408,
-            "digest": "sha256:7d35a043d32f27797dbd73e5294e7163f372b8e6397ea22c251fc883ba7e2e1a",
-            "state": "uploaded",
-            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-apple-darwin"
+            "size": 95383280
           },
           {
-            "id": 739314263,
-            "name": "pentest-aarch64-unknown-linux-gnu",
-            "size": 115862120,
-            "digest": "sha256:8ff602ce050404ecf84403a674c5e01f148cca179d767970448a8fd8d91c7eb5",
-            "state": "uploaded",
-            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-aarch64-unknown-linux-gnu"
-          },
-          {
-            "id": 739314261,
-            "name": "pentest-x86_64-apple-darwin",
-            "size": 96380928,
-            "digest": "sha256:d8284fa5867e8c08e2e92ca11c08ecd55657bf80a0f166cd28e77392096a8a47",
-            "state": "uploaded",
-            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-apple-darwin"
-          },
-          {
-            "id": 739314271,
-            "name": "pentest-x86_64-unknown-linux-gnu",
-            "size": 118903248,
-            "digest": "sha256:4a0e89ef2e542356c52b43a7950d6cf7b123c68f971c61e10afd41abcb5481aa",
-            "state": "uploaded",
-            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/pentest-x86_64-unknown-linux-gnu"
-          },
-          {
-            "id": 739314264,
+            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/SHA256SUMS",
+            "digest": "sha256:9206f85cc43402ca139f1724613f0e805935ff8982280d24d44c7ab167503f23",
             "name": "SHA256SUMS",
-            "size": 388,
-            "digest": "sha256:782dac687db405d54f1029e4b01dc1fcdc23b9a33ccc80c1947e818cb4644aa8",
-            "state": "uploaded",
-            "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.54/SHA256SUMS"
+            "size": 95
           }
         ],
-        "validation_scope": "Four native CI binaries passed --version and --fork-version; downloaded bytes match SHA256SUMS and GitHub digests; headers verify four architectures. macOS arm64 downloaded release bytes equal the separately executed workflow artifact. Sandbox runtime acceptance is linux/arm64 only. No live scan or production deployment."
+        "validation_scope": "Tag, version and asset metadata only."
       }
     },
     "selected_patch_validation_history": [
@@ -1296,6 +1276,34 @@
           "published_at": "2026-11-09T16:08:46Z",
           "tag_name": "shvia-v1.2.50",
           "peeled_tag_commit": "127cdb0f47a25fe495beec528a3c46db2eeae621"
+        }
+      },
+      {
+        "sha": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+        "ref": "refs/heads/master",
+        "version": "1.2.58",
+        "observed_at": "2026-11-26T12:03:01.689838+00:00",
+        "record": "round-2026-11-26.json",
+        "release_observation": {
+          "tag_name": "shvia-v1.2.58",
+          "html_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.58",
+          "published_at": "2026-11-24T19:39:14Z",
+          "peeled_tag_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+          "assets": [
+            {
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/pentest-aarch64-apple-darwin",
+              "digest": "sha256:6891a2acf0f1a0235b3103a0bd00b43efe5039e2327d896e8ce016f98601514f",
+              "name": "pentest-aarch64-apple-darwin",
+              "size": 95383280
+            },
+            {
+              "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/SHA256SUMS",
+              "digest": "sha256:9206f85cc43402ca139f1724613f0e805935ff8982280d24d44c7ab167503f23",
+              "name": "SHA256SUMS",
+              "size": 95
+            }
+          ],
+          "validation_scope": "Tag, version and asset metadata only."
         }
       }
     ],
@@ -2109,7 +2117,7 @@
         "release_changed": false
       }
     ],
-    "last_attempted_inventory_at": "2026-11-19T10:32:19.331901+00:00",
+    "last_attempted_inventory_at": "2026-11-26T11:54:38.351507+00:00",
     "latest_selective_integration": {
       "event_id": "selective-startup-sandbox-released-2026-11-12",
       "at": "2026-11-12T12:02:55.964909+00:00",
@@ -2136,26 +2144,57 @@
           "usestrix/strix#issue:1785",
           "usestrix/strix#pr:1786"
         ]
+      },
+      {
+        "record": "round-2026-11-26.json",
+        "report": "../UPSTREAM_REVIEW_2026-11-26.md",
+        "checked_at": "2026-11-26T12:03:01.689838+00:00",
+        "observed_upstream_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+        "source_ledger_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+        "scope": "By-ID metadata, paginated discovery and selected operational reviews",
+        "known_verified": 765,
+        "known_unavailable": [
+          "usestrix/strix#pr:1067",
+          "usestrix/strix#pr:1294",
+          "usestrix/strix#pr:1338",
+          "usestrix/strix#pr:1474"
+        ],
+        "new_inventory_items": 49,
+        "publications": [
+          "usestrix/strix#issue:1837",
+          "usestrix/strix#issue:1838",
+          "usestrix/strix#issue:1839",
+          "usestrix/strix#pr:1840"
+        ],
+        "current_ledger_records": 822,
+        "inventory_checkpoint_advanced": false,
+        "full_upstream_sync_advanced": false
       }
     ],
     "latest_operational_review": {
-      "record": "round-2026-11-19.json",
-      "checked_at": "2026-11-19T10:42:46.463530+00:00",
-      "observed_upstream_sha": "8db295a5b3564be2b430bb3a9afdb4db7850fa24",
-      "report": "../UPSTREAM_REVIEW_2026-11-19.md",
-      "scope": "Metadata by ID, paginated discovery and selected operational reviews",
-      "known_verified": 720,
+      "record": "round-2026-11-26.json",
+      "report": "../UPSTREAM_REVIEW_2026-11-26.md",
+      "checked_at": "2026-11-26T12:03:01.689838+00:00",
+      "observed_upstream_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+      "source_ledger_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+      "scope": "By-ID metadata, paginated discovery and selected operational reviews",
+      "known_verified": 765,
       "known_unavailable": [
         "usestrix/strix#pr:1067",
         "usestrix/strix#pr:1294",
-        "usestrix/strix#pr:1338"
+        "usestrix/strix#pr:1338",
+        "usestrix/strix#pr:1474"
       ],
-      "new_items": 46,
+      "new_inventory_items": 49,
       "publications": [
-        "usestrix/strix#pr:1784",
-        "usestrix/strix#issue:1785",
-        "usestrix/strix#pr:1786"
-      ]
+        "usestrix/strix#issue:1837",
+        "usestrix/strix#issue:1838",
+        "usestrix/strix#issue:1839",
+        "usestrix/strix#pr:1840"
+      ],
+      "current_ledger_records": 822,
+      "inventory_checkpoint_advanced": false,
+      "full_upstream_sync_advanced": false
     }
   },
   "version_release_audit": "release-audit.json",

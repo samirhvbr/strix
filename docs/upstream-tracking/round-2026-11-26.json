@@ -1,0 +1,969 @@
+{
+  "schema_version": 1,
+  "record": "round-2026-11-26.json",
+  "report": "../UPSTREAM_REVIEW_2026-11-26.md",
+  "checked_at": "2026-11-26T12:03:01.689838+00:00",
+  "observed_upstream_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+  "source_ledger_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+  "scope": "By-ID metadata, paginated discovery and selected operational reviews",
+  "known_verified": 765,
+  "known_unavailable": [
+    "usestrix/strix#pr:1067",
+    "usestrix/strix#pr:1294",
+    "usestrix/strix#pr:1338",
+    "usestrix/strix#pr:1474"
+  ],
+  "new_inventory_items": 49,
+  "publications": [
+    "usestrix/strix#issue:1837",
+    "usestrix/strix#issue:1838",
+    "usestrix/strix#issue:1839",
+    "usestrix/strix#pr:1840"
+  ],
+  "current_ledger_records": 822,
+  "inventory_checkpoint_advanced": false,
+  "full_upstream_sync_advanced": false,
+  "inventory": {
+    "started_at": "2026-11-26T11:54:28.109517+00:00",
+    "checked_at": "2026-11-26T11:54:38.351507+00:00",
+    "ledger_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+    "scope": "metadata only",
+    "since": "2026-11-07T09:55:23Z",
+    "known_ids": 769,
+    "known_verified": 765,
+    "known_missing": [
+      "usestrix/strix#pr:1067",
+      "usestrix/strix#pr:1294",
+      "usestrix/strix#pr:1338",
+      "usestrix/strix#pr:1474"
+    ],
+    "known_error_details": [
+      {
+        "type": "NOT_FOUND",
+        "path": [
+          "repository",
+          "n1067"
+        ],
+        "locations": [
+          {
+            "line": 1,
+            "column": 3293
+          }
+        ],
+        "message": "Could not resolve to a PullRequest with the number of 1067."
+      },
+      {
+        "type": "NOT_FOUND",
+        "path": [
+          "repository",
+          "n1294"
+        ],
+        "locations": [
+          {
+            "line": 1,
+            "column": 2645
+          }
+        ],
+        "message": "Could not resolve to a PullRequest with the number of 1294."
+      },
+      {
+        "type": "NOT_FOUND",
+        "path": [
+          "repository",
+          "n1338"
+        ],
+        "locations": [
+          {
+            "line": 1,
+            "column": 6749
+          }
+        ],
+        "message": "Could not resolve to a PullRequest with the number of 1338."
+      },
+      {
+        "type": "NOT_FOUND",
+        "path": [
+          "repository",
+          "n1474"
+        ],
+        "locations": [
+          {
+            "line": 1,
+            "column": 2213
+          }
+        ],
+        "message": "Could not resolve to a PullRequest with the number of 1474."
+      }
+    ],
+    "open_count": 645,
+    "open_page_sizes": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      45
+    ],
+    "opened_prs": 385,
+    "opened_issues": 260,
+    "delta_count": 202,
+    "delta_page_sizes": [
+      100,
+      100,
+      2
+    ],
+    "new_count": 49,
+    "changed_count": 55
+  },
+  "changed_items": [
+    {
+      "id": "usestrix/strix#pr:673",
+      "fields": {
+        "updatedAt": [
+          "2026-10-31T18:55:53Z",
+          "2026-11-19T18:47:06Z"
+        ],
+        "headRefOid": [
+          "5a5087436528e940711c2fba3acff7498d2a8388",
+          "b370ba788da136b2158a90620bc1000ddea5c559"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:716",
+      "fields": {
+        "updatedAt": [
+          "2026-10-23T22:40:00Z",
+          "2026-11-25T08:16:35Z"
+        ],
+        "headRefOid": [
+          "ccea42456cfc0013186769de06ac509b21ec89b7",
+          "885b9da3e6b773f6364ccdae2a3824a01ffc38d4"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:840",
+      "fields": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updatedAt": [
+          "2026-10-22T04:38:15Z",
+          "2026-11-20T04:07:08Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:904",
+      "fields": {
+        "updatedAt": [
+          "2026-10-19T20:46:07Z",
+          "2026-11-24T20:18:29Z"
+        ],
+        "headRefOid": [
+          "81813318bd3feb313b6f787bab43cd39e04ae2b1",
+          "8087028733a4f8caf2227a7ef46cfb18cc668bea"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1425",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T06:54:38Z",
+          "2026-11-24T06:54:37Z"
+        ],
+        "headRefOid": [
+          "695990a6154948f5aa3698a9071907e06e875bc7",
+          "334b7b1a0d45181f2cdb2b4706c073a0251cc52b"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1600",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T06:54:59Z",
+          "2026-11-24T06:55:01Z"
+        ],
+        "headRefOid": [
+          "8a6762646cf6fa2371ca5ec5c44c10cfff0228de",
+          "5b1b81899d51262a0f1c620a8a932e39e440fa7d"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1647",
+      "fields": {
+        "updatedAt": [
+          "2026-11-11T21:14:39Z",
+          "2026-11-24T06:23:03Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1678",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T17:16:15Z",
+          "2026-11-24T21:53:21Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1676",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T22:22:09Z",
+          "2026-11-25T20:58:36Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1674",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T17:16:35Z",
+          "2026-11-25T20:37:08Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1671",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T17:17:16Z",
+          "2026-11-24T16:17:31Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1670",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T17:17:25Z",
+          "2026-11-25T23:04:47Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1663",
+      "fields": {
+        "updatedAt": [
+          "2026-11-18T04:04:09Z",
+          "2026-11-24T07:27:42Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1684",
+      "fields": {
+        "updatedAt": [
+          "2026-11-07T12:25:37Z",
+          "2026-11-25T22:13:20Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1685",
+      "fields": {
+        "updatedAt": [
+          "2026-11-12T16:16:54Z",
+          "2026-11-25T21:28:48Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1686",
+      "fields": {
+        "updatedAt": [
+          "2026-11-07T12:27:43Z",
+          "2026-11-25T21:34:10Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1688",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T20:59:34Z",
+          "2026-11-25T22:14:33Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1689",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T17:14:35Z",
+          "2026-11-25T21:23:21Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1713",
+      "fields": {
+        "updatedAt": [
+          "2026-11-09T10:22:13Z",
+          "2026-11-23T00:42:08Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1721",
+      "fields": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updatedAt": [
+          "2026-11-17T06:55:27Z",
+          "2026-11-24T06:55:02Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1719",
+      "fields": {
+        "updatedAt": [
+          "2026-11-10T11:13:53Z",
+          "2026-11-23T23:15:59Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1714",
+      "fields": {
+        "updatedAt": [
+          "2026-11-09T17:21:57Z",
+          "2026-11-25T20:59:50Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1717",
+      "fields": {
+        "updatedAt": [
+          "2026-11-09T22:32:31Z",
+          "2026-11-21T20:05:51Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1726",
+      "fields": {
+        "updatedAt": [
+          "2026-11-10T10:47:49Z",
+          "2026-11-23T00:10:31Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1728",
+      "fields": {
+        "updatedAt": [
+          "2026-11-10T10:55:48Z",
+          "2026-11-25T20:13:27Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1733",
+      "fields": {
+        "updatedAt": [
+          "2026-11-11T23:00:11Z",
+          "2026-11-23T11:20:15Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1732",
+      "fields": {
+        "updatedAt": [
+          "2026-11-11T14:38:24Z",
+          "2026-11-22T21:19:22Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1731",
+      "fields": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "updatedAt": [
+          "2026-11-19T04:56:58Z",
+          "2026-11-24T14:28:46Z"
+        ],
+        "headRefOid": [
+          "6b8942e823c0dd10b1711acdecdaec077ee0b46e",
+          "d5df107843d569369882a626017de477c97b8812"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1742",
+      "fields": {
+        "updatedAt": [
+          "2026-11-13T00:37:57Z",
+          "2026-11-23T16:54:56Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1739",
+      "fields": {
+        "updatedAt": [
+          "2026-11-12T19:11:34Z",
+          "2026-11-23T15:24:27Z"
+        ],
+        "headRefOid": [
+          null,
+          "f8c8c6809f101b545e4b7578052b0a6599b0d285"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1740",
+      "fields": {
+        "updatedAt": [
+          "2026-11-12T13:41:37Z",
+          "2026-11-24T01:14:47Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1741",
+      "fields": {
+        "updatedAt": [
+          "2026-11-12T19:34:13Z",
+          "2026-11-26T11:36:00Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1743",
+      "fields": {
+        "updatedAt": [
+          "2026-11-18T07:47:15Z",
+          "2026-11-22T16:34:58Z"
+        ],
+        "headRefOid": [
+          null,
+          "561e17885947573102e7de0acef2fbfa45ccec2c"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1746",
+      "fields": {
+        "updatedAt": [
+          "2026-11-18T07:47:19Z",
+          "2026-11-21T12:33:44Z"
+        ],
+        "headRefOid": [
+          null,
+          "67a3bf59205fcf4b1acac549882e52229e1ccf41"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1747",
+      "fields": {
+        "headRefOid": [
+          null,
+          "79c9568026b012fef95810c91af295fff3f93616"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1748",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T13:13:00Z",
+          "2026-11-24T01:15:59Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1749",
+      "fields": {
+        "updatedAt": [
+          "2026-11-14T05:40:08Z",
+          "2026-11-24T05:13:36Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1750",
+      "fields": {
+        "updatedAt": [
+          "2026-11-14T05:45:58Z",
+          "2026-11-23T00:30:44Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1751",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T20:21:30Z",
+          "2026-11-23T03:48:41Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1752",
+      "fields": {
+        "updatedAt": [
+          "2026-11-16T02:40:54Z",
+          "2026-11-24T21:09:57Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1763",
+      "fields": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updatedAt": [
+          "2026-11-16T16:13:18Z",
+          "2026-11-24T09:11:17Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1764",
+      "fields": {
+        "headRefOid": [
+          null,
+          "35d27cb0920a22aa2ddf006cc9f12079880bbc57"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1765",
+      "fields": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updatedAt": [
+          "2026-11-17T20:52:51Z",
+          "2026-11-19T17:17:14Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1770",
+      "fields": {
+        "headRefOid": [
+          null,
+          "8746d5db833db8b009d20d67c168ffa692463f3b"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1771",
+      "fields": {
+        "updatedAt": [
+          "2026-11-17T03:36:20Z",
+          "2026-11-24T01:11:36Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1772",
+      "fields": {
+        "state": [
+          "OPEN",
+          "CLOSED"
+        ],
+        "updatedAt": [
+          "2026-11-17T06:59:18Z",
+          "2026-11-24T06:57:30Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1775",
+      "fields": {
+        "updatedAt": [
+          "2026-11-18T15:50:37Z",
+          "2026-11-25T21:08:43Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1776",
+      "fields": {
+        "updatedAt": [
+          "2026-11-18T21:48:22Z",
+          "2026-11-22T02:45:32Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1777",
+      "fields": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "updatedAt": [
+          "2026-11-19T05:47:03Z",
+          "2026-11-19T18:27:09Z"
+        ],
+        "headRefOid": [
+          "0fc1846fbaa7699ba79374c89369176b2d462031",
+          "c52fe0291e20415d01169da6fcebd6d71e2a0d43"
+        ],
+        "title": [
+          "feat(skills): findings are filed first, then a fix agent and an independent reviewer decide whether a patch is attached",
+          "feat(skills): file findings first and require independent review before attaching a patch"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1778",
+      "fields": {
+        "headRefOid": [
+          null,
+          "703dc1b838fe612508aeec52bd1e5f9a41f4f08d"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1779",
+      "fields": {
+        "headRefOid": [
+          null,
+          "cc0291b72fb464539d36a563778008a216e96f19"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1780",
+      "fields": {
+        "updatedAt": [
+          "2026-11-19T01:46:04Z",
+          "2026-11-23T03:45:58Z"
+        ],
+        "headRefOid": [
+          "4ca8791d9ac367310eeb1eb91e4417c3494017b0",
+          "e74364fda87208136c42775c1c9fbc13ded53ff7"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1781",
+      "fields": {
+        "updatedAt": [
+          "2026-11-19T00:26:50Z",
+          "2026-11-21T16:05:00Z"
+        ],
+        "headRefOid": [
+          null,
+          "9e406971449ec3585d12ff4b493e7f64e32aaa2f"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1782",
+      "fields": {
+        "state": [
+          "OPEN",
+          "MERGED"
+        ],
+        "updatedAt": [
+          "2026-11-19T04:45:48Z",
+          "2026-11-19T18:00:35Z"
+        ]
+      }
+    },
+    {
+      "id": "usestrix/strix#pr:1783",
+      "fields": {
+        "headRefOid": [
+          null,
+          "2eb17fcc8cf28a41f08e6e473c083f9b06ca7438"
+        ]
+      }
+    }
+  ],
+  "closure_observations": {
+    "840": [],
+    "1721": [
+      {
+        "url": "https://github.com/usestrix/strix/pull/1721#issuecomment-7124420297",
+        "author": "dependabot"
+      }
+    ],
+    "1763": [],
+    "1765": [
+      {
+        "url": "https://github.com/usestrix/strix/pull/1765#issuecomment-7016495818",
+        "author": "ian-at-strix"
+      }
+    ],
+    "1772": [
+      {
+        "url": "https://github.com/usestrix/strix/pull/1772#issuecomment-7124462850",
+        "author": "dependabot"
+      }
+    ]
+  },
+  "discovered_ids": [
+    "usestrix/strix#issue:1796",
+    "usestrix/strix#issue:1798",
+    "usestrix/strix#issue:1799",
+    "usestrix/strix#issue:1801",
+    "usestrix/strix#issue:1805",
+    "usestrix/strix#issue:1808",
+    "usestrix/strix#issue:1811",
+    "usestrix/strix#issue:1817",
+    "usestrix/strix#issue:1818",
+    "usestrix/strix#issue:1821",
+    "usestrix/strix#issue:1823",
+    "usestrix/strix#issue:1831",
+    "usestrix/strix#issue:1833",
+    "usestrix/strix#pr:1787",
+    "usestrix/strix#pr:1788",
+    "usestrix/strix#pr:1790",
+    "usestrix/strix#pr:1791",
+    "usestrix/strix#pr:1792",
+    "usestrix/strix#pr:1793",
+    "usestrix/strix#pr:1794",
+    "usestrix/strix#pr:1795",
+    "usestrix/strix#pr:1797",
+    "usestrix/strix#pr:1800",
+    "usestrix/strix#pr:1802",
+    "usestrix/strix#pr:1803",
+    "usestrix/strix#pr:1804",
+    "usestrix/strix#pr:1806",
+    "usestrix/strix#pr:1807",
+    "usestrix/strix#pr:1809",
+    "usestrix/strix#pr:1810",
+    "usestrix/strix#pr:1812",
+    "usestrix/strix#pr:1813",
+    "usestrix/strix#pr:1814",
+    "usestrix/strix#pr:1815",
+    "usestrix/strix#pr:1816",
+    "usestrix/strix#pr:1819",
+    "usestrix/strix#pr:1820",
+    "usestrix/strix#pr:1822",
+    "usestrix/strix#pr:1824",
+    "usestrix/strix#pr:1825",
+    "usestrix/strix#pr:1826",
+    "usestrix/strix#pr:1827",
+    "usestrix/strix#pr:1828",
+    "usestrix/strix#pr:1829",
+    "usestrix/strix#pr:1830",
+    "usestrix/strix#pr:1832",
+    "usestrix/strix#pr:1834",
+    "usestrix/strix#pr:1835",
+    "usestrix/strix#pr:1836"
+  ],
+  "selected_reviews": {
+    "1784": {
+      "finding": "No new human response or check run on head 7c2a6374. The existing exact-head pytest timeout evidence remains current for that head.",
+      "linked_items": []
+    },
+    "1785": {
+      "finding": "Issue remains open. PR #1786 is the proposed resolution.",
+      "linked_items": [
+        "usestrix/strix#pr:1786"
+      ]
+    },
+    "1786": {
+      "finding": "No new human response or check run on head 156e2574. The previous automated thread is outdated and the head includes its requested test.",
+      "linked_items": [
+        "usestrix/strix#issue:1785"
+      ]
+    },
+    "1802": {
+      "finding": "Open proposal overlaps the child-runner skills fixture correction in #1657. Check the full fixture set and merged behavior before considering either patch.",
+      "linked_items": [
+        "usestrix/strix#pr:1657"
+      ]
+    },
+    "1816": {
+      "finding": "Open proposal overlaps the provider authentication fix during pricing in #1658. Both remain proposals.",
+      "linked_items": [
+        "usestrix/strix#pr:1658"
+      ]
+    },
+    "1837": {
+      "finding": "Document data sent by the viewer relay and usage telemetry. The code from main was checked using synthetic inputs and the proposed docs are in #1840.",
+      "linked_items": [
+        "usestrix/strix#pr:1840"
+      ]
+    },
+    "1838": {
+      "finding": "A macOS ARM64 wheel can bundle a Linux ARM64 Go sidecar. Both real builds succeeded, with different executable headers. Await the upstream native versus cross-build contract.",
+      "linked_items": []
+    },
+    "1839": {
+      "finding": "Ruff and Mypy pass on unchanged main, and make check-all exits 2 at 968 Pyright diagnostics. The upstream CI lint job passes without Pyright. Await maintainer direction on contributor checks.",
+      "linked_items": [
+        "usestrix/strix#pr:1301",
+        "usestrix/strix#pr:1360"
+      ]
+    },
+    "1840": {
+      "finding": "Clarify selected-run disk reads, email verification, feedback and report relay requests, and telemetry. Documentation only. 11 viewer auth tests, stub request assertions, docs link and diff checks passed.",
+      "linked_items": [
+        "usestrix/strix#issue:1837"
+      ]
+    }
+  },
+  "latest_main_ci": {
+    "run_id": 45671540630,
+    "head_sha": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407823092",
+        "id": 139407823092,
+        "name": "tui",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407823466",
+        "id": 139407823466,
+        "name": "viewer",
+        "status": "completed"
+      },
+      {
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407823533",
+        "id": 139407823533,
+        "name": "pytest (3.14)",
+        "status": "completed",
+        "timeout_seconds": 900
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407823588",
+        "id": 139407823588,
+        "name": "wheel",
+        "status": "completed"
+      },
+      {
+        "conclusion": "cancelled",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407823725",
+        "id": 139407823725,
+        "name": "pytest (3.12)",
+        "status": "completed",
+        "timeout_seconds": 900
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45671540630/job/139407824208",
+        "id": 139407824208,
+        "name": "lint",
+        "status": "completed"
+      }
+    ]
+  },
+  "pr_1840_ci": {
+    "run_id": 45815799641,
+    "conclusion": null,
+    "head_sha": "f37744a662f14f8d2610a4f459575c4fc8deffe9",
+    "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641",
+    "status": "in_progress",
+    "jobs": [
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222109",
+        "id": 139895222109,
+        "name": "lint",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222186",
+        "id": 139895222186,
+        "name": "viewer",
+        "status": "completed"
+      },
+      {
+        "conclusion": null,
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222269",
+        "id": 139895222269,
+        "name": "pytest (3.12)",
+        "status": "in_progress"
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222321",
+        "id": 139895222321,
+        "name": "wheel",
+        "status": "completed"
+      },
+      {
+        "conclusion": "success",
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222324",
+        "id": 139895222324,
+        "name": "tui",
+        "status": "completed"
+      },
+      {
+        "conclusion": null,
+        "html_url": "https://github.com/usestrix/strix/actions/runs/45815799641/job/139895222447",
+        "id": 139895222447,
+        "name": "pytest (3.14)",
+        "status": "in_progress"
+      }
+    ]
+  },
+  "pr_1840_review_followup": {
+    "url": "https://github.com/usestrix/strix/pull/1840#discussion_r4708058059",
+    "previous_head": "3f5560a3ed5e43786eea3711099939f3f789b3e8",
+    "addressed_by": "f37744a662f14f8d2610a4f459575c4fc8deffe9",
+    "change": "Describe telemetry at viewer startup, including --no-open."
+  },
+  "release_observation": {
+    "checked_at": "2026-11-26T12:03:01.689838+00:00",
+    "scope": "Release metadata and tag/reference verification",
+    "fork_master": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+    "fork_main_mirror": "6b7ae2ebe4d47037a927aade23265ff4e4f27e84",
+    "upstream_main": "9ed84f99c8f13fc921baebc59e0c696108cfab3e",
+    "fork_latest_release": "shvia-v1.2.58",
+    "fork_release_url": "https://github.com/samirhvbr/strix/releases/tag/shvia-v1.2.58",
+    "fork_release_published_at": "2026-11-24T19:39:14Z",
+    "fork_release_tag_object_sha": "0f32f160dda115c669ddc1aaf8f0defc69e54d7f",
+    "fork_release_tag_commit": "982caf14f85c2910d4084a55c4e7fa9e8b378269",
+    "tag_resolves_to_review_start_master": true,
+    "upstream_latest_release": "v1.7.1",
+    "upstream_release_published_at": "2026-11-10T21:24:38Z",
+    "upstream_release_tag_commit": "685bbc8138d35fc9fe378ac37ec0d9198b9c46a3",
+    "version_file": "1.2.58",
+    "package_version": "1.7.0",
+    "upstream_package_version": "1.7.1",
+    "release_assets": [
+      {
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/pentest-aarch64-apple-darwin",
+        "digest": "sha256:6891a2acf0f1a0235b3103a0bd00b43efe5039e2327d896e8ce016f98601514f",
+        "name": "pentest-aarch64-apple-darwin",
+        "size": 95383280
+      },
+      {
+        "browser_download_url": "https://github.com/samirhvbr/strix/releases/download/shvia-v1.2.58/SHA256SUMS",
+        "digest": "sha256:9206f85cc43402ca139f1724613f0e805935ff8982280d24d44c7ab167503f23",
+        "name": "SHA256SUMS",
+        "size": 95
+      }
+    ],
+    "release_assets_downloaded_or_executed": false,
+    "tags_or_releases_changed": false
+  },
+  "next": "Recheck the four publications and remaining pytest fixes, refresh all ledger IDs including the missing PRs, and resume the all-state discovery from the preserved inventory cursor."
+}

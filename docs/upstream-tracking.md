@@ -1,5 +1,7 @@
 # Upstream continuity record
 
+**Latest operational review** [November 26, 2026](UPSTREAM_REVIEW_2026-11-26.md).
+
 **Latest targeted follow-up** [CI and review for #1784 and #1786](UPSTREAM_CI_1784_1786_2026-11-19.md).
 The [November 19 operational review](UPSTREAM_REVIEW_2026-11-19.md) records publication and inventory coverage.
 See the [November 18 CI follow-up](UPSTREAM_PR_FOLLOWUP_2026-11-18.md) for the preceding 31-PR diagnostic.
@@ -24,9 +26,9 @@ be covered, and reviewed code is not necessarily integrated or released.
 
 | Checkpoint | Last completed state | Current scope |
 | --- | --- | --- |
-| Fork source and release | Latest observed published release is `shvia-v1.2.55` at `02d6a1a7`. Fork source `0f69075f` declares 1.2.56. | Release observations and code synchronization have independent checkpoints. |
+| Fork source and release | `shvia-v1.2.58` at `982caf14`, the source observed on November 26. | The release publishes an Apple Silicon binary and SHA256SUMS. See the [release audit](upstream-tracking/release-audit.json). |
 | Upstream code synchronization | Effective integrated upstream is `6b7ae2ebe4d47037a927aade23265ff4e4f27e84`, merge `d3654fb29c8fb86bdee2d23d648f978c82f74a33` | Upstream release v1.7.1 was observed separately. TUI startup from #61, Opengrep and sandbox 1.4.1 were selectively delivered through #63; this does not advance the full synchronization. |
-| Contribution review | 2026-11-12. Verified 702 of 705 known IDs, retaining prior metadata for three unavailable PRs. | November 19 refreshed 720 known observations and recorded the build and local viewer proposals. |
+| Contribution review | Broad inventory cursor from November 9. | November 26 verified 765 of 769 known IDs, cataloged 49 new items, and recorded four upstream publications. |
 
 The machine-readable [checkpoints](upstream-tracking/checkpoints.json) pin the actual validated
 fork commit, check results, coverage, partial work and the next query window. Advance a code
